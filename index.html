@@ -373,7 +373,6 @@ button{font:inherit;color:inherit}
     <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
   </div>
   <div class="extras">
-    <button class="open" data-act="upload">Rare-stijl met je eigen foto</button>
     <button class="reset" data-act="settings">Instellingen</button>
     <button class="reset" data-act="info">Uitleg</button>
   </div>
@@ -795,7 +794,6 @@ function go(n,force){
 let sx0=null,swiped=false;
 document.addEventListener('click',e=>{
   if(swiped){swiped=false;return}
-  if(e.target.closest('[data-act="upload"]')){openUpload();return}
   if(e.target.closest('[data-act="info"]')){openInfo();return}
   if(e.target.closest('[data-act="settings"]')){openSettings();return}
   if(e.target.closest('[data-act="logout"]')){logout();return}
@@ -929,34 +927,6 @@ function openInfo(){
 }
 async function logout(){
   closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
-}
-
-/* ---------- Rare-stijl met eigen foto (alleen voorbeeld) ---------- */
-function openUpload(){
-  const keys=Object.keys(AREAS);
-  const o=overlay(`<p class="status">Rare-stijl met je eigen foto</p>
-    <div class="upl">
-      <div class="pvwrap"><img class="pv" id="pv" alt="Voorbeeld van de kaartafbeelding"><span class="pvtag" id="pvtag">Voorbeeldfles</span></div>
-      <label class="pick" for="file"><span id="picktxt">Kies een foto van een fles</span><input type="file" id="file" accept="image/*"></label>
-      <p class="err" id="err" hidden></p>
-      <label for="wr">Regio (bepaalt de kleuren)<select id="wr">${keys.map(k=>`<option value="${k}">${esc(AREAS[k].naam)}</option>`).join('')}</select></label>
-    </div>
-    <p class="hint">Zo ziet een Rare-kaart van jouw fles eruit. Dit is een voorbeeld en wordt niet bewaard; in de echte app gebeurt het automatisch bij het scannen.</p>
-    <div class="actions"><button class="btn primary" id="close">Klaar</button></div>`);
-  const pv=o.querySelector('#pv'),wr=o.querySelector('#wr'),err=o.querySelector('#err'),file=o.querySelector('#file');
-  let src=null;
-  const showErr=m=>{err.textContent=m;err.hidden=!m};
-  const render=()=>{try{const a=AREAS[wr.value];pv.src=posterize(src||demoPhoto({naam:'Mijn eigen fles',stijl:'Rood'}),{naam:a.naam,c:a.c,motifs:a.motifs})}catch(e){showErr('Deze foto kon niet worden omgezet. Probeer een andere foto.')}};
-  render();wr.onchange=render;
-  file.onchange=()=>{
-    showErr('');const f=file.files&&file.files[0];if(!f)return;
-    if(!/^image\//.test(f.type)){showErr('Dit bestand is geen foto. Kies een JPG of PNG.');return}
-    const im=new Image();
-    im.onload=()=>{src=im;render();o.querySelector('#picktxt').textContent='Andere foto kiezen';o.querySelector('#pvtag').textContent='Jouw foto'};
-    im.onerror=()=>showErr('Deze foto kon niet worden geladen. Probeer een JPG of PNG.');
-    im.src=URL.createObjectURL(f);
-  };
-  o.querySelector('#close').onclick=()=>closeOverlay();
 }
 
 /* ---------- start ---------- */
