@@ -368,6 +368,7 @@ button{font:inherit;color:inherit}
 .lands button.on{border-color:var(--gold);background:rgba(210,174,98,.12);opacity:1}
 .toc li.dim{opacity:.5}
 .lands small{font-weight:400;opacity:.6;font-size:11px}
+.qnum{font-size:11px;letter-spacing:.04em;text-transform:none;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -397,7 +398,7 @@ const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
-const LIMIT=3, DUR=900;
+let LIMIT=3;const DUR=900;
 const TIERS={
   common:{label:'Common',sym:'●',odds:'76%'},
   rare:{label:'Rare',sym:'◆',odds:'18%'},
@@ -434,8 +435,8 @@ function applySettings(){
 applySettings();
 async function loadSettings(){
   try{
-    const {data,error}=await sb.from('collectors').select('display_name,cover_color,page_color').maybeSingle();
-    if(!error&&data){settings={name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
+    const {data,error}=await sb.from('collectors').select('*').maybeSingle();
+    if(!error&&data){LIMIT=data.daily_limit||3;settings={name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
 }
 function openSettings(){
@@ -787,7 +788,7 @@ function renderChrome(){
   const used=session?scansToday():0;
   const sc=$('#scan'),spent=!!session&&used>=LIMIT;
   sc.classList.toggle('spent',spent);sc.textContent=spent?'Morgen weer scannen':'Scan een wijn';
-  $('#dots').innerHTML=Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}"></i>`).join('');
+  $('#dots').innerHTML=LIMIT<=5?Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}"></i>`).join(''):`<span class="qnum">${used} / ${LIMIT} · tester</span>`;
   $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
   if(!session||!st){$('#tabs').innerHTML='';return}
   const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land),inLists=pg.set&&pg.set.part===2;
@@ -861,7 +862,7 @@ function limitMsg(){
   const p=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
   const h=+p.find(x=>x.type==='hour').value,m=+p.find(x=>x.type==='minute').value,left=1440-(h*60+m);
   const hh=Math.floor(left/60),mm=left%60;
-  return `Je 3 scans voor vandaag zijn op. Over ${hh?hh+' uur en ':''}${mm} min kun je weer nieuwe kaarten verzamelen.`;
+  return `Je ${LIMIT} scans voor vandaag zijn op. Over ${hh?hh+' uur en ':''}${mm} min kun je weer nieuwe kaarten verzamelen.`;
 }
 
 /* ---------- scannen ---------- */
@@ -1017,7 +1018,7 @@ function openInfo(){
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 async function logout(){
-  closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
+  closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();LIMIT=3;serverToday=null;session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
 }
 
 /* ---------- start ---------- */
