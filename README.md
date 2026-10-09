@@ -7,7 +7,8 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 ## Spelregels
 
 - Maximaal **3 nieuwe scans per dag**. Dat gaat valsspelen tegen en moedigt geen extra alcoholgebruik aan.
-- **Eén kaart per wijn** (producent + cuvée; de jaargang is alleen een detail). Een dubbele scan levert niets op en telt niet mee.
+- **Eén kaart per wijn** (producent + cuvée; de jaargang is alleen een detail).
+- **Herproeven:** scan je een wijn die je al hebt, dan kun je kiezen voor een nieuwe trekking. Dat kost één van je 3 scans; alleen een hogere klasse vervangt je kaart. Icon-kaarten kun je niet herproeven. Kies je niet, dan telt de scan niet mee.
 - Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **verzamellijsten** (druiven, bubbels, Wereldreiziger, Icons).
 - Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets worden pas zichtbaar als je een andere voltooit of de eerste passende wijn vindt. Zie `docs/setcatalogus.md`.
 
@@ -37,4 +38,4 @@ Live: https://lenvanuuden.github.io/VindIt/ — of open `index.html` in een brow
 
 ## Database
 
-Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) en `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur). De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
+Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur) en `supabase/004_herproeven.sql` (herproeven en de dagteller). De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.

@@ -472,7 +472,8 @@ function openSettings(){
   };
   sn.focus();
 }
-const scansToday=()=>{const t=amsDay(new Date());return cards.filter(c=>c.created&&amsDay(new Date(c.created))===t).length};
+let serverToday=null;
+const scansToday=()=>{if(serverToday!=null)return serverToday;const t=amsDay(new Date());return cards.filter(c=>c.created&&amsDay(new Date(c.created))===t).length};
 const setById=id=>SETS.find(s=>s.id===id);
 
 /* ---------- gebied en palet van een kaart ---------- */
@@ -774,6 +775,7 @@ async function loadAlbum(){
   cards=[];ownedKeys=new Set();
   if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
   for(const r of data||[]){if(!r.wine)continue;ownedKeys.add(r.wine.wine_key);cards.push(toCard(r,r.wine))}
+  try{const t=await sb.rpc('scans_today');serverToday=(!t.error&&typeof t.data==='number')?t.data:null}catch(e){serverToday=null}
   refresh();renderChrome();
 }
 
@@ -900,23 +902,51 @@ $('#scan').onclick=async()=>{
   if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
   if(d.status==='duplicate'){showDup(cards.find(c=>c.wineId===d.wine.id));return}
   ownedKeys.add(d.wine.wine_key);
+  if(typeof d.scans_today==='number'&&serverToday!=null)serverToday=d.scans_today;
   const card=toCard(d.card,d.wine);
   if(!card.app&&pick.app)Object.assign(card,{app:pick.app,grape:pick.grape,style:pick.style,color:pick.color,tags:pick.tags});
   cards.push(card);refresh();renderChrome();
   reveal(card,newsSince(before));
 };
 function showDup(c){
-  const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}<p class="hint">Elke wijn levert maar één kaart op. Deze scan telt niet mee voor je dagelijkse 3.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
-  const k=o.querySelector('.card');if(k)tilt(k);const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+  const left=LIMIT-scansToday(),canRetry=c&&c.rar!=='icon'&&left>0;
+  const note=!c?'':c.rar==='icon'?'Icon-kaarten zijn al de hoogste klasse. Deze scan telt niet mee.'
+    :left>0?`Je kunt herproeven: dat kost 1 van je scans (nog ${left} vandaag) en geeft een nieuwe trekking. Alleen een hogere klasse vervangt je kaart.`
+    :'Herproeven kan weer als je nieuwe scans hebt. Deze scan telt niet mee.';
+  const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}<p class="hint">${note}</p>
+    <div class="actions">${canRetry?'<button class="btn" id="close">Bewaren zo</button><button class="btn primary" id="retry">Herproeven</button>':'<button class="btn primary" id="close">Oké</button>'}</div>`);
+  const k=o.querySelector('.card');if(k)tilt(k);
+  const b=o.querySelector('#close');b.onclick=()=>closeOverlay();
+  const r=o.querySelector('#retry');
+  if(r){r.focus();r.onclick=()=>doRetry(c)}else b.focus();
+}
+async function doRetry(c){
+  const before=snapshot();
+  const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Opnieuw proeven…</p><p class="hint">Een nieuwe trekking voor ${esc(c.naam)}.</p>`);
+  const [res]=await Promise.all([sb.rpc('retry_wine',{p_wine_id:c.wineId}),wait(reduced?200:1300)]);
+  if(!o.isConnected)return;
+  if(res.error){closeOverlay();toast(/function|not find|schema/i.test(res.error.message||'')?'Herproeven is nog niet geactiveerd in de database (migratie 004).':'Herproeven lukte niet. Probeer het opnieuw.');console.error(res.error);return}
+  const d=res.data;
+  if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
+  if(d.status==='icon'){closeOverlay();toast('Icon-kaarten kun je niet herproeven.');return}
+  if(typeof d.scans_today==='number')serverToday=d.scans_today;
+  if(d.upgraded){
+    c.rar=d.rolled_tier;refresh();renderChrome();
+    reveal(c,newsSince(before),`Opgewaardeerd: ${TIERS[d.old_tier].label} → ${TIERS[d.rolled_tier].label}`);
+  }else{
+    renderChrome();
+    const o2=overlay(`<p class="status">Geen upgrade</p>${bigCard(c)}<p class="hint">Je trok ${TIERS[d.rolled_tier].sym} ${TIERS[d.rolled_tier].label}. Je kaart blijft ${TIERS[c.rar].label}. Nog ${Math.max(0,LIMIT-scansToday())} scans vandaag.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
+    tilt(o2.querySelector('.card'));const b=o2.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+  }
 }
 function pageOfCard(c){
   return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.physical[p.set.id]||[]).some(x=>x&&x.id===c.id))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
 }
-function reveal(c,news){
-  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Vin’d It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+function reveal(c,news,title){
+  const o=overlay(`<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Vin’d It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   const open=()=>{if(flip.classList.contains('open'))return;flip.classList.add('open');
-    setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
+    setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
       o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vin’d It die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
   flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
   o.querySelector('#place').onclick=()=>{
@@ -974,7 +1004,7 @@ function openInfo(){
     <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
       <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
-    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je kunt 3 nieuwe wijnen per dag scannen; elke wijn levert één kaart op.</p>
+    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: dat kost een scan en alleen een hogere klasse vervangt je kaart.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vin’d It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
