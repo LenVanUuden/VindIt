@@ -279,6 +279,8 @@ button{font:inherit;color:inherit}
   .flipper,.mini{transition:none}
 }
 
+.scan.spent{background:transparent;border:1px solid rgba(233,211,160,.4);color:var(--gold-soft);font-weight:500}
+
 /* Inloggen op de omslag */
 .login{display:grid;gap:10px;width:80%;max-width:280px;cursor:default}
 .login label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);opacity:.85;text-align:center}
@@ -614,6 +616,8 @@ async function loadAlbum(){
 const stack=$('#stack');
 function renderChrome(){
   const used=session?scansToday():0;
+  const sc=$('#scan'),spent=!!session&&used>=LIMIT;
+  sc.classList.toggle('spent',spent);sc.textContent=spent?'Morgen weer scannen':'Scan een wijn';
   $('#dots').innerHTML=Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}"></i>`).join('');
   $('#prev').disabled=cur===0;$('#next').disabled=cur===PAGES-1||!session;
   const land=cur<FIRST?null:REG[ORDER[cur-FIRST]].land;
@@ -673,15 +677,21 @@ function openCard(nr){
 }
 function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3600)}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function limitMsg(){
+  const p=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+  const h=+p.find(x=>x.type==='hour').value,m=+p.find(x=>x.type==='minute').value,left=1440-(h*60+m);
+  const hh=Math.floor(left/60),mm=left%60;
+  return `Je 3 scans voor vandaag zijn op. Over ${hh?hh+' uur en ':''}${mm} min kun je weer nieuwe kaarten verzamelen.`;
+}
 
 $('#scan').onclick=async()=>{
   if(!session){toast('Log eerst in om te scannen.');return}
   if(document.querySelector('.overlay'))return;
+  if(scansToday()>=LIMIT){toast(limitMsg());return}
   const fresh=POOL.filter(w=>!ownedKeys.has(wkey(w)));
   const dupes=POOL.filter(w=>ownedKeys.has(wkey(w)));
-  if(scansToday()>=LIMIT&&!dupes.length){toast('Je 3 scans voor vandaag zijn op. Morgen kun je weer nieuwe kaarten verzamelen.');return}
   let pick;
-  if(dupes.length&&(Math.random()<.2||!fresh.length||scansToday()>=LIMIT))pick=dupes[Math.floor(Math.random()*dupes.length)];
+  if(dupes.length&&(Math.random()<.2||!fresh.length))pick=dupes[Math.floor(Math.random()*dupes.length)];
   else if(fresh.length)pick=fresh[Math.floor(Math.random()*fresh.length)];
   if(!pick){toast('Je hebt alle demowijnen al verzameld.');return}
   const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Etiket wordt herkend</p><p class="hint">In de echte app richt je hier je camera op het etiket.</p>`);
@@ -689,7 +699,7 @@ $('#scan').onclick=async()=>{
   if(!o.isConnected)return;
   if(res.error){closeOverlay();toast('Scannen lukte niet. Controleer je verbinding en probeer het opnieuw.');console.error(res.error);return}
   const d=res.data;
-  if(d.status==='limit'){closeOverlay();toast('Je 3 scans voor vandaag zijn op. Morgen kun je weer nieuwe kaarten verzamelen.');return}
+  if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
   if(d.status==='duplicate'){let nr=null;owned.forEach((c,k)=>{if(c.wineId===d.wine.id)nr=k});showDup(nr);return}
   ownedKeys.add(d.wine.wine_key);
   const rk=d.wine.regio,nr=REG[rk]?REG[rk].base+countReg(rk):null;
