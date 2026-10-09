@@ -155,7 +155,28 @@ Doel: voltooid binnen 1–3 weken. Eerste overwinning.
 | Château-Chalon | 🔴 |
 | Vin Jaune (stijl) | 🔴 |
 
-*Volgende uitbreidingen: Elzas, Champagne, Languedoc, Provence, Piemonte, Veneto, Sicilië, Ribera del Duero, Portugal (Douro/Alentejo/Vinho Verde), Duitsland (Mosel/Rheingau/Pfalz), Zuid-Afrika, Chili, Argentinië, Australië, Californië.*
+### Overige landen – één set per land (vakken = regio's)
+
+| Land | Vakken (🟢 supermarkt · 🟡 wijnwinkel · 🔴 specialist) |
+|---|---|
+| **Portugal** | 🟢 Vinho Verde · 🟢 Douro · 🟢 Alentejo · 🟢 Lisboa · 🟢 Porto · 🟡 Dão · 🟡 Bairrada · 🟡 Setúbal · 🟡 Madeira |
+| **Duitsland** | 🟢 Mosel · 🟢 Pfalz · 🟢 Rheinhessen · 🟡 Rheingau · 🟡 Nahe · 🟡 Baden · 🟡 Franken · 🔴 Württemberg · 🔴 Ahr |
+| **Oostenrijk** | 🟢 Weinviertel · 🟢 Burgenland · 🟡 Wachau · 🟡 Kamptal · 🟡 Kremstal · 🟡 Neusiedlersee · 🟡 Steiermark · 🔴 Wien · 🔴 Carnuntum |
+| **Nederland** (per provincie) | 🟡 Limburg · 🟡 Gelderland · 🟡 Zeeland · 🟡 Noord-Brabant · 🟡 Utrecht · 🔴 Overijssel · 🔴 Noord-Holland · 🔴 Zuid-Holland · 🔴 Noorden (Friesland, Groningen, Drenthe) |
+| **Engeland en Wales** | 🟡 Sussex · 🟡 Kent · 🟡 Hampshire · 🔴 Surrey · 🔴 Essex · 🔴 Dorset · 🔴 Cornwall · 🔴 Oxfordshire · 🔴 Wales |
+| **Zuid-Afrika** | 🟢 Western Cape · 🟢 Stellenbosch · 🟢 Paarl · 🟢 Robertson · 🟡 Swartland · 🟡 Franschhoek · 🟡 Hemel-en-Aarde · 🔴 Elgin · 🔴 Constantia |
+| **Chili** | 🟢 Valle Central · 🟢 Maipo · 🟢 Colchagua · 🟢 Casablanca · 🟡 Curicó · 🟡 Cachapoal · 🟡 Maule · 🟡 Aconcagua · 🔴 Itata |
+| **Argentinië** | 🟢 Mendoza · 🟡 Luján de Cuyo · 🟡 Valle de Uco · 🟡 Maipú · 🟡 Salta · 🟡 San Juan · 🔴 Patagonia · 🔴 La Rioja · 🔴 Catamarca |
+| **Verenigde Staten** | 🟢 Californië · 🟢 Napa Valley · 🟢 Sonoma · 🟢 Lodi · 🟡 Paso Robles · 🔴 Santa Barbara · 🟡 Oregon · 🟡 Washington State · 🔴 New York |
+| **Australië** | 🟢 South Eastern Australia · 🟢 Barossa Valley · 🟡 McLaren Vale · 🟡 Coonawarra · 🟡 Margaret River · 🟡 Yarra Valley · 🟡 Hunter Valley · 🔴 Clare / Eden Valley · 🔴 Tasmanië |
+
+Aandachtspunten:
+- **Portugal, Duitsland en Oostenrijk** hebben genoeg regio's voor meerdere sets per regio (zoals Frankrijk). Voor nu één set per land; later uit te splitsen (bijv. Douro I/II, Mosel-lagen).
+- **Nederland** is per provincie ingedeeld omdat de meeste Nederlandse wijn onder een provinciale aanduiding valt. Veel vakken zijn 🔴: weinig in de supermarkt, vooral bij de wijngaard zelf. Dat maakt de set een leuke "wijnroute door eigen land".
+- **Engeland en Wales** is vooral bubbels; de set vult zich traag en is bedoeld als uitdaging.
+- **Californië (algemeen)** is het vak voor de vele supermarktwijnen met alleen "California" op het etiket.
+
+*Volgende uitbreidingen: Elzas, Champagne, Languedoc, Provence, Piemonte, Veneto, Sicilië, Ribera del Duero; later regio-verdieping voor Portugal, Duitsland en de nieuwe wereld.*
 
 ---
 
