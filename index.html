@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2A1D16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Winex">
+<title>Winex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&display=swap">
+<style>
+/* Layout: een dik, in leer gebonden insteekalbum op een houten tafel. Kartonnen bladen met 9 doorzichtige sleeves; vijf kaartklassen die je in één oogopslag uit elkaar houdt. Bewust één donkere wereld. */
+:root{
+  --table:#2A1D16;
+  --leather:#5A1F2A;
+  --leather-dark:#3B121A;
+  --board:#1F2622;
+  --pocket:#29312C;
+  --edge:#D8CFBB;
+  --edge-dark:#8E8575;
+  --gold:#D2AE62;
+  --gold-soft:#E9D3A0;
+  --cream:#F1E6D6;
+  --card:#FBFAF5;
+  --ink:#23272A;
+  --ink-soft:#5E6561;
+  --silver:#C9D1D6;
+  --violet:#B9A2F0;
+  --onyx:#17120D;
+  --overlay:#160A0C;
+  --danger:#F09595;
+  --display:"Limelight","Didot",Georgia,serif;
+  --body:"Libre Franklin","Helvetica Neue",Arial,sans-serif;
+  --grain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --leathergrain:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)'/%3E%3C/svg%3E");
+  --gilt:linear-gradient(135deg,#B9852F,#F2D88A 38%,#A8772A 58%,#E9C76F);
+  --silverfoil:linear-gradient(135deg,#8F99A1,#EEF1F3 35%,#8A939A 60%,#D9DEE2);
+  color-scheme:dark;
+}
+@property --mx{syntax:'<number>';inherits:true;initial-value:.5}
+@property --my{syntax:'<number>';inherits:true;initial-value:.5}
+@property --rx{syntax:'<angle>';inherits:true;initial-value:0deg}
+@property --ry{syntax:'<angle>';inherits:true;initial-value:0deg}
+
+html,body{height:100%}
+body{margin:0;background-color:var(--table);background-image:repeating-linear-gradient(92deg,rgba(0,0,0,.18) 0 2px,rgba(0,0,0,0) 2px 9px,rgba(255,255,255,.025) 9px 10px,rgba(0,0,0,0) 10px 23px),var(--grain);color:var(--cream);font-family:var(--body);font-size:15px;line-height:1.5;overflow-x:hidden}
+.app{max-width:460px;margin:0 auto;padding-inline:16px;padding-block:14px 24px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.06em;line-height:1;margin:0;color:var(--gold-soft)}
+.quota{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft)}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold);display:block}
+.dots i.used{background:var(--gold)}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.tabs button{flex:none;background:transparent;border:1px solid rgba(233,211,160,.28);color:var(--gold-soft);border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer}
+.tabs button[aria-current="true"]{background:var(--gold);color:#2B1308;border-color:var(--gold)}
+
+/* Album */
+.album{position:relative;background-color:var(--leather);background-image:var(--leathergrain);border-radius:6px 14px 14px 6px;padding:10px 16px 14px 26px;
+  box-shadow:0 22px 44px rgba(0,0,0,.6),0 4px 8px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.05),inset 0 0 26px rgba(0,0,0,.4)}
+.album::before{content:"";position:absolute;left:0;top:0;bottom:0;width:20px;border-radius:6px 0 0 6px;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(255,255,255,.08) 45%,rgba(0,0,0,.35))}
+.album::after{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:1.5px;opacity:.5;background:repeating-linear-gradient(to bottom,var(--gold) 0 6px,transparent 6px 11px)}
+.stack{position:relative;display:grid;perspective:2200px;touch-action:pan-y}
+.stack::after{content:"";position:absolute;top:5px;bottom:2px;right:-8px;width:8px;border-radius:0 3px 3px 0;z-index:0;background:repeating-linear-gradient(90deg,var(--edge) 0 1px,var(--edge-dark) 1px 2px)}
+.stack::before{content:"";position:absolute;left:4px;right:-6px;bottom:-7px;height:7px;border-radius:0 0 3px 3px;z-index:0;background:repeating-linear-gradient(180deg,var(--edge) 0 1px,var(--edge-dark) 1px 2px)}
+
+/* Leaves */
+.leaf{grid-area:1/1;display:grid;transform-style:preserve-3d;transform-origin:left center;position:relative;z-index:1}
+.leaf>.page,.leaf>.leafback{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leafback{transform:rotateY(180deg);background-color:var(--board);background-image:var(--grain);border-radius:6px 2px 2px 6px}
+.leafback.endpaper{background-color:#4A1822;background-image:repeating-radial-gradient(circle at 28% 38%,rgba(210,174,98,.35) 0 1.5px,rgba(0,0,0,0) 1.5px 9px),repeating-radial-gradient(circle at 74% 68%,rgba(122,42,56,.9) 0 5px,rgba(74,24,34,0) 5px 12px),var(--grain)}
+.leaf.flip-fwd{animation:flipF .9s cubic-bezier(.5,.05,.3,1) forwards;z-index:3}
+.leaf.flip-back{animation:flipB .9s cubic-bezier(.5,.05,.3,1) forwards;z-index:3}
+@keyframes flipF{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
+@keyframes flipB{from{transform:rotateY(-180deg)}to{transform:rotateY(0)}}
+.flip-fwd>.page::after,.flip-back>.page::after,.under>.page::after,.covered>.page::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:20;border-radius:inherit}
+.flip-fwd>.page::after{background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.65));animation:fadeIn .9s forwards}
+.flip-back>.page::after{background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.65));animation:fadeOut .9s forwards}
+.under>.page::after{background:rgba(0,0,0,.55);animation:fadeOut .9s forwards}
+.covered>.page::after{background:rgba(0,0,0,.55);animation:fadeIn .9s forwards}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+
+/* Page */
+.page{position:relative;background-color:var(--board);background-image:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,0) 20px),var(--grain);border-radius:2px 6px 6px 2px;padding:16px 12px 12px 20px;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;
+  box-shadow:inset -1px 0 0 rgba(255,255,255,.08),1px 0 0 #121614,2px 0 0 #3a423d}
+.eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);opacity:.8;margin:0}
+.foil{font-family:var(--display);font-weight:400;background:linear-gradient(180deg,#F5E2A6,#C19A4E 55%,#E8CB82);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.7))}
+.page h2{font-size:30px;line-height:1.05;margin:3px 0 0;text-wrap:balance}
+.progress{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.bar{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px}
+.pfoot{margin-top:auto;display:flex;justify-content:space-between;font-size:10.5px;color:var(--gold-soft);opacity:.6;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+
+/* Sleeves */
+.sleeve{position:relative;isolation:isolate;aspect-ratio:5/7.4;max-width:100%;background:var(--pocket);border-radius:3px;padding:6px 5px 5px;box-sizing:border-box;box-shadow:inset 0 2px 3px rgba(0,0,0,.45),0 1px 0 rgba(255,255,255,.05)}
+.sleeve::after{content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;z-index:7;border:1px solid rgba(255,255,255,.13);
+  background:radial-gradient(circle at 50% 0,rgba(0,0,0,0) 0 9px,rgba(255,255,255,.28) 9px 10px,rgba(0,0,0,0) 10.5px),
+   linear-gradient(118deg,rgba(255,255,255,0) 20%,rgba(255,255,255,.14) 29%,rgba(255,255,255,0) 39%,rgba(255,255,255,0) 63%,rgba(255,255,255,.07) 69%,rgba(255,255,255,0) 75%),
+   linear-gradient(180deg,rgba(255,255,255,.25) 0 1px,rgba(255,255,255,0) 1px)}
+.empty{height:100%;border:1px dashed rgba(233,211,160,.18);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;color:rgba(233,211,160,.32);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+
+/* Perforation */
+.card,.mini{position:relative;background:var(--card)}
+.card::before,.mini::before{content:"";position:absolute;pointer-events:none;z-index:5}
+.card::before{inset:-4px;background:radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 100%/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/8px 12px repeat-y,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 100% 0/8px 12px repeat-y}
+.mini::before{inset:-2.5px;background:radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 100%/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/5px 7px repeat-y,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 100% 0/5px 7px repeat-y}
+.art svg,.art img{display:block;width:100%;height:auto}
+.art img{aspect-ratio:10/7}
+
+/* Mini card */
+.mini{--hole:var(--pocket);border:0;padding:4px 4px 5px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;height:100%;box-sizing:border-box;transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+.mini:hover{transform:translateY(-6%)}
+.mini.pull{transform:translateY(-34%)}
+.mini .face{position:relative;overflow:hidden}
+.mini .mname{font-size:10px;line-height:1.25;font-weight:500;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mini .mnr{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:var(--ink-soft);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.mini.is-new{animation:slideIn 1.1s .8s both cubic-bezier(.2,.7,.2,1)}
+@keyframes slideIn{0%{transform:translateY(-125%) rotate(-4deg)}70%{transform:translateY(4%) rotate(0)}100%{transform:translateY(0)}}
+
+/* Big card */
+.card{--hole:var(--overlay);width:min(78vw,300px);padding:10px;box-sizing:border-box;transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;touch-action:none;box-shadow:0 20px 40px rgba(0,0,0,.5)}
+.card .face{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:6px;padding-bottom:4px}
+.card .toprow{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.card h3{font-family:var(--display);font-weight:400;font-size:21px;line-height:1.1;margin:6px 0 0;color:var(--ink);text-wrap:balance}
+.card .maker{margin:0;font-size:12.5px;color:var(--ink-soft)}
+.facts{margin:4px 0 0;border-top:1px solid #DCDDD3;padding-top:6px;display:grid;gap:2px;font-size:12px;color:var(--ink)}
+.facts div{display:flex;justify-content:space-between;gap:10px}
+.facts dt{color:var(--ink-soft)}
+.facts dd{margin:0;text-align:right}
+
+/* Effect layers */
+.shine,.sparkle,.glare{position:absolute;inset:0;pointer-events:none;z-index:4}
+.glare{background:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),rgba(255,255,255,.6),transparent 48%);mix-blend-mode:overlay}
+.sparkle{background-image:radial-gradient(circle,#fff 0 .8px,transparent 1.4px),radial-gradient(circle,#fff 0 .6px,transparent 1.2px);background-size:19px 23px,29px 31px;background-position:calc(var(--mx)*40px) calc(var(--my)*30px),calc(var(--mx)*-30px) calc(var(--my)*-40px);mix-blend-mode:overlay;opacity:.9;
+  -webkit-mask:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 55%);mask:radial-gradient(circle at calc(var(--mx)*100%) calc(var(--my)*100%),#000 0,transparent 55%)}
+.rainbow{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:280% 280%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.5;filter:brightness(.75) contrast(1.3)}
+
+/* Tier: Rare + Super Rare (zilver) */
+.t-rare,.t-superrare{background:var(--silverfoil)}
+.t-rare .face,.t-superrare .face{background:var(--card);outline:1px solid #7D868D;outline-offset:3px}
+.mini.t-rare .face,.mini.t-superrare .face{outline-offset:2px}
+.t-rare .shine{background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.55) 8%,rgba(255,255,255,0) 16%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:overlay}
+.t-superrare .shine{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:280% 280%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.5;filter:brightness(.75) contrast(1.3)}
+.t-rare .toprow .pill{color:#56606A}
+.t-superrare .toprow .pill{color:#6C4FB0}
+
+/* Tier: Ultra (full art) */
+.t-ultra{background:var(--gilt);padding:7px}
+.mini.t-ultra{padding:3px}
+.t-ultra .face{background:#000}
+.card.t-ultra .face{aspect-ratio:5/7.1;justify-content:space-between;padding:10px 10px 8px}
+.mini.t-ultra .face{flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.ufill{position:absolute;inset:0;overflow:hidden;z-index:0}
+.ul{position:absolute;inset:-7%;transform:translate3d(calc((var(--mx) - .5) * var(--k)),calc((var(--my) - .5) * var(--k)),0)}
+.ul svg{display:block;width:100%;height:100%}
+.t-ultra .toprow{color:#FFF6E2;text-shadow:0 1px 2px rgba(0,0,0,.6);margin:-10px -10px 0;padding:9px 10px 16px;background:linear-gradient(rgba(18,10,6,.6),rgba(18,10,6,0))}
+.t-ultra .toprow .pill{color:#FFF1C9;background:rgba(40,20,8,.35)}
+.uinfo{position:relative;z-index:2;margin:0 -10px -8px;padding:34px 10px 8px;background:linear-gradient(rgba(18,10,6,0),rgba(18,10,6,.82) 38%)}
+.t-ultra h3{color:#FFF6E2}
+.t-ultra .maker{color:#EADBB9}
+.t-ultra .facts{color:#FFF6E2;border-top-color:rgba(255,246,226,.25)}
+.t-ultra .facts dt{color:#D9C69C}
+.t-ultra .shine{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:280% 280%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.32;filter:brightness(.8) contrast(1.2)}
+.mband{position:relative;z-index:3;padding:16px 4px 4px;background:linear-gradient(rgba(18,10,6,0),rgba(18,10,6,.85) 45%);display:flex;flex-direction:column;gap:2px}
+.mini.t-ultra .mname{color:#FFF6E2}
+.mini.t-ultra .mnr{color:#E9D3A0}
+
+/* Tier: Icon (onyx en goud) */
+.t-icon{background:var(--onyx);box-shadow:inset 0 0 0 1.5px #C9A253,0 20px 40px rgba(0,0,0,.5)}
+.mini.t-icon{box-shadow:inset 0 0 0 1px #C9A253}
+.t-icon .face{background:var(--onyx)}
+.t-icon .art{outline:1px solid #C9A253;outline-offset:2px}
+.t-icon h3{background:linear-gradient(180deg,#F5E2A6,#C19A4E 55%,#E8CB82);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-icon .toprow,.t-icon .maker{color:#D9BE82}
+.t-icon .toprow .pill{color:#E9CC86}
+.t-icon .facts{color:#F1E6D6;border-top-color:rgba(201,162,83,.35)}
+.t-icon .facts dt{color:#BFA470}
+.t-icon .shine{background:repeating-linear-gradient(115deg,rgba(233,200,120,0) 0%,rgba(233,200,120,.45) 9%,rgba(233,200,120,0) 18%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:screen}
+.mini.t-icon .mname{color:#E9D3A0}
+.mini.t-icon .mnr{color:#C9A253}
+
+.mini.t-rare .face,.mini.t-superrare .face,.mini.t-ultra .face,.mini.t-icon .face{animation:drift 5s ease-in-out infinite alternate}
+@keyframes drift{0%{--mx:.1;--my:.2}100%{--mx:.9;--my:.85}}
+.card.idle{animation:wobble 6s ease-in-out infinite}
+@keyframes wobble{0%,100%{--mx:.25;--my:.3;--rx:7deg;--ry:-11deg}50%{--mx:.78;--my:.72;--rx:-6deg;--ry:12deg}}
+.card.burst .sparkle,.card.burst .shine{animation:burst 1.2s ease-out}
+@keyframes burst{0%{opacity:0;transform:scale(1.4)}30%{opacity:1}100%{transform:scale(1)}}
+
+/* Tier symbols */
+.sym{font-style:normal;letter-spacing:0}
+.s-common{color:#8C918C}
+.s-rare{color:#7D878F}
+.s-superrare{color:#7A5CC4}
+.s-ultra{color:#B8862E}
+.s-icon{color:#C9A253}
+
+/* Cover */
+.page.cover{background-color:var(--leather);background-image:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,0) 14px),var(--leathergrain);align-items:center;justify-content:center;gap:22px;cursor:pointer;box-shadow:inset 0 0 30px rgba(0,0,0,.35),1px 0 0 #2a0c12}
+.cover .frame{border:1.5px solid rgba(210,174,98,.75);outline:1px solid rgba(210,174,98,.5);outline-offset:5px;padding:34px 22px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;width:78%;box-sizing:border-box;box-shadow:inset 0 1px 3px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.07)}
+.cover h2{font-size:56px;letter-spacing:.06em;margin:0}
+.crest{width:58px;height:auto;opacity:.85}
+.open{background:none;border:1px solid rgba(210,174,98,.55);color:var(--gold-soft);border-radius:999px;padding:8px 18px;font-size:13px;letter-spacing:.04em;cursor:pointer}
+
+/* Contents */
+.tiers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tiers div{border-top:1px solid rgba(233,211,160,.25);padding-top:8px;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center}
+.tiers .sym{font-size:13px}
+.tiers .s-common{color:#CFCBC0}.tiers .s-rare{color:var(--silver)}.tiers .s-superrare{color:var(--violet)}.tiers .s-ultra,.tiers .s-icon{color:var(--gold)}
+.tiers b{font-family:var(--display);font-weight:400;font-size:22px;line-height:1.1;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.tiers span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);opacity:.8;white-space:nowrap}
+.tiers em{font-style:normal;font-size:10px;color:var(--cream);opacity:.5;font-variant-numeric:tabular-nums}
+.toc{list-style:none;margin:0;padding:0;display:grid}
+.toc button{width:100%;display:flex;justify-content:space-between;gap:10px;background:none;border:0;border-bottom:1px dotted rgba(233,211,160,.25);padding:8px 2px;color:var(--cream);cursor:pointer;font-variant-numeric:tabular-nums;text-align:left}
+.toc small{opacity:.55}
+.toc button span:last-child{color:var(--gold-soft);font-size:13px}
+.note{font-size:11px;color:var(--gold-soft);opacity:.65;margin:0;line-height:1.45}
+.upbtn{align-self:center}
+
+/* Overlay */
+.overlay{position:fixed;inset:0;z-index:50;background:var(--overlay);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:16px;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 20px);color:var(--cream);text-align:center;perspective:1200px}
+.hint{font-size:12.5px;opacity:.75;margin:0;max-width:32ch}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{border:1px solid rgba(241,230,214,.45);background:transparent;color:var(--cream);border-radius:999px;padding:10px 18px;cursor:pointer;font-weight:500}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#2B1308}
+.status{font-family:var(--display);font-size:22px;margin:0;color:var(--gold-soft)}
+.flipper{width:min(78vw,300px);display:grid;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.1,.2,1);cursor:pointer}
+.flipper>*{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flipper .card{width:100%;transform:rotateY(180deg)}
+.flipper.open{transform:rotateY(180deg)}
+.flipper.open .card{transform:rotateY(180deg) rotateX(var(--rx)) rotateY(var(--ry))}
+.back{background-color:var(--leather-dark);background-image:var(--leathergrain);border:10px solid var(--leather);outline:2px solid var(--gold);outline-offset:-16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--gold-soft);box-shadow:0 20px 40px rgba(0,0,0,.45);aspect-ratio:5/7.2}
+.back b{font-family:var(--display);font-weight:400;font-size:38px;letter-spacing:.08em;color:var(--cream)}
+.back span{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase}
+.seal{width:76px;height:76px;border-radius:50%;border:1.5px dashed var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px}
+.scanframe{width:min(70vw,260px);aspect-ratio:3/4;border-radius:14px;position:relative;
+  background:linear-gradient(var(--gold),var(--gold)) 0 0/26px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 0 0/3px 26px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 0/26px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 0/3px 26px no-repeat,
+  linear-gradient(var(--gold),var(--gold)) 0 100%/26px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 0 100%/3px 26px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 100%/26px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 100%/3px 26px no-repeat}
+.scanframe::after{content:"";position:absolute;left:8%;right:8%;height:2px;background:var(--gold);top:10%;animation:sweep 1s ease-in-out infinite alternate}
+@keyframes sweep{to{top:88%}}
+.bottle{position:absolute;left:50%;top:12%;width:34%;height:80%;transform:translateX(-50%);border-radius:40% 40% 6px 6px / 18% 18% 6px 6px;background:#2b3a2e}
+.bottle::before{content:"";position:absolute;left:34%;right:34%;top:-22%;height:26%;background:#2b3a2e;border-radius:3px}
+.bottle::after{content:"";position:absolute;left:10%;right:10%;top:42%;height:30%;background:var(--card)}
+
+/* Upload */
+.upl{display:grid;gap:12px;width:min(86vw,320px);text-align:left}
+.upl label{display:grid;gap:4px;font-size:12px;color:var(--gold-soft);letter-spacing:.03em}
+.upl input[type=text],.upl select{height:40px;border-radius:8px;border:1px solid rgba(233,211,160,.35);background:#24161A;color:var(--cream);padding:0 10px;font:inherit;font-size:14px;box-sizing:border-box;width:100%}
+.upl .pick{display:flex;align-items:center;justify-content:center;height:44px;border:1px dashed var(--gold);border-radius:10px;color:var(--gold-soft);cursor:pointer;font-size:13.5px;position:relative}
+.pick input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pick:focus-within{outline:2px solid var(--gold);outline-offset:3px}
+.pvwrap{position:relative;border-radius:4px;overflow:hidden;background:#24161A}
+.pv{width:100%;aspect-ratio:10/7;display:block;object-fit:cover}
+.pvtag{position:absolute;left:8px;top:8px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:rgba(22,10,12,.75);color:var(--gold-soft);padding:3px 8px;border-radius:999px}
+.err{color:var(--danger);font-size:12.5px;margin:0}
+
+/* Dock */
+.dock{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.nav{width:44px;height:44px;border-radius:50%;border:1px solid rgba(233,211,160,.35);background:transparent;color:var(--gold-soft);cursor:pointer;font-size:20px;line-height:1}
+.nav:disabled{opacity:.3;cursor:default}
+.scan{flex:1;height:48px;border-radius:999px;border:0;background:var(--gold);color:#2B1308;font-weight:600;letter-spacing:.02em;cursor:pointer;font-size:15px}
+.extras{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+.reset{background:none;border:0;color:var(--gold-soft);opacity:.55;font-size:12px;text-decoration:underline;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:60;max-width:min(88vw,380px);text-align:center}
+
+@media (prefers-reduced-motion:reduce){
+  .card.idle,.mini .face,.scanframe::after,.mini.is-new{animation:none!important}
+  .flipper,.mini{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <p class="brand">Winex</p>
+    <div class="quota" aria-live="polite"><span>Scans vandaag</span><div class="dots" id="dots"></div></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Hoofdstukken"></nav>
+  <div class="album"><main class="stack" id="stack" aria-live="polite"></main></div>
+  <div class="dock">
+    <button class="nav" id="prev" aria-label="Vorige blad">&#8249;</button>
+    <button class="scan" id="scan">Scan een wijn</button>
+    <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
+  </div>
+  <div class="extras">
+    <button class="open" data-act="upload">Jouw foto als Rare-kaart</button>
+    <button class="reset" data-act="info">Uitleg</button>
+    <button class="reset" id="reset">Demo opnieuw beginnen</button>
+  </div>
+</div>
+
+<script>
+const REG={
+  bordeaux:{land:'Frankrijk',naam:'Bordeaux',base:1,motifs:['chateau','village'],c:{sky:'#EED3AC',sun:'#F09A3E',far:'#93607A',near:'#5A3550',dark:'#2E1A2A',m:'#F7EAD6'}},
+  bourgogne:{land:'Frankrijk',naam:'Bourgogne',base:10,motifs:['church','village'],c:{sky:'#F3DDAA',sun:'#E4693A',far:'#B0734A',near:'#6B7A3E',dark:'#33401E',m:'#FAF0DA'}},
+  jura:{land:'Frankrijk',naam:'Jura',base:19,motifs:['windmill','pines'],c:{sky:'#D3E4E1',sun:'#F2C462',far:'#7C9C95',near:'#47695A',dark:'#213A31',m:'#F5F0E2'}},
+  toscane:{land:'Italië',naam:'Toscane',base:28,motifs:['cypress','farmhouse'],c:{sky:'#F7CD8E',sun:'#E05A38',far:'#C98F55',near:'#86924A',dark:'#3A4522',m:'#FBEBCF'}},
+  rioja:{land:'Spanje',naam:'Rioja',base:37,motifs:['mesa','village'],c:{sky:'#F5BE73',sun:'#FDE6A8',far:'#BC6A40',near:'#84402C',dark:'#47201A',m:'#F8E4C4'}},
+  marlborough:{land:'Nieuw-Zeeland',naam:'Marlborough',base:46,motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
+};
+const ORDER=['bordeaux','bourgogne','jura','toscane','rioja','marlborough'];
+const CHAPTERS=[['Frankrijk','bordeaux'],['Italië','toscane'],['Spanje','rioja'],['Nieuw-Zeeland','marlborough']];
+const FIRST=2, PAGES=FIRST+ORDER.length;
+const TIERS={
+  common:{label:'Common',sym:'●',odds:'76%'},
+  rare:{label:'Rare',sym:'◆',odds:'18%'},
+  superrare:{label:'Super Rare',sym:'◆◆',odds:'5%'},
+  ultra:{label:'Ultra',sym:'★',odds:'1%'},
+  icon:{label:'Icon',sym:'♛',odds:'vast'}
+};
+const TORDER=['common','rare','superrare','ultra','icon'];
+
+const START=[
+ {nr:1,reg:'bordeaux',naam:'Château Lamothe-Sablon',maker:'Bordeaux Supérieur',jaar:2019,druif:'Merlot, Cabernet Franc',stijl:'Rood, soepel',rar:'common',v:0,datum:'14 sep 2026'},
+ {nr:2,reg:'bordeaux',naam:'Clos des Graves Pâles',maker:'Graves',jaar:2021,druif:'Sauvignon Blanc, Sémillon',stijl:'Wit, fris',rar:'rare',v:1,datum:'20 sep 2026'},
+ {nr:10,reg:'bourgogne',naam:'Vernier-Lacombe Pinot Noir',maker:'Bourgogne AOC',jaar:2021,druif:'Pinot Noir',stijl:'Rood, licht',rar:'common',v:0,datum:'2 sep 2026'},
+ {nr:11,reg:'bourgogne',naam:'Mâcon-Villages Les Crays',maker:'Domaine des Crays',jaar:2022,druif:'Chardonnay',stijl:'Wit, rond',rar:'superrare',v:1,datum:'27 sep 2026'},
+ {nr:19,reg:'jura',naam:'Domaine des Sapins',maker:'Côtes du Jura',jaar:2022,druif:'Chardonnay',stijl:'Wit, mineraal',rar:'common',v:0,datum:'1 okt 2026'},
+ {nr:28,reg:'toscane',naam:'Poggio Alto',maker:'Chianti Classico',jaar:2020,druif:'Sangiovese',stijl:'Rood, stevig',rar:'common',v:0,datum:'11 sep 2026'},
+ {nr:29,reg:'toscane',naam:'Sassorosso',maker:'Toscana IGT',jaar:2019,druif:'Cabernet Sauvignon, Merlot',stijl:'Rood, vol',rar:'icon',v:1,datum:'5 okt 2026'},
+ {nr:37,reg:'rioja',naam:'Bodegas Ventura Crianza',maker:'Rioja DOCa',jaar:2020,druif:'Tempranillo',stijl:'Rood, houtgerijpt',rar:'ultra',v:0,datum:'18 sep 2026'},
+ {nr:46,reg:'marlborough',naam:'Kowhai Bay',maker:'Marlborough',jaar:2023,druif:'Sauvignon Blanc',stijl:'Wit, uitbundig',rar:'common',v:0,datum:'23 sep 2026'},
+ {nr:47,reg:'marlborough',naam:'Wairau Stone',maker:'Marlborough',jaar:2022,druif:'Pinot Noir',stijl:'Rood, sappig',rar:'rare',v:1,datum:'29 sep 2026'}
+];
+const POOL=[
+ {nr:38,reg:'rioja',naam:'Viña Clara Blanco',maker:'Rioja DOCa',jaar:2022,druif:'Viura',stijl:'Wit, fris',rar:'rare',v:2},
+ {nr:30,reg:'toscane',naam:'Casa Rondine',maker:'Rosso di Montalcino',jaar:2021,druif:'Sangiovese',stijl:'Rood, elegant',rar:'superrare',v:3},
+ {dup:1},
+ {nr:48,reg:'marlborough',naam:'Cloudy Ridge',maker:'Marlborough',jaar:2023,druif:'Pinot Noir',stijl:'Rosé, droog',rar:'ultra',v:2},
+ {nr:20,reg:'jura',naam:'Ploussard des Combes',maker:'Arbois',jaar:2021,druif:'Poulsard',stijl:'Rood, heel licht',rar:'common',v:2}
+];
+const LIMIT=3, DUR=900;
+let owned,scans,poolIdx,cur=0,busy=false,lastNew=null;
+function reset(){owned=new Map(START.map(c=>[c.nr,{...c}]));scans=0;poolIdx=0;lastNew=null}
+reset();
+
+const $=s=>document.querySelector(s);
+const nrf=n=>'#'+String(n).padStart(3,'0');
+const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- reisposter-illustraties (Common, Icon) ---------- */
+const M={
+ chateau:(x,y,c)=>`<g><rect x="${x-16}" y="${y-18}" width="32" height="22" fill="${c.m}"/><rect x="${x-23}" y="${y-28}" width="8" height="32" fill="${c.m}"/><rect x="${x+15}" y="${y-28}" width="8" height="32" fill="${c.m}"/><polygon points="${x-25},${y-28} ${x-19},${y-42} ${x-13},${y-28}" fill="${c.dark}"/><polygon points="${x+13},${y-28} ${x+19},${y-42} ${x+25},${y-28}" fill="${c.dark}"/><polygon points="${x-17},${y-18} ${x},${y-28} ${x+17},${y-18}" fill="${c.dark}"/><rect x="${x-9}" y="${y-12}" width="4" height="6" fill="${c.dark}"/><rect x="${x+5}" y="${y-12}" width="4" height="6" fill="${c.dark}"/><rect x="${x-2}" y="${y-10}" width="4" height="10" fill="${c.dark}"/></g>`,
+ village:(x,y,c)=>[[-20,0,12],[-6,-6,14],[9,-2,12],[22,2,10]].map(([dx,dy,w])=>`<rect x="${x+dx}" y="${y+dy-10}" width="${w}" height="14" fill="${c.m}"/><polygon points="${x+dx-1},${y+dy-10} ${x+dx+w/2},${y+dy-18} ${x+dx+w+1},${y+dy-10}" fill="${c.dark}"/>`).join('')+`<rect x="${x-3}" y="${y-34}" width="6" height="22" fill="${c.m}"/><polygon points="${x-4},${y-34} ${x},${y-44} ${x+4},${y-34}" fill="${c.dark}"/>`,
+ church:(x,y,c)=>`<g><rect x="${x-18}" y="${y-16}" width="26" height="20" fill="${c.m}"/><polygon points="${x-20},${y-16} ${x-5},${y-26} ${x+10},${y-16}" fill="${c.dark}"/><rect x="${x+8}" y="${y-34}" width="10" height="38" fill="${c.m}"/><polygon points="${x+6},${y-34} ${x+13},${y-52} ${x+20},${y-34}" fill="${c.dark}"/><rect x="${x+11}" y="${y-28}" width="4" height="6" fill="${c.dark}"/></g>`,
+ windmill:(x,y,c)=>`<g><polygon points="${x-8},${y+4} ${x+8},${y+4} ${x+5},${y-30} ${x-5},${y-30}" fill="${c.m}"/><polygon points="${x-7},${y-30} ${x},${y-38} ${x+7},${y-30}" fill="${c.dark}"/><g transform="rotate(22 ${x} ${y-32})" fill="${c.dark}"><rect x="${x-1.5}" y="${y-62}" width="3" height="60"/><rect x="${x-30}" y="${y-33.5}" width="60" height="3"/><rect x="${x+1.5}" y="${y-60}" width="6" height="24" fill="${c.m}" opacity=".8"/><rect x="${x-7.5}" y="${y-28}" width="6" height="24" fill="${c.m}" opacity=".8"/></g><rect x="${x-2.5}" y="${y-8}" width="5" height="9" fill="${c.dark}"/></g>`,
+ pines:(x,y,c)=>[-26,-12,4,18,30].map((d,i)=>{const h=[30,40,34,44,28][i];return `<polygon points="${x+d-7},${y+4} ${x+d},${y-h} ${x+d+7},${y+4}" fill="${c.dark}"/>`}).join(''),
+ cypress:(x,y,c)=>[-24,-10,6,22].map((d,i)=>`<ellipse cx="${x+d}" cy="${y-[16,22,18,24][i]}" rx="4" ry="${[18,24,20,26][i]}" fill="${c.dark}"/>`).join(''),
+ farmhouse:(x,y,c)=>`<rect x="${x-18}" y="${y-16}" width="30" height="20" fill="${c.m}"/><polygon points="${x-21},${y-16} ${x-3},${y-26} ${x+15},${y-16}" fill="${c.sun}"/><rect x="${x-10}" y="${y-10}" width="5" height="6" fill="${c.dark}"/><ellipse cx="${x+22}" cy="${y-18}" rx="4" ry="22" fill="${c.dark}"/><ellipse cx="${x+31}" cy="${y-14}" rx="3.5" ry="18" fill="${c.dark}"/>`,
+ mesa:(x,y,c)=>`<path d="M${x-60} ${y} L${x-42} ${y-30} L${x+12} ${y-30} L${x+22} ${y-18} L${x+40} ${y-18} L${x+56} ${y}Z" fill="${c.dark}" opacity=".55"/>`,
+ mountains:(x,y,c)=>`<polygon points="-10,82 55,18 120,82" fill="${c.far}"/><polygon points="80,82 140,30 210,82" fill="${c.far}" opacity=".8"/><polygon points="44,29 55,18 66,29 59,27 55,31 50,27" fill="${c.m}"/><polygon points="131,38 140,30 149,38 143,36 140,40 136,36" fill="${c.m}"/>`
+};
+const BACK=new Set(['mountains','mesa']);
+function scene(rk,v){
+  const R=REG[rk],c=R.c,mot=R.motifs[v%R.motifs.length];
+  const sx=[150,48,104,158][v],sy=[34,40,26,74][v],sr=v===3?22:14;
+  const f=[[78,46,64,52],[66,58,48,70],[72,40,60,44],[60,62,70,50]][v];
+  const n=[[100,84,98],[94,106,88],[104,86,96],[96,90,106]][v];
+  const mx=[132,58,104,48][v];
+  let s=`<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustratie ${esc(R.naam)}"><rect width="200" height="140" fill="${c.sky}"/>`;
+  s+=`<rect y="${sy-2}" width="200" height="1.5" fill="${c.sun}" opacity=".5"/><rect y="${sy+5}" width="200" height="1" fill="${c.sun}" opacity=".35"/><circle cx="${sx}" cy="${sy}" r="${sr}" fill="${c.sun}"/>`;
+  if(BACK.has(mot)) s+=M[mot](mx,88,c);
+  s+=`<path d="M0 ${f[0]} Q50 ${f[1]} 100 ${f[2]} T200 ${f[3]} V140 H0Z" fill="${c.far}"/>`;
+  if(!BACK.has(mot)) s+=M[mot](mx,90,c);
+  s+=`<path d="M0 ${n[0]} Q60 ${n[1]} 120 ${n[2]} T200 ${n[2]-6} V140 H0Z" fill="${c.near}"/>`;
+  if(v!==3){const top=Math.min(...n)+10;for(let i=0;i<8;i++)s+=`<line x1="${i*30-14}" y1="140" x2="${70+i*10}" y2="${top}" stroke="${c.dark}" stroke-width="2.2" opacity=".5"/>`}
+  else{for(let i=0;i<6;i++)s+=`<rect x="0" y="${112+i*1.5}" width="200" height=".8" fill="${c.dark}" opacity=".35"/>`}
+  s+=`<rect y="121" width="200" height="19" fill="${c.dark}"/><text x="100" y="134.5" text-anchor="middle" font-family="Limelight, Georgia, serif" font-size="11" letter-spacing="3" fill="${c.sky}">${esc(R.naam.toUpperCase())}</text></svg>`;
+  return s;
+}
+
+/* ---------- Ultra: full art in drie lagen ---------- */
+function ultraFill(rk,v){
+  const R=REG[rk],c=R.c,mot=R.motifs[v%R.motifs.length];
+  const vb='viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"';
+  let rays='';
+  for(let i=0;i<16;i++){const a1=(i/16)*Math.PI*2,a2=a1+Math.PI/16;rays+=`<polygon points="100,118 ${(100+400*Math.cos(a1)).toFixed(1)},${(118+400*Math.sin(a1)).toFixed(1)} ${(100+400*Math.cos(a2)).toFixed(1)},${(118+400*Math.sin(a2)).toFixed(1)}" fill="${c.sun}" opacity=".16"/>`}
+  const back=`<svg ${vb}><rect width="200" height="280" fill="${c.sky}"/>${rays}<circle cx="100" cy="118" r="32" fill="${c.sun}"/>${[104,113,123].map((y,i)=>`<rect y="${y}" width="200" height="${2+i*.6}" fill="${c.sky}" opacity=".7"/>`).join('')}</svg>`;
+  let mid=`<svg ${vb}>`;
+  if(mot==='mountains') mid+=`<g transform="translate(0 80)">${M.mountains(0,0,c)}</g>`;
+  if(mot==='mesa') mid+=M.mesa(100,166,c);
+  mid+=`<path d="M0 162 Q50 126 100 148 T200 134 V280 H0Z" fill="${c.far}"/>`;
+  if(!BACK.has(mot)) mid+=M[mot](132,168,c);
+  mid+='</svg>';
+  let front=`<svg ${vb}><path d="M0 204 Q60 180 120 194 T200 188 V280 H0Z" fill="${c.near}"/>`;
+  for(let i=0;i<9;i++) front+=`<line x1="${i*30-30}" y1="280" x2="${60+i*12}" y2="200" stroke="${c.dark}" stroke-width="3" opacity=".45"/>`;
+  front+=`<g fill="${c.dark}"><path d="M8 214 C26 196 52 200 58 216 C46 214 40 222 44 232 C30 226 20 230 16 240 C14 228 4 224 8 214Z"/>${[[40,236],[50,236],[60,236],[45,245],[55,245],[50,254],[65,244]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5.5"/>`).join('')}<path d="M50 230 C52 220 58 214 66 212" stroke="${c.dark}" stroke-width="2" fill="none"/></g></svg>`;
+  return `<div class="ufill" role="img" aria-label="Full-art illustratie ${esc(R.naam)}"><div class="ul" style="--k:-6px">${back}</div><div class="ul" style="--k:-14px">${mid}</div><div class="ul" style="--k:-26px">${front}</div></div>`;
+}
+
+/* ---------- Rare: flesfoto omzetten naar reisposterstijl ---------- */
+function lum(hex){const n=parseInt(hex.slice(1),16);return .2126*(n>>16&255)+.7152*(n>>8&255)+.0722*(n&255)}
+function rgb(hex){const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255]}
+function posterize(src,rk){
+  const R=REG[rk],c=R.c,W=300,H=210;
+  const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
+  const scale=Math.max(W/sw,H/sh),cw=W/scale,ch=H/scale,cx=(sw-cw)/2,cy=(sh-ch)/2;
+  const small=document.createElement('canvas');small.width=90;small.height=63;
+  small.getContext('2d').drawImage(src,cx,cy,cw,ch,0,0,90,63);
+  const out=document.createElement('canvas');out.width=W;out.height=H;
+  const x=out.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(small,0,0,W,H);
+  const img=x.getImageData(0,0,W,H),d=img.data,L=new Float32Array(W*H),hist=new Uint32Array(256);
+  for(let i=0,p=0;i<d.length;i+=4,p++){const l=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];L[p]=l;hist[l|0]++}
+  const cuts=[.2,.42,.64,.85].map(q=>{let acc=0,t=q*W*H;for(let v=0;v<256;v++){acc+=hist[v];if(acc>=t)return v}return 255});
+  const pal=[c.dark,c.near,c.far,c.sun,c.sky].sort((a,b)=>lum(a)-lum(b)).map(rgb);
+  for(let p=0,i=0;p<L.length;p++,i+=4){const l=L[p];const k=l<=cuts[0]?0:l<=cuts[1]?1:l<=cuts[2]?2:l<=cuts[3]?3:4;const col=pal[k];d[i]=col[0];d[i+1]=col[1];d[i+2]=col[2];d[i+3]=255}
+  x.putImageData(img,0,0);
+  const bh=Math.round(H*19/140);
+  x.fillStyle=c.dark;x.fillRect(0,H-bh,W,bh);
+  x.fillStyle=c.sky;x.font='16px Limelight, Georgia, serif';x.textAlign='center';x.textBaseline='middle';
+  x.fillText(R.naam.toUpperCase().split('').join(String.fromCharCode(8202)),W/2,H-bh/2+1);
+  return out.toDataURL('image/jpeg',.86);
+}
+function demoPhoto(c){
+  const W=300,H=210,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#c2b49c');g.addColorStop(1,'#5a4b3e');x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createRadialGradient(60,40,4,60,40,170);g.addColorStop(0,'rgba(255,250,235,.75)');g.addColorStop(1,'rgba(255,250,235,0)');x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createLinearGradient(0,165,0,H);g.addColorStop(0,'#7a5639');g.addColorStop(1,'#3e2a1c');x.fillStyle=g;x.fillRect(0,165,W,H-165);
+  x.fillStyle='rgba(0,0,0,.35)';x.beginPath();x.ellipse(170,190,70,9,0,0,Math.PI*2);x.fill();
+  const white=/Wit|Rosé/.test(c.stijl||'');
+  g=x.createLinearGradient(108,0,192,0);
+  g.addColorStop(0,white?'#6f7d3f':'#22301f');g.addColorStop(.22,white?'#a6b468':'#3f5a40');g.addColorStop(.7,white?'#4b5626':'#121a12');g.addColorStop(1,white?'#77853f':'#26342a');
+  x.fillStyle=g;x.beginPath();x.moveTo(108,215);x.lineTo(108,62);x.quadraticCurveTo(108,30,135,18);x.lineTo(135,-5);x.lineTo(165,-5);x.lineTo(165,18);x.quadraticCurveTo(192,30,192,62);x.lineTo(192,215);x.closePath();x.fill();
+  x.fillStyle='rgba(255,255,255,.4)';x.fillRect(118,40,7,170);
+  x.fillStyle='#efe6d2';x.fillRect(114,86,72,80);
+  x.strokeStyle='#5b4a33';x.lineWidth=1.2;x.strokeRect(118,90,64,72);
+  x.beginPath();x.arc(150,104,8,0,Math.PI*2);x.stroke();
+  x.fillStyle='#2d2418';x.font='bold 10px Georgia, serif';x.textAlign='center';
+  const words=String(c.naam||'').split(' ');let l1='',l2='';
+  words.forEach(w=>{if((l1+' '+w).trim().length<=13&&!l2)l1=(l1+' '+w).trim();else l2=(l2+' '+w).trim()});
+  x.fillText(l1,150,128);if(l2)x.fillText(l2.slice(0,14),150,141);
+  x.fillRect(132,150,36,1.4);x.fillRect(138,155,24,1);
+  return cv;
+}
+const IMG={};
+function rareImg(c){if(c.img)return c.img;if(!IMG[c.nr])IMG[c.nr]=posterize(demoPhoto(c),c.reg);return IMG[c.nr]}
+
+/* ---------- kaarten ---------- */
+const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class="glare"></div>':'<div class="shine"></div><div class="sparkle"></div><div class="glare"></div>';
+const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
+function artHTML(c){
+  if(c.rar==='rare'||c.rar==='superrare') return `<img src="${rareImg(c)}" alt="${esc(c.naam)}, flesfoto in posterstijl">`;
+  return scene(c.reg,c.v);
+}
+function bigCard(c){
+  const r=REG[c.reg],T=TIERS[c.rar];
+  const top=`<div class="toprow"><span>${nrf(c.nr)} · ${esc(r.land)}</span><span class="pill">${T.sym} ${T.label}</span></div>`;
+  const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
+    <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif)}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl)}</dd></div><div><dt>Gescand</dt><dd>${esc(c.datum)}</dd></div></dl>`;
+  if(c.rar==='ultra') return `<div class="card t-ultra idle"><div class="face">${ultraFill(c.reg,c.v)}${top}<div class="uinfo">${info}</div>${layers('ultra')}</div></div>`;
+  return `<div class="card t-${c.rar} idle"><div class="face">${top}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
+}
+function sleeve(nr){
+  const c=owned.get(nr);
+  if(!c) return `<div class="sleeve"><div class="empty">${nrf(nr)}</div></div>`;
+  const cls=`mini t-${c.rar}${lastNew===nr?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, uit de sleeve halen`;
+  const foot=`<span class="mnr"><span>${nrf(nr)}</span>${symHTML(c.rar)}</span>`;
+  if(c.rar==='ultra') return `<div class="sleeve"><button class="${cls}" data-nr="${nr}" aria-label="${lab}"><div class="face">${ultraFill(c.reg,c.v)}${layers('ultra')}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button></div>`;
+  return `<div class="sleeve"><button class="${cls}" data-nr="${nr}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}</div><span class="mname">${esc(c.naam)}</span>${foot}</button></div>`;
+}
+const countReg=rk=>{let n=0;owned.forEach(c=>{if(c.reg===rk)n++});return n};
+const countTier=t=>{let n=0;owned.forEach(c=>{if(c.rar===t)n++});return n};
+const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="none" stroke="#D2AE62" stroke-width="1.6"><path d="M30 4 C30 10 34 12 38 12"/><path d="M30 8 C24 6 18 9 17 14 C24 15 28 12 30 8Z"/>${[[22,22],[30,22],[38,22],[26,30],[34,30],[42,30],[18,30],[22,38],[30,38],[38,38],[26,46],[34,46],[30,54]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6"/>`).join('')}</g></svg>`;
+
+function makePage(i){
+  const el=document.createElement('section');el.className='page';
+  if(i===0){
+    el.classList.add('cover');
+    el.innerHTML=`<div class="frame"><p class="eyebrow">Wijnzegelalbum</p>${CREST}<h2 class="foil">Winex</h2><p class="eyebrow">Collectie van Len</p></div><button class="open" data-go="1">Album openen</button>`;
+    return el;
+  }
+  if(i===1){
+    el.innerHTML=`<div><p class="eyebrow">${owned.size} van ${ORDER.length*9} kaarten</p><h2 class="foil">Inhoud</h2></div>
+      <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${countTier(t)}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
+      <ul class="toc">${ORDER.map((rk,k)=>`<li><button data-go="${k+FIRST}"><span>${esc(REG[rk].naam)} <small>· ${esc(REG[rk].land)}</small></span><span>${countReg(rk)} / 9</span></button></li>`).join('')}</ul>
+      <p class="note" style="text-align:center">Prototype. Alle wijnen in dit album zijn fictieve voorbeelden.</p>
+      <div class="pfoot"><span>Winex</span><span>Blad 1</span></div>`;
+    return el;
+  }
+  const rk=ORDER[i-FIRST],R=REG[rk],have=countReg(rk);
+  const chap=CHAPTERS.findIndex(ch=>ch[0]===R.land)+1;
+  let s='';for(let k=0;k<9;k++)s+=sleeve(R.base+k);
+  el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chap} · ${esc(R.land)}</p><h2 class="foil">${esc(R.naam)}</h2></div>
+    <div class="progress"><span>${have} van 9</span><div class="bar"><span style="width:${have/9*100}%"></span></div></div>
+    <div class="grid">${s}</div>
+    <div class="pfoot"><span>Winex</span><span>Blad ${i}</span></div>`;
+  return el;
+}
+function makeLeaf(i){
+  const leaf=document.createElement('div');leaf.className='leaf';leaf.dataset.i=i;
+  const back=document.createElement('div');back.className='leafback'+(i===0?' endpaper':'');
+  leaf.append(makePage(i),back);return leaf;
+}
+
+/* ---------- bladeren ---------- */
+const stack=$('#stack');
+function renderChrome(){
+  $('#dots').innerHTML=Array.from({length:LIMIT},(_,k)=>`<i class="${k<scans?'used':''}"></i>`).join('');
+  $('#prev').disabled=cur===0;$('#next').disabled=cur===PAGES-1;
+  const land=cur<FIRST?null:REG[ORDER[cur-FIRST]].land;
+  $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Inhoud</button>`+CHAPTERS.map(([l,rk])=>`<button data-go="${ORDER.indexOf(rk)+FIRST}" aria-current="${l===land}">${esc(l)}</button>`).join('');
+}
+function go(n,force){
+  if(n<0||n>=PAGES||busy)return;
+  if(n===cur&&!force)return;
+  const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur;
+  cur=n;renderChrome();
+  if(!old||reduced||+old.dataset.i===n){stack.replaceChildren(nu);return}
+  busy=true;
+  if(fwd){stack.insertBefore(nu,old);nu.classList.add('under');old.classList.add('flip-fwd')}
+  else{stack.appendChild(nu);nu.classList.add('flip-back');old.classList.add('covered')}
+  setTimeout(()=>{old.remove();nu.classList.remove('under','flip-back');busy=false},DUR+40);
+}
+let sx0=null,swiped=false;
+document.addEventListener('click',e=>{
+  if(swiped){swiped=false;return}
+  if(e.target.closest('[data-act="upload"]')){openUpload();return}
+  if(e.target.closest('[data-act="info"]')){openInfo();return}
+  const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
+  if(e.target.closest('.page.cover')){go(1);return}
+  const m=e.target.closest('.mini');if(m)pullOut(m);
+});
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+stack.addEventListener('pointerdown',e=>{sx0=e.clientX;swiped=false});
+stack.addEventListener('pointerup',e=>{if(sx0===null)return;const dx=e.clientX-sx0;sx0=null;if(Math.abs(dx)>50){swiped=true;go(cur+(dx<0?1:-1))}});
+document.addEventListener('keydown',e=>{if(document.querySelector('.overlay')){if(e.key==='Escape')closeOverlay();return}if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+
+/* ---------- kantelen ---------- */
+function tilt(card){
+  const set=(px,py)=>{card.style.setProperty('--mx',px.toFixed(3));card.style.setProperty('--my',py.toFixed(3));card.style.setProperty('--rx',((py-.5)*-24).toFixed(2)+'deg');card.style.setProperty('--ry',((px-.5)*28).toFixed(2)+'deg')};
+  card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();card.classList.remove('idle');set(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),Math.min(1,Math.max(0,(e.clientY-r.top)/r.height)))});
+  const back=()=>{if(!reduced)card.classList.add('idle')};
+  card.addEventListener('pointerleave',back);card.addEventListener('pointercancel',back);
+  if(reduced)card.classList.remove('idle');
+}
+
+/* ---------- overlays ---------- */
+function overlay(html){closeOverlay(true);const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML=html;document.body.appendChild(o);return o}
+function closeOverlay(keepPulled){document.querySelectorAll('.overlay').forEach(o=>o.remove());if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
+function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(+m.dataset.nr),reduced?0:300)}
+const HINT={
+  common:'Common: de regio als reisposter. Sleep over de kaart om hem te kantelen.',
+  rare:'Rare: jouw eigen flesfoto in posterstijl, met zilveren rand.',
+  superrare:'Super Rare: kantel de kaart en kijk hoe hij glanst.',
+  ultra:'Ultra: kantel langzaam, de lagen bewegen los van elkaar.',
+  icon:'Icon: deze wijn staat op de lijst met iconische wijnen. Dat hangt niet van geluk af.'
+};
+function openCard(nr){
+  const c=owned.get(nr);if(!c)return;
+  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}</p><div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
+  tilt(o.querySelector('.card'));const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+}
+function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+const today=()=>new Date().toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'}).replace('.','');
+
+$('#scan').onclick=()=>{
+  const item=POOL[poolIdx];
+  if(!item){toast('Geen demowijnen meer. Begin de demo opnieuw om nog eens te scannen.');return}
+  if(scans>=LIMIT&&!item.dup){toast('Je 3 scans voor vandaag zijn op. Morgen kun je weer nieuwe kaarten verzamelen.');return}
+  poolIdx++;
+  const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Etiket wordt herkend</p><p class="hint">In de echte app richt je hier je camera op het etiket.</p>`);
+  setTimeout(()=>{if(!o.isConnected)return;item.dup?showDup(item.dup):reveal(item)},reduced?200:1400);
+};
+function showDup(nr){
+  const o=overlay(`<p class="status">Deze kaart heb je al</p>${bigCard(owned.get(nr))}<p class="hint">Elke wijn levert maar één kaart op. Deze scan telt niet mee voor je dagelijkse 3.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
+  tilt(o.querySelector('.card'));const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+}
+function reveal(item,free){
+  const c={...item,datum:today()};
+  if(!free)scans++;
+  owned.set(c.nr,c);renderChrome();
+  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Winex</b><div class="seal">${nrf(c.nr)}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+  const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
+  const open=()=>{if(flip.classList.contains('open'))return;flip.classList.add('open');
+    setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
+      o.querySelector('#h').textContent=HINT[c.rar];o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
+  flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
+  o.querySelector('#place').onclick=()=>{closeOverlay();lastNew=c.nr;go(ORDER.indexOf(c.reg)+FIRST,true);setTimeout(()=>{lastNew=null},2500)};
+}
+
+/* ---------- uitleg ---------- */
+function openInfo(){
+  const desc={common:'De regio als reisposter.',rare:'Jouw eigen flesfoto in posterstijl, zilveren rand.',superrare:'Rare met regenboog-holo en glitter.',ultra:'Full art in lagen, goudrand.',icon:'Vaste lijst iconische wijnen. Hangt af van de wijn, niet van geluk.'};
+  const o=overlay(`<p class="status">Hoe Winex werkt</p>
+    <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
+      <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
+      <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${t==='icon'?'vast':TIERS[t].odds}</span></div>`).join('')}</div>
+    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je kunt 3 nieuwe wijnen per dag scannen; elke wijn levert één kaart op.</p>
+    <div class="actions"><button class="btn primary" id="close">Terug naar album</button></div>`);
+  const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+}
+
+/* ---------- eigen foto als Rare ---------- */
+function openUpload(){
+  const startReg=cur>=FIRST?ORDER[cur-FIRST]:'bordeaux';
+  const o=overlay(`<p class="status">Jouw foto als Rare-kaart</p>
+    <div class="upl">
+      <div class="pvwrap"><img class="pv" id="pv" alt="Voorbeeld van de kaartafbeelding"><span class="pvtag" id="pvtag">Voorbeeldfles</span></div>
+      <label class="pick" for="file"><span id="picktxt">Kies een foto van een fles</span><input type="file" id="file" accept="image/*"></label>
+      <p class="err" id="err" hidden></p>
+      <label for="wn">Naam van de wijn<input type="text" id="wn" value="Mijn eigen fles" maxlength="40"></label>
+      <label for="wr">Regio (bepaalt de kleuren)<select id="wr">${ORDER.map(rk=>`<option value="${rk}"${rk===startReg?' selected':''}>${esc(REG[rk].naam)}</option>`).join('')}</select></label>
+    </div>
+    <p class="hint">Je foto blijft op je eigen toestel. Fotografeer het etiket recht van voren; het midden van de foto komt op de kaart.</p>
+    <div class="actions"><button class="btn" id="close">Annuleren</button><button class="btn primary" id="mk">Maak Rare-kaart</button></div>`);
+  const pv=o.querySelector('#pv'),wr=o.querySelector('#wr'),wn=o.querySelector('#wn'),err=o.querySelector('#err'),file=o.querySelector('#file');
+  let src=null;
+  const showErr=m=>{err.textContent=m;err.hidden=!m};
+  const render=()=>{try{pv.src=posterize(src||demoPhoto({naam:wn.value||'Mijn wijn',stijl:'Rood'}),wr.value)}catch(e){showErr('Deze foto kon niet worden omgezet. Probeer een andere foto.')}};
+  render();
+  wr.onchange=render;
+  wn.oninput=()=>{showErr('');if(!src)render()};
+  file.onchange=()=>{
+    showErr('');const f=file.files&&file.files[0];if(!f)return;
+    if(!/^image\//.test(f.type)){showErr('Dit bestand is geen foto. Kies een JPG of PNG.');return}
+    const im=new Image();
+    im.onload=()=>{src=im;render();o.querySelector('#picktxt').textContent='Andere foto kiezen';o.querySelector('#pvtag').textContent='Jouw foto'};
+    im.onerror=()=>showErr('Deze foto kon niet worden geladen. Probeer een JPG of PNG.');
+    im.src=URL.createObjectURL(f);
+  };
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelector('#mk').onclick=()=>{
+    const rk=wr.value,R=REG[rk];let nr=null;
+    for(let k=0;k<9;k++){if(!owned.has(R.base+k)){nr=R.base+k;break}}
+    if(nr===null){showErr(`Alle 9 sleeves van ${R.naam} zijn al gevuld. Kies een andere regio.`);return}
+    const name=(wn.value||'').trim();if(!name){showErr('Geef de wijn een naam.');wn.focus();return}
+    reveal({nr,reg:rk,naam:name,maker:src?'Eigen foto':'Voorbeeldfles',jaar:'',druif:'Wordt herkend bij scan',stijl:'—',rar:'rare',v:0,img:pv.src},true);
+  };
+}
+
+$('#reset').onclick=()=>{reset();closeOverlay();busy=false;go(0,true);toast('Demo staat weer aan het begin.')};
+go(0,true);
+</script>
+</body>
+</html>
