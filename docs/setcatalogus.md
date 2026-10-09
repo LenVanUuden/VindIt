@@ -176,7 +176,28 @@ Aandachtspunten:
 - **Engeland en Wales** is vooral bubbels; de set vult zich traag en is bedoeld als uitdaging.
 - **Californië (algemeen)** is het vak voor de vele supermarktwijnen met alleen "California" op het etiket.
 
-*Volgende uitbreidingen: Elzas, Champagne, Languedoc, Provence, Piemonte, Veneto, Sicilië, Ribera del Duero; later regio-verdieping voor Portugal, Duitsland en de nieuwe wereld.*
+### Extra regiosets Frankrijk, Italië en Spanje (toegevoegd 9 oktober)
+
+| Set | Vakken (🟢 supermarkt · 🟡 wijnwinkel · 🔴 specialist) |
+|---|---|
+| **Champagne** (stijlen) | 🟢 Brut · 🟡 Blanc de Blancs · 🟡 Blanc de Noirs · 🟡 Rosé · 🟡 Extra Brut / Brut Nature · 🔴 Millésime · 🔴 Prestige cuvée · 🔴 Récoltant-manipulant · 🔴 Coteaux Champenois |
+| **Elzas** (druiven) | 🟢 Riesling · 🟢 Gewurztraminer · 🟢 Pinot Gris · 🟢 Pinot Blanc · 🟢 Crémant d'Alsace · 🟡 Muscat · 🟡 Pinot Noir · 🔴 Grand Cru · 🔴 Vendanges Tardives |
+| **Languedoc-Roussillon** | 🟢 Pays d'Oc · 🟢 Languedoc · 🟢 Corbières · 🟢 Minervois · 🟢 Picpoul de Pinet · 🟡 Saint-Chinian · 🟡 Faugères · 🟡 Pic Saint-Loup · 🟡 Côtes du Roussillon |
+| **Provence** | 🟢 Côtes de Provence · 🟢 Coteaux d'Aix · 🟢 Méditerranée · 🟡 Coteaux Varois · 🟡 Bandol · 🔴 Sainte-Victoire · 🔴 Cassis · 🔴 Bellet · 🔴 Palette |
+| **Zuidwest-Frankrijk** | 🟢 Côtes de Gascogne · 🟢 Bergerac · 🟢 Cahors · 🟡 Madiran · 🟡 Jurançon · 🟡 Monbazillac · 🟡 Gaillac · 🔴 Fronton · 🔴 Irouléguy |
+| **Piemonte** | 🟢 Barbera d'Asti · 🟢 Langhe · 🟢 Gavi · 🟢 Moscato d'Asti · 🟡 Barbera d'Alba · 🟡 Dolcetto d'Alba · 🟡 Barolo · 🟡 Barbaresco · 🔴 Roero |
+| **Veneto** | 🟢 Prosecco · 🟢 Valpolicella · 🟢 Ripasso · 🟢 Soave · 🟢 Bardolino · 🟢 Pinot Grigio delle Venezie · 🟡 Amarone · 🟡 Lugana · 🔴 Recioto |
+| **Zuid-Italië** | 🟢 Primitivo di Manduria · 🟢 Puglia · 🟢 Salento · 🟢 Salice Salentino · 🟢 Montepulciano d'Abruzzo · 🟡 Falanghina · 🔴 Aglianico del Vulture · 🔴 Taurasi · 🔴 Cirò |
+| **Sicilië** | 🟢 Terre Siciliane · 🟢 Sicilia · 🟡 Etna Rosso · 🟡 Etna Bianco · 🟡 Cerasuolo di Vittoria · 🟡 Marsala · 🔴 Pantelleria · 🔴 Noto · 🔴 Faro |
+| **Noordwest-Spanje** | 🟢 Ribera del Duero · 🟢 Rueda · 🟢 Navarra · 🟡 Rías Baixas · 🟡 Toro · 🟡 Bierzo · 🔴 Ribeiro · 🔴 Valdeorras · 🔴 Txakoli |
+| **Oost-Spanje** | 🟢 Cava · 🟢 Penedès · 🟢 Jumilla · 🟢 Valencia · 🟡 Yecla · 🟡 Utiel-Requena · 🟡 Montsant · 🔴 Priorat · 🔴 Costers del Segre |
+| **Centraal- en Zuid-Spanje** | 🟢 Castilla · 🟢 La Mancha · 🟢 Valdepeñas · 🟡 Sherry · 🟡 Manzanilla · 🔴 Málaga · 🔴 Montilla-Moriles · 🔴 Vinos de Madrid · 🔴 Manchuela |
+
+### Wereldreiziger II (verzamellijst, vrij te spelen na Wereldreiziger I)
+
+Eén wijn uit elk land: Griekenland · Hongarije · Georgië · Libanon · Uruguay · België · Zwitserland · Canada · Japan · Israël · Kroatië · Luxemburg. Wijnen uit deze landen staan in het album op het blad "Overige landen".
+
+*Volgende uitbreidingen: regio-verdieping voor Portugal, Duitsland en de nieuwe wereld; eventueel eigen hoofdstukken voor Griekenland en Hongarije.*
 
 ---
 

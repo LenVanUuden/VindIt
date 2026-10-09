@@ -520,13 +520,13 @@ function compute(){
     s.overflow[land]=lc.filter(c=>!placed.has(c.id));
   }
   const other=cards.filter(c=>!LANDS.includes(c.land));
-  if(other.length){s.lands.push('Overig');s.overflow['Overig']=other}
-  s.allLands=[...LANDS,...(other.length?['Overig']:[])];
+  if(other.length){s.lands.push('Overige landen');s.overflow['Overige landen']=other}
+  s.allLands=[...LANDS,...(other.length?['Overige landen']:[])];
   return s;
 }
 function landStats(l){
   const sets=SETS.filter(s=>s.part===1&&s.land===l&&st.visible[s.id]);
-  return {have:sets.reduce((a,s)=>a+filledOf(s).filter(Boolean).length,0),tot:sets.reduce((a,s)=>a+s.slots.length,0),cards:cards.filter(c=>c.land===l||(l==='Overig'&&!LANDS.includes(c.land))).length};
+  return {have:sets.reduce((a,s)=>a+filledOf(s).filter(Boolean).length,0),tot:sets.reduce((a,s)=>a+s.slots.length,0),cards:cards.filter(c=>c.land===l||(l==='Overige landen'&&!LANDS.includes(c.land))).length};
 }
 const filledOf=set=>set.part===1?(st.physical[set.id]||new Array(set.slots.length).fill(null)):st.assign[set.id];
 const isDone=set=>filledOf(set).every(Boolean);
@@ -744,7 +744,7 @@ function makePage(i){
   if(p.t==='overige'){
     const list=st.overflow[p.land]||[],chapN=st.allLands.indexOf(p.land)+1;
     el.innerHTML=p.noSets?`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
-      <p class="note">${list.length?'Je wijnen uit '+esc(p.land)+'.':'Nog geen wijn uit '+esc(p.land)+'.'} Voor dit land zijn er nog geen regiosets. Elke wijn krijgt hier een plek en telt mee voor de verzamellijsten, zoals Wereldreiziger.</p>`
+      <p class="note">${p.land==='Overige landen'?'Wijnen uit landen zonder eigen hoofdstuk, zoals Griekenland, Hongarije of Georgië. Ze tellen mee voor de verzamellijsten, zoals Wereldreiziger II.':(list.length?'Je wijnen uit '+esc(p.land)+'.':'Nog geen wijn uit '+esc(p.land)+'.')+' Voor dit land zijn er nog geen regiosets. Elke wijn krijgt hier een plek en telt mee voor de verzamellijsten, zoals Wereldreiziger.'}</p>`
      :`<div><p class="eyebrow">Hoofdstuk ${chapN} · ${esc(p.land)}</p><h2 class="foil">Overige</h2></div>
       <p class="note">Wijnen die (nog) in geen set passen, of een vak dat al gevuld is. Ze gaan nooit verloren en schuiven vanzelf door als er een passende set vrijkomt.</p>
       <div class="grid">${list.map(c=>slotHTML(c,c.app||c.regio)).join('')}${list.length?'':'<div class="slot"><div class="sleeve"><div class="empty"></div></div></div>'.repeat(6)}</div>${pageFoot(i)}`;
@@ -766,7 +766,11 @@ function makeLeaf(i){
 }
 
 /* ---------- data ---------- */
+/* Testfase: setgegevens van demowijnen komen uit data.js, zodat nieuwe sets ook voor al gescande kaarten werken. */
+const POOL_BY_KEY=Object.fromEntries(POOL.map(p=>[wkey(p),p]));
 function toCard(row,w){
+  const pw=POOL_BY_KEY[w.wine_key];
+  if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:w.jaar,druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
     rar:row.tier,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
