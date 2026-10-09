@@ -1,0 +1,347 @@
+/* =====================================================================
+   Winex – sets, gebieden en demowijnen
+   Pas hier de setcatalogus aan. Matchregels per vak (m):
+     regio  – gebiedscode (bijv. 'bordeaux')
+     app    – lijst appellations
+     grape  – hoofddruif
+     land   – land
+     style  – 'stil' | 'mousserend' | 'zoet' | 'versterkt'
+     color  – 'rood' | 'wit' | 'rosé'
+     tag    – kenmerk (bijv. 'crianza', 'crémant')
+     key    – exacte wijn (maker|naam, kleine letters)
+   Alle opgegeven velden moeten kloppen. d = moeilijkheid (1 supermarkt, 2 wijnwinkel, 3 specialist).
+   ===================================================================== */
+
+const LANDS = ['Frankrijk','Italië','Spanje','Portugal','Duitsland','Oostenrijk','Nederland','Verenigd Koninkrijk','Zuid-Afrika','Chili','Argentinië','Verenigde Staten','Australië','Nieuw-Zeeland'];
+
+/* Kleurpaletten en motieven voor de reisposters */
+const AREAS = {
+  bordeaux:{naam:'Bordeaux',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#EED3AC',sun:'#F09A3E',far:'#93607A',near:'#5A3550',dark:'#2E1A2A',m:'#F7EAD6'}},
+  bourgogne:{naam:'Bourgogne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#F3DDAA',sun:'#E4693A',far:'#B0734A',near:'#6B7A3E',dark:'#33401E',m:'#FAF0DA'}},
+  beaujolais:{naam:'Beaujolais',land:'Frankrijk',motifs:['village','church'],c:{sky:'#F2D6C9',sun:'#E8784A',far:'#B4687A',near:'#6E8B4E',dark:'#3A2A3E',m:'#FBEFE6'}},
+  jura:{naam:'Jura',land:'Frankrijk',motifs:['windmill','pines'],c:{sky:'#D3E4E1',sun:'#F2C462',far:'#7C9C95',near:'#47695A',dark:'#213A31',m:'#F5F0E2'}},
+  rhone:{naam:'Rhône',land:'Frankrijk',motifs:['chateau','cypress'],c:{sky:'#F6D9A0',sun:'#E46B2E',far:'#B57B57',near:'#7F7A3C',dark:'#3C3220',m:'#F8EBD3'}},
+  loire:{naam:'Loire',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#D7E3EC',sun:'#F3C26B',far:'#8FA7B8',near:'#5E8156',dark:'#2B3C35',m:'#F5F1E8'}},
+  champagne:{naam:'Champagne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#EFE7D2',sun:'#E9B949',far:'#A6A07A',near:'#6F7F45',dark:'#2F3524',m:'#FFFDF5'}},
+  toscane:{naam:'Toscane',land:'Italië',motifs:['cypress','farmhouse'],c:{sky:'#F7CD8E',sun:'#E05A38',far:'#C98F55',near:'#86924A',dark:'#3A4522',m:'#FBEBCF'}},
+  rioja:{naam:'Rioja',land:'Spanje',motifs:['mesa','village'],c:{sky:'#F5BE73',sun:'#FDE6A8',far:'#BC6A40',near:'#84402C',dark:'#47201A',m:'#F8E4C4'}},
+  'nieuw-zeeland':{naam:'Nieuw-Zeeland',land:'Nieuw-Zeeland',motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
+};
+/* Terugval per land voor gebieden zonder eigen palet */
+const LANDPAL = {
+  'Frankrijk':{motifs:['village','church'],c:{sky:'#E9DCC0',sun:'#E58A45',far:'#9C7A8E',near:'#5F6E44',dark:'#2E2A26',m:'#FAF3E6'}},
+  'Italië':{motifs:['cypress','village'],c:{sky:'#F4D49A',sun:'#D9603A',far:'#B98557',near:'#7D8A44',dark:'#3A3A22',m:'#FBEED6'}},
+  'Spanje':{motifs:['mesa','village'],c:{sky:'#F3C27E',sun:'#FBE1A0',far:'#C27546',near:'#8C4A2E',dark:'#47231A',m:'#F8E6C8'}},
+  'Portugal':{motifs:['village','cypress'],c:{sky:'#F1D7A8',sun:'#E57A3C',far:'#A65E4E',near:'#6F7A3A',dark:'#352620',m:'#F7EADA'}},
+  'Duitsland':{motifs:['church','pines'],c:{sky:'#D9E2D3',sun:'#EFC25C',far:'#8C9C7E',near:'#4F6B45',dark:'#26332A',m:'#F6F2E6'}},
+  'Oostenrijk':{motifs:['mountains','church'],c:{sky:'#D5E3E8',sun:'#F2D27A',far:'#7F98A3',near:'#5E8352',dark:'#28392F',m:'#FFFFFF'}},
+  'Nederland':{motifs:['windmill','village'],c:{sky:'#D8E4EE',sun:'#F0B54E',far:'#8DA3B5',near:'#5E8A4E',dark:'#2A3A3A',m:'#FAF7EE'}},
+  'Verenigd Koninkrijk':{motifs:['church','village'],c:{sky:'#DCE3E3',sun:'#EDC46A',far:'#93A1A0',near:'#5D7D51',dark:'#2B3530',m:'#FAF8F0'}},
+  'Zuid-Afrika':{motifs:['mesa','farmhouse'],c:{sky:'#F2CFA0',sun:'#E86A3A',far:'#A87A62',near:'#6A7E46',dark:'#2E2C22',m:'#FAF0E0'}},
+  'Chili':{motifs:['mountains','farmhouse'],c:{sky:'#E7D2B6',sun:'#E5733F',far:'#8E8AA6',near:'#7C8A4A',dark:'#30302A',m:'#FFFFFF'}},
+  'Argentinië':{motifs:['mountains','village'],c:{sky:'#EAD7C0',sun:'#E77B45',far:'#9B85A0',near:'#8A7E48',dark:'#3A2C2A',m:'#FFFFFF'}},
+  'Verenigde Staten':{motifs:['farmhouse','pines'],c:{sky:'#F3D3A4',sun:'#EA7A3E',far:'#B98A6A',near:'#7E8A48',dark:'#33301F',m:'#FAF0DE'}},
+  'Australië':{motifs:['mesa','farmhouse'],c:{sky:'#F4C48A',sun:'#E4572E',far:'#C2704A',near:'#8E7E44',dark:'#40261C',m:'#FAEAD2'}},
+  'Nieuw-Zeeland':{motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
+};
+
+/* ---------- Sets ----------
+   part 1 = regio (kaart zit hier fysiek), part 2 = verzamellijst (afdruk)
+   unlock = zichtbaar zodra die set voltooid is; secret = zichtbaar zodra je eerste passende wijn binnen is
+   always = altijd zichtbaar (verzamellijsten zonder always verschijnen zodra er één vak gevuld is) */
+const S=(l,d,m)=>({l,d,m});
+const SETS = [
+  {id:'bordeaux-1',name:'Bordeaux I',part:1,land:'Frankrijk',area:'bordeaux',slots:[
+    S('Bordeaux / Supérieur',1,{regio:'bordeaux',app:['Bordeaux','Bordeaux Supérieur']}),
+    S('Médoc',1,{regio:'bordeaux',app:['Médoc']}),
+    S('Haut-Médoc',1,{regio:'bordeaux',app:['Haut-Médoc']}),
+    S('Saint-Émilion',1,{regio:'bordeaux',app:['Saint-Émilion','Saint-Émilion Grand Cru']}),
+    S('Pessac-Léognan',2,{regio:'bordeaux',app:['Pessac-Léognan','Graves']}),
+    S('Margaux',2,{regio:'bordeaux',app:['Margaux']}),
+    S('Pauillac',2,{regio:'bordeaux',app:['Pauillac']}),
+    S('Pomerol',3,{regio:'bordeaux',app:['Pomerol']}),
+    S('Sauternes',2,{regio:'bordeaux',app:['Sauternes','Barsac']})]},
+  {id:'bordeaux-2',name:'Bordeaux II',part:1,land:'Frankrijk',area:'bordeaux',unlock:'bordeaux-1',slots:[
+    S('Côtes de Bourg',2,{regio:'bordeaux',app:['Côtes de Bourg']}),
+    S('Blaye',2,{regio:'bordeaux',app:['Blaye','Blaye Côtes de Bordeaux']}),
+    S('Fronsac',2,{regio:'bordeaux',app:['Fronsac','Canon-Fronsac']}),
+    S('Lalande-de-Pomerol',2,{regio:'bordeaux',app:['Lalande-de-Pomerol']}),
+    S('Listrac-Médoc',3,{regio:'bordeaux',app:['Listrac-Médoc']}),
+    S('Moulis',3,{regio:'bordeaux',app:['Moulis','Moulis-en-Médoc']}),
+    S('Saint-Julien',2,{regio:'bordeaux',app:['Saint-Julien']}),
+    S('Saint-Estèphe',2,{regio:'bordeaux',app:['Saint-Estèphe']}),
+    S('Entre-Deux-Mers',2,{regio:'bordeaux',app:['Entre-Deux-Mers']})]},
+  {id:'bourgogne-1',name:'Bourgogne I',part:1,land:'Frankrijk',area:'bourgogne',slots:[
+    S('Bourgogne',1,{regio:'bourgogne',app:['Bourgogne','Bourgogne AOC','Bourgogne Côte d\'Or']}),
+    S('Mâcon',1,{regio:'bourgogne',app:['Mâcon','Mâcon-Villages']}),
+    S('Chablis',1,{regio:'bourgogne',app:['Chablis']}),
+    S('Givry / Mercurey',2,{regio:'bourgogne',app:['Givry','Mercurey']}),
+    S('Crémant de Bourgogne',2,{regio:'bourgogne',app:['Crémant de Bourgogne']}),
+    S('Pouilly-Fuissé',2,{regio:'bourgogne',app:['Pouilly-Fuissé']}),
+    S('Côte de Nuits-Villages',2,{regio:'bourgogne',app:['Côte de Nuits-Villages']}),
+    S('Gevrey-Chambertin',3,{regio:'bourgogne',app:['Gevrey-Chambertin']}),
+    S('Meursault',3,{regio:'bourgogne',app:['Meursault']})]},
+  {id:'bourgogne-2',name:'Bourgogne II',part:1,land:'Frankrijk',area:'bourgogne',unlock:'bourgogne-1',slots:[
+    S('Rully',2,{regio:'bourgogne',app:['Rully']}),
+    S('Montagny',2,{regio:'bourgogne',app:['Montagny']}),
+    S('Santenay',2,{regio:'bourgogne',app:['Santenay']}),
+    S('Savigny-lès-Beaune',2,{regio:'bourgogne',app:['Savigny-lès-Beaune']}),
+    S('Pommard',3,{regio:'bourgogne',app:['Pommard']}),
+    S('Volnay',3,{regio:'bourgogne',app:['Volnay']}),
+    S('Nuits-Saint-Georges',3,{regio:'bourgogne',app:['Nuits-Saint-Georges']}),
+    S('Vosne-Romanée',3,{regio:'bourgogne',app:['Vosne-Romanée','Romanée-Conti Grand Cru']}),
+    S('Chablis Premier Cru',2,{regio:'bourgogne',app:['Chablis Premier Cru']})]},
+  {id:'beaujolais',name:'Beaujolais',part:1,land:'Frankrijk',area:'beaujolais',slots:[
+    S('Beaujolais',1,{regio:'beaujolais',app:['Beaujolais']}),
+    S('Beaujolais-Villages',1,{regio:'beaujolais',app:['Beaujolais-Villages']}),
+    S('Morgon',2,{regio:'beaujolais',app:['Morgon']}),
+    S('Fleurie',2,{regio:'beaujolais',app:['Fleurie']}),
+    S('Moulin-à-Vent',2,{regio:'beaujolais',app:['Moulin-à-Vent']}),
+    S('Brouilly',2,{regio:'beaujolais',app:['Brouilly','Côte de Brouilly']}),
+    S('Juliénas',2,{regio:'beaujolais',app:['Juliénas']}),
+    S('Saint-Amour',3,{regio:'beaujolais',app:['Saint-Amour']}),
+    S('Chiroubles',3,{regio:'beaujolais',app:['Chiroubles']})]},
+  {id:'rhone',name:'Rhône',part:1,land:'Frankrijk',area:'rhone',slots:[
+    S('Côtes du Rhône',1,{regio:'rhone',app:['Côtes du Rhône']}),
+    S('Côtes du Rhône Villages',1,{regio:'rhone',app:['Côtes du Rhône Villages']}),
+    S('Ventoux / Luberon',1,{regio:'rhone',app:['Ventoux','Luberon']}),
+    S('Vacqueyras',2,{regio:'rhone',app:['Vacqueyras']}),
+    S('Gigondas',2,{regio:'rhone',app:['Gigondas']}),
+    S('Châteauneuf-du-Pape',2,{regio:'rhone',app:['Châteauneuf-du-Pape']}),
+    S('Crozes-Hermitage',2,{regio:'rhone',app:['Crozes-Hermitage']}),
+    S('Saint-Joseph',2,{regio:'rhone',app:['Saint-Joseph']}),
+    S('Condrieu',3,{regio:'rhone',app:['Condrieu']})]},
+  {id:'loire',name:'Loire',part:1,land:'Frankrijk',area:'loire',slots:[
+    S('Muscadet',1,{regio:'loire',app:['Muscadet','Muscadet Sèvre et Maine']}),
+    S('Touraine',1,{regio:'loire',app:['Touraine']}),
+    S('Vouvray',2,{regio:'loire',app:['Vouvray']}),
+    S('Sancerre',1,{regio:'loire',app:['Sancerre']}),
+    S('Pouilly-Fumé',2,{regio:'loire',app:['Pouilly-Fumé']}),
+    S('Anjou / Saumur',2,{regio:'loire',app:['Anjou','Saumur','Saumur-Champigny']}),
+    S('Chinon / Bourgueil',2,{regio:'loire',app:['Chinon','Bourgueil']}),
+    S('Crémant de Loire',2,{regio:'loire',app:['Crémant de Loire']}),
+    S('Savennières',3,{regio:'loire',app:['Savennières']})]},
+  {id:'jura',name:'Jura',part:1,land:'Frankrijk',area:'jura',secret:true,slots:[
+    S('Côtes du Jura',2,{regio:'jura',app:['Côtes du Jura']}),
+    S('Arbois',2,{regio:'jura',app:['Arbois']}),
+    S('Crémant du Jura',2,{regio:'jura',app:['Crémant du Jura']}),
+    S('L\'Étoile',3,{regio:'jura',app:['L\'Étoile']}),
+    S('Château-Chalon',3,{regio:'jura',app:['Château-Chalon']}),
+    S('Vin Jaune',3,{regio:'jura',tag:'vin jaune'})]},
+  {id:'toscane',name:'Toscane',part:1,land:'Italië',area:'toscane',slots:[
+    S('Toscana IGT',1,{regio:'toscane',app:['Toscana IGT']}),
+    S('Chianti',1,{regio:'toscane',app:['Chianti']}),
+    S('Chianti Classico',1,{regio:'toscane',app:['Chianti Classico']}),
+    S('Morellino di Scansano',2,{regio:'toscane',app:['Morellino di Scansano']}),
+    S('Rosso di Montalcino',2,{regio:'toscane',app:['Rosso di Montalcino']}),
+    S('Vino Nobile di Montepulciano',2,{regio:'toscane',app:['Vino Nobile di Montepulciano']}),
+    S('Vernaccia di San Gimignano',2,{regio:'toscane',app:['Vernaccia di San Gimignano']}),
+    S('Brunello di Montalcino',3,{regio:'toscane',app:['Brunello di Montalcino']}),
+    S('Bolgheri',3,{regio:'toscane',app:['Bolgheri','Bolgheri Sassicaia']})]},
+  {id:'rioja',name:'Rioja',part:1,land:'Spanje',area:'rioja',slots:[
+    S('Rioja (joven)',1,{regio:'rioja',tag:'joven'}),
+    S('Crianza',1,{regio:'rioja',tag:'crianza'}),
+    S('Reserva',1,{regio:'rioja',tag:'reserva'}),
+    S('Gran Reserva',2,{regio:'rioja',tag:'gran reserva'}),
+    S('Rioja Blanco',1,{regio:'rioja',color:'wit'}),
+    S('Rioja Rosado',2,{regio:'rioja',color:'rosé'}),
+    S('Rioja Alta',2,{regio:'rioja',tag:'rioja alta'}),
+    S('Rioja Alavesa',2,{regio:'rioja',tag:'rioja alavesa'}),
+    S('Rioja Oriental',3,{regio:'rioja',tag:'rioja oriental'})]},
+  {id:'nieuw-zeeland',name:'Nieuw-Zeeland',part:1,land:'Nieuw-Zeeland',area:'nieuw-zeeland',slots:[
+    S('Marlborough',1,{land:'Nieuw-Zeeland',app:['Marlborough']}),
+    S('Hawke\'s Bay',2,{land:'Nieuw-Zeeland',app:['Hawke\'s Bay']}),
+    S('Central Otago',2,{land:'Nieuw-Zeeland',app:['Central Otago']}),
+    S('Martinborough',3,{land:'Nieuw-Zeeland',app:['Martinborough','Wairarapa']}),
+    S('Nelson',3,{land:'Nieuw-Zeeland',app:['Nelson']}),
+    S('Gisborne',3,{land:'Nieuw-Zeeland',app:['Gisborne']}),
+    S('North Canterbury',3,{land:'Nieuw-Zeeland',app:['North Canterbury','Waipara']}),
+    S('Waiheke / Auckland',3,{land:'Nieuw-Zeeland',app:['Waiheke Island','Auckland']}),
+    S('Gimblett Gravels',3,{land:'Nieuw-Zeeland',app:['Gimblett Gravels']})]},
+
+  /* ---------- Deel 2: verzamellijsten ---------- */
+  {id:'starter',name:'De Grote Vijf',part:2,always:true,intro:'Je eerste set. Vijf druiven die je overal tegenkomt.',slots:[
+    S('Cabernet Sauvignon',1,{grape:'Cabernet Sauvignon'}),
+    S('Merlot',1,{grape:'Merlot'}),
+    S('Pinot Noir',1,{grape:'Pinot Noir'}),
+    S('Chardonnay',1,{grape:'Chardonnay'}),
+    S('Sauvignon Blanc',1,{grape:'Sauvignon Blanc'})]},
+  {id:'wereldreiziger',name:'Wereldreiziger',part:2,always:true,intro:'Eén wijn uit elk land.',slots:
+    ['Frankrijk','Italië','Spanje','Portugal','Duitsland','Nederland','Zuid-Afrika','Chili','Argentinië','Verenigde Staten','Australië','Nieuw-Zeeland']
+      .map(l=>S(l,['Nederland','Portugal','Argentinië'].includes(l)?2:1,{land:l}))},
+  {id:'chardonnay',name:'Chardonnay rond de wereld',part:2,slots:[
+    S('Bourgogne',1,{grape:'Chardonnay',regio:'bourgogne'}),
+    S('Chablis',1,{grape:'Chardonnay',app:['Chablis','Chablis Premier Cru']}),
+    S('Jura',2,{grape:'Chardonnay',regio:'jura'}),
+    S('Champagne',2,{grape:'Chardonnay',regio:'champagne'}),
+    S('Californië',1,{grape:'Chardonnay',regio:'californie'}),
+    S('Australië',1,{grape:'Chardonnay',land:'Australië'}),
+    S('Zuid-Afrika',1,{grape:'Chardonnay',land:'Zuid-Afrika'}),
+    S('Chili',1,{grape:'Chardonnay',land:'Chili'}),
+    S('Nieuw-Zeeland',2,{grape:'Chardonnay',land:'Nieuw-Zeeland'})]},
+  {id:'pinot-noir',name:'Pinot Noir rond de wereld',part:2,slots:[
+    S('Bourgogne',1,{grape:'Pinot Noir',regio:'bourgogne'}),
+    S('Elzas',2,{grape:'Pinot Noir',regio:'elzas'}),
+    S('Duitsland',2,{grape:'Pinot Noir',land:'Duitsland'}),
+    S('Italië',2,{grape:'Pinot Noir',land:'Italië'}),
+    S('Oregon',3,{grape:'Pinot Noir',regio:'oregon'}),
+    S('Californië',2,{grape:'Pinot Noir',regio:'californie'}),
+    S('Nieuw-Zeeland',1,{grape:'Pinot Noir',land:'Nieuw-Zeeland'}),
+    S('Chili',1,{grape:'Pinot Noir',land:'Chili'}),
+    S('Zuid-Afrika',2,{grape:'Pinot Noir',land:'Zuid-Afrika'})]},
+  {id:'sauvignon-blanc',name:'Sauvignon Blanc rond de wereld',part:2,slots:[
+    S('Sancerre',1,{grape:'Sauvignon Blanc',app:['Sancerre']}),
+    S('Pouilly-Fumé',2,{grape:'Sauvignon Blanc',app:['Pouilly-Fumé']}),
+    S('Touraine',1,{grape:'Sauvignon Blanc',app:['Touraine']}),
+    S('Bordeaux Blanc',1,{grape:'Sauvignon Blanc',regio:'bordeaux'}),
+    S('Oostenrijk',2,{grape:'Sauvignon Blanc',land:'Oostenrijk'}),
+    S('Marlborough',1,{grape:'Sauvignon Blanc',app:['Marlborough']}),
+    S('Zuid-Afrika',1,{grape:'Sauvignon Blanc',land:'Zuid-Afrika'}),
+    S('Chili',1,{grape:'Sauvignon Blanc',land:'Chili'}),
+    S('Australië',2,{grape:'Sauvignon Blanc',land:'Australië'})]},
+  {id:'syrah',name:'Syrah / Shiraz rond de wereld',part:2,slots:[
+    S('Noordelijke Rhône',2,{grape:'Syrah',app:['Crozes-Hermitage','Saint-Joseph','Hermitage','Côte-Rôtie','Cornas']}),
+    S('Languedoc',1,{grape:'Syrah',regio:'languedoc'}),
+    S('Australië',1,{grape:'Syrah',land:'Australië'}),
+    S('Zuid-Afrika',1,{grape:'Syrah',land:'Zuid-Afrika'}),
+    S('Chili',1,{grape:'Syrah',land:'Chili'}),
+    S('Californië',2,{grape:'Syrah',regio:'californie'}),
+    S('Washington State',3,{grape:'Syrah',regio:'washington'}),
+    S('Nieuw-Zeeland',2,{grape:'Syrah',land:'Nieuw-Zeeland'}),
+    S('Argentinië',2,{grape:'Syrah',land:'Argentinië'})]},
+  {id:'cabernet',name:'Cabernet Sauvignon rond de wereld',part:2,slots:[
+    S('Bordeaux linkeroever',1,{grape:'Cabernet Sauvignon',regio:'bordeaux',app:['Médoc','Haut-Médoc','Pauillac','Margaux','Saint-Julien','Saint-Estèphe','Pessac-Léognan','Listrac-Médoc','Moulis']}),
+    S('Toscane',2,{grape:'Cabernet Sauvignon',regio:'toscane'}),
+    S('Spanje',2,{grape:'Cabernet Sauvignon',land:'Spanje'}),
+    S('Californië',1,{grape:'Cabernet Sauvignon',regio:'californie'}),
+    S('Washington State',3,{grape:'Cabernet Sauvignon',regio:'washington'}),
+    S('Chili',1,{grape:'Cabernet Sauvignon',land:'Chili'}),
+    S('Argentinië',2,{grape:'Cabernet Sauvignon',land:'Argentinië'}),
+    S('Australië',1,{grape:'Cabernet Sauvignon',land:'Australië'}),
+    S('Zuid-Afrika',1,{grape:'Cabernet Sauvignon',land:'Zuid-Afrika'})]},
+  {id:'bubbels',name:'Bubbels',part:2,slots:[
+    S('Champagne',1,{app:['Champagne']}),
+    S('Crémant',1,{tag:'crémant'}),
+    S('Cava',1,{app:['Cava']}),
+    S('Prosecco',1,{app:['Prosecco']}),
+    S('Franciacorta',2,{app:['Franciacorta']}),
+    S('Sekt',2,{style:'mousserend',land:'Duitsland'}),
+    S('Cap Classique',2,{style:'mousserend',land:'Zuid-Afrika'}),
+    S('Engelse bubbels',3,{style:'mousserend',land:'Verenigd Koninkrijk'}),
+    S('Pét-nat',3,{tag:'pét-nat'})]},
+  {id:'icons',name:'Icons',part:2,always:true,intro:'Twaalf legendarische wijnen. Vaak per glas te proeven.',slots:[
+    S('Cloudy Bay Sauvignon Blanc',2,{key:'cloudy bay|cloudy bay sauvignon blanc'}),
+    S('Tignanello',2,{key:'marchesi antinori|tignanello'}),
+    S('Dom Pérignon',2,{key:'moët & chandon|dom pérignon'}),
+    S('Krug Grande Cuvée',3,{key:'krug|krug grande cuvée'}),
+    S('Sassicaia',3,{key:'tenuta san guido|sassicaia'}),
+    S('Vega Sicilia Único',3,{key:'vega sicilia|vega sicilia único'}),
+    S('Château d\'Yquem',3,{key:'château d\'yquem|château d\'yquem'}),
+    S('Penfolds Grange',3,{key:'penfolds|penfolds grange'}),
+    S('Opus One',3,{key:'opus one|opus one'}),
+    S('Château Margaux',3,{key:'château margaux|château margaux'}),
+    S('Pétrus',3,{key:'pétrus|pétrus'}),
+    S('Romanée-Conti',3,{key:'domaine de la romanée-conti|romanée-conti'})]}
+];
+
+/* ---------- Demowijnen (fase 2) ----------
+   De eerste 30 bestonden al; naam en maker blijven gelijk zodat bestaande kaarten blijven kloppen.
+   Icons zijn echte wijnen; al het andere is fictief. */
+const D=(regio,land,naam,maker,jaar,druif,grape,app,stijl,style,color,tags,icon)=>({regio,land,naam,maker,jaar,druif,grape,app,stijl,style,color,tags:tags||[],icon:!!icon});
+const POOL = [
+  D('bordeaux','Frankrijk','Château Lamothe-Sablon','Bordeaux Supérieur',2019,'Merlot, Cabernet Franc','Merlot','Bordeaux Supérieur','Rood, soepel','stil','rood'),
+  D('bordeaux','Frankrijk','Clos des Graves Pâles','Graves',2021,'Sauvignon Blanc, Sémillon','Sauvignon Blanc','Graves','Wit, fris','stil','wit'),
+  D('bordeaux','Frankrijk','Château Belair-Roque','Saint-Émilion Grand Cru',2018,'Merlot','Merlot','Saint-Émilion Grand Cru','Rood, vol','stil','rood'),
+  D('bordeaux','Frankrijk','Les Hauts de Ferrand','Médoc',2020,'Cabernet Sauvignon','Cabernet Sauvignon','Médoc','Rood, stevig','stil','rood'),
+  D('bordeaux','Frankrijk','Château du Pin Doré','Pauillac',2016,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Pauillac','Rood, krachtig','stil','rood'),
+  D('bourgogne','Frankrijk','Vernier-Lacombe Pinot Noir','Bourgogne AOC',2021,'Pinot Noir','Pinot Noir','Bourgogne','Rood, licht','stil','rood'),
+  D('bourgogne','Frankrijk','Mâcon-Villages Les Crays','Domaine des Crays',2022,'Chardonnay','Chardonnay','Mâcon-Villages','Wit, rond','stil','wit'),
+  D('bourgogne','Frankrijk','Chablis Les Bastions','Domaine Morel-Vaudé',2022,'Chardonnay','Chardonnay','Chablis','Wit, mineraal','stil','wit'),
+  D('bourgogne','Frankrijk','Clos Ravel','Côte de Nuits-Villages',2020,'Pinot Noir','Pinot Noir','Côte de Nuits-Villages','Rood, elegant','stil','rood'),
+  D('bourgogne','Frankrijk','Brut Perle','Crémant de Bourgogne',2021,'Chardonnay, Pinot Noir','','Crémant de Bourgogne','Mousserend, droog','mousserend','wit',['crémant']),
+  D('jura','Frankrijk','Domaine des Sapins','Côtes du Jura',2022,'Chardonnay','Chardonnay','Côtes du Jura','Wit, mineraal','stil','wit'),
+  D('jura','Frankrijk','Ploussard des Combes','Arbois',2021,'Poulsard','Poulsard','Arbois','Rood, heel licht','stil','rood'),
+  D('jura','Frankrijk','Vin Jaune Les Roches','Château-Chalon',2015,'Savagnin','Savagnin','Château-Chalon','Wit, oxidatief','stil','wit',['vin jaune']),
+  D('jura','Frankrijk','Trousseau du Moulin','Arbois',2020,'Trousseau','Trousseau','Arbois','Rood, licht','stil','rood'),
+  D('jura','Frankrijk','Givre','Crémant du Jura',2021,'Chardonnay','Chardonnay','Crémant du Jura','Mousserend, fris','mousserend','wit',['crémant']),
+  D('toscane','Italië','Poggio Alto','Chianti Classico',2020,'Sangiovese','Sangiovese','Chianti Classico','Rood, stevig','stil','rood'),
+  D('toscane','Italië','Sassorosso','Toscana IGT',2019,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Toscana IGT','Rood, vol','stil','rood'),
+  D('toscane','Italië','Casa Rondine','Rosso di Montalcino',2021,'Sangiovese','Sangiovese','Rosso di Montalcino','Rood, elegant','stil','rood'),
+  D('toscane','Italië','Vigna del Falco','Brunello di Montalcino',2017,'Sangiovese','Sangiovese','Brunello di Montalcino','Rood, krachtig','stil','rood'),
+  D('toscane','Italië','Bianco delle Colline','Toscana IGT',2023,'Vermentino','Vermentino','Toscana IGT','Wit, fris','stil','wit'),
+  D('rioja','Spanje','Bodegas Ventura Crianza','Rioja DOCa',2020,'Tempranillo','Tempranillo','Rioja','Rood, houtgerijpt','stil','rood',['crianza']),
+  D('rioja','Spanje','Viña Clara Blanco','Rioja DOCa',2022,'Viura','Viura','Rioja','Wit, fris','stil','wit'),
+  D('rioja','Spanje','Marqués de Alcor Reserva','Rioja DOCa',2016,'Tempranillo, Graciano','Tempranillo','Rioja','Rood, rijp','stil','rood',['reserva','rioja alta']),
+  D('rioja','Spanje','Rosado de la Sierra','Rioja DOCa',2023,'Garnacha','Garnacha','Rioja','Rosé, sappig','stil','rosé'),
+  D('rioja','Spanje','Cuatro Vientos Gran Reserva','Rioja DOCa',2012,'Tempranillo','Tempranillo','Rioja','Rood, complex','stil','rood',['gran reserva']),
+  D('nieuw-zeeland','Nieuw-Zeeland','Kowhai Bay','Marlborough',2023,'Sauvignon Blanc','Sauvignon Blanc','Marlborough','Wit, uitbundig','stil','wit'),
+  D('nieuw-zeeland','Nieuw-Zeeland','Wairau Stone','Marlborough',2022,'Pinot Noir','Pinot Noir','Marlborough','Rood, sappig','stil','rood'),
+  D('nieuw-zeeland','Nieuw-Zeeland','Cloudy Ridge','Marlborough',2023,'Pinot Noir','Pinot Noir','Marlborough','Rosé, droog','stil','rosé'),
+  D('nieuw-zeeland','Nieuw-Zeeland','Tui Valley','Marlborough',2022,'Chardonnay','Chardonnay','Marlborough','Wit, romig','stil','wit'),
+  D('nieuw-zeeland','Nieuw-Zeeland','Awatere Flint','Marlborough',2023,'Sauvignon Blanc','Sauvignon Blanc','Marlborough','Wit, strak','stil','wit'),
+  /* nieuw toegevoegd */
+  D('bordeaux','Frankrijk','Château Margelle','Château Margelle',2018,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Margaux','Rood, elegant','stil','rood'),
+  D('bordeaux','Frankrijk','Clos du Tertre','Clos du Tertre',2017,'Merlot','Merlot','Pomerol','Rood, fluweelzacht','stil','rood'),
+  D('bordeaux','Frankrijk','Château Lusseau','Château Lusseau',2019,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Pessac-Léognan','Rood, rokerig','stil','rood'),
+  D('bordeaux','Frankrijk','Château Doisy-Laurent','Château Doisy-Laurent',2015,'Sémillon','Sémillon','Sauternes','Wit, zoet','zoet','wit'),
+  D('bordeaux','Frankrijk','Château Rive Haute','Château Rive Haute',2020,'Cabernet Sauvignon','Cabernet Sauvignon','Haut-Médoc','Rood, stevig','stil','rood'),
+  D('bordeaux','Frankrijk','Château Bel-Fronsac','Château Bel-Fronsac',2019,'Merlot','Merlot','Fronsac','Rood, rond','stil','rood'),
+  D('beaujolais','Frankrijk','Domaine des Pierres Dorées','Domaine des Pierres Dorées',2023,'Gamay','Gamay','Beaujolais','Rood, fruitig','stil','rood'),
+  D('beaujolais','Frankrijk','Domaine de la Côte','Domaine de la Côte',2023,'Gamay','Gamay','Beaujolais-Villages','Rood, sappig','stil','rood'),
+  D('beaujolais','Frankrijk','Les Granits Roses','Domaine Vernay',2022,'Gamay','Gamay','Morgon','Rood, stevig','stil','rood'),
+  D('beaujolais','Frankrijk','Clos des Vignes Fleuries','Domaine Aubel',2022,'Gamay','Gamay','Fleurie','Rood, bloemig','stil','rood'),
+  D('beaujolais','Frankrijk','Vent du Moulin','Château des Ailes',2021,'Gamay','Gamay','Moulin-à-Vent','Rood, vol','stil','rood'),
+  D('bourgogne','Frankrijk','Pouilly-Fuissé Vieilles Vignes','Domaine Ferrand-Aubert',2021,'Chardonnay','Chardonnay','Pouilly-Fuissé','Wit, rijk','stil','wit'),
+  D('bourgogne','Frankrijk','Givry Clos Lavigne','Domaine Lavigne',2021,'Pinot Noir','Pinot Noir','Givry','Rood, kersig','stil','rood'),
+  D('rhone','Frankrijk','Les Galets Ronds','Les Galets Ronds',2022,'Grenache, Syrah','Grenache','Côtes du Rhône','Rood, kruidig','stil','rood'),
+  D('rhone','Frankrijk','Domaine du Mistral','Domaine du Mistral',2021,'Grenache, Syrah','Grenache','Côtes du Rhône Villages','Rood, warm','stil','rood'),
+  D('rhone','Frankrijk','Clos des Papes Anciens','Clos des Papes Anciens',2019,'Grenache','Grenache','Châteauneuf-du-Pape','Rood, krachtig','stil','rood'),
+  D('rhone','Frankrijk','Domaine de la Colline','Domaine de la Colline',2021,'Syrah','Syrah','Crozes-Hermitage','Rood, peperig','stil','rood'),
+  D('rhone','Frankrijk','Les Dentelles','Domaine Brunel',2020,'Grenache, Mourvèdre','Grenache','Gigondas','Rood, rijp','stil','rood'),
+  D('loire','Frankrijk','Les Caillottes','Domaine Roux-Bellier',2023,'Sauvignon Blanc','Sauvignon Blanc','Sancerre','Wit, mineraal','stil','wit'),
+  D('loire','Frankrijk','Château de la Ragotière','Château de la Ragotière',2023,'Melon de Bourgogne','Melon de Bourgogne','Muscadet Sèvre et Maine','Wit, zilt','stil','wit'),
+  D('loire','Frankrijk','Clos Fumé','Domaine Desroches',2022,'Sauvignon Blanc','Sauvignon Blanc','Pouilly-Fumé','Wit, rokerig','stil','wit'),
+  D('loire','Frankrijk','Les Coteaux','Domaine Huet-Marin',2022,'Chenin Blanc','Chenin Blanc','Vouvray','Wit, halfdroog','stil','wit'),
+  D('loire','Frankrijk','La Bergerie','Domaine de la Bergerie',2021,'Cabernet Franc','Cabernet Franc','Chinon','Rood, fris','stil','rood'),
+  D('loire','Frankrijk','Brut Ligérien','Caves de Saumur',2021,'Chenin Blanc','Chenin Blanc','Crémant de Loire','Mousserend, droog','mousserend','wit',['crémant']),
+  D('toscane','Italië','Fattoria Il Leccio','Fattoria Il Leccio',2022,'Sangiovese','Sangiovese','Chianti','Rood, kersig','stil','rood'),
+  D('toscane','Italië','Podere Le Querce','Podere Le Querce',2020,'Sangiovese','Sangiovese','Vino Nobile di Montepulciano','Rood, elegant','stil','rood'),
+  D('toscane','Italië','Tenuta Mare Alto','Tenuta Mare Alto',2019,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Bolgheri','Rood, vol','stil','rood'),
+  D('rioja','Spanje','El Ciervo Joven','Bodegas El Ciervo',2023,'Tempranillo','Tempranillo','Rioja','Rood, fruitig','stil','rood',['joven','rioja alavesa']),
+  D('nieuw-zeeland','Nieuw-Zeeland','Kererū Ridge','Kererū Ridge',2021,'Pinot Noir','Pinot Noir','Central Otago','Rood, zijdezacht','stil','rood'),
+  D('nieuw-zeeland','Nieuw-Zeeland','Gannet Bay Syrah','Gannet Bay',2020,'Syrah','Syrah','Hawke\'s Bay','Rood, peperig','stil','rood'),
+  D('champagne','Frankrijk','Brut Réserve','Maison Arlaux-Prévost',null,'Chardonnay, Pinot Noir, Meunier','','Champagne','Mousserend, droog','mousserend','wit'),
+  D('champagne','Frankrijk','Blanc de Blancs','Champagne Delorme',null,'Chardonnay','Chardonnay','Champagne','Mousserend, fijn','mousserend','wit'),
+  D('penedes','Spanje','Brut Nature','Caves Montserrat',null,'Xarel·lo, Macabeo, Parellada','','Cava','Mousserend, droog','mousserend','wit'),
+  D('veneto','Italië','Extra Dry','Colli Trevigiani',null,'Glera','Glera','Prosecco','Mousserend, fruitig','mousserend','wit'),
+  D('douro','Portugal','Quinta do Vale Escuro','Quinta do Vale Escuro',2020,'Touriga Nacional','Touriga Nacional','Douro','Rood, donker','stil','rood'),
+  D('mosel','Duitsland','Steinbach Riesling','Weingut Steinbach',2022,'Riesling','Riesling','Mosel','Wit, fris','stil','wit'),
+  D('pfalz','Duitsland','Spätburgunder Kalkstein','Weingut Hollerbach',2021,'Pinot Noir','Pinot Noir','Pfalz','Rood, licht','stil','rood'),
+  D('nederland','Nederland','Heuvelrug Wit','Wijngaard De Heuvelrug',2023,'Solaris','Solaris','Nederland','Wit, fris','stil','wit'),
+  D('stellenbosch','Zuid-Afrika','Stellenbosch Oak Cabernet','Oak Valley Estate',2020,'Cabernet Sauvignon','Cabernet Sauvignon','Stellenbosch','Rood, stevig','stil','rood'),
+  D('walker-bay','Zuid-Afrika','Walker Cove Chardonnay','Walker Cove',2022,'Chardonnay','Chardonnay','Hemel-en-Aarde','Wit, elegant','stil','wit'),
+  D('stellenbosch','Zuid-Afrika','Kaapse Ster Brut','Kaapse Ster',null,'Chardonnay, Pinot Noir','','Cap Classique','Mousserend, droog','mousserend','wit'),
+  D('maipo','Chili','Cordillera Cabernet','Viña Cordillera',2021,'Cabernet Sauvignon','Cabernet Sauvignon','Maipo','Rood, rond','stil','rood'),
+  D('casablanca','Chili','Costa Fría','Viña Costa Fría',2023,'Sauvignon Blanc','Sauvignon Blanc','Casablanca','Wit, fris','stil','wit'),
+  D('mendoza','Argentinië','Alto Andes Malbec','Bodega Alto Andes',2021,'Malbec','Malbec','Mendoza','Rood, vol','stil','rood'),
+  D('californie','Verenigde Staten','Redwood Crest Chardonnay','Redwood Crest',2021,'Chardonnay','Chardonnay','Sonoma','Wit, romig','stil','wit'),
+  D('californie','Verenigde Staten','Napa Bench Cabernet','Napa Bench Cellars',2019,'Cabernet Sauvignon','Cabernet Sauvignon','Napa Valley','Rood, krachtig','stil','rood'),
+  D('barossa','Australië','Red Gum Shiraz','Red Gum Estate',2020,'Shiraz','Syrah','Barossa Valley','Rood, vol','stil','rood'),
+  D('steiermark','Oostenrijk','Steirische Klassik','Weingut Pölzl',2022,'Sauvignon Blanc','Sauvignon Blanc','Südsteiermark','Wit, fris','stil','wit'),
+  D('sussex','Verenigd Koninkrijk','Chalk Downs Brut','Chalk Downs',null,'Chardonnay, Pinot Noir','','Sussex','Mousserend, strak','mousserend','wit'),
+  /* echte Icons */
+  D('nieuw-zeeland','Nieuw-Zeeland','Cloudy Bay Sauvignon Blanc','Cloudy Bay',2023,'Sauvignon Blanc','Sauvignon Blanc','Marlborough','Wit, uitbundig','stil','wit',[],true),
+  D('toscane','Italië','Tignanello','Marchesi Antinori',2020,'Sangiovese, Cabernet Sauvignon','Sangiovese','Toscana IGT','Rood, vol','stil','rood',[],true),
+  D('champagne','Frankrijk','Dom Pérignon','Moët & Chandon',2013,'Chardonnay, Pinot Noir','','Champagne','Mousserend, verfijnd','mousserend','wit',[],true),
+  D('champagne','Frankrijk','Krug Grande Cuvée','Krug',null,'Pinot Noir, Chardonnay, Meunier','','Champagne','Mousserend, rijk','mousserend','wit',[],true),
+  D('toscane','Italië','Sassicaia','Tenuta San Guido',2019,'Cabernet Sauvignon, Cabernet Franc','Cabernet Sauvignon','Bolgheri Sassicaia','Rood, elegant','stil','rood',[],true),
+  D('ribera','Spanje','Vega Sicilia Único','Vega Sicilia',2012,'Tempranillo, Cabernet Sauvignon','Tempranillo','Ribera del Duero','Rood, complex','stil','rood',[],true),
+  D('bordeaux','Frankrijk','Château d\'Yquem','Château d\'Yquem',2015,'Sémillon, Sauvignon Blanc','Sémillon','Sauternes','Wit, zoet','zoet','wit',[],true),
+  D('barossa','Australië','Penfolds Grange','Penfolds',2018,'Shiraz','Syrah','South Australia','Rood, krachtig','stil','rood',[],true),
+  D('californie','Verenigde Staten','Opus One','Opus One',2019,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Napa Valley','Rood, vol','stil','rood',[],true),
+  D('bordeaux','Frankrijk','Château Margaux','Château Margaux',2015,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Margaux','Rood, verfijnd','stil','rood',[],true),
+  D('bordeaux','Frankrijk','Pétrus','Pétrus',2016,'Merlot','Merlot','Pomerol','Rood, fluweelzacht','stil','rood',[],true),
+  D('bourgogne','Frankrijk','Romanée-Conti','Domaine de la Romanée-Conti',2018,'Pinot Noir','Pinot Noir','Romanée-Conti Grand Cru','Rood, legendarisch','stil','rood',[],true)
+];
+
+if (typeof module !== 'undefined') module.exports = {LANDS, AREAS, LANDPAL, SETS, POOL};

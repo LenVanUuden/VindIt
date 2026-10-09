@@ -298,6 +298,22 @@ button{font:inherit;color:inherit}
   font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-14deg);background:rgba(255,250,240,.25);pointer-events:none}
 .t-ultra .stamp,.t-icon .stamp{color:#F3D9A0;border-color:rgba(243,217,160,.8);outline-color:rgba(243,217,160,.5);background:rgba(0,0,0,.2)}
 .mstamp{position:absolute;right:3px;top:3px;z-index:6;width:14px;height:14px;border-radius:50%;border:1px solid rgba(150,34,46,.85);background:rgba(255,250,240,.85)}
+
+/* Benoemde vakken */
+.slot{display:flex;flex-direction:column;gap:4px;min-width:0}
+.slabel{font-size:9.5px;line-height:1.2;color:var(--gold-soft);opacity:.8;text-align:center;letter-spacing:.02em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
+.empty{font-family:var(--body);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:4px}
+.empty.d1{color:rgba(233,211,160,.42)}
+.empty.d2{color:rgba(233,211,160,.32)}
+.empty.d3{color:rgba(233,211,160,.24)}
+.page.done{box-shadow:inset 0 0 0 1.5px rgba(210,174,98,.6),inset -1px 0 0 rgba(255,255,255,.08),1px 0 0 #121614,2px 0 0 #3a423d}
+.donestamp{display:inline-block;margin-top:6px;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1.5px solid var(--gold);border-radius:999px;padding:2px 10px;transform:rotate(-3deg)}
+.toch{margin-top:2px}
+.news{list-style:none;padding:0;margin:0;display:grid;gap:10px;width:min(86vw,320px);text-align:left}
+.news li{border:1px solid rgba(233,211,160,.3);border-radius:10px;padding:10px 14px;display:grid;gap:2px}
+.news span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft);opacity:.8}
+.news b{font-family:var(--display);font-weight:400;font-size:19px;color:var(--gold-soft)}
+.news em{font-style:normal;font-size:12.5px;opacity:.75}
 </style>
 </head>
 <body>
@@ -320,22 +336,13 @@ button{font:inherit;color:inherit}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="data.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
 const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
-const REG={
-  bordeaux:{land:'Frankrijk',naam:'Bordeaux',base:1,motifs:['chateau','village'],c:{sky:'#EED3AC',sun:'#F09A3E',far:'#93607A',near:'#5A3550',dark:'#2E1A2A',m:'#F7EAD6'}},
-  bourgogne:{land:'Frankrijk',naam:'Bourgogne',base:10,motifs:['church','village'],c:{sky:'#F3DDAA',sun:'#E4693A',far:'#B0734A',near:'#6B7A3E',dark:'#33401E',m:'#FAF0DA'}},
-  jura:{land:'Frankrijk',naam:'Jura',base:19,motifs:['windmill','pines'],c:{sky:'#D3E4E1',sun:'#F2C462',far:'#7C9C95',near:'#47695A',dark:'#213A31',m:'#F5F0E2'}},
-  toscane:{land:'Italië',naam:'Toscane',base:28,motifs:['cypress','farmhouse'],c:{sky:'#F7CD8E',sun:'#E05A38',far:'#C98F55',near:'#86924A',dark:'#3A4522',m:'#FBEBCF'}},
-  rioja:{land:'Spanje',naam:'Rioja',base:37,motifs:['mesa','village'],c:{sky:'#F5BE73',sun:'#FDE6A8',far:'#BC6A40',near:'#84402C',dark:'#47201A',m:'#F8E4C4'}},
-  marlborough:{land:'Nieuw-Zeeland',naam:'Marlborough',base:46,motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
-};
-const ORDER=['bordeaux','bourgogne','jura','toscane','rioja','marlborough'];
-const CHAPTERS=[['Frankrijk','bordeaux'],['Italië','toscane'],['Spanje','rioja'],['Nieuw-Zeeland','marlborough']];
-const FIRST=2, PAGES=FIRST+ORDER.length, LIMIT=3, DUR=900;
+const LIMIT=3, DUR=900;
 const TIERS={
   common:{label:'Common',sym:'●',odds:'76%'},
   rare:{label:'Rare',sym:'◆',odds:'18%'},
@@ -344,54 +351,87 @@ const TIERS={
   icon:{label:'Icon',sym:'♛',odds:'vast'}
 };
 const TORDER=['common','rare','superrare','ultra','icon'];
+const DIFF={1:'Supermarkt',2:'Wijnwinkel',3:'Specialist'};
 
-/* Fictieve demowijnen. In fase 3 komt hier de echte etiketherkenning. */
-const W=(regio,naam,maker,jaar,druif,stijl)=>({regio,naam,maker,jaar,druif,stijl,land:REG[regio].land});
-const POOL=[
- W('bordeaux','Château Lamothe-Sablon','Bordeaux Supérieur',2019,'Merlot, Cabernet Franc','Rood, soepel'),
- W('bordeaux','Clos des Graves Pâles','Graves',2021,'Sauvignon Blanc, Sémillon','Wit, fris'),
- W('bordeaux','Château Belair-Roque','Saint-Émilion Grand Cru',2018,'Merlot','Rood, vol'),
- W('bordeaux','Les Hauts de Ferrand','Médoc',2020,'Cabernet Sauvignon','Rood, stevig'),
- W('bordeaux','Château du Pin Doré','Pauillac',2016,'Cabernet Sauvignon, Merlot','Rood, krachtig'),
- W('bourgogne','Vernier-Lacombe Pinot Noir','Bourgogne AOC',2021,'Pinot Noir','Rood, licht'),
- W('bourgogne','Mâcon-Villages Les Crays','Domaine des Crays',2022,'Chardonnay','Wit, rond'),
- W('bourgogne','Chablis Les Bastions','Domaine Morel-Vaudé',2022,'Chardonnay','Wit, mineraal'),
- W('bourgogne','Clos Ravel','Côte de Nuits-Villages',2020,'Pinot Noir','Rood, elegant'),
- W('bourgogne','Brut Perle','Crémant de Bourgogne',2021,'Chardonnay, Pinot Noir','Mousserend, droog'),
- W('jura','Domaine des Sapins','Côtes du Jura',2022,'Chardonnay','Wit, mineraal'),
- W('jura','Ploussard des Combes','Arbois',2021,'Poulsard','Rood, heel licht'),
- W('jura','Vin Jaune Les Roches','Château-Chalon',2015,'Savagnin','Wit, oxidatief'),
- W('jura','Trousseau du Moulin','Arbois',2020,'Trousseau','Rood, licht'),
- W('jura','Givre','Crémant du Jura',2021,'Chardonnay','Mousserend, fris'),
- W('toscane','Poggio Alto','Chianti Classico',2020,'Sangiovese','Rood, stevig'),
- W('toscane','Sassorosso','Toscana IGT',2019,'Cabernet Sauvignon, Merlot','Rood, vol'),
- W('toscane','Casa Rondine','Rosso di Montalcino',2021,'Sangiovese','Rood, elegant'),
- W('toscane','Vigna del Falco','Brunello di Montalcino',2017,'Sangiovese','Rood, krachtig'),
- W('toscane','Bianco delle Colline','Toscana IGT',2023,'Vermentino','Wit, fris'),
- W('rioja','Bodegas Ventura Crianza','Rioja DOCa',2020,'Tempranillo','Rood, houtgerijpt'),
- W('rioja','Viña Clara Blanco','Rioja DOCa',2022,'Viura','Wit, fris'),
- W('rioja','Marqués de Alcor Reserva','Rioja DOCa',2016,'Tempranillo, Graciano','Rood, rijp'),
- W('rioja','Rosado de la Sierra','Rioja DOCa',2023,'Garnacha','Rosé, sappig'),
- W('rioja','Cuatro Vientos Gran Reserva','Rioja DOCa',2012,'Tempranillo','Rood, complex'),
- W('marlborough','Kowhai Bay','Marlborough',2023,'Sauvignon Blanc','Wit, uitbundig'),
- W('marlborough','Wairau Stone','Marlborough',2022,'Pinot Noir','Rood, sappig'),
- W('marlborough','Cloudy Ridge','Marlborough',2023,'Pinot Noir','Rosé, droog'),
- W('marlborough','Tui Valley','Marlborough',2022,'Chardonnay','Wit, romig'),
- W('marlborough','Awatere Flint','Marlborough',2023,'Sauvignon Blanc','Wit, strak')
-];
-
-let session=null,owned=new Map(),ownedKeys=new Set(),cur=0,busy=false,lastNew=null,loading=true;
+let session=null,cards=[],ownedKeys=new Set(),st=null,pages=[],cur=0,busy=false,lastNewId=null,loading=true;
 let authStep='email',pendingEmail='',verifying=false;
 
 const $=s=>document.querySelector(s);
-const nrf=n=>'#'+String(n).padStart(3,'0');
 const esc=s=>String(s??'').replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const low=s=>String(s??'').trim().toLowerCase();
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const wkey=w=>(String(w.maker||'').trim().toLowerCase())+'|'+String(w.naam).trim().toLowerCase();
+const wkey=w=>low(w.maker)+'|'+low(w.naam);
 const amsDay=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 const fmtDate=iso=>new Date(iso).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'}).replace('.','');
 const firstName=()=>{const e=session?.user?.email||'';const n=e.split('@')[0].split(/[._-]/)[0];return n?n[0].toUpperCase()+n.slice(1):'jou'};
-const scansToday=()=>{const t=amsDay(new Date());let n=0;owned.forEach(c=>{if(c.created&&amsDay(new Date(c.created))===t)n++});return n};
+const scansToday=()=>{const t=amsDay(new Date());return cards.filter(c=>c.created&&amsDay(new Date(c.created))===t).length};
+const setById=id=>SETS.find(s=>s.id===id);
+
+/* ---------- gebied en palet van een kaart ---------- */
+function areaOf(c){
+  const a=AREAS[c.regio];
+  if(a) return {naam:c.regio==='nieuw-zeeland'?(c.app||a.naam):a.naam,c:a.c,motifs:a.motifs};
+  const lp=LANDPAL[c.land]||LANDPAL['Frankrijk'];
+  return {naam:c.app||c.land||'Wijn',c:lp.c,motifs:lp.motifs};
+}
+
+/* ---------- sets matchen ---------- */
+function matches(c,m){
+  if(m.key&&low(c.key)!==m.key)return false;
+  if(m.regio&&c.regio!==m.regio)return false;
+  if(m.land&&c.land!==m.land)return false;
+  if(m.grape&&low(c.grape)!==low(m.grape))return false;
+  if(m.style&&c.style!==m.style)return false;
+  if(m.color&&c.color!==m.color)return false;
+  if(m.tag&&!(c.tags||[]).includes(m.tag))return false;
+  if(m.app&&!m.app.some(a=>low(a)===low(c.app)))return false;
+  return true;
+}
+const spec=m=>Object.keys(m).length+(m.app?1:0)+(m.key?3:0);
+function assign(set,pool){
+  const res=new Array(set.slots.length).fill(null),used=new Set();
+  const order=set.slots.map((_,i)=>i).sort((a,b)=>spec(set.slots[b].m)-spec(set.slots[a].m));
+  for(const i of order){const c=pool.find(c=>!used.has(c.id)&&matches(c,set.slots[i].m));if(c){res[i]=c;used.add(c.id)}}
+  return res;
+}
+function compute(){
+  const s={assign:{},complete:{},visible:{},physical:{},overflow:{},lands:[]};
+  for(const set of SETS){const a=assign(set,cards);s.assign[set.id]=a;s.complete[set.id]=a.every(Boolean)}
+  for(const set of SETS){
+    let v;
+    if(set.unlock)v=!!s.complete[set.unlock];
+    else if(set.secret)v=s.assign[set.id].some(Boolean);
+    else if(set.part===1)v=cards.some(c=>c.land===set.land);
+    else v=!!set.always||s.assign[set.id].some(Boolean);
+    s.visible[set.id]=v;
+  }
+  const placed=new Set();
+  for(const land of LANDS){
+    const lc=cards.filter(c=>c.land===land);if(!lc.length)continue;s.lands.push(land);
+    for(const set of SETS.filter(x=>x.part===1&&x.land===land&&s.visible[x.id])){
+      const a=assign(set,lc.filter(c=>!placed.has(c.id)));s.physical[set.id]=a;a.forEach(c=>c&&placed.add(c.id));
+    }
+    s.overflow[land]=lc.filter(c=>!placed.has(c.id));
+  }
+  const other=cards.filter(c=>!LANDS.includes(c.land));
+  if(other.length){s.lands.push('Overig');s.overflow['Overig']=other}
+  return s;
+}
+const filledOf=set=>set.part===1?(st.physical[set.id]||new Array(set.slots.length).fill(null)):st.assign[set.id];
+const isDone=set=>filledOf(set).every(Boolean);
+
+function buildPages(){
+  const P=[{t:'cover'},{t:'inhoud'}];
+  if(session){
+    for(const land of st.lands){
+      for(const set of SETS)if(set.part===1&&set.land===land&&st.visible[set.id])P.push({t:'set',set,land});
+      if(st.overflow[land]?.length)P.push({t:'overige',land});
+    }
+    for(const set of SETS)if(set.part===2&&st.visible[set.id])P.push({t:'set',set});
+  }
+  pages=P;
+}
+function refresh(){st=compute();buildPages();if(cur>=pages.length)cur=pages.length-1}
 
 /* ---------- reisposter-illustraties ---------- */
 const M={
@@ -406,13 +446,14 @@ const M={
  mountains:(x,y,c)=>`<polygon points="-10,82 55,18 120,82" fill="${c.far}"/><polygon points="80,82 140,30 210,82" fill="${c.far}" opacity=".8"/><polygon points="44,29 55,18 66,29 59,27 55,31 50,27" fill="${c.m}"/><polygon points="131,38 140,30 149,38 143,36 140,40 136,36" fill="${c.m}"/>`
 };
 const BACK=new Set(['mountains','mesa']);
-function scene(rk,v){
-  const R=REG[rk],c=R.c,mot=R.motifs[v%R.motifs.length];
+function scene(A,v){
+  const c=A.c,mot=A.motifs[v%A.motifs.length];
   const sx=[150,48,104,158][v],sy=[34,40,26,74][v],sr=v===3?22:14;
   const f=[[78,46,64,52],[66,58,48,70],[72,40,60,44],[60,62,70,50]][v];
   const n=[[100,84,98],[94,106,88],[104,86,96],[96,90,106]][v];
   const mx=[132,58,104,48][v];
-  let s=`<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustratie ${esc(R.naam)}"><rect width="200" height="140" fill="${c.sky}"/>`;
+  const label=A.naam.toUpperCase(),fs=label.length>14?Math.max(6.5,150/label.length):11,ls=label.length>14?1:3;
+  let s=`<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustratie ${esc(A.naam)}"><rect width="200" height="140" fill="${c.sky}"/>`;
   s+=`<rect y="${sy-2}" width="200" height="1.5" fill="${c.sun}" opacity=".5"/><rect y="${sy+5}" width="200" height="1" fill="${c.sun}" opacity=".35"/><circle cx="${sx}" cy="${sy}" r="${sr}" fill="${c.sun}"/>`;
   if(BACK.has(mot)) s+=M[mot](mx,88,c);
   s+=`<path d="M0 ${f[0]} Q50 ${f[1]} 100 ${f[2]} T200 ${f[3]} V140 H0Z" fill="${c.far}"/>`;
@@ -420,11 +461,11 @@ function scene(rk,v){
   s+=`<path d="M0 ${n[0]} Q60 ${n[1]} 120 ${n[2]} T200 ${n[2]-6} V140 H0Z" fill="${c.near}"/>`;
   if(v!==3){const top=Math.min(...n)+10;for(let i=0;i<8;i++)s+=`<line x1="${i*30-14}" y1="140" x2="${70+i*10}" y2="${top}" stroke="${c.dark}" stroke-width="2.2" opacity=".5"/>`}
   else{for(let i=0;i<6;i++)s+=`<rect x="0" y="${112+i*1.5}" width="200" height=".8" fill="${c.dark}" opacity=".35"/>`}
-  s+=`<rect y="121" width="200" height="19" fill="${c.dark}"/><text x="100" y="134.5" text-anchor="middle" font-family="Limelight, Georgia, serif" font-size="11" letter-spacing="3" fill="${c.sky}">${esc(R.naam.toUpperCase())}</text></svg>`;
+  s+=`<rect y="121" width="200" height="19" fill="${c.dark}"/><text x="100" y="134.5" text-anchor="middle" font-family="Limelight, Georgia, serif" font-size="${fs.toFixed(1)}" letter-spacing="${ls}" fill="${c.sky}">${esc(label)}</text></svg>`;
   return s;
 }
-function ultraFill(rk,v){
-  const R=REG[rk],c=R.c,mot=R.motifs[v%R.motifs.length];
+function ultraFill(A,v){
+  const c=A.c,mot=A.motifs[v%A.motifs.length];
   const vb='viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"';
   let rays='';
   for(let i=0;i<16;i++){const a1=(i/16)*Math.PI*2,a2=a1+Math.PI/16;rays+=`<polygon points="100,118 ${(100+400*Math.cos(a1)).toFixed(1)},${(118+400*Math.sin(a1)).toFixed(1)} ${(100+400*Math.cos(a2)).toFixed(1)},${(118+400*Math.sin(a2)).toFixed(1)}" fill="${c.sun}" opacity=".16"/>`}
@@ -438,14 +479,14 @@ function ultraFill(rk,v){
   let front=`<svg ${vb}><path d="M0 204 Q60 180 120 194 T200 188 V280 H0Z" fill="${c.near}"/>`;
   for(let i=0;i<9;i++) front+=`<line x1="${i*30-30}" y1="280" x2="${60+i*12}" y2="200" stroke="${c.dark}" stroke-width="3" opacity=".45"/>`;
   front+=`<g fill="${c.dark}"><path d="M8 214 C26 196 52 200 58 216 C46 214 40 222 44 232 C30 226 20 230 16 240 C14 228 4 224 8 214Z"/>${[[40,236],[50,236],[60,236],[45,245],[55,245],[50,254],[65,244]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5.5"/>`).join('')}<path d="M50 230 C52 220 58 214 66 212" stroke="${c.dark}" stroke-width="2" fill="none"/></g></svg>`;
-  return `<div class="ufill" role="img" aria-label="Full-art illustratie ${esc(R.naam)}"><div class="ul" style="--k:-6px">${back}</div><div class="ul" style="--k:-14px">${mid}</div><div class="ul" style="--k:-26px">${front}</div></div>`;
+  return `<div class="ufill" role="img" aria-label="Full-art illustratie ${esc(A.naam)}"><div class="ul" style="--k:-6px">${back}</div><div class="ul" style="--k:-14px">${mid}</div><div class="ul" style="--k:-26px">${front}</div></div>`;
 }
 
 /* ---------- Rare: flesfoto naar posterstijl ---------- */
 function lum(hex){const n=parseInt(hex.slice(1),16);return .2126*(n>>16&255)+.7152*(n>>8&255)+.0722*(n&255)}
 function rgb(hex){const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255]}
-function posterize(src,rk){
-  const R=REG[rk],c=R.c,Wd=300,H=210;
+function posterize(src,A){
+  const c=A.c,Wd=300,H=210;
   const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
   const scale=Math.max(Wd/sw,H/sh),cw=Wd/scale,ch=H/scale,cx=(sw-cw)/2,cy=(sh-ch)/2;
   const small=document.createElement('canvas');small.width=90;small.height=63;
@@ -458,10 +499,10 @@ function posterize(src,rk){
   const pal=[c.dark,c.near,c.far,c.sun,c.sky].sort((a,b)=>lum(a)-lum(b)).map(rgb);
   for(let p=0,i=0;p<L.length;p++,i+=4){const l=L[p];const k=l<=cuts[0]?0:l<=cuts[1]?1:l<=cuts[2]?2:l<=cuts[3]?3:4;const col=pal[k];d[i]=col[0];d[i+1]=col[1];d[i+2]=col[2];d[i+3]=255}
   x.putImageData(img,0,0);
-  const bh=Math.round(H*19/140);
+  const bh=Math.round(H*19/140),label=A.naam.toUpperCase();
   x.fillStyle=c.dark;x.fillRect(0,H-bh,Wd,bh);
-  x.fillStyle=c.sky;x.font='16px Limelight, Georgia, serif';x.textAlign='center';x.textBaseline='middle';
-  x.fillText(R.naam.toUpperCase().split('').join(String.fromCharCode(8202)),Wd/2,H-bh/2+1);
+  x.fillStyle=c.sky;x.font=(label.length>14?12:16)+'px Limelight, Georgia, serif';x.textAlign='center';x.textBaseline='middle';
+  x.fillText(label.split('').join(String.fromCharCode(8202)),Wd/2,H-bh/2+1);
   return out.toDataURL('image/jpeg',.86);
 }
 function demoPhoto(c){
@@ -486,7 +527,7 @@ function demoPhoto(c){
   return cv;
 }
 const IMG={};
-function rareImg(c){const k=c.wineId||c.nr;if(!IMG[k])IMG[k]=posterize(demoPhoto(c),c.reg);return IMG[k]}
+function rareImg(c){if(!IMG[c.wineId])IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));return IMG[c.wineId]}
 
 /* ---------- kaarten ---------- */
 const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class="glare"></div>':'<div class="shine"></div><div class="sparkle"></div><div class="glare"></div>';
@@ -494,27 +535,26 @@ const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t
 const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
 function artHTML(c){
   if(c.rar==='rare'||c.rar==='superrare') return `<img src="${rareImg(c)}" alt="${esc(c.naam)}, flesfoto in posterstijl">`;
-  return scene(c.reg,c.v);
+  return scene(areaOf(c),c.v);
 }
 function bigCard(c){
-  const r=REG[c.reg],T=TIERS[c.rar];
-  const top=`<div class="toprow"><span>${nrf(c.nr)} · ${esc(r.land)}</span><span class="pill">${T.sym} ${T.label}</span></div>`;
+  const T=TIERS[c.rar];
+  const top=`<div class="toprow"><span>${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${T.label}</span></div>`;
   const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
     <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif||'Onbekend')}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl||'—')}</dd></div><div><dt>Gescand</dt><dd>${esc(c.datum)}</dd></div></dl>`;
-  if(c.rar==='ultra') return `<div class="card t-ultra idle"><div class="face">${ultraFill(c.reg,c.v)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${layers('ultra')}</div></div>`;
+  if(c.rar==='ultra') return `<div class="card t-ultra idle"><div class="face">${ultraFill(areaOf(c),c.v)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${layers('ultra')}</div></div>`;
   return `<div class="card t-${c.rar} idle"><div class="face">${top}${stampHTML(c)}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
 }
-function sleeve(nr){
-  const c=owned.get(nr);
-  if(!c) return `<div class="sleeve"><div class="empty">${nrf(nr)}</div></div>`;
-  const cls=`mini t-${c.rar}${lastNew===nr?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, uit de sleeve halen`;
-  const foot=`<span class="mnr"><span>${nrf(nr)}</span>${symHTML(c.rar)}</span>`;
+function mini(c){
+  const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
+  const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
   const ms=c.first?'<span class="mstamp" aria-hidden="true"></span>':'';
-  if(c.rar==='ultra') return `<div class="sleeve"><button class="${cls}" data-nr="${nr}" aria-label="${lab}"><div class="face">${ultraFill(c.reg,c.v)}${layers('ultra')}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button></div>`;
-  return `<div class="sleeve"><button class="${cls}" data-nr="${nr}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button></div>`;
+  if(c.rar==='ultra') return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face">${ultraFill(areaOf(c),c.v)}${layers('ultra')}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
+  return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
-const countReg=rk=>{let n=0;owned.forEach(c=>{if(c.reg===rk)n++});return n};
-const countTier=t=>{let n=0;owned.forEach(c=>{if(c.rar===t)n++});return n};
+function slotHTML(c,label,d){
+  return `<div class="slot"><div class="sleeve">${c?mini(c):`<div class="empty d${d||0}">${d?DIFF[d]:''}</div>`}</div><span class="slabel">${esc(label)}</span></div>`;
+}
 const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="none" stroke="#D2AE62" stroke-width="1.6"><path d="M30 4 C30 10 34 12 38 12"/><path d="M30 8 C24 6 18 9 17 14 C24 15 28 12 30 8Z"/>${[[22,22],[30,22],[38,22],[26,30],[34,30],[42,30],[18,30],[22,38],[30,38],[38,38],[26,46],[34,46],[30,54]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6"/>`).join('')}</g></svg>`;
 
 /* ---------- omslag met inloggen ---------- */
@@ -525,9 +565,9 @@ function coverHTML(){
   if(authStep==='email') return frame('Log in om je album te openen')+`<form class="login" id="login" novalidate>
       <label for="em">E-mailadres</label>
       <input id="em" type="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.nl" value="${esc(pendingEmail)}">
-      <button class="btn primary" type="submit">Stuur inlogcode</button>
+      <button class="btn primary" type="submit">Stuur inloglink</button>
       <p class="err" id="lerr" hidden></p>
-      <p>Geen wachtwoord nodig. Je krijgt een code per e-mail.</p></form>`;
+      <p>Geen wachtwoord nodig. Je krijgt een inloglink per e-mail.</p></form>`;
   return frame('Bijna binnen')+`<form class="login" id="login" novalidate>
       <p>We hebben een e-mail gestuurd naar<br><b>${esc(pendingEmail)}</b></p>
       <p>Open de mail op dit toestel en tik op de inloglink. Je album opent dan vanzelf.</p>
@@ -548,43 +588,63 @@ function wireLogin(el){
     if(authStep==='email'){
       const em=f.querySelector('#em').value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){showErr('Vul een geldig e-mailadres in.');return}
-      btn.disabled=true;btn.textContent='Code wordt verstuurd…';
+      btn.disabled=true;btn.textContent='Bezig met versturen…';
       const {error}=await sb.auth.signInWithOtp({email:em,options:{shouldCreateUser:true,emailRedirectTo:location.href.split('#')[0]}});
-      btn.disabled=false;btn.textContent='Stuur inlogcode';
-      if(error){showErr(/rate|limit/i.test(error.message)?'Er zijn te veel codes aangevraagd. Wacht even en probeer het opnieuw.':'De code kon niet worden verstuurd. Controleer je e-mailadres en probeer het opnieuw.');return}
+      btn.disabled=false;btn.textContent='Stuur inloglink';
+      if(error){showErr(/rate|limit/i.test(error.message)?'Er zijn te veel inlogmails aangevraagd. Wacht even en probeer het opnieuw.':'De mail kon niet worden verstuurd. Controleer je e-mailadres en probeer het opnieuw.');return}
       pendingEmail=em;authStep='code';go(0,true);
-      setTimeout(()=>{const o=document.getElementById('otp');if(o)o.focus()},50);
     }else{
       const code=f.querySelector('#otp').value.replace(/\D/g,'');
       if(code.length<6){showErr('Vul de volledige code uit de e-mail in.');return}
       btn.disabled=true;btn.textContent='Bezig…';verifying=true;
       const {data,error}=await sb.auth.verifyOtp({email:pendingEmail,token:code,type:'email'});
       btn.disabled=false;btn.textContent='Album openen';
-      if(error||!data.session){verifying=false;showErr('Deze code klopt niet of is verlopen. Vraag een nieuwe code aan.');return}
+      if(error||!data.session){verifying=false;showErr('Deze code klopt niet of is verlopen. Vraag een nieuwe mail aan.');return}
       session=data.session;await loadAlbum();verifying=false;go(1);
     }
   };
 }
 
 /* ---------- pagina's ---------- */
+function pageFoot(i){return `<div class="pfoot"><span>Winex</span><span>Blad ${i}</span></div>`}
+function progress(have,n){return `<div class="progress"><span>${have} van ${n}</span><div class="bar"><span style="width:${have/n*100}%"></span></div></div>`}
+function firstPageOf(pred){return pages.findIndex(pred)}
 function makePage(i){
-  const el=document.createElement('section');el.className='page';
-  if(i===0){el.classList.add('cover');el.innerHTML=coverHTML();wireLogin(el);return el}
-  if(i===1){
-    el.innerHTML=`<div><p class="eyebrow">${owned.size} van ${ORDER.length*9} kaarten</p><h2 class="foil">Inhoud</h2></div>
-      <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${countTier(t)}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
-      <ul class="toc">${ORDER.map((rk,k)=>`<li><button data-go="${k+FIRST}"><span>${esc(REG[rk].naam)} <small>· ${esc(REG[rk].land)}</small></span><span>${countReg(rk)} / 9</span></button></li>`).join('')}</ul>
-      <p class="note" style="text-align:center">Testversie. Scannen gebruikt nog fictieve demowijnen.</p>
-      <div class="pfoot"><span>Winex</span><span>Blad 1</span></div>`;
+  const p=pages[i],el=document.createElement('section');el.className='page';
+  if(p.t==='cover'){el.classList.add('cover');el.innerHTML=coverHTML();wireLogin(el);return el}
+  if(p.t==='inhoud'){
+    const lists=SETS.filter(s=>s.part===2&&st.visible[s.id]);
+    const hiddenLists=SETS.filter(s=>s.part===2&&!st.visible[s.id]).length;
+    const landsLeft=LANDS.filter(l=>!st.lands.includes(l)).length;
+    const toc=st.lands.map(l=>{
+      const sets=SETS.filter(s=>s.part===1&&s.land===l&&st.visible[s.id]);
+      const have=sets.reduce((a,s)=>a+filledOf(s).filter(Boolean).length,0),tot=sets.reduce((a,s)=>a+s.slots.length,0);
+      const idx=firstPageOf(x=>x.land===l);
+      return `<li><button data-go="${idx}"><span>${esc(l)}</span><span>${tot?have+' / '+tot:(st.overflow[l]||[]).length+' kaarten'}</span></button></li>`;
+    }).join('');
+    const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
+    el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Inhoud</h2></div>
+      <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
+      ${toc?`<p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>`:'<p class="note">Scan je eerste wijn. Het hoofdstuk van dat land verschijnt dan vanzelf in je album.</p>'}
+      <p class="eyebrow toch">Verzamellijsten</p><ul class="toc">${ltoc}</ul>
+      <p class="note" style="text-align:center">Nog ${landsLeft} landen${hiddenLists?` en ${hiddenLists} verzamellijsten`:''} te ontdekken.</p>
+      ${pageFoot(1)}`;
     return el;
   }
-  const rk=ORDER[i-FIRST],R=REG[rk],have=countReg(rk);
-  const chap=CHAPTERS.findIndex(ch=>ch[0]===R.land)+1;
-  let s='';for(let k=0;k<9;k++)s+=sleeve(R.base+k);
-  el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chap} · ${esc(R.land)}</p><h2 class="foil">${esc(R.naam)}</h2></div>
-    <div class="progress"><span>${have} van 9</span><div class="bar"><span style="width:${have/9*100}%"></span></div></div>
-    <div class="grid">${s}</div>
-    <div class="pfoot"><span>Winex</span><span>Blad ${i}</span></div>`;
+  if(p.t==='overige'){
+    const list=st.overflow[p.land]||[];
+    el.innerHTML=`<div><p class="eyebrow">${esc(p.land)}</p><h2 class="foil">Overige</h2></div>
+      <p class="note">Wijnen die (nog) in geen set passen, of een vak dat al gevuld is. Ze gaan nooit verloren en schuiven vanzelf door als er een passende set vrijkomt.</p>
+      <div class="grid">${list.map(c=>slotHTML(c,c.app||c.regio)).join('')}</div>${pageFoot(i)}`;
+    return el;
+  }
+  const s=p.set,f=filledOf(s),have=f.filter(Boolean).length,done=have===s.slots.length;
+  if(done)el.classList.add('done');
+  const chap=s.part===1?st.lands.indexOf(s.land)+1:0;
+  const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Verzamellijst';
+  el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
+    ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
+    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d)).join('')}</div>${pageFoot(i)}`;
   return el;
 }
 function makeLeaf(i){
@@ -594,22 +654,17 @@ function makeLeaf(i){
 }
 
 /* ---------- data ---------- */
-function toCard(row,wine,nr){
-  return {nr,reg:wine.regio,naam:wine.naam,maker:wine.maker,jaar:wine.jaar,druif:wine.druif,stijl:wine.stijl,rar:row.tier,v:wine.variant||0,
-    datum:fmtDate(row.created_at),created:row.created_at,wineId:wine.id,first:!!session&&wine.first_scanned_by===session.user.id};
+function toCard(row,w){
+  return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:w.jaar,druif:w.druif,stijl:w.stijl,
+    regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
+    rar:row.tier,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
 }
 async function loadAlbum(){
-  const {data,error}=await sb.from('cards').select('id,tier,created_at,wine:wines(id,wine_key,naam,maker,jaar,druif,stijl,regio,land,variant,is_icon,first_scanned_by)').order('created_at');
-  owned=new Map();ownedKeys=new Set();
-  if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');return}
-  const per={};
-  for(const r of data||[]){
-    const w=r.wine;if(!w)continue;ownedKeys.add(w.wine_key);
-    if(!REG[w.regio])continue;
-    const idx=per[w.regio]||0;if(idx>=9)continue;per[w.regio]=idx+1;
-    const nr=REG[w.regio].base+idx;owned.set(nr,toCard(r,w,nr));
-  }
-  renderChrome();
+  const {data,error}=await sb.from('cards').select('id,tier,created_at,wine:wines(*)').order('created_at');
+  cards=[];ownedKeys=new Set();
+  if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
+  for(const r of data||[]){if(!r.wine)continue;ownedKeys.add(r.wine.wine_key);cards.push(toCard(r,r.wine))}
+  refresh();renderChrome();
 }
 
 /* ---------- bladeren ---------- */
@@ -619,16 +674,20 @@ function renderChrome(){
   const sc=$('#scan'),spent=!!session&&used>=LIMIT;
   sc.classList.toggle('spent',spent);sc.textContent=spent?'Morgen weer scannen':'Scan een wijn';
   $('#dots').innerHTML=Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}"></i>`).join('');
-  $('#prev').disabled=cur===0;$('#next').disabled=cur===PAGES-1||!session;
-  const land=cur<FIRST?null:REG[ORDER[cur-FIRST]].land;
-  $('#tabs').innerHTML=session?`<button data-go="1" aria-current="${cur===1}">Inhoud</button>`+CHAPTERS.map(([l,rk])=>`<button data-go="${ORDER.indexOf(rk)+FIRST}" aria-current="${l===land}">${esc(l)}</button>`).join(''):'';
+  $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
+  if(!session||!st){$('#tabs').innerHTML='';return}
+  const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land),inLists=pg.set&&pg.set.part===2;
+  const firstList=firstPageOf(x=>x.set&&x.set.part===2);
+  $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Inhoud</button>`+
+    st.lands.map(l=>`<button data-go="${firstPageOf(x=>x.land===l)}" aria-current="${l===curLand&&!inLists}">${esc(l)}</button>`).join('')+
+    (firstList>0?`<button data-go="${firstList}" aria-current="${!!inLists}">Verzamellijsten</button>`:'');
 }
 function go(n,force){
-  if(n<0||n>=PAGES||busy)return;
-  if(n>0&&!session)return;
+  if(n<0||n>=pages.length||busy)return;
   if(n===cur&&!force)return;
   const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur;
   cur=n;renderChrome();
+  const t=document.querySelector('#tabs [aria-current="true"]');if(t)t.scrollIntoView({block:'nearest',inline:'nearest'});
   if(!old||reduced||+old.dataset.i===n){stack.replaceChildren(nu);return}
   busy=true;
   if(fwd){stack.insertBefore(nu,old);nu.classList.add('under');old.classList.add('flip-fwd')}
@@ -662,7 +721,7 @@ function tilt(card){
 /* ---------- overlays ---------- */
 function overlay(html){closeOverlay(true);const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML=html;document.body.appendChild(o);return o}
 function closeOverlay(keepPulled){document.querySelectorAll('.overlay').forEach(o=>o.remove());if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
-function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(+m.dataset.nr),reduced?0:300)}
+function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(m.dataset.id),reduced?0:300)}
 const HINT={
   common:'Common: de regio als reisposter. Sleep over de kaart om hem te kantelen.',
   rare:'Rare: jouw flesfoto in posterstijl, met zilveren rand.',
@@ -670,9 +729,11 @@ const HINT={
   ultra:'Ultra: kantel langzaam, de lagen bewegen los van elkaar.',
   icon:'Icon: deze wijn staat op de lijst met iconische wijnen.'
 };
-function openCard(nr){
-  const c=owned.get(nr);if(!c)return;
-  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}${c.first?' Jij was de eerste in Winex die deze wijn scande.':''}</p><div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
+function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&filledOf(s).some(x=>x&&x.id===c.id)).map(s=>s.name)}
+function openCard(id){
+  const c=cards.find(x=>x.id===id);if(!c)return;
+  const sets=setsOf(c);
+  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}${c.first?' Jij was de eerste in Winex die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}<div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
   tilt(o.querySelector('.card'));const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3600)}
@@ -684,42 +745,74 @@ function limitMsg(){
   return `Je 3 scans voor vandaag zijn op. Over ${hh?hh+' uur en ':''}${mm} min kun je weer nieuwe kaarten verzamelen.`;
 }
 
+/* ---------- scannen ---------- */
+function snapshot(){return {lands:[...st.lands],complete:{...st.complete},visible:{...st.visible},done:Object.fromEntries(SETS.map(s=>[s.id,st.visible[s.id]&&isDone(s)]))}}
+function newsSince(b){
+  const out=[];
+  for(const l of st.lands)if(!b.lands.includes(l))out.push(['Nieuw hoofdstuk',l,'Je eerste wijn uit '+l+'.']);
+  for(const s of SETS){
+    if(st.visible[s.id]&&!b.visible[s.id]){
+      const have=filledOf(s).filter(Boolean).length;
+      if(s.unlock)out.push(['Nieuwe set vrijgespeeld',s.name,`Je hebt er al ${have} van de ${s.slots.length}.`]);
+      else if(s.secret)out.push(['Geheime set ontdekt',s.name,`${have} van de ${s.slots.length} gevonden.`]);
+      else if(s.part===2&&!s.always)out.push(['Nieuwe verzamellijst',s.name,`${have} van de ${s.slots.length} gevuld.`]);
+    }
+    if(st.visible[s.id]&&isDone(s)&&!b.done[s.id])out.push(['Set voltooid',s.name,'Alle '+s.slots.length+' vakken gevuld.']);
+  }
+  return out;
+}
+function pickWine(){
+  const fresh=POOL.filter(w=>!ownedKeys.has(wkey(w))),dupes=POOL.filter(w=>ownedKeys.has(wkey(w)));
+  if(dupes.length&&(Math.random()<.2||!fresh.length))return dupes[Math.floor(Math.random()*dupes.length)];
+  if(!fresh.length)return null;
+  const icons=fresh.filter(w=>w.icon),normal=fresh.filter(w=>!w.icon);
+  const src=icons.length&&(Math.random()<.05||!normal.length)?icons:normal;
+  return src[Math.floor(Math.random()*src.length)];
+}
 $('#scan').onclick=async()=>{
   if(!session){toast('Log eerst in om te scannen.');return}
   if(document.querySelector('.overlay'))return;
   if(scansToday()>=LIMIT){toast(limitMsg());return}
-  const fresh=POOL.filter(w=>!ownedKeys.has(wkey(w)));
-  const dupes=POOL.filter(w=>ownedKeys.has(wkey(w)));
-  let pick;
-  if(dupes.length&&(Math.random()<.2||!fresh.length))pick=dupes[Math.floor(Math.random()*dupes.length)];
-  else if(fresh.length)pick=fresh[Math.floor(Math.random()*fresh.length)];
+  const pick=pickWine();
   if(!pick){toast('Je hebt alle demowijnen al verzameld.');return}
+  const before=snapshot();
   const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Etiket wordt herkend</p><p class="hint">In de echte app richt je hier je camera op het etiket.</p>`);
-  const [res]=await Promise.all([sb.rpc('scan_wine',{p_wine:pick}),wait(reduced?200:1400)]);
+  const payload={naam:pick.naam,maker:pick.maker,jaar:pick.jaar,druif:pick.druif,stijl:pick.stijl,regio:pick.regio,land:pick.land,app:pick.app,grape:pick.grape,style:pick.style,color:pick.color,tags:pick.tags};
+  const [res]=await Promise.all([sb.rpc('scan_wine',{p_wine:payload}),wait(reduced?200:1400)]);
   if(!o.isConnected)return;
   if(res.error){closeOverlay();toast('Scannen lukte niet. Controleer je verbinding en probeer het opnieuw.');console.error(res.error);return}
   const d=res.data;
   if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
-  if(d.status==='duplicate'){let nr=null;owned.forEach((c,k)=>{if(c.wineId===d.wine.id)nr=k});showDup(nr);return}
+  if(d.status==='duplicate'){showDup(cards.find(c=>c.wineId===d.wine.id));return}
   ownedKeys.add(d.wine.wine_key);
-  const rk=d.wine.regio,nr=REG[rk]?REG[rk].base+countReg(rk):null;
-  if(nr===null||countReg(rk)>=9){closeOverlay();toast('Kaart bewaard, maar dit blad is vol.');return}
-  const card=toCard(d.card,d.wine,nr);owned.set(nr,card);renderChrome();
-  reveal(card);
+  const card=toCard(d.card,d.wine);
+  if(!card.app&&pick.app)Object.assign(card,{app:pick.app,grape:pick.grape,style:pick.style,color:pick.color,tags:pick.tags});
+  cards.push(card);refresh();renderChrome();
+  reveal(card,newsSince(before));
 };
-function showDup(nr){
-  const c=nr!=null?owned.get(nr):null;
+function showDup(c){
   const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}<p class="hint">Elke wijn levert maar één kaart op. Deze scan telt niet mee voor je dagelijkse 3.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
   const k=o.querySelector('.card');if(k)tilt(k);const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
-function reveal(c){
-  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Winex</b><div class="seal">${nrf(c.nr)}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+function pageOfCard(c){
+  return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.physical[p.set.id]||[]).some(x=>x&&x.id===c.id))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
+}
+function reveal(c,news){
+  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Winex</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   const open=()=>{if(flip.classList.contains('open'))return;flip.classList.add('open');
     setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
       o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Winex die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
   flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
-  o.querySelector('#place').onclick=()=>{closeOverlay();lastNew=c.nr;go(ORDER.indexOf(c.reg)+FIRST,true);setTimeout(()=>{lastNew=null},2500)};
+  o.querySelector('#place').onclick=()=>{
+    closeOverlay();lastNewId=c.id;const pg=pageOfCard(c);go(pg>0?pg:1,true);
+    setTimeout(()=>{lastNewId=null},2500);
+    if(news.length)setTimeout(()=>showNews(news),reduced?300:2300);
+  };
+}
+function showNews(news){
+  const o=overlay(`<p class="status">Nieuws in je album</p><ul class="news">${news.map(([k,n,t])=>`<li><span>${esc(k)}</span><b>${esc(n)}</b><em>${esc(t)}</em></li>`).join('')}</ul><div class="actions"><button class="btn primary" id="close">Verder</button></div>`);
+  const b=o.querySelector('#close');b.onclick=()=>{closeOverlay();renderChrome()};b.focus();
 }
 
 /* ---------- uitleg en uitloggen ---------- */
@@ -729,31 +822,32 @@ function openInfo(){
     <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
       <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
-    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je kunt 3 nieuwe wijnen per dag scannen; elke wijn levert één kaart op. Een rode stempel betekent dat jij de wijn als eerste in Winex scande.</p>
+    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je kunt 3 nieuwe wijnen per dag scannen; elke wijn levert één kaart op.</p>
+    <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Winex scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 async function logout(){
-  closeOverlay();await sb.auth.signOut();session=null;owned=new Map();ownedKeys=new Set();authStep='email';busy=false;go(0,true);toast('Je bent uitgelogd.');
+  closeOverlay();await sb.auth.signOut();session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
 }
 
 /* ---------- Rare-stijl met eigen foto (alleen voorbeeld) ---------- */
 function openUpload(){
-  const startReg=cur>=FIRST?ORDER[cur-FIRST]:'bordeaux';
+  const keys=Object.keys(AREAS);
   const o=overlay(`<p class="status">Rare-stijl met je eigen foto</p>
     <div class="upl">
       <div class="pvwrap"><img class="pv" id="pv" alt="Voorbeeld van de kaartafbeelding"><span class="pvtag" id="pvtag">Voorbeeldfles</span></div>
       <label class="pick" for="file"><span id="picktxt">Kies een foto van een fles</span><input type="file" id="file" accept="image/*"></label>
       <p class="err" id="err" hidden></p>
-      <label for="wr">Regio (bepaalt de kleuren)<select id="wr">${ORDER.map(rk=>`<option value="${rk}"${rk===startReg?' selected':''}>${esc(REG[rk].naam)}</option>`).join('')}</select></label>
+      <label for="wr">Regio (bepaalt de kleuren)<select id="wr">${keys.map(k=>`<option value="${k}">${esc(AREAS[k].naam)}</option>`).join('')}</select></label>
     </div>
     <p class="hint">Zo ziet een Rare-kaart van jouw fles eruit. Dit is een voorbeeld en wordt niet bewaard; in de echte app gebeurt het automatisch bij het scannen.</p>
     <div class="actions"><button class="btn primary" id="close">Klaar</button></div>`);
   const pv=o.querySelector('#pv'),wr=o.querySelector('#wr'),err=o.querySelector('#err'),file=o.querySelector('#file');
   let src=null;
   const showErr=m=>{err.textContent=m;err.hidden=!m};
-  const render=()=>{try{pv.src=posterize(src||demoPhoto({naam:'Mijn eigen fles',stijl:'Rood'}),wr.value)}catch(e){showErr('Deze foto kon niet worden omgezet. Probeer een andere foto.')}};
+  const render=()=>{try{const a=AREAS[wr.value];pv.src=posterize(src||demoPhoto({naam:'Mijn eigen fles',stijl:'Rood'}),{naam:a.naam,c:a.c,motifs:a.motifs})}catch(e){showErr('Deze foto kon niet worden omgezet. Probeer een andere foto.')}};
   render();wr.onchange=render;
   file.onchange=()=>{
     showErr('');const f=file.files&&file.files[0];if(!f)return;
@@ -768,12 +862,12 @@ function openUpload(){
 
 /* ---------- start ---------- */
 (async function boot(){
-  go(0,true);
+  refresh();go(0,true);
   try{const {data}=await sb.auth.getSession();session=data.session}catch(e){session=null}
   if(session)await loadAlbum();
-  loading=false;go(0,true);
+  loading=false;refresh();go(0,true);
   sb.auth.onAuthStateChange((ev,s)=>{
-    if(ev==='SIGNED_OUT'&&session){session=null;owned=new Map();ownedKeys=new Set();go(0,true)}
+    if(ev==='SIGNED_OUT'&&session){session=null;cards=[];ownedKeys=new Set();refresh();cur=0;go(0,true)}
     else if(ev==='SIGNED_IN'&&s&&!session&&!verifying){session=s;loadAlbum().then(()=>go(0,true))}
     else if(s)session=s;
   });

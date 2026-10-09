@@ -1,6 +1,6 @@
 # Winex – Setcatalogus v1
 
-Concept ter beoordeling. Alles is aan te passen.
+Vastgesteld op 9 oktober 2026. De sets staan in code in `data.js`; dit document is de leesbare versie.
 
 ## Principes
 
@@ -58,14 +58,27 @@ Doel: voltooid binnen 1–3 weken. Eerste overwinning.
 | Bourgogne (regionaal) | 🟢 |
 | Mâcon / Mâcon-Villages | 🟢 |
 | Chablis | 🟢 |
-| Beaujolais (incl. cru's) | 🟢 |
+| Givry / Mercurey | 🟡 |
 | Crémant de Bourgogne | 🟡 |
 | Pouilly-Fuissé | 🟡 |
 | Côte de Nuits-Villages | 🟡 |
 | Gevrey-Chambertin | 🔴 |
 | Meursault | 🔴 |
 
-*Vrij te spelen: **Bourgogne II*** – Givry, Mercurey, Rully, Santenay, Savigny-lès-Beaune, Pommard, Volnay, Nuits-Saint-Georges, Chablis Premier Cru.
+*Vrij te spelen: **Bourgogne II*** – Rully, Montagny, Santenay, Savigny-lès-Beaune, Pommard, Volnay, Nuits-Saint-Georges, Vosne-Romanée, Chablis Premier Cru.
+
+### Frankrijk – Beaujolais (eigen regio)
+| Vak | |
+|---|---|
+| Beaujolais | 🟢 |
+| Beaujolais-Villages | 🟢 |
+| Morgon | 🟡 |
+| Fleurie | 🟡 |
+| Moulin-à-Vent | 🟡 |
+| Brouilly / Côte de Brouilly | 🟡 |
+| Juliénas | 🟡 |
+| Saint-Amour | 🔴 |
+| Chiroubles | 🔴 |
 
 ### Frankrijk – Rhône
 | Vak | |
@@ -223,12 +236,12 @@ Let op: dit zijn echte merken. Ze noemen in een lijst is normaal, maar gebruik g
 | Regio-verdieping (II) | 6–12 maanden |
 | Icons | jaren |
 
-## Open vragen
+## Besluiten (9 oktober 2026)
 
-1. Beaujolais onder Bourgogne laten vallen (handig voor de set) of als eigen regio (strikt genomen correcter)?
-2. Nieuw-Zeeland als één regioset met regio's als vakken, of later opsplitsen?
-3. De echte Icons-lijst nu al vastleggen, of eerst met fictieve demowijnen testen?
-4. Beloning bij een voltooide set in v1: alleen visueel (vergulde bladrand, stempel "Voltooid"), of al iets met partners?
+1. **Beaujolais is een eigen regio** met een eigen set; Bourgogne I kreeg in plaats daarvan het vak Givry / Mercurey.
+2. **Nieuwe-wereldlanden zijn één set per land**, met de regio's als vakken (zoals Nieuw-Zeeland). Chili, Zuid-Afrika en andere volgen dit model.
+3. **De echte Icons-lijst geldt vanaf nu.** Alleen namen, geen etiketten of logo's. De fictieve demo-Icons uit de eerste test zijn geen Icon meer.
+4. **Beloning in v1 is alleen visueel:** vergulde bladrand, stempel "Voltooid" en een melding. Partnerbeloningen pas als er cijfers zijn.
 
 ## Technische gevolgen
 
