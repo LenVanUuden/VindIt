@@ -391,6 +391,7 @@ button{font:inherit;color:inherit}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="data.js"></script>
+<script src="art.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -477,9 +478,9 @@ const setById=id=>SETS.find(s=>s.id===id);
 /* ---------- gebied en palet van een kaart ---------- */
 function areaOf(c){
   const a=AREAS[c.regio];
-  if(a) return {naam:c.regio==='nieuw-zeeland'?(c.app||a.naam):a.naam,c:a.c,motifs:a.motifs};
+  if(a) return {naam:c.regio==='nieuw-zeeland'?(c.app||a.naam):a.naam,c:a.c,motifs:a.motifs,art:a.art};
   const lp=LANDPAL[c.land]||LANDPAL['Frankrijk'];
-  return {naam:c.app||c.land||'Wijn',c:lp.c,motifs:lp.motifs};
+  return {naam:c.app||c.land||'Wijn',c:lp.c,motifs:lp.motifs,art:lp.art};
 }
 
 /* ---------- sets matchen ---------- */
@@ -547,52 +548,10 @@ function buildPages(){
 }
 function refresh(){st=compute();buildPages();if(cur>=pages.length)cur=pages.length-1}
 
-/* ---------- reisposter-illustraties ---------- */
-const M={
- chateau:(x,y,c)=>`<g><rect x="${x-16}" y="${y-18}" width="32" height="22" fill="${c.m}"/><rect x="${x-23}" y="${y-28}" width="8" height="32" fill="${c.m}"/><rect x="${x+15}" y="${y-28}" width="8" height="32" fill="${c.m}"/><polygon points="${x-25},${y-28} ${x-19},${y-42} ${x-13},${y-28}" fill="${c.dark}"/><polygon points="${x+13},${y-28} ${x+19},${y-42} ${x+25},${y-28}" fill="${c.dark}"/><polygon points="${x-17},${y-18} ${x},${y-28} ${x+17},${y-18}" fill="${c.dark}"/><rect x="${x-9}" y="${y-12}" width="4" height="6" fill="${c.dark}"/><rect x="${x+5}" y="${y-12}" width="4" height="6" fill="${c.dark}"/><rect x="${x-2}" y="${y-10}" width="4" height="10" fill="${c.dark}"/></g>`,
- village:(x,y,c)=>[[-20,0,12],[-6,-6,14],[9,-2,12],[22,2,10]].map(([dx,dy,w])=>`<rect x="${x+dx}" y="${y+dy-10}" width="${w}" height="14" fill="${c.m}"/><polygon points="${x+dx-1},${y+dy-10} ${x+dx+w/2},${y+dy-18} ${x+dx+w+1},${y+dy-10}" fill="${c.dark}"/>`).join('')+`<rect x="${x-3}" y="${y-34}" width="6" height="22" fill="${c.m}"/><polygon points="${x-4},${y-34} ${x},${y-44} ${x+4},${y-34}" fill="${c.dark}"/>`,
- church:(x,y,c)=>`<g><rect x="${x-18}" y="${y-16}" width="26" height="20" fill="${c.m}"/><polygon points="${x-20},${y-16} ${x-5},${y-26} ${x+10},${y-16}" fill="${c.dark}"/><rect x="${x+8}" y="${y-34}" width="10" height="38" fill="${c.m}"/><polygon points="${x+6},${y-34} ${x+13},${y-52} ${x+20},${y-34}" fill="${c.dark}"/><rect x="${x+11}" y="${y-28}" width="4" height="6" fill="${c.dark}"/></g>`,
- windmill:(x,y,c)=>`<g><polygon points="${x-8},${y+4} ${x+8},${y+4} ${x+5},${y-30} ${x-5},${y-30}" fill="${c.m}"/><polygon points="${x-7},${y-30} ${x},${y-38} ${x+7},${y-30}" fill="${c.dark}"/><g transform="rotate(22 ${x} ${y-32})" fill="${c.dark}"><rect x="${x-1.5}" y="${y-62}" width="3" height="60"/><rect x="${x-30}" y="${y-33.5}" width="60" height="3"/><rect x="${x+1.5}" y="${y-60}" width="6" height="24" fill="${c.m}" opacity=".8"/><rect x="${x-7.5}" y="${y-28}" width="6" height="24" fill="${c.m}" opacity=".8"/></g><rect x="${x-2.5}" y="${y-8}" width="5" height="9" fill="${c.dark}"/></g>`,
- pines:(x,y,c)=>[-26,-12,4,18,30].map((d,i)=>{const h=[30,40,34,44,28][i];return `<polygon points="${x+d-7},${y+4} ${x+d},${y-h} ${x+d+7},${y+4}" fill="${c.dark}"/>`}).join(''),
- cypress:(x,y,c)=>[-24,-10,6,22].map((d,i)=>`<ellipse cx="${x+d}" cy="${y-[16,22,18,24][i]}" rx="4" ry="${[18,24,20,26][i]}" fill="${c.dark}"/>`).join(''),
- farmhouse:(x,y,c)=>`<rect x="${x-18}" y="${y-16}" width="30" height="20" fill="${c.m}"/><polygon points="${x-21},${y-16} ${x-3},${y-26} ${x+15},${y-16}" fill="${c.sun}"/><rect x="${x-10}" y="${y-10}" width="5" height="6" fill="${c.dark}"/><ellipse cx="${x+22}" cy="${y-18}" rx="4" ry="22" fill="${c.dark}"/><ellipse cx="${x+31}" cy="${y-14}" rx="3.5" ry="18" fill="${c.dark}"/>`,
- mesa:(x,y,c)=>`<path d="M${x-60} ${y} L${x-42} ${y-30} L${x+12} ${y-30} L${x+22} ${y-18} L${x+40} ${y-18} L${x+56} ${y}Z" fill="${c.dark}" opacity=".55"/>`,
- mountains:(x,y,c)=>`<polygon points="-10,82 55,18 120,82" fill="${c.far}"/><polygon points="80,82 140,30 210,82" fill="${c.far}" opacity=".8"/><polygon points="44,29 55,18 66,29 59,27 55,31 50,27" fill="${c.m}"/><polygon points="131,38 140,30 149,38 143,36 140,40 136,36" fill="${c.m}"/>`
-};
-const BACK=new Set(['mountains','mesa']);
-function scene(A,v){
-  const c=A.c,mot=A.motifs[v%A.motifs.length];
-  const sx=[150,48,104,158][v],sy=[34,40,26,74][v],sr=v===3?22:14;
-  const f=[[78,46,64,52],[66,58,48,70],[72,40,60,44],[60,62,70,50]][v];
-  const n=[[100,84,98],[94,106,88],[104,86,96],[96,90,106]][v];
-  const mx=[132,58,104,48][v];
-  const label=A.naam.toUpperCase(),fs=label.length>14?Math.max(6.5,150/label.length):11,ls=label.length>14?1:3;
-  let s=`<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustratie ${esc(A.naam)}"><rect width="200" height="140" fill="${c.sky}"/>`;
-  s+=`<rect y="${sy-2}" width="200" height="1.5" fill="${c.sun}" opacity=".5"/><rect y="${sy+5}" width="200" height="1" fill="${c.sun}" opacity=".35"/><circle cx="${sx}" cy="${sy}" r="${sr}" fill="${c.sun}"/>`;
-  if(BACK.has(mot)) s+=M[mot](mx,88,c);
-  s+=`<path d="M0 ${f[0]} Q50 ${f[1]} 100 ${f[2]} T200 ${f[3]} V140 H0Z" fill="${c.far}"/>`;
-  if(!BACK.has(mot)) s+=M[mot](mx,90,c);
-  s+=`<path d="M0 ${n[0]} Q60 ${n[1]} 120 ${n[2]} T200 ${n[2]-6} V140 H0Z" fill="${c.near}"/>`;
-  if(v!==3){const top=Math.min(...n)+10;for(let i=0;i<8;i++)s+=`<line x1="${i*30-14}" y1="140" x2="${70+i*10}" y2="${top}" stroke="${c.dark}" stroke-width="2.2" opacity=".5"/>`}
-  else{for(let i=0;i<6;i++)s+=`<rect x="0" y="${112+i*1.5}" width="200" height=".8" fill="${c.dark}" opacity=".35"/>`}
-  s+=`<rect y="121" width="200" height="19" fill="${c.dark}"/><text x="100" y="134.5" text-anchor="middle" font-family="Limelight, Georgia, serif" font-size="${fs.toFixed(1)}" letter-spacing="${ls}" fill="${c.sky}">${esc(label)}</text></svg>`;
-  return s;
-}
+/* ---------- reisposter-illustraties (art.js) ---------- */
+function scene(A,v){return posterSVG(A,v,A.naam)}
 function ultraFill(A,v){
-  const c=A.c,mot=A.motifs[v%A.motifs.length];
-  const vb='viewBox="0 0 200 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"';
-  let rays='';
-  for(let i=0;i<16;i++){const a1=(i/16)*Math.PI*2,a2=a1+Math.PI/16;rays+=`<polygon points="100,118 ${(100+400*Math.cos(a1)).toFixed(1)},${(118+400*Math.sin(a1)).toFixed(1)} ${(100+400*Math.cos(a2)).toFixed(1)},${(118+400*Math.sin(a2)).toFixed(1)}" fill="${c.sun}" opacity=".16"/>`}
-  const back=`<svg ${vb}><rect width="200" height="280" fill="${c.sky}"/>${rays}<circle cx="100" cy="118" r="32" fill="${c.sun}"/>${[104,113,123].map((y,i)=>`<rect y="${y}" width="200" height="${2+i*.6}" fill="${c.sky}" opacity=".7"/>`).join('')}</svg>`;
-  let mid=`<svg ${vb}>`;
-  if(mot==='mountains') mid+=`<g transform="translate(0 80)">${M.mountains(0,0,c)}</g>`;
-  if(mot==='mesa') mid+=M.mesa(100,166,c);
-  mid+=`<path d="M0 162 Q50 126 100 148 T200 134 V280 H0Z" fill="${c.far}"/>`;
-  if(!BACK.has(mot)) mid+=M[mot](132,168,c);
-  mid+='</svg>';
-  let front=`<svg ${vb}><path d="M0 204 Q60 180 120 194 T200 188 V280 H0Z" fill="${c.near}"/>`;
-  for(let i=0;i<9;i++) front+=`<line x1="${i*30-30}" y1="280" x2="${60+i*12}" y2="200" stroke="${c.dark}" stroke-width="3" opacity=".45"/>`;
-  front+=`<g fill="${c.dark}"><path d="M8 214 C26 196 52 200 58 216 C46 214 40 222 44 232 C30 226 20 230 16 240 C14 228 4 224 8 214Z"/>${[[40,236],[50,236],[60,236],[45,245],[55,245],[50,254],[65,244]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5.5"/>`).join('')}<path d="M50 230 C52 220 58 214 66 212" stroke="${c.dark}" stroke-width="2" fill="none"/></g></svg>`;
+  const [back,mid,front]=posterTallLayers(A,v);
   return `<div class="ufill" role="img" aria-label="Full-art illustratie ${esc(A.naam)}"><div class="ul" style="--k:-6px">${back}</div><div class="ul" style="--k:-14px">${mid}</div><div class="ul" style="--k:-26px">${front}</div></div>`;
 }
 

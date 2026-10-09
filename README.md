@@ -28,7 +28,7 @@ Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. De kansen zijn
 1. **Prototype**: album, sleeves, klassen, holo-effecten (klaar)
 2. **Fundament** (in test): hosting, inloggen met e-maillink, database (Supabase, EU), de 3-per-dag-regel en de klassetrekking aan de serverkant
 3. **Scannen**: camera, etiketherkenning, dubbelcheck, budgetgrens van €30 per maand
-4. **Plaatjesbibliotheek**: reisposterillustraties per regio, startlijst met iconische wijnen
+4. **Illustraties**: getekende reisposters per regio en land (art.js, klaar in eerste versie); later eventueel AI- of illustratorwerk
 5. **Test**: eerst Len en Malou, daarna 10–20 vrienden
 
 ## Lokaal bekijken

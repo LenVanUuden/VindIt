@@ -16,39 +16,39 @@ const LANDS = ['Frankrijk','Italië','Spanje','Portugal','Duitsland','Oostenrijk
 
 /* Kleurpaletten en motieven voor de reisposters */
 const AREAS = {
-  bordeaux:{naam:'Bordeaux',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#EED3AC',sun:'#F09A3E',far:'#93607A',near:'#5A3550',dark:'#2E1A2A',m:'#F7EAD6'}},
-  bourgogne:{naam:'Bourgogne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#F3DDAA',sun:'#E4693A',far:'#B0734A',near:'#6B7A3E',dark:'#33401E',m:'#FAF0DA'}},
-  beaujolais:{naam:'Beaujolais',land:'Frankrijk',motifs:['village','church'],c:{sky:'#F2D6C9',sun:'#E8784A',far:'#B4687A',near:'#6E8B4E',dark:'#3A2A3E',m:'#FBEFE6'}},
-  jura:{naam:'Jura',land:'Frankrijk',motifs:['windmill','pines'],c:{sky:'#D3E4E1',sun:'#F2C462',far:'#7C9C95',near:'#47695A',dark:'#213A31',m:'#F5F0E2'}},
-  rhone:{naam:'Rhône',land:'Frankrijk',motifs:['chateau','cypress'],c:{sky:'#F6D9A0',sun:'#E46B2E',far:'#B57B57',near:'#7F7A3C',dark:'#3C3220',m:'#F8EBD3'}},
-  loire:{naam:'Loire',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#D7E3EC',sun:'#F3C26B',far:'#8FA7B8',near:'#5E8156',dark:'#2B3C35',m:'#F5F1E8'}},
-  champagne:{naam:'Champagne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#EFE7D2',sun:'#E9B949',far:'#A6A07A',near:'#6F7F45',dark:'#2F3524',m:'#FFFDF5'}},
-  elzas:{naam:'Elzas',land:'Frankrijk',motifs:['church','village'],c:{sky:'#E4E6D2',sun:'#EBB54A',far:'#8FA27E',near:'#5C7A45',dark:'#2C3A26',m:'#FBF6EA'}},
-  languedoc:{naam:'Languedoc',land:'Frankrijk',motifs:['cypress','chateau'],c:{sky:'#F6D59C',sun:'#E5622F',far:'#BE8455',near:'#857A3E',dark:'#3E2F1E',m:'#FAEBD2'}},
-  provence:{naam:'Provence',land:'Frankrijk',motifs:['farmhouse','cypress'],c:{sky:'#F3D7D0',sun:'#EE9A5C',far:'#B58FB0',near:'#8C9C5A',dark:'#3D3242',m:'#FFF6EE'}},
-  piemonte:{naam:'Piemonte',land:'Italië',motifs:['mountains','village'],c:{sky:'#E6DCCB',sun:'#E07B45',far:'#9E8DA6',near:'#7D8650',dark:'#3A2D2E',m:'#FFFFFF'}},
-  veneto:{naam:'Veneto',land:'Italië',motifs:['church','cypress'],c:{sky:'#E2E3D8',sun:'#E9A64C',far:'#9AA493',near:'#6E8650',dark:'#2E3428',m:'#FBF7EC'}},
-  sicilie:{naam:'Sicilië',land:'Italië',motifs:['mountains','farmhouse'],c:{sky:'#F5C98B',sun:'#E0482E',far:'#B5764E',near:'#8A8A44',dark:'#41281C',m:'#FAEAD0'}},
-  toscane:{naam:'Toscane',land:'Italië',motifs:['cypress','farmhouse'],c:{sky:'#F7CD8E',sun:'#E05A38',far:'#C98F55',near:'#86924A',dark:'#3A4522',m:'#FBEBCF'}},
-  rioja:{naam:'Rioja',land:'Spanje',motifs:['mesa','village'],c:{sky:'#F5BE73',sun:'#FDE6A8',far:'#BC6A40',near:'#84402C',dark:'#47201A',m:'#F8E4C4'}},
-  'nieuw-zeeland':{naam:'Nieuw-Zeeland',land:'Nieuw-Zeeland',motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
+  bordeaux:{naam:'Bordeaux',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#EED3AC',sun:'#F09A3E',far:'#93607A',near:'#5A3550',dark:'#2E1A2A',m:'#F7EAD6'},art:{landmark:'chateau',water:'river',flora:'poplar'}},
+  bourgogne:{naam:'Bourgogne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#F3DDAA',sun:'#E4693A',far:'#B0734A',near:'#6B7A3E',dark:'#33401E',m:'#FAF0DA'},art:{landmark:'church',flora:'poplar'}},
+  beaujolais:{naam:'Beaujolais',land:'Frankrijk',motifs:['village','church'],c:{sky:'#F2D6C9',sun:'#E8784A',far:'#B4687A',near:'#6E8B4E',dark:'#3A2A3E',m:'#FBEFE6'},art:{landmark:'village',flora:'poplar'}},
+  jura:{naam:'Jura',land:'Frankrijk',motifs:['windmill','pines'],c:{sky:'#D3E4E1',sun:'#F2C462',far:'#7C9C95',near:'#47695A',dark:'#213A31',m:'#F5F0E2'},art:{landmark:'church',mount:'alps',flora:'pines'}},
+  rhone:{naam:'Rhône',land:'Frankrijk',motifs:['chateau','cypress'],c:{sky:'#F6D9A0',sun:'#E46B2E',far:'#B57B57',near:'#7F7A3C',dark:'#3C3220',m:'#F8EBD3'},art:{landmark:'papal',water:'river',flora:'cypress',terraces:true}},
+  loire:{naam:'Loire',land:'Frankrijk',motifs:['chateau','village'],c:{sky:'#D7E3EC',sun:'#F3C26B',far:'#8FA7B8',near:'#5E8156',dark:'#2B3C35',m:'#F5F1E8'},art:{landmark:'chateau',water:'river',flora:'poplar'}},
+  champagne:{naam:'Champagne',land:'Frankrijk',motifs:['church','village'],c:{sky:'#EFE7D2',sun:'#E9B949',far:'#A6A07A',near:'#6F7F45',dark:'#2F3524',m:'#FFFDF5'},art:{landmark:'cathedral',flora:'poplar'}},
+  elzas:{naam:'Elzas',land:'Frankrijk',motifs:['church','village'],c:{sky:'#E4E6D2',sun:'#EBB54A',far:'#8FA27E',near:'#5C7A45',dark:'#2C3A26',m:'#FBF6EA'},art:{landmark:'timber',mount:'alps',flora:'pines'}},
+  languedoc:{naam:'Languedoc',land:'Frankrijk',motifs:['cypress','chateau'],c:{sky:'#F6D59C',sun:'#E5622F',far:'#BE8455',near:'#857A3E',dark:'#3E2F1E',m:'#FAEBD2'},art:{landmark:'walled',water:'sea',flora:'cypress'}},
+  provence:{naam:'Provence',land:'Frankrijk',motifs:['farmhouse','cypress'],c:{sky:'#F3D7D0',sun:'#EE9A5C',far:'#B58FB0',near:'#8C9C5A',dark:'#3D3242',m:'#FFF6EE'},art:{landmark:'farmhouse',water:'sea',flora:'cypress',lavender:true}},
+  piemonte:{naam:'Piemonte',land:'Italië',motifs:['mountains','village'],c:{sky:'#E6DCCB',sun:'#E07B45',far:'#9E8DA6',near:'#7D8650',dark:'#3A2D2E',m:'#FFFFFF'},art:{landmark:'castle',mount:'alps',flora:'poplar'}},
+  veneto:{naam:'Veneto',land:'Italië',motifs:['church','cypress'],c:{sky:'#E2E3D8',sun:'#E9A64C',far:'#9AA493',near:'#6E8650',dark:'#2E3428',m:'#FBF7EC'},art:{landmark:'campanile',water:'lake',flora:'cypress'}},
+  sicilie:{naam:'Sicilië',land:'Italië',motifs:['mountains','farmhouse'],c:{sky:'#F5C98B',sun:'#E0482E',far:'#B5764E',near:'#8A8A44',dark:'#41281C',m:'#FAEAD0'},art:{landmark:'church',mount:'volcano',water:'sea',flora:'cypress'}},
+  toscane:{naam:'Toscane',land:'Italië',motifs:['cypress','farmhouse'],c:{sky:'#F7CD8E',sun:'#E05A38',far:'#C98F55',near:'#86924A',dark:'#3A4522',m:'#FBEBCF'},art:{landmark:'farmhouse',flora:'cypress'}},
+  rioja:{naam:'Rioja',land:'Spanje',motifs:['mesa','village'],c:{sky:'#F5BE73',sun:'#FDE6A8',far:'#BC6A40',near:'#84402C',dark:'#47201A',m:'#F8E4C4'},art:{landmark:'bodega',mount:'mesa',flora:'poplar'}},
+  'nieuw-zeeland':{naam:'Nieuw-Zeeland',land:'Nieuw-Zeeland',motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'},art:{landmark:'farmhouse',mount:'alps',water:'lake',flora:'pines'}}
 };
 /* Terugval per land voor gebieden zonder eigen palet */
 const LANDPAL = {
-  'Frankrijk':{motifs:['village','church'],c:{sky:'#E9DCC0',sun:'#E58A45',far:'#9C7A8E',near:'#5F6E44',dark:'#2E2A26',m:'#FAF3E6'}},
-  'Italië':{motifs:['cypress','village'],c:{sky:'#F4D49A',sun:'#D9603A',far:'#B98557',near:'#7D8A44',dark:'#3A3A22',m:'#FBEED6'}},
-  'Spanje':{motifs:['mesa','village'],c:{sky:'#F3C27E',sun:'#FBE1A0',far:'#C27546',near:'#8C4A2E',dark:'#47231A',m:'#F8E6C8'}},
-  'Portugal':{motifs:['village','cypress'],c:{sky:'#F1D7A8',sun:'#E57A3C',far:'#A65E4E',near:'#6F7A3A',dark:'#352620',m:'#F7EADA'}},
-  'Duitsland':{motifs:['church','pines'],c:{sky:'#D9E2D3',sun:'#EFC25C',far:'#8C9C7E',near:'#4F6B45',dark:'#26332A',m:'#F6F2E6'}},
-  'Oostenrijk':{motifs:['mountains','church'],c:{sky:'#D5E3E8',sun:'#F2D27A',far:'#7F98A3',near:'#5E8352',dark:'#28392F',m:'#FFFFFF'}},
-  'Nederland':{motifs:['windmill','village'],c:{sky:'#D8E4EE',sun:'#F0B54E',far:'#8DA3B5',near:'#5E8A4E',dark:'#2A3A3A',m:'#FAF7EE'}},
-  'Verenigd Koninkrijk':{motifs:['church','village'],c:{sky:'#DCE3E3',sun:'#EDC46A',far:'#93A1A0',near:'#5D7D51',dark:'#2B3530',m:'#FAF8F0'}},
-  'Zuid-Afrika':{motifs:['mesa','farmhouse'],c:{sky:'#F2CFA0',sun:'#E86A3A',far:'#A87A62',near:'#6A7E46',dark:'#2E2C22',m:'#FAF0E0'}},
-  'Chili':{motifs:['mountains','farmhouse'],c:{sky:'#E7D2B6',sun:'#E5733F',far:'#8E8AA6',near:'#7C8A4A',dark:'#30302A',m:'#FFFFFF'}},
-  'Argentinië':{motifs:['mountains','village'],c:{sky:'#EAD7C0',sun:'#E77B45',far:'#9B85A0',near:'#8A7E48',dark:'#3A2C2A',m:'#FFFFFF'}},
-  'Verenigde Staten':{motifs:['farmhouse','pines'],c:{sky:'#F3D3A4',sun:'#EA7A3E',far:'#B98A6A',near:'#7E8A48',dark:'#33301F',m:'#FAF0DE'}},
-  'Australië':{motifs:['mesa','farmhouse'],c:{sky:'#F4C48A',sun:'#E4572E',far:'#C2704A',near:'#8E7E44',dark:'#40261C',m:'#FAEAD2'}},
-  'Nieuw-Zeeland':{motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'}}
+  'Frankrijk':{motifs:['village','church'],c:{sky:'#E9DCC0',sun:'#E58A45',far:'#9C7A8E',near:'#5F6E44',dark:'#2E2A26',m:'#FAF3E6'},art:{landmark:'church',flora:'poplar'}},
+  'Italië':{motifs:['cypress','village'],c:{sky:'#F4D49A',sun:'#D9603A',far:'#B98557',near:'#7D8A44',dark:'#3A3A22',m:'#FBEED6'},art:{landmark:'campanile',flora:'cypress'}},
+  'Spanje':{motifs:['mesa','village'],c:{sky:'#F3C27E',sun:'#FBE1A0',far:'#C27546',near:'#8C4A2E',dark:'#47231A',m:'#F8E6C8'},art:{landmark:'bodega',mount:'mesa',flora:'poplar'}},
+  'Portugal':{motifs:['village','cypress'],c:{sky:'#F1D7A8',sun:'#E57A3C',far:'#A65E4E',near:'#6F7A3A',dark:'#352620',m:'#F7EADA'},art:{landmark:'farmhouse',water:'river',flora:'cypress',terraces:true}},
+  'Duitsland':{motifs:['church','pines'],c:{sky:'#D9E2D3',sun:'#EFC25C',far:'#8C9C7E',near:'#4F6B45',dark:'#26332A',m:'#F6F2E6'},art:{landmark:'castle',water:'river',flora:'pines',terraces:true}},
+  'Oostenrijk':{motifs:['mountains','church'],c:{sky:'#D5E3E8',sun:'#F2D27A',far:'#7F98A3',near:'#5E8352',dark:'#28392F',m:'#FFFFFF'},art:{landmark:'abbey',water:'river',mount:'alps',flora:'pines'}},
+  'Nederland':{motifs:['windmill','village'],c:{sky:'#D8E4EE',sun:'#F0B54E',far:'#8DA3B5',near:'#5E8A4E',dark:'#2A3A3A',m:'#FAF7EE'},art:{landmark:'windmill',water:'lake',flora:'poplar'}},
+  'Verenigd Koninkrijk':{motifs:['church','village'],c:{sky:'#DCE3E3',sun:'#EDC46A',far:'#93A1A0',near:'#5D7D51',dark:'#2B3530',m:'#FAF8F0'},art:{landmark:'church',flora:'poplar'}},
+  'Zuid-Afrika':{motifs:['mesa','farmhouse'],c:{sky:'#F2CFA0',sun:'#E86A3A',far:'#A87A62',near:'#6A7E46',dark:'#2E2C22',m:'#FAF0E0'},art:{landmark:'gable',mount:'table',flora:'gum'}},
+  'Chili':{motifs:['mountains','farmhouse'],c:{sky:'#E7D2B6',sun:'#E5733F',far:'#8E8AA6',near:'#7C8A4A',dark:'#30302A',m:'#FFFFFF'},art:{landmark:'farmhouse',mount:'andes',flora:'poplar'}},
+  'Argentinië':{motifs:['mountains','village'],c:{sky:'#EAD7C0',sun:'#E77B45',far:'#9B85A0',near:'#8A7E48',dark:'#3A2C2A',m:'#FFFFFF'},art:{landmark:'bodega',mount:'andes',flora:'poplar'}},
+  'Verenigde Staten':{motifs:['farmhouse','pines'],c:{sky:'#F3D3A4',sun:'#EA7A3E',far:'#B98A6A',near:'#7E8A48',dark:'#33301F',m:'#FAF0DE'},art:{landmark:'barn',flora:'redwood'}},
+  'Australië':{motifs:['mesa','farmhouse'],c:{sky:'#F4C48A',sun:'#E4572E',far:'#C2704A',near:'#8E7E44',dark:'#40261C',m:'#FAEAD2'},art:{landmark:'farmhouse',flora:'gum'}},
+  'Nieuw-Zeeland':{motifs:['mountains','pines'],c:{sky:'#B4D0E4',sun:'#FFF0C2',far:'#6A89A8',near:'#77A35C',dark:'#2F5130',m:'#FFFFFF'},art:{landmark:'farmhouse',mount:'alps',water:'lake',flora:'pines'}}
 };
 
 /* ---------- Sets ----------
