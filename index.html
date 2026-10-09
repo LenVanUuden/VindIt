@@ -527,8 +527,9 @@ function coverHTML(){
       <p class="err" id="lerr" hidden></p>
       <p>Geen wachtwoord nodig. Je krijgt een code per e-mail.</p></form>`;
   return frame('Bijna binnen')+`<form class="login" id="login" novalidate>
-      <p>We hebben een code gestuurd naar<br><b>${esc(pendingEmail)}</b></p>
-      <label for="otp">Code uit de e-mail</label>
+      <p>We hebben een e-mail gestuurd naar<br><b>${esc(pendingEmail)}</b></p>
+      <p>Open de mail op dit toestel en tik op de inloglink. Je album opent dan vanzelf.</p>
+      <label for="otp">Staat er een code in de mail?</label>
       <input id="otp" class="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="8" placeholder="······">
       <button class="btn primary" type="submit">Album openen</button>
       <p class="err" id="lerr" hidden></p>
