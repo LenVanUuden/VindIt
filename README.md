@@ -2,7 +2,7 @@
 
 Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg een kaart en steek hem in de sleeve van een dik, in leer gebonden album. Spaar regio's vol en hoop op een zeldzame kaart.
 
-**Status:** prototype (fase 1). Scannen is nog gesimuleerd en er is nog geen login of database.
+**Status:** fase 2. Inloggen met e-mailcode en een echte database (Supabase); scannen gebruikt nog fictieve demowijnen.
 
 ## Spelregels
 
@@ -25,7 +25,7 @@ Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. De kansen zijn
 ## Bouwplan
 
 1. **Prototype**: album, sleeves, klassen, holo-effecten (klaar)
-2. **Fundament**: hosting, inloggen met e-maillink, database (Supabase, EU), de 3-per-dag-regel en de klassetrekking aan de serverkant
+2. **Fundament** (in test): hosting, inloggen met e-maillink, database (Supabase, EU), de 3-per-dag-regel en de klassetrekking aan de serverkant
 3. **Scannen**: camera, etiketherkenning, dubbelcheck, budgetgrens van €30 per maand
 4. **Plaatjesbibliotheek**: reisposterillustraties per regio, startlijst met iconische wijnen
 5. **Test**: eerst Len en Malou, daarna 10–20 vrienden
@@ -33,3 +33,7 @@ Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. De kansen zijn
 ## Lokaal bekijken
 
 Open `index.html` in een browser. Er is geen build-stap nodig.
+
+## Database
+
+Het schema staat in `supabase/schema.sql`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
