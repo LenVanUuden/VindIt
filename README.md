@@ -1,4 +1,4 @@
-# Vin’d It (werknaam, voorheen Winex)
+# Vin’d It
 
 Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg een kaart en steek hem in de sleeve van een dik, in leer gebonden album. Spaar regio's vol en hoop op een zeldzame kaart.
 
@@ -33,7 +33,7 @@ Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. De kansen zijn
 
 ## Lokaal bekijken
 
-Open `index.html` in een browser. Er is geen build-stap nodig.
+Live: https://lenvanuuden.github.io/VindIt/ — of open `index.html` in een browser. Er is geen build-stap nodig.
 
 ## Database
 
