@@ -314,6 +314,49 @@ button{font:inherit;color:inherit}
 .news span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft);opacity:.8}
 .news b{font-family:var(--display);font-weight:400;font-size:19px;color:var(--gold-soft)}
 .news em{font-style:normal;font-size:12.5px;opacity:.75}
+
+/* Omslagkleuren */
+:root[data-cover="groen"]{--leather:#24432F;--leather-dark:#15291D}
+:root[data-cover="blauw"]{--leather:#22314F;--leather-dark:#141E33}
+:root[data-cover="cognac"]{--leather:#86491F;--leather-dark:#5A2F12}
+:root[data-cover="zwart"]{--leather:#262321;--leather-dark:#151312}
+
+/* Crème bladen */
+:root[data-pages="creme"]{--board:#E8DFCB;--pocket:#DCD1B9}
+:root[data-pages="creme"] .page:not(.cover),:root[data-pages="creme"] .leafback:not(.endpaper){background-image:linear-gradient(90deg,rgba(80,55,25,.22),rgba(80,55,25,0) 20px),radial-gradient(ellipse at 70% 20%,rgba(255,255,255,.35),rgba(255,255,255,0) 60%);color:#3A2E22;box-shadow:inset -1px 0 0 rgba(255,255,255,.5),1px 0 0 #B9AE95,2px 0 0 #D6CCB4}
+:root[data-pages="creme"] .page:not(.cover) .eyebrow,:root[data-pages="creme"] .page:not(.cover) .progress,:root[data-pages="creme"] .page:not(.cover) .slabel,:root[data-pages="creme"] .page:not(.cover) .pfoot,:root[data-pages="creme"] .page:not(.cover) .note,:root[data-pages="creme"] .tiers b,:root[data-pages="creme"] .tiers span,:root[data-pages="creme"] .toc button span:last-child{color:#7A5A2A}
+:root[data-pages="creme"] .page:not(.cover) .foil{background:linear-gradient(180deg,#B88A3A,#7A5520 55%,#A87A32);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 1px 0 rgba(255,255,255,.6))}
+:root[data-pages="creme"] .toc button{color:#3A2E22;border-bottom-color:rgba(90,60,30,.25)}
+:root[data-pages="creme"] .tiers div{border-top-color:rgba(90,60,30,.25)}
+:root[data-pages="creme"] .tiers .s-common{color:#8C8574}
+:root[data-pages="creme"] .tiers .s-rare{color:#6B7680}
+:root[data-pages="creme"] .tiers .s-superrare{color:#6C4FB0}
+:root[data-pages="creme"] .tiers .s-ultra,:root[data-pages="creme"] .tiers .s-icon{color:#9A6E22}
+:root[data-pages="creme"] .bar{background:rgba(90,60,30,.12)}
+:root[data-pages="creme"] .bar span{background:#A87A32}
+:root[data-pages="creme"] .sleeve{box-shadow:inset 0 2px 3px rgba(80,55,25,.25),0 1px 0 rgba(255,255,255,.5)}
+:root[data-pages="creme"] .sleeve::after{border-color:rgba(255,255,255,.55)}
+:root[data-pages="creme"] .empty{border-color:rgba(90,60,30,.25)}
+:root[data-pages="creme"] .empty.d1{color:rgba(90,60,30,.6)}
+:root[data-pages="creme"] .empty.d2{color:rgba(90,60,30,.48)}
+:root[data-pages="creme"] .empty.d3{color:rgba(90,60,30,.36)}
+:root[data-pages="creme"] .donestamp{color:#9A6E22;border-color:#9A6E22}
+:root[data-pages="creme"] .page.done{box-shadow:inset 0 0 0 1.5px rgba(154,110,34,.6),1px 0 0 #B9AE95,2px 0 0 #D6CCB4}
+
+/* Instellingen */
+.settings fieldset{border:0;margin:0;padding:0;display:grid;gap:8px}
+.settings legend{font-size:12px;color:var(--gold-soft);letter-spacing:.03em;margin-bottom:6px;padding:0}
+.sprev{margin:-4px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);opacity:.8;text-align:center}
+.swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.swatches.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sw{display:flex!important;flex-direction:column;align-items:center;gap:5px;font-size:10.5px!important;text-align:center;cursor:pointer;color:var(--cream)!important}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.swbook{width:100%;max-width:46px;aspect-ratio:3/4;border-radius:2px 5px 5px 2px;box-shadow:inset 3px 0 0 rgba(0,0,0,.35),inset 0 0 0 1px rgba(210,174,98,.4);outline:2px solid transparent;outline-offset:3px}
+.swpage{width:100%;height:46px;border-radius:4px;outline:2px solid transparent;outline-offset:3px;box-shadow:inset 0 0 0 1px rgba(233,211,160,.3)}
+.sw input:checked+span{outline-color:var(--gold)}
+.sw input:focus-visible+span{outline-color:var(--cream)}
+.sw-bordeaux .swbook{background:#5A1F2A}.sw-groen .swbook{background:#24432F}.sw-blauw .swbook{background:#22314F}.sw-cognac .swbook{background:#86491F}.sw-zwart .swbook{background:#262321}
+.pg-zwart .swpage{background:#1F2622}.pg-creme .swpage{background:#E8DFCB}
 </style>
 </head>
 <body>
@@ -331,6 +374,7 @@ button{font:inherit;color:inherit}
   </div>
   <div class="extras">
     <button class="open" data-act="upload">Rare-stijl met je eigen foto</button>
+    <button class="reset" data-act="settings">Instellingen</button>
     <button class="reset" data-act="info">Uitleg</button>
   </div>
 </div>
@@ -364,6 +408,59 @@ const wkey=w=>low(w.maker)+'|'+low(w.naam);
 const amsDay=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 const fmtDate=iso=>new Date(iso).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'}).replace('.','');
 const firstName=()=>{const e=session?.user?.email||'';const n=e.split('@')[0].split(/[._-]/)[0];return n?n[0].toUpperCase()+n.slice(1):'jou'};
+
+/* ---------- instellingen ---------- */
+const COVERS={bordeaux:'Bordeaux',groen:'Groen',blauw:'Blauw',cognac:'Cognac',zwart:'Zwart'};
+const PAGESTYLE={zwart:'Zwart karton',creme:'Crème karton'};
+let settings={name:'',cover:'bordeaux',pages:'zwart'};
+try{const s=JSON.parse(localStorage.getItem('winex.settings')||'null');if(s)settings={...settings,...s}}catch(e){}
+const coverName=()=>settings.name||firstName();
+function applySettings(){
+  document.documentElement.dataset.cover=COVERS[settings.cover]?settings.cover:'bordeaux';
+  document.documentElement.dataset.pages=PAGESTYLE[settings.pages]?settings.pages:'zwart';
+  try{localStorage.setItem('winex.settings',JSON.stringify(settings))}catch(e){}
+}
+applySettings();
+async function loadSettings(){
+  try{
+    const {data,error}=await sb.from('collectors').select('display_name,cover_color,page_color').maybeSingle();
+    if(!error&&data){settings={name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
+  }catch(e){}
+}
+function openSettings(){
+  const o=overlay(`<p class="status">Instellingen</p>
+    <form class="upl settings" id="sf" novalidate>
+      <label for="sn">Naam op de omslag
+        <input type="text" id="sn" maxlength="24" autocomplete="nickname" value="${esc(settings.name)}" placeholder="${esc(firstName())}">
+      </label>
+      <p class="sprev" id="sprev">Collectie van ${esc(coverName())}</p>
+      <fieldset><legend>Kleur van de omslag</legend><div class="swatches">
+        ${Object.entries(COVERS).map(([k,l])=>`<label class="sw sw-${k}"><input type="radio" name="cover" value="${k}"${settings.cover===k?' checked':''}><span class="swbook" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
+      </div></fieldset>
+      <fieldset><legend>Bladen</legend><div class="swatches two">
+        ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
+      </div></fieldset>
+      <p class="err" id="serr" hidden></p>
+      <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
+    </form>`);
+  const f=o.querySelector('#sf'),sn=o.querySelector('#sn'),err=o.querySelector('#serr');
+  const showErr=m=>{err.textContent=m;err.hidden=!m};
+  sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    const name=sn.value.trim().replace(/\s+/g,' ');
+    if(name&&!/^[\p{L}\p{N} .'&-]{1,24}$/u.test(name)){showErr('Gebruik alleen letters, cijfers, spaties en . \' & - (maximaal 24 tekens).');sn.focus();return}
+    const next={name,cover:f.cover.value,pages:f.pages.value};
+    const btn=f.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Opslaan…';
+    let synced=false;
+    if(session){const {error}=await sb.rpc('update_settings',{p_name:name,p_cover:next.cover,p_pages:next.pages});synced=!error;if(error)console.error(error)}
+    settings=next;applySettings();closeOverlay();
+    if(stack.querySelector('.leaf'))go(cur,true);
+    toast(synced||!session?'Instellingen opgeslagen.':'Opgeslagen op dit toestel. Synchroniseren met je account lukte niet.');
+  };
+  sn.focus();
+}
 const scansToday=()=>{const t=amsDay(new Date());return cards.filter(c=>c.created&&amsDay(new Date(c.created))===t).length};
 const setById=id=>SETS.find(s=>s.id===id);
 
@@ -561,7 +658,7 @@ const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="
 function coverHTML(){
   const frame=(sub)=>`<div class="frame"${session?'':' style="padding:22px 18px"'}><p class="eyebrow">Wijnzegelalbum</p>${CREST}<h2 class="foil">Winex</h2><p class="eyebrow">${sub}</p></div>`;
   if(loading) return frame('Album wordt geladen')+'<p class="loading">Even geduld…</p>';
-  if(session) return frame('Collectie van '+esc(firstName()))+'<button class="open" data-go="1">Album openen</button>';
+  if(session) return frame('Collectie van '+esc(coverName()))+'<button class="open" data-go="1">Album openen</button>';
   if(authStep==='email') return frame('Log in om je album te openen')+`<form class="login" id="login" novalidate>
       <label for="em">E-mailadres</label>
       <input id="em" type="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.nl" value="${esc(pendingEmail)}">
@@ -660,6 +757,7 @@ function toCard(row,w){
     rar:row.tier,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
 }
 async function loadAlbum(){
+  await loadSettings();
   const {data,error}=await sb.from('cards').select('id,tier,created_at,wine:wines(*)').order('created_at');
   cards=[];ownedKeys=new Set();
   if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
@@ -699,6 +797,7 @@ document.addEventListener('click',e=>{
   if(swiped){swiped=false;return}
   if(e.target.closest('[data-act="upload"]')){openUpload();return}
   if(e.target.closest('[data-act="info"]')){openInfo();return}
+  if(e.target.closest('[data-act="settings"]')){openSettings();return}
   if(e.target.closest('[data-act="logout"]')){logout();return}
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
@@ -829,7 +928,7 @@ function openInfo(){
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 async function logout(){
-  closeOverlay();await sb.auth.signOut();session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
+  closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
 }
 
 /* ---------- Rare-stijl met eigen foto (alleen voorbeeld) ---------- */

@@ -37,4 +37,4 @@ Open `index.html` in een browser. Er is geen build-stap nodig.
 
 ## Database
 
-Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons). De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
+Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) en `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur). De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
