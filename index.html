@@ -472,7 +472,7 @@ function openSettings(){
   };
   sn.focus();
 }
-let serverToday=null;
+let serverToday=null,retriedToday=new Set();
 const scansToday=()=>{if(serverToday!=null)return serverToday;const t=amsDay(new Date());return cards.filter(c=>c.created&&amsDay(new Date(c.created))===t).length};
 const setById=id=>SETS.find(s=>s.id===id);
 
@@ -775,6 +775,8 @@ async function loadAlbum(){
   cards=[];ownedKeys=new Set();
   if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
   for(const r of data||[]){if(!r.wine)continue;ownedKeys.add(r.wine.wine_key);cards.push(toCard(r,r.wine))}
+  retriedToday=new Set();
+  try{const rt=await sb.from('retries').select('wine_id,created_at').order('created_at',{ascending:false}).limit(200);const td=amsDay(new Date());(rt.data||[]).forEach(r=>{if(amsDay(new Date(r.created_at))===td)retriedToday.add(r.wine_id)})}catch(e){}
   try{const t=await sb.rpc('scans_today');serverToday=(!t.error&&typeof t.data==='number')?t.data:null}catch(e){serverToday=null}
   refresh();renderChrome();
 }
@@ -909,8 +911,10 @@ $('#scan').onclick=async()=>{
   reveal(card,newsSince(before));
 };
 function showDup(c){
-  const left=LIMIT-scansToday(),canRetry=c&&c.rar!=='icon'&&left>0;
+  const today=amsDay(new Date()),cool=!!c&&((c.created&&amsDay(new Date(c.created))===today)||retriedToday.has(c.wineId));
+  const left=LIMIT-scansToday(),canRetry=c&&c.rar!=='icon'&&left>0&&!cool;
   const note=!c?'':c.rar==='icon'?'Icon-kaarten zijn al de hoogste klasse. Deze scan telt niet mee.'
+    :cool?'Deze fles heb je vandaag al ontkurkt. Volgende ontkurking weer een kans op upgrade! (vanaf morgen) Deze scan telt niet mee.'
     :left>0?`Je kunt herproeven: dat kost 1 van je scans (nog ${left} vandaag) en geeft een nieuwe trekking. Alleen een hogere klasse vervangt je kaart.`
     :'Herproeven kan weer als je nieuwe scans hebt. Deze scan telt niet mee.';
   const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}<p class="hint">${note}</p>
@@ -929,13 +933,15 @@ async function doRetry(c){
   const d=res.data;
   if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
   if(d.status==='icon'){closeOverlay();toast('Icon-kaarten kun je niet herproeven.');return}
+  if(d.status==='cooldown'){closeOverlay();retriedToday.add(c.wineId);toast('Deze fles heb je vandaag al ontkurkt. Volgende ontkurking weer een kans op upgrade!');return}
+  retriedToday.add(c.wineId);
   if(typeof d.scans_today==='number')serverToday=d.scans_today;
   if(d.upgraded){
     c.rar=d.rolled_tier;refresh();renderChrome();
     reveal(c,newsSince(before),`Opgewaardeerd: ${TIERS[d.old_tier].label} → ${TIERS[d.rolled_tier].label}`);
   }else{
     renderChrome();
-    const o2=overlay(`<p class="status">Geen upgrade</p>${bigCard(c)}<p class="hint">Je trok ${TIERS[d.rolled_tier].sym} ${TIERS[d.rolled_tier].label}. Je kaart blijft ${TIERS[c.rar].label}. Nog ${Math.max(0,LIMIT-scansToday())} scans vandaag.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
+    const o2=overlay(`<p class="status">Geen upgrade</p>${bigCard(c)}<p class="hint">Je trok ${TIERS[d.rolled_tier].sym} ${TIERS[d.rolled_tier].label}. Je kaart blijft ${TIERS[c.rar].label}.</p><p class="hint"><b>Volgende ontkurking weer een kans op upgrade!</b> Morgen mag je deze fles weer proberen.</p><div class="actions"><button class="btn primary" id="close">Oké</button></div>`);
     tilt(o2.querySelector('.card'));const b=o2.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
   }
 }
@@ -1004,7 +1010,7 @@ function openInfo(){
     <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
       <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
-    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: dat kost een scan en alleen een hogere klasse vervangt je kaart.</p>
+    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: dat kost een scan, kan één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vin’d It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
