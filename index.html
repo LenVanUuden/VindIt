@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2A1D16">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Winex">
+<meta name="apple-mobile-web-app-title" content="Vin’d It">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>Winex</title>
+<title>Vin’d It</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&display=swap">
@@ -209,7 +209,7 @@ button{font:inherit;color:inherit}
 /* Cover */
 .page.cover{background-color:var(--leather);background-image:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,0) 14px),var(--leathergrain);align-items:center;justify-content:center;gap:22px;cursor:pointer;box-shadow:inset 0 0 30px rgba(0,0,0,.35),1px 0 0 #2a0c12}
 .cover .frame{border:1.5px solid rgba(210,174,98,.75);outline:1px solid rgba(210,174,98,.5);outline-offset:5px;padding:34px 22px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;width:78%;box-sizing:border-box;box-shadow:inset 0 1px 3px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.07)}
-.cover h2{font-size:56px;letter-spacing:.06em;margin:0}
+.cover h2{font-size:46px;letter-spacing:.04em;margin:0;white-space:nowrap}
 .crest{width:58px;height:auto;opacity:.85}
 .open{background:none;border:1px solid rgba(210,174,98,.55);color:var(--gold-soft);border-radius:999px;padding:8px 18px;font-size:13px;letter-spacing:.04em;cursor:pointer}
 
@@ -373,7 +373,7 @@ button{font:inherit;color:inherit}
 <body>
 <div class="app">
   <header class="top">
-    <p class="brand">Winex</p>
+    <p class="brand">Vin’d It</p>
     <div class="quota" aria-live="polite"><span>Scans vandaag</span><div class="dots" id="dots"></div></div>
   </header>
   <nav class="tabs" id="tabs" aria-label="Hoofdstukken"></nav>
@@ -673,7 +673,7 @@ const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="
 
 /* ---------- omslag met inloggen ---------- */
 function coverHTML(){
-  const frame=(sub)=>`<div class="frame"${session?'':' style="padding:22px 18px"'}><p class="eyebrow">Wijnzegelalbum</p>${CREST}<h2 class="foil">Winex</h2><p class="eyebrow">${sub}</p></div>`;
+  const frame=(sub)=>`<div class="frame"${session?'':' style="padding:22px 18px"'}><p class="eyebrow">Wijnzegelalbum</p>${CREST}<h2 class="foil">Vin’d It</h2><p class="eyebrow">${sub}</p></div>`;
   if(loading) return frame('Album wordt geladen')+'<p class="loading">Even geduld…</p>';
   if(session) return frame('Collectie van '+esc(coverName()))+'<button class="open" data-go="1">Album openen</button>';
   if(authStep==='email') return frame('Log in om je album te openen')+`<form class="login" id="login" novalidate>
@@ -740,7 +740,7 @@ function wireLogin(el){
 }
 
 /* ---------- pagina's ---------- */
-function pageFoot(i){return `<div class="pfoot"><span>Winex</span><span>Blad ${i}</span></div>`}
+function pageFoot(i){return `<div class="pfoot"><span>Vin’d It</span><span>Blad ${i}</span></div>`}
 function progress(have,n){return `<div class="progress"><span>${have} van ${n}</span><div class="bar"><span style="width:${have/n*100}%"></span></div></div>`}
 function firstPageOf(pred){return pages.findIndex(pred)}
 function makePage(i){
@@ -889,7 +889,7 @@ function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&filledOf(s).some(x=>x
 function openCard(id){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
-  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}${c.first?' Jij was de eerste in Winex die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}<div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
+  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}${c.first?' Jij was de eerste in Vin’d It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}<div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
   tilt(o.querySelector('.card'));const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3600)}
@@ -954,11 +954,11 @@ function pageOfCard(c){
   return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.physical[p.set.id]||[]).some(x=>x&&x.id===c.id))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
 }
 function reveal(c,news){
-  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Winex</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+  const o=overlay(`<p class="status">Nieuwe kaart</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Vin’d It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   const open=()=>{if(flip.classList.contains('open'))return;flip.classList.add('open');
     setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
-      o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Winex die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
+      o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vin’d It die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
   flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
   o.querySelector('#place').onclick=()=>{
     closeOverlay();lastNewId=c.id;const pg=pageOfCard(c);go(pg>0?pg:1,true);
@@ -1011,12 +1011,12 @@ function openLists(){
 /* ---------- uitleg en uitloggen ---------- */
 function openInfo(){
   const desc={common:'De regio als reisposter.',rare:'Jouw flesfoto in posterstijl, zilveren rand.',superrare:'Rare met regenboog-holo en glitter.',ultra:'Full art in lagen, goudrand.',icon:'Vaste lijst iconische wijnen. Hangt af van de wijn, niet van geluk.'};
-  const o=overlay(`<p class="status">Hoe Winex werkt</p>
+  const o=overlay(`<p class="status">Hoe Vin’d It werkt</p>
     <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
       <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
     <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je kunt 3 nieuwe wijnen per dag scannen; elke wijn levert één kaart op.</p>
-    <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Winex scande.</p>
+    <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vin’d It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();

@@ -1,4 +1,4 @@
-# Winex
+# Vin’d It (werknaam, voorheen Winex)
 
 Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg een kaart en steek hem in de sleeve van een dik, in leer gebonden album. Spaar regio's vol en hoop op een zeldzame kaart.
 
