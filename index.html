@@ -367,6 +367,7 @@ button{font:inherit;color:inherit}
 .lands button.dim{opacity:.55}
 .lands button.on{border-color:var(--gold);background:rgba(210,174,98,.12);opacity:1}
 .toc li.dim{opacity:.5}
+.lands small{font-weight:400;opacity:.6;font-size:11px}
 </style>
 </head>
 <body>
@@ -536,6 +537,7 @@ function buildPages(){
   if(session){
     for(const land of st.allLands){
       const sets=SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
+      if(sets.length>1)P.push({t:'chapter',land});
       for(const set of sets)P.push({t:'set',set,land});
       if(!sets.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!sets.length});
     }
@@ -679,7 +681,16 @@ function coverHTML(){
       <input id="em" type="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.nl" value="${esc(pendingEmail)}">
       <button class="btn primary" type="submit">Stuur inloglink</button>
       <p class="err" id="lerr" hidden></p>
-      <p>Geen wachtwoord nodig. Je krijgt een inloglink per e-mail.</p></form>`;
+      <p>Geen wachtwoord nodig. Je krijgt een inloglink per e-mail.</p>
+      <button class="linkbtn" type="button" id="pwmode">Inloggen met wachtwoord</button></form>`;
+  if(authStep==='password') return frame('Log in om je album te openen')+`<form class="login" id="login" novalidate>
+      <label for="em">E-mailadres</label>
+      <input id="em" type="email" autocomplete="username" inputmode="email" placeholder="naam@voorbeeld.nl" value="${esc(pendingEmail)}">
+      <label for="pw">Wachtwoord</label>
+      <input id="pw" type="password" autocomplete="current-password">
+      <button class="btn primary" type="submit">Album openen</button>
+      <p class="err" id="lerr" hidden></p>
+      <button class="linkbtn" type="button" id="back">Liever een inloglink per e-mail</button></form>`;
   return frame('Bijna binnen')+`<form class="login" id="login" novalidate>
       <p>We hebben een e-mail gestuurd naar<br><b>${esc(pendingEmail)}</b></p>
       <p>Open de mail op dit toestel en tik op de inloglink. Je album opent dan vanzelf.</p>
@@ -694,9 +705,20 @@ function wireLogin(el){
   const err=f.querySelector('#lerr'),btn=f.querySelector('button[type=submit]');
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   const back=f.querySelector('#back');if(back)back.onclick=()=>{authStep='email';go(0,true)};
+  const pwm=f.querySelector('#pwmode');if(pwm)pwm.onclick=()=>{pendingEmail=f.querySelector('#em').value.trim();authStep='password';go(0,true)};
   f.querySelectorAll('input').forEach(i=>i.addEventListener('input',()=>showErr('')));
   f.onsubmit=async e=>{
     e.preventDefault();showErr('');
+    if(authStep==='password'){
+      const em=f.querySelector('#em').value.trim(),pw=f.querySelector('#pw').value;
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){showErr('Vul een geldig e-mailadres in.');return}
+      if(!pw){showErr('Vul je wachtwoord in.');return}
+      btn.disabled=true;btn.textContent='Bezig…';verifying=true;
+      const {data,error}=await sb.auth.signInWithPassword({email:em,password:pw});
+      btn.disabled=false;btn.textContent='Album openen';
+      if(error||!data.session){verifying=false;showErr('E-mailadres of wachtwoord klopt niet.');return}
+      pendingEmail=em;session=data.session;await loadAlbum();verifying=false;go(1);return;
+    }
     if(authStep==='email'){
       const em=f.querySelector('#em').value.trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){showErr('Vul een geldig e-mailadres in.');return}
@@ -739,6 +761,18 @@ function makePage(i){
       <p class="eyebrow toch">Verzamellijsten</p><ul class="toc">${ltoc}</ul>
       <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} verzamellijsten zijn nog verborgen`:''}.</p>
       ${pageFoot(1)}`;
+    return el;
+  }
+  if(p.t==='chapter'){
+    const x=landStats(p.land),chapN=st.allLands.indexOf(p.land)+1;
+    const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.land===p.land&&q.t!=='chapter').map(([q,k])=>{
+      if(q.t==='overige'){const n=(st.overflow[p.land]||[]).length;return `<li><button data-go="${k}"><span>Overige</span><span>${n} ${n===1?'kaart':'kaarten'}</span></button></li>`}
+      const f=filledOf(q.set),h=f.filter(Boolean).length;
+      return `<li><button data-go="${k}"><span>${esc(q.set.name)}${isDone(q.set)?' <small>· voltooid</small>':''}</span><span>${h} / ${f.length}</span></button></li>`;
+    }).join('');
+    el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
+      ${progress(x.have,x.tot)}
+      <p class="eyebrow toch">Sets in dit hoofdstuk</p><ul class="toc">${rows}</ul>${pageFoot(i)}`;
     return el;
   }
   if(p.t==='overige'){
@@ -798,7 +832,7 @@ function renderChrome(){
   const inLand=!!curLand&&!inLists;
   $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Inhoud</button>`+
     `<button data-act="lands" aria-current="${inLand}" aria-haspopup="dialog">${inLand?esc(curLand):'Landen'} <span class="caret" aria-hidden="true">▾</span></button>`+
-    (firstList>0?`<button data-go="${firstList}" aria-current="${!!inLists}">Verzamellijsten</button>`:'');
+    (firstList>0?`<button data-act="lists" aria-current="${!!inLists}" aria-haspopup="dialog">Verzamellijsten <span class="caret" aria-hidden="true">▾</span></button>`:'');
 }
 function go(n,force){
   if(n<0||n>=pages.length||busy)return;
@@ -818,7 +852,9 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="info"]')){openInfo();return}
   if(e.target.closest('[data-act="settings"]')){openSettings();return}
   if(e.target.closest('[data-act="lands"]')){openLands();return}
-  const lp=e.target.closest('[data-land]');if(lp){closeOverlay();go(firstPageOf(x=>x.land===lp.dataset.land));return}
+  if(e.target.closest('[data-act="lists"]')){openLists();return}
+  const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
+  const lp=e.target.closest('[data-land]');if(lp){openLands(lp.dataset.land);return}
   if(e.target.closest('[data-act="logout"]')){logout();return}
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
@@ -936,13 +972,39 @@ function showNews(news){
 }
 
 /* ---------- landkiezer ---------- */
-function openLands(){
+function pickRow(k,title,sub,on,dim){return `<button data-pg="${k}" class="${dim?'dim':''}${on?' on':''}"><b>${title}</b><span>${sub}</span></button>`}
+function openLands(land){
   const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land);
+  if(land){
+    const own=pages.map((q,k)=>[q,k]).filter(([q])=>q.land===land);
+    if(own.length===1){closeOverlay();go(own[0][1]);return}
+    const rows=own.map(([q,k])=>{
+      if(q.t==='chapter')return pickRow(k,'Hoofdstukblad','overzicht van '+esc(land),k===cur,false);
+      if(q.t==='overige'){const n=(st.overflow[land]||[]).length;return pickRow(k,'Overige',n+' '+(n===1?'kaart':'kaarten'),k===cur,!n)}
+      const f=filledOf(q.set),h=f.filter(Boolean).length;
+      return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
+    }).join('');
+    const o=overlay(`<p class="status">${esc(land)}</p><div class="lands">${rows}</div>
+      <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`);
+    o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
+    const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
+    return;
+  }
   const o=overlay(`<p class="status">Kies een land</p>
-    <div class="lands">${st.allLands.map(l=>{const x=landStats(l);
-      return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}</b><span>${x.tot?x.have+' / '+x.tot+' vakken':x.cards?x.cards+' '+(x.cards===1?'kaart':'kaarten'):'nog leeg'}</span></button>`}).join('')}</div>
+    <div class="lands">${st.allLands.map(l=>{const x=landStats(l),n=SETS.filter(z=>z.part===1&&z.land===l&&st.visible[z.id]).length;
+      return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}${n>1?` <small>· ${n} sets</small>`:''}</b><span>${x.tot?x.have+' / '+x.tot+' vakken':x.cards?x.cards+' '+(x.cards===1?'kaart':'kaarten'):'nog leeg'}</span></button>`}).join('')}</div>
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
-  const b=o.querySelector('#close');b.onclick=()=>closeOverlay();
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
+}
+function openLists(){
+  const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.set&&q.set.part===2).map(([q,k])=>{
+    const f=filledOf(q.set),h=f.filter(Boolean).length;
+    return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
+  }).join('');
+  const o=overlay(`<p class="status">Verzamellijsten</p><div class="lands">${rows}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
 }
 
