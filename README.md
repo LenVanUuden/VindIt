@@ -10,6 +10,7 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 - **Eén kaart per wijn** (producent + cuvée; de jaargang is alleen een detail).
 - **Herproeven:** scan je een wijn die je al hebt, dan kun je kiezen voor een nieuwe trekking. Dat kost één van je 3 scans en kan één keer per dag per wijn; alleen een hogere klasse vervangt je kaart. Icon-kaarten kun je niet herproeven. Kies je niet, dan telt de scan niet mee.
 - Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **verzamellijsten** (druiven, bubbels, Wereldreiziger, Icons).
+- **Groeiend album:** een land of regioset krijgt pas een bladzijde bij je eerste passende wijn. Nog niet ontdekte landen en sets staan grijs op de Inhoud en zijn als voorbeeld te bekijken.
 - Tik op een leeg vak voor een gids: wat het is, prijsindicatie, type winkel en waar je op het etiket op let (`gids.js`).
 - Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets worden pas zichtbaar als je een andere voltooit of de eerste passende wijn vindt. Zie `docs/setcatalogus.md`.
 

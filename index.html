@@ -616,9 +616,10 @@ function matches(c,m){
   if(m.color&&nrm(c.color)!==nrm(m.color))return false;
   if(m.tag&&!(c.tags||[]).some(t=>nrm(t)===nrm(m.tag)))return false;
   if(m.app&&!m.app.some(a=>nrm(a)===nrm(c.app)))return false;
+  if(m.has&&!m.has.some(h=>nrm(c.app).includes(h)))return false;
   return true;
 }
-const spec=m=>Object.keys(m).length+(m.app?1:0)+(m.key?3:0);
+const spec=m=>Object.keys(m).length+(m.app||m.has?1:0)+(m.key?3:0);
 function assign(set,pool){
   const res=new Array(set.slots.length).fill(null),used=new Set();
   const order=set.slots.map((_,i)=>i).sort((a,b)=>spec(set.slots[b].m)-spec(set.slots[a].m));
@@ -655,15 +656,18 @@ function landStats(l){
 }
 const filledOf=set=>set.part===1?(st.physical[set.id]||new Array(set.slots.length).fill(null)):st.assign[set.id];
 const isDone=set=>filledOf(set).every(Boolean);
+const started=set=>filledOf(set).some(Boolean);
+const visSets=land=>SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
 
 function buildPages(){
   const P=[{t:'cover'},{t:'inhoud'}];
   if(session){
     for(const land of st.allLands){
-      const sets=SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
-      if(sets.length>1)P.push({t:'chapter',land});
+      if(!st.lands.includes(land))continue;          // groeiend album: een land verschijnt bij je eerste wijn
+      const vis=visSets(land),sets=vis.filter(started);
+      if(vis.length>1||sets.length<vis.length)P.push({t:'chapter',land});
       for(const set of sets)P.push({t:'set',set,land});
-      if(!sets.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!sets.length});
+      if(!vis.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!vis.length});
     }
     for(const set of SETS)if(set.part===2&&st.visible[set.id])P.push({t:'set',set});
   }
@@ -850,7 +854,8 @@ function makePage(i){
     const landsLeft=LANDS.filter(l=>!st.lands.includes(l)).length;
     const toc=st.allLands.map(l=>{
       const x=landStats(l),idx=firstPageOf(p=>p.land===l);
-      return `<li${x.cards?'':' class="dim"'}><button data-go="${idx}"><span>${esc(l)}</span><span>${x.tot?x.have+' / '+x.tot:x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button></li>`;
+      if(idx<0)return `<li class="dim"><button data-pland="${esc(l)}"><span>${esc(l)}</span><span>nog te ontdekken</span></button></li>`;
+      return `<li><button data-go="${idx}"><span>${esc(l)}</span><span>${x.tot?x.have+' / '+x.tot:x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button></li>`;
     }).join('');
     const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
     el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Inhoud</h2></div>
@@ -863,11 +868,11 @@ function makePage(i){
   }
   if(p.t==='chapter'){
     const x=landStats(p.land),chapN=st.allLands.indexOf(p.land)+1;
-    const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.land===p.land&&q.t!=='chapter').map(([q,k])=>{
-      if(q.t==='overige'){const n=(st.overflow[p.land]||[]).length;return `<li><button data-go="${k}"><span>Overige</span><span>${n} ${n===1?'kaart':'kaarten'}</span></button></li>`}
-      const f=filledOf(q.set),h=f.filter(Boolean).length;
-      return `<li><button data-go="${k}"><span>${esc(q.set.name)}${isDone(q.set)?' <small>· voltooid</small>':''}</span><span>${h} / ${f.length}</span></button></li>`;
-    }).join('');
+    const rows=visSets(p.land).map(set=>{
+      const k=firstPageOf(q=>q.set===set),f=filledOf(set),h=f.filter(Boolean).length;
+      if(k<0)return `<li class="dim"><button data-preview="${set.id}"><span>${esc(set.name)}</span><span>nog te ontdekken</span></button></li>`;
+      return `<li><button data-go="${k}"><span>${esc(set.name)}${isDone(set)?' <small>· voltooid</small>':''}</span><span>${h} / ${f.length}</span></button></li>`;
+    }).join('')+((st.overflow[p.land]||[]).length?(()=>{const k=firstPageOf(q=>q.t==='overige'&&q.land===p.land),n=st.overflow[p.land].length;return `<li><button data-go="${k}"><span>Overige</span><span>${n} ${n===1?'kaart':'kaarten'}</span></button></li>`})():'');
     el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
       ${progress(x.have,x.tot)}
       <p class="eyebrow toch">Sets in dit hoofdstuk</p><ul class="toc">${rows}</ul>${pageFoot(i)}`;
@@ -957,6 +962,8 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="lists"]')){openLists();return}
   const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
   const lp=e.target.closest('[data-land]');if(lp){openLands(lp.dataset.land);return}
+  const pl=e.target.closest('[data-pland]');if(pl){openLandPreview(pl.dataset.pland);return}
+  const pv=e.target.closest('[data-preview]');if(pv){openSetPreview(pv.dataset.preview);return}
   if(e.target.closest('[data-act="logout"]')){logout();return}
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
@@ -1005,10 +1012,11 @@ function limitMsg(){
 }
 
 /* ---------- scannen ---------- */
-function snapshot(){return {lands:[...st.lands],complete:{...st.complete},visible:{...st.visible},done:Object.fromEntries(SETS.map(s=>[s.id,st.visible[s.id]&&isDone(s)]))}}
+function snapshot(){return {started:Object.fromEntries(SETS.map(s=>[s.id,started(s)])),lands:[...st.lands],complete:{...st.complete},visible:{...st.visible},done:Object.fromEntries(SETS.map(s=>[s.id,st.visible[s.id]&&isDone(s)]))}}
 function newsSince(b){
   const out=[];
-  for(const l of st.lands)if(!b.lands.includes(l))out.push(['Nieuw land',l,'Je eerste wijn uit '+l+'.']);
+  for(const l of st.lands)if(!b.lands.includes(l))out.push(['Nieuw hoofdstuk',l,l==='Overige landen'?'Je eerste wijn uit een land zonder eigen hoofdstuk. Hij krijgt een plek bij Overige landen en telt mee voor Wereldreiziger II.':'Je eerste wijn uit '+l+'. Er is een nieuw hoofdstuk aan je album toegevoegd.']);
+  for(const s of SETS)if(s.part===1&&!s.secret&&st.visible[s.id]&&started(s)&&!b.started[s.id]&&b.lands.includes(s.land))out.push(['Nieuwe bladzijde',s.name,'Deze bladzijde staat nu in je album, met je eerste kaart erin.']);
   for(const s of SETS){
     if(st.visible[s.id]&&!b.visible[s.id]){
       const have=filledOf(s).filter(Boolean).length;
@@ -1218,13 +1226,14 @@ function openLands(land){
   const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land);
   if(land){
     const own=pages.map((q,k)=>[q,k]).filter(([q])=>q.land===land);
+    if(!own.length){openLandPreview(land);return}
     if(own.length===1){closeOverlay();go(own[0][1]);return}
-    const rows=own.map(([q,k])=>{
-      if(q.t==='chapter')return pickRow(k,'Hoofdstukblad','overzicht van '+esc(land),k===cur,false);
-      if(q.t==='overige'){const n=(st.overflow[land]||[]).length;return pickRow(k,'Overige',n+' '+(n===1?'kaart':'kaarten'),k===cur,!n)}
-      const f=filledOf(q.set),h=f.filter(Boolean).length;
-      return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
-    }).join('');
+    const ch=own.find(([q])=>q.t==='chapter'),ov=own.find(([q])=>q.t==='overige');
+    const rows=(ch?pickRow(ch[1],'Hoofdstukblad','overzicht van '+esc(land),ch[1]===cur,false):'')+
+      visSets(land).map(set=>{const pk=own.find(([q])=>q.set===set);
+        if(!pk)return `<button data-preview="${set.id}" class="dim"><b>${esc(set.name)}</b><span>nog te ontdekken</span></button>`;
+        const f=filledOf(set),h=f.filter(Boolean).length;return pickRow(pk[1],esc(set.name)+(isDone(set)?' ✓':''),h+' / '+f.length+' vakken',pk[1]===cur,false)}).join('')+
+      (ov?(()=>{const n=(st.overflow[land]||[]).length;return pickRow(ov[1],'Overige',n+' '+(n===1?'kaart':'kaarten'),ov[1]===cur,!n)})():'');
     const o=overlay(`<p class="status">${esc(land)}</p><div class="lands">${rows}</div>
       <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`);
     o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
@@ -1233,10 +1242,30 @@ function openLands(land){
   }
   const o=overlay(`<p class="status">Kies een land</p>
     <div class="lands">${st.allLands.map(l=>{const x=landStats(l),n=SETS.filter(z=>z.part===1&&z.land===l&&st.visible[z.id]).length;
-      return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}${n>1?` <small>· ${n} sets</small>`:''}</b><span>${x.tot?x.have+' / '+x.tot+' vakken':x.cards?x.cards+' '+(x.cards===1?'kaart':'kaarten'):'nog leeg'}</span></button>`}).join('')}</div>
+      return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}${n>1?` <small>· ${n} sets</small>`:''}</b><span>${!x.cards?'nog te ontdekken':x.tot?x.have+' / '+x.tot+' vakken':x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button>`}).join('')}</div>
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
+}
+function openLandPreview(land){
+  const sets=visSets(land);
+  const o=overlay(`<p class="eyebrow">Nog te ontdekken</p><p class="status">${esc(land)}</p>
+    <p class="hint">Scan je eerste wijn uit ${esc(land)} en dit hoofdstuk komt in je album.${sets.length?' Tik op een set om te zien wat erin hoort.':' Elke wijn uit dit land krijgt een plek en telt mee voor de verzamellijsten.'}</p>
+    ${sets.length?`<div class="lands">${sets.map(set=>`<button data-preview="${set.id}"><b>${esc(set.name)}</b><span>${set.slots.length} vakken</span></button>`).join('')}</div>`:''}
+    <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`);
+  o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
+  const f=o.querySelector('.lands button')||o.querySelector('#close');f.focus();
+}
+function openSetPreview(id){
+  const set=SETS.find(x=>x.id===id);if(!set)return;
+  const o=overlay(`<p class="eyebrow">${set.part===1?esc(set.land)+' · ':''}nog te ontdekken</p><p class="status">${esc(set.name)}</p>
+    <p class="hint">Deze bladzijde komt in je album zodra je er je eerste wijn voor scant. Tik op een vak voor tips.</p>
+    <div class="lands">${set.slots.map((sl,k)=>`<button data-gid="${set.id}|${k}" class="gidbtn-row"><b>${esc(sl.l)}</b><span>${DIFF[sl.d]||''}</span></button>`).join('')}</div>
+    <div class="actions">${set.part===1?`<button class="btn" id="back">‹ ${esc(set.land)}</button>`:''}<button class="btn" id="close">Sluiten</button></div>`);
+  const b=o.querySelector('#back');if(b)b.onclick=()=>openLands(set.land);
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelectorAll('[data-gid]').forEach(x=>x.onclick=ev=>{ev.stopPropagation();openGids(x.dataset.gid)});
+  o.querySelector('.lands button').focus();
 }
 function openLists(){
   const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.set&&q.set.part===2).map(([q,k])=>{
@@ -1259,6 +1288,7 @@ function openInfo(){
     <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: bedoeld voor een nieuwe fles van dezelfde wijn. Het kost een scan, kan hooguit één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
     <p class="hint">Scannen: maak een foto van het etiket, recht van voren en scherp. De app leest naam, producent, jaargang en herkomst, en maakt de kaart. Bij een Rare wordt jouw foto de posterafbeelding.</p>
     <p class="hint">Tik op een leeg vak voor uitleg: wat het is, wat het ongeveer kost en waar je zo'n fles vindt.</p>
+    <p class="hint">Je album groeit mee: een land of regio krijgt pas een bladzijde als je er je eerste wijn van scant. Op de Inhoud zie je wat er nog te ontdekken valt.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vined It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);

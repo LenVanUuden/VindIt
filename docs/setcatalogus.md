@@ -290,3 +290,10 @@ Let op: dit zijn echte merken. Ze noemen in een lijst is normaal, maar gebruik g
 - De herkenning (fase 3) moet per wijn leveren: land, regio, **appellation**, hoofddruif, stijl (stil/mousserend/zoet/versterkt) en kleur.
 - Database: tabellen `sets` en `set_slots` met per vak een matchregel (bijv. `appellation = 'Pauillac'`, `grape = 'Chardonnay' AND region = 'Chablis'`). Voltooiing wordt berekend, niet opgeslagen.
 - Album: sleeves krijgen namen in plaats van nummers; blad "Overige" per regio; deel 2 "Verzamellijsten".
+
+## Wijziging oktober 2026: groeiend album en schapcorrecties
+
+- **Groeiend album:** een land verschijnt pas bij de eerste wijn uit dat land, een regioset pas bij de eerste kaart erin. Niet-ontdekte landen en sets staan grijs op de Inhoud, op het hoofdstukblad en in de landkiezer, en zijn als voorbeeld te openen (met de gids per vak).
+- **Nieuwe sets:** Midden- en Noord-Italië (Lambrusco, Verdicchio, Orvieto, Frascati, Trebbiano d'Abruzzo, Friuli, Alto Adige/Trentino, Sardegna, Franciacorta/Lombardije) en Noordoost-Spanje (Cariñena, Campo de Borja, Calatayud, Catalunya, Aragón, Somontano, Terra Alta, Empordà, Conca de Barberà). De Italiaanse set matcht op een deel van de herkomstnaam (`has`), omdat die op etiketten sterk varieert.
+- **Reparaties:** Petit Chablis telt als Chablis; de Saint-Émilion-satellieten tellen als Saint-Émilion; Bordeaux II kreeg Castillon/Côtes de Bordeaux (Listrac en Moulis zijn samengevoegd); Portugal kreeg Tejo (Dão en Bairrada zijn samengevoegd).
+- **Kleinere sets (6 vakken):** Nieuw-Zeeland (met "New Zealand" algemeen), Engeland en Wales (met "England" algemeen) en Nederland.
