@@ -15,6 +15,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 9 | "Koop deze fles" vanuit een leeg vak | Len | Verdienmodel | Middel (partners nodig) | Later |
 | 10 | Overzicht "Mijn kaarten" op datum | Claude | Middel | Klein | Idee |
 | 11 | **Interactieve wereldkaart** ("Mijn wijnwereld") | Tester | Middel-hoog: overzicht en trots | Middel | Klaar (wacht op livegang) |
+| 13 | **Stapels per vak**: extra kaarten op de stapel in hun vak, zeldzaamste bovenop, zelf te kiezen | Len | Hoog: elke kaart een plek in context, minder 'Overige' | Middel | Klaar (wacht op livegang) |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Klaar (wacht op livegang) |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)

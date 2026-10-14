@@ -444,6 +444,16 @@ button{font:inherit;color:inherit}
 .fx-ultra i:nth-child(3n),.fx-icon i:nth-child(3n),.fx-superrare i:nth-child(4n){border-radius:1px;transform:rotate(45deg)}
 @keyframes spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
 @media (prefers-reduced-motion: reduce){.spin{transition:none}.flipper.open{transition:none}}
+/* Stapels */
+.slot.stacked .sleeve{box-shadow:inset 0 2px 3px rgba(0,0,0,.45),2px 2px 0 -1px rgba(233,211,160,.35),4px 4px 0 -2px rgba(233,211,160,.2)}
+.scount{position:absolute;right:-5px;bottom:-5px;z-index:9;min-width:20px;height:18px;padding:0 5px;box-sizing:border-box;border-radius:9px;background:#7A1F2A;color:#F8F0DE;font-size:10.5px;font-weight:600;line-height:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.5);border:1px solid rgba(233,211,160,.6)}
+.fan{display:flex;gap:12px;overflow-x:auto;max-width:92vw;padding:10px 6px 6px;scroll-snap-type:x mandatory}
+.fanitem{flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:6px;scroll-snap-align:center}
+.fanitem .sleeve{width:100%}
+.fanitem.top .sleeve{box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(210,174,98,.35)}
+.fanlab{font-size:11.5px;color:var(--gold-soft)}
+.fanon{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.btn.small{padding:6px 10px;font-size:12px}
 /* Kaarten */
 .minimap{position:absolute;top:12px;right:10px;z-index:3;width:58px;height:58px;padding:3px;border:1px solid rgba(233,211,160,.28);border-radius:8px;background:rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .minimap.wide{width:76px;height:42px}
@@ -711,9 +721,23 @@ function assign(set,pool){
   for(const i of order){const c=pool.find(c=>!used.has(c.id)&&matches(c,set.slots[i].m));if(c){res[i]=c;used.add(c.id)}}
   return res;
 }
+const TRANK={common:0,rare:1,superrare:2,ultra:3,icon:4};
+function topSort(a,b){const ta=a.topAt?Date.parse(a.topAt):0,tb=b.topAt?Date.parse(b.topAt):0;if(ta!==tb)return tb-ta;
+  if(TRANK[b.rar]!==TRANK[a.rar])return TRANK[b.rar]-TRANK[a.rar];return String(a.created).localeCompare(String(b.created))}
+// Extra kaarten die in een al gevuld vak passen, komen op die stapel (meest specifieke vak). Bovenop: gekozen kaart, anders de zeldzaamste.
+function stackUp(sets,base,pool,used){
+  const stacks={};sets.forEach(set=>stacks[set.id]=base[set.id].map(c=>c?[c]:[]));
+  for(const c of pool){if(used.has(c.id))continue;let best=null,bs=-1;
+    for(const set of sets)set.slots.forEach((sl,i)=>{if(stacks[set.id][i].length&&matches(c,sl.m)){const sp=spec(sl.m);if(sp>bs){bs=sp;best=[set.id,i]}}});
+    if(best){stacks[best[0]][best[1]].push(c);used.add(c.id)}}
+  for(const id in stacks)stacks[id].forEach(st=>st.sort(topSort));
+  return stacks;
+}
 function compute(){
   const s={assign:{},complete:{},visible:{},physical:{},overflow:{},lands:[]};
   for(const set of SETS){const a=assign(set,cards);s.assign[set.id]=a;s.complete[set.id]=a.every(Boolean)}
+  s.stacks={};
+  for(const set of SETS.filter(x=>x.part===2)){const st2=stackUp([set],{[set.id]:s.assign[set.id]},cards,new Set(s.assign[set.id].filter(Boolean).map(c=>c.id)))[set.id];s.stacks[set.id]=st2;s.assign[set.id]=st2.map(x=>x[0]||null)}
   for(const set of SETS){
     let v;
     if(set.unlock)v=!!s.complete[set.unlock];
@@ -725,9 +749,10 @@ function compute(){
   const placed=new Set();
   for(const land of LANDS){
     const lc=cards.filter(c=>c.land===land);if(!lc.length)continue;s.lands.push(land);
-    for(const set of SETS.filter(x=>x.part===1&&x.land===land&&s.visible[x.id])){
-      const a=assign(set,lc.filter(c=>!placed.has(c.id)));s.physical[set.id]=a;a.forEach(c=>c&&placed.add(c.id));
-    }
+    const lsets=SETS.filter(x=>x.part===1&&x.land===land&&s.visible[x.id]),base={};
+    for(const set of lsets){const a=assign(set,lc.filter(c=>!placed.has(c.id)));base[set.id]=a;a.forEach(c=>c&&placed.add(c.id))}
+    const stk=stackUp(lsets,base,lc,placed);
+    for(const set of lsets){s.stacks[set.id]=stk[set.id];s.physical[set.id]=stk[set.id].map(x=>x[0]||null)}
     s.overflow[land]=lc.filter(c=>!placed.has(c.id));
   }
   const other=cards.filter(c=>!LANDS.includes(c.land));
@@ -740,6 +765,8 @@ function landStats(l){
   return {have:sets.reduce((a,s)=>a+filledOf(s).filter(Boolean).length,0),tot:sets.reduce((a,s)=>a+s.slots.length,0),cards:cards.filter(c=>c.land===l||(l==='Overige landen'&&!LANDS.includes(c.land))).length};
 }
 const filledOf=set=>set.part===1?(st.physical[set.id]||new Array(set.slots.length).fill(null)):st.assign[set.id];
+const stackOf=(set,k)=>(st.stacks[set.id]&&st.stacks[set.id][k])||[];
+function stackInfo(c){for(const set of SETS){if(!st.visible[set.id]||set.part!==1)continue;const S=st.stacks[set.id]||[];for(let k=0;k<S.length;k++)if(S[k].some(x=>x.id===c.id))return {set,k,n:S[k].length,top:S[k][0].id===c.id}}return null}
 const isDone=set=>filledOf(set).every(Boolean);
 const started=set=>filledOf(set).some(Boolean);
 const visSets=land=>SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
@@ -854,9 +881,10 @@ function mini(c){
   if(c.rar==='ultra') return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face">${ultraFill(areaOf(c),c.v)}${layers('ultra')}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
-function slotHTML(c,label,d,gid){
+function slotHTML(c,label,d,gid,n){
   const empty=gid?`<button class="empty d${d||0} gidbtn" data-gid="${esc(gid)}" aria-label="Waar vind ik ${esc(label)}?">${d?DIFF[d]:''}<span class="gq" aria-hidden="true">?</span></button>`:`<div class="empty d${d||0}">${d?DIFF[d]:''}</div>`;
-  return `<div class="slot"><div class="sleeve">${c?mini(c):empty}</div><span class="slabel">${esc(label)}</span></div>`;
+  const stk=c&&n>1;
+  return `<div class="slot${stk?' stacked':''}"${stk?` data-stack="${esc(gid)}"`:''}><div class="sleeve">${c?mini(c):empty}${stk?`<span class="scount">×${n}</span>`:''}</div><span class="slabel">${esc(label)}</span></div>`;
 }
 const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="none" stroke="#D2AE62" stroke-width="1.6"><path d="M30 4 C30 10 34 12 38 12"/><path d="M30 8 C24 6 18 9 17 14 C24 15 28 12 30 8Z"/>${[[22,22],[30,22],[38,22],[26,30],[34,30],[42,30],[18,30],[22,38],[30,38],[38,38],[26,46],[34,46],[30,54]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6"/>`).join('')}</g></svg>`;
 
@@ -937,7 +965,7 @@ const NAME_OF_ISO=typeof MAPS!=='undefined'?Object.fromEntries(Object.entries(MA
 function proj(m,lat,lon){return [(lon-m.b[0])*m.k*m.c,(m.b[3]-lat)*m.k]}
 function worldStats(){const tot=Object.keys(MAPS.ISO).length,have=Object.keys(MAPS.ISO).filter(n=>cards.some(c=>c.land===n)).length;return {have,tot}}
 function cardPin(c){
-  for(const set of SETS){if(set.part!==1||set.land!==c.land)continue;const f=filledOf(set),k=f.findIndex(x=>x&&x.id===c.id);if(k<0)continue;
+  for(const set of SETS){if(set.part!==1||set.land!==c.land)continue;const S=st.stacks[set.id]||[],k=S.findIndex(x=>x.some(y=>y.id===c.id));if(k<0)continue;
     const sp=PINS.slot[set.id]&&PINS.slot[set.id][set.slots[k].l];if(sp)return sp;if(PINS.set[set.id])return PINS.set[set.id]}
   const ce=MAPS.centroid[c.land];return ce?[ce[1],ce[0]]:null;
 }
@@ -1087,7 +1115,7 @@ function makePage0(i){
   const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Verzamellijst';
   el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
     ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
-    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k)).join('')}</div>${pageFoot(i)}`;
+    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k,stackOf(s,k).length)).join('')}</div>${pageFoot(i)}`;
   return el;
 }
 function makeLeaf(i){
@@ -1104,11 +1132,11 @@ function toCard(row,w){
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:w.jaar,druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
+    rar:row.tier,memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
 }
 async function loadAlbum(){
   await loadSettings();
-  let {data,error}=await sb.from('cards').select('id,tier,created_at,memo,memo_at,fav_rank,wine:wines(*)').order('created_at');
+  let {data,error}=await sb.from('cards').select('id,tier,created_at,memo,memo_at,fav_rank,top_at,wine:wines(*)').order('created_at');
   if(error){const r=await sb.from('cards').select('id,tier,created_at,wine:wines(*)').order('created_at');data=r.data;error=r.error}
   cards=[];ownedKeys=new Set();
   if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
@@ -1165,6 +1193,7 @@ document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
   const gb=e.target.closest('.gidbtn');if(gb){openGids(gb.dataset.gid);return}
+  const sk=e.target.closest('[data-stack]');if(sk&&e.target.closest('.mini')){openStack(sk.dataset.stack);return}
   const m=e.target.closest('.mini');if(m)pullOut(m);
 });
 $('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
@@ -1192,7 +1221,7 @@ const HINT={
   ultra:'Ultra: kantel langzaam, de lagen bewegen los van elkaar.',
   icon:'Icon: deze wijn staat op de lijst met iconische wijnen.'
 };
-function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&filledOf(s).some(x=>x&&x.id===c.id)).map(s=>s.name)}
+function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id))).map(s=>s.name)}
 function memoBack(c){
   const d=c.memoAt?fmtDate(c.memoAt):'';
   return `<div class="memoback"><div class="mbin">
@@ -1222,6 +1251,25 @@ function openCard(id,showBack){
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
   o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+}
+function openStack(gid){
+  const [sid,k]=gid.split('|'),set=SETS.find(x=>x.id===sid);if(!set)return;
+  const S=stackOf(set,+k);if(!S.length)return;
+  const o=overlay(`<p class="eyebrow">${esc(set.name)} · stapel</p><p class="status">${esc(set.slots[+k].l)}</p>
+    <p class="hint">${S.length} kaarten in dit vak. De bovenste zie je in je album. Tik op een kaart om hem te bekijken.</p>
+    <div class="fan">${S.map((c,n)=>`<div class="fanitem${n===0?' top':''}"><div class="sleeve">${mini(c)}</div>
+      <span class="fanlab">${TIERS[c.rar].sym} ${esc(TIERS[c.rar].label)}</span>
+      ${n===0?'<span class="fanon">Ligt bovenop</span>':`<button class="btn small" data-top="${c.id}">Bovenop leggen</button>`}</div>`).join('')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.querySelectorAll('.fan .mini').forEach(m=>m.addEventListener('click',ev=>{ev.stopPropagation();openCard(m.dataset.id)}));
+  o.querySelectorAll('[data-top]').forEach(b=>b.onclick=async()=>{
+    o.querySelectorAll('button').forEach(x=>x.disabled=true);
+    const {data,error}=await sb.rpc('pick_top',{p_card:b.dataset.top});
+    if(error){o.querySelectorAll('button').forEach(x=>x.disabled=false);toast('Opslaan lukte niet. Probeer het zo nog eens.');console.error(error);return}
+    const c=cards.find(x=>x.id===b.dataset.top);c.topAt=(data&&data.top_at)||new Date().toISOString();
+    refresh();renderChrome();toast(`${c.naam} ligt nu bovenop.`);openStack(gid);
+  });
+  o.querySelector('#close').onclick=()=>{closeOverlay();go(cur,true)};o.querySelector('#close').focus();
 }
 function openMemo(id,after){
   const c=cards.find(x=>x.id===id);if(!c)return;
@@ -1461,7 +1509,7 @@ async function doRetry(c){
   }
 }
 function pageOfCard(c){
-  return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.physical[p.set.id]||[]).some(x=>x&&x.id===c.id))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
+  return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.stacks[p.set.id]||[]).some(x=>x.some(y=>y.id===c.id)))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
 }
 const GLOW={common:'#F1E6D6',rare:'#DCE3EC',superrare:'#C9A8FF',ultra:'#F2C65E',icon:'#E9C46A'};
 const SPARKS={common:10,rare:22,superrare:40,ultra:64,icon:64};
@@ -1489,7 +1537,7 @@ function reveal(c,news,title){
       buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar]);
       setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
         o.querySelector('.status').classList.add('pop');
-        o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
+        const si=stackInfo(c);o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
   const place=()=>{
     closeOverlay();lastNewId=c.id;const pg=pageOfCard(c);go(pg>0?pg:1,true);

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Vined It database – migratie 009: herinneringen en top 10
+-- Vined It database – migratie 009: herinneringen, top 10 en stapels
 -- Draai NA 008_feedback.sql. Plak in Supabase → SQL Editor → New query → Run.
 -- Veilig om opnieuw te draaien.
 -- =====================================================================
@@ -79,3 +79,25 @@ end;
 $$;
 revoke all on function public.set_favorite(uuid, int) from public, anon;
 grant execute on function public.set_favorite(uuid, int) to authenticated;
+
+-- Stapels: kies welke kaart bovenop ligt in een vak (de app kijkt naar de laatst gekozen kaart).
+alter table public.cards add column if not exists top_at timestamptz;
+
+create or replace function public.pick_top(p_card uuid)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+  v_at  timestamptz;
+begin
+  if v_uid is null then raise exception 'not_authenticated' using errcode = '28000'; end if;
+  update public.cards set top_at = now() where id = p_card and user_id = v_uid returning top_at into v_at;
+  if v_at is null then raise exception 'no_card' using errcode = '22023'; end if;
+  return jsonb_build_object('id', p_card, 'top_at', v_at);
+end;
+$$;
+revoke all on function public.pick_top(uuid) from public, anon;
+grant execute on function public.pick_top(uuid) to authenticated;
