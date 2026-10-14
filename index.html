@@ -1102,11 +1102,11 @@ function makePage0(i){
   }
   if(p.t==='overige'){
     const list=st.overflow[p.land]||[],chapN=st.allLands.indexOf(p.land)+1;
-    el.innerHTML=p.noSets?`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
+    el.innerHTML=(p.noSets?`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
       <p class="note">${p.land==='Overige landen'?'Wijnen uit landen zonder eigen hoofdstuk, zoals Griekenland, Hongarije of Georgië. Ze tellen mee voor de verzamellijsten, zoals Wereldreiziger II.':(list.length?'Je wijnen uit '+esc(p.land)+'.':'Nog geen wijn uit '+esc(p.land)+'.')+' Voor dit land zijn er nog geen regiosets. Elke wijn krijgt hier een plek en telt mee voor de verzamellijsten, zoals Wereldreiziger.'}</p>`
      :`<div><p class="eyebrow">Hoofdstuk ${chapN} · ${esc(p.land)}</p><h2 class="foil">Overige</h2></div>
-      <p class="note">Wijnen die (nog) in geen set passen, of een vak dat al gevuld is. Ze gaan nooit verloren en schuiven vanzelf door als er een passende set vrijkomt.</p>
-      <div class="grid">${list.map(c=>slotHTML(c,c.app||c.regio)).join('')}${list.length?'':'<div class="slot"><div class="sleeve"><div class="empty"></div></div></div>'.repeat(6)}</div>${pageFoot(i)}`;
+      <p class="note">Wijnen die (nog) in geen vak passen. Ze gaan nooit verloren en schuiven vanzelf door als er een passend vak bijkomt.</p>`)
+      +`<div class="grid">${list.map(c=>slotHTML(c,p.land==='Overige landen'?c.land:(c.app||c.regio))).join('')}${list.length?'':'<div class="slot"><div class="sleeve"><div class="empty"></div></div></div>'.repeat(6)}</div>${pageFoot(i)}`;
     return el;
   }
   const s=p.set,f=filledOf(s),have=f.filter(Boolean).length,done=have===s.slots.length;
