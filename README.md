@@ -2,7 +2,7 @@
 
 Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg een kaart en steek hem in de sleeve van een dik, in leer gebonden album. Spaar regio's vol en hoop op een zeldzame kaart.
 
-**Status:** fase 2. Inloggen met e-mailcode en een echte database (Supabase); scannen gebruikt nog fictieve demowijnen.
+**Status:** fase 3. Echt scannen met camera en etiketherkenning (Claude via de Edge Function `recognize`); testers kunnen in Instellingen terug naar demowijnen.
 
 ## Spelregels
 
@@ -38,4 +38,4 @@ Live: https://lenvanuuden.github.io/VindIt/ — of open `index.html` in een brow
 
 ## Database
 
-Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur) `supabase/004_herproeven.sql` (herproeven en de dagteller) `supabase/005_herproeven_wachttijd.sql` (één poging per wijn per dag) en `supabase/006_testerlimiet.sql` (hogere dagelimiet voor testaccounts). De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
+Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur) `supabase/004_herproeven.sql` (herproeven en de dagteller) `supabase/005_herproeven_wachttijd.sql` (één poging per wijn per dag) `supabase/006_testerlimiet.sql` (hogere dagelimiet voor testaccounts) en `supabase/007_scannen.sql` (budgetteller, daglimiet herkenningen, opslag voor kaartafbeeldingen). De Edge Function staat in `supabase/functions/recognize/index.ts` en heeft het geheim `ANTHROPIC_API_KEY` nodig. De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.

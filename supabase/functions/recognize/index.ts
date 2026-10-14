@@ -1,0 +1,151 @@
+// =====================================================================
+// Vin’d It – Edge Function "recognize"
+// Leest een foto van een wijnetiket met Claude en maakt via scan_wine()
+// de kaart aan. De API-sleutel staat als geheim in Supabase
+// (ANTHROPIC_API_KEY) en komt nooit in de app.
+//
+// Optionele geheimen:
+//   VINDIT_MODEL          – standaard claude-haiku-5-5
+//   VINDIT_MONTH_CAP      – max. herkenningen per maand, alle gebruikers samen (standaard 20000)
+//   VINDIT_USER_DAY_CAP   – max. herkenningen per gebruiker per dag (standaard 15; testers krijgen 5x hun dagelimiet)
+// =====================================================================
+import { createClient } from "jsr:@supabase/supabase-js@2";
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+const MODEL = Deno.env.get("VINDIT_MODEL") ?? "claude-haiku-5-5";
+const MONTH_CAP = Number(Deno.env.get("VINDIT_MONTH_CAP") ?? "20000");
+const USER_DAY_CAP = Number(Deno.env.get("VINDIT_USER_DAY_CAP") ?? "15");
+const PUBLISHABLE_FALLBACK = "sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA";
+
+const SYSTEM = `You read photos of wine bottle labels for a Dutch wine-collecting app and return structured data via the "wijnetiket" tool.
+
+Rules:
+- is_wine_label: false if the photo does not clearly show a wine label (beer, spirits, a menu, no label, unreadable). Then fill the other fields as best you can or with empty strings.
+- confidence: 0..1, how sure you are the producer and wine name are read correctly.
+- naam: the wine/cuvée name WITHOUT vintage and without the producer. If the label has no separate cuvée name, use the appellation or grape as printed (e.g. "Chablis", "Sauvignon Blanc"). Keep original spelling and accents.
+- maker: the producer/estate exactly as printed (e.g. "Domaine Laroche", "Château Lynch-Bages", "Bodegas Muga"). For négociant/supermarket brands use the brand.
+- jaar: vintage as a 4-digit number, or null if non-vintage/not visible.
+- druif: grape(s) as display text in Dutch-friendly form (e.g. "Merlot, Cabernet Franc"). Infer from the appellation if not printed (Chablis → Chardonnay, Sancerre → Sauvignon Blanc, Barolo → Nebbiolo, Rioja → Tempranillo).
+- grape: the single MAIN grape only if it is a single-varietal wine or clearly dominant (≥75%), else "". Use international names: "Cabernet Sauvignon", "Merlot", "Pinot Noir", "Chardonnay", "Sauvignon Blanc", "Syrah" (also for Shiraz), "Riesling", "Grenache" (also Garnacha), "Tempranillo", "Sangiovese", "Nebbiolo", "Gamay", "Chenin Blanc", "Malbec", "Pinot Gris", "Gewurztraminer", "Pinot Blanc", "Muscat", etc.
+- app: the official appellation / region of origin as printed, in its own language with correct accents (e.g. "Saint-Émilion Grand Cru", "Côtes du Rhône Villages", "Chianti Classico", "Rioja", "Ribera del Duero", "Mosel", "Marlborough", "Barossa Valley", "Western Cape", "Champagne", "Alsace", "Crémant d'Alsace", "Pays d'Oc", "Prosecco", "Cava"). For Etna use "Etna Rosso" or "Etna Bianco". For Burgundy villages use the village appellation (e.g. "Gevrey-Chambertin").
+- regio: one of these codes when it applies, otherwise a short lowercase code of the wine region without spaces (e.g. "douro", "mosel", "mendoza"):
+  bordeaux, bourgogne (NOT Beaujolais), beaujolais, jura, rhone, loire, champagne, elzas (Alsace), languedoc (incl. Roussillon), provence, zuidwest (South-West France: Cahors, Bergerac, Gascogne, Madiran…), toscane, piemonte, veneto, sicilie, rioja, nieuw-zeeland (any New Zealand wine), californie, oregon, washington.
+- land: country in DUTCH: Frankrijk, Italië, Spanje, Portugal, Duitsland, Oostenrijk, Nederland, Verenigd Koninkrijk, Zuid-Afrika, Chili, Argentinië, Verenigde Staten, Australië, Nieuw-Zeeland, Griekenland, Hongarije, Georgië, Libanon, Uruguay, België, Zwitserland, Canada, Japan, Israël, Kroatië, Luxemburg, or another country name in Dutch.
+- stijl: short Dutch style description, e.g. "Rood, vol", "Wit, fris", "Mousserend, droog", "Rosé, droog", "Wit, zoet".
+- style: stil | mousserend | zoet | versterkt.
+- color: rood | wit | rosé (sparkling white = wit).
+- tags: only these lowercase values when they apply: joven, crianza, reserva, gran reserva, rioja alta, rioja alavesa, rioja oriental, crémant, brut, blanc de blancs, blanc de noirs, brut nature, millésime, prestige, récoltant, vin jaune, grand cru, vendanges tardives, pét-nat. ("crémant" for any Crémant; "récoltant" if the label shows RM / récoltant-manipulant; "prestige" for a house's top cuvée; "brut nature" also for Extra Brut / zero dosage.)
+- Iconic wines: if the wine is one of these, use EXACTLY this naam / maker:
+  Cloudy Bay Sauvignon Blanc / Cloudy Bay · Tignanello / Marchesi Antinori · Dom Pérignon / Moët & Chandon · Krug Grande Cuvée / Krug · Sassicaia / Tenuta San Guido · Vega Sicilia Único / Vega Sicilia · Château d'Yquem / Château d'Yquem · Penfolds Grange / Penfolds · Opus One / Opus One · Château Margaux / Château Margaux · Pétrus / Pétrus · Romanée-Conti / Domaine de la Romanée-Conti.
+- Be consistent: the same wine photographed twice must give the same naam and maker.`;
+
+const TOOL = {
+  name: "wijnetiket",
+  description: "Gestructureerde gegevens van een wijnetiket",
+  input_schema: {
+    type: "object",
+    properties: {
+      is_wine_label: { type: "boolean" },
+      confidence: { type: "number" },
+      naam: { type: "string" },
+      maker: { type: "string" },
+      jaar: { type: ["integer", "null"] },
+      druif: { type: "string" },
+      grape: { type: "string" },
+      app: { type: "string" },
+      regio: { type: "string" },
+      land: { type: "string" },
+      stijl: { type: "string" },
+      style: { type: "string", enum: ["stil", "mousserend", "zoet", "versterkt"] },
+      color: { type: "string", enum: ["rood", "wit", "rosé"] },
+      tags: { type: "array", items: { type: "string" } },
+    },
+    required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color"],
+  },
+};
+
+const json = (b: unknown, s = 200) =>
+  new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  try {
+    const url = Deno.env.get("SUPABASE_URL")!;
+    const auth = req.headers.get("Authorization") ?? "";
+    const userClient = createClient(url, Deno.env.get("SUPABASE_ANON_KEY") ?? PUBLISHABLE_FALLBACK, {
+      global: { headers: { Authorization: auth } },
+    });
+    const { data: { user } } = await userClient.auth.getUser();
+    if (!user) return json({ status: "not_authenticated" }, 401);
+
+    const body = await req.json().catch(() => ({}));
+    const image: string = body.image ?? "";
+    const mediaType: string = body.mediaType ?? "image/jpeg";
+    if (!image || image.length > 5_000_000) return json({ status: "bad_image" }, 400);
+
+    // Budget en daglimiet (alleen de server kan dit aanpassen)
+    const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const { data: claim, error: claimErr } = await admin.rpc("claim_recognition", {
+      p_user: user.id, p_month_cap: MONTH_CAP, p_day_cap: USER_DAY_CAP,
+    });
+    if (claimErr) throw claimErr;
+    if (claim !== "ok") return json({ status: claim });
+
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 700,
+        system: SYSTEM,
+        tools: [TOOL],
+        tool_choice: { type: "tool", name: "wijnetiket" },
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: mediaType, data: image } },
+            { type: "text", text: "Lees dit wijnetiket." },
+          ],
+        }],
+      }),
+    });
+    if (!r.ok) {
+      console.error("anthropic", r.status, await r.text());
+      return json({ status: "ai_error" }, 502);
+    }
+    const out = await r.json();
+    const w = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+    if (!w || !w.is_wine_label || (w.confidence ?? 0) < 0.5 || !w.naam) {
+      return json({ status: "not_recognized", wine: w ?? null });
+    }
+
+    const payload = {
+      naam: String(w.naam).trim(),
+      maker: String(w.maker ?? "").trim(),
+      jaar: Number.isInteger(w.jaar) ? w.jaar : null,
+      druif: w.druif ?? "",
+      stijl: w.stijl ?? "",
+      regio: String(w.regio || "overig").toLowerCase().replace(/\s+/g, "-"),
+      land: w.land ?? "",
+      app: w.app ?? "",
+      grape: w.grape ?? "",
+      style: w.style ?? "stil",
+      color: w.color ?? "",
+      tags: Array.isArray(w.tags) ? w.tags.map((t: string) => String(t).toLowerCase()) : [],
+    };
+    const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: payload });
+    if (scanErr) throw scanErr;
+    return json({ status: "ok", recognized: payload, confidence: w.confidence, result });
+  } catch (e) {
+    console.error(e);
+    return json({ status: "error", message: String((e as Error)?.message ?? e) }, 500);
+  }
+});

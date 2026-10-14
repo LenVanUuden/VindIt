@@ -369,6 +369,9 @@ button{font:inherit;color:inherit}
 .toc li.dim{opacity:.5}
 .lands small{font-weight:400;opacity:.6;font-size:11px}
 .qnum{font-size:11px;letter-spacing:.04em;text-transform:none;font-variant-numeric:tabular-nums}
+.snapframe{overflow:hidden;padding:0}
+.snap{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.settings .chk{display:flex;flex-direction:row;gap:8px;align-items:center;font-size:13px;color:var(--cream)}
 </style>
 </head>
 <body>
@@ -384,6 +387,7 @@ button{font:inherit;color:inherit}
     <button class="scan" id="scan">Scan een wijn</button>
     <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
   </div>
+  <input type="file" id="cam" accept="image/*" capture="environment" hidden>
   <div class="extras">
     <button class="reset" data-act="settings">Instellingen</button>
     <button class="reset" data-act="info">Uitleg</button>
@@ -436,7 +440,7 @@ applySettings();
 async function loadSettings(){
   try{
     const {data,error}=await sb.from('collectors').select('*').maybeSingle();
-    if(!error&&data){LIMIT=data.daily_limit||3;settings={name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
+    if(!error&&data){LIMIT=data.daily_limit||3;settings={...settings,name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
 }
 function openSettings(){
@@ -452,6 +456,7 @@ function openSettings(){
       <fieldset><legend>Bladen</legend><div class="swatches two">
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
+      ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -463,7 +468,7 @@ function openSettings(){
     e.preventDefault();
     const name=sn.value.trim().replace(/\s+/g,' ');
     if(name&&!/^[\p{L}\p{N} .'&-]{1,24}$/u.test(name)){showErr('Gebruik alleen letters, cijfers, spaties en . \' & - (maximaal 24 tekens).');sn.focus();return}
-    const next={name,cover:f.cover.value,pages:f.pages.value};
+    const dm=f.querySelector('#sdemo');const next={name,cover:f.cover.value,pages:f.pages.value,demo:dm?dm.checked:!!settings.demo};
     const btn=f.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Opslaan…';
     let synced=false;
     if(session){const {error}=await sb.rpc('update_settings',{p_name:name,p_cover:next.cover,p_pages:next.pages});synced=!error;if(error)console.error(error)}
@@ -486,15 +491,16 @@ function areaOf(c){
 }
 
 /* ---------- sets matchen ---------- */
+const nrm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 function matches(c,m){
-  if(m.key&&low(c.key)!==m.key)return false;
-  if(m.regio&&c.regio!==m.regio)return false;
-  if(m.land&&c.land!==m.land)return false;
-  if(m.grape&&low(c.grape)!==low(m.grape))return false;
+  if(m.key&&nrm(c.key)!==nrm(m.key))return false;
+  if(m.regio&&nrm(c.regio)!==nrm(m.regio))return false;
+  if(m.land&&nrm(c.land)!==nrm(m.land))return false;
+  if(m.grape&&nrm(c.grape)!==nrm(m.grape))return false;
   if(m.style&&c.style!==m.style)return false;
-  if(m.color&&c.color!==m.color)return false;
-  if(m.tag&&!(c.tags||[]).includes(m.tag))return false;
-  if(m.app&&!m.app.some(a=>low(a)===low(c.app)))return false;
+  if(m.color&&nrm(c.color)!==nrm(m.color))return false;
+  if(m.tag&&!(c.tags||[]).some(t=>nrm(t)===nrm(m.tag)))return false;
+  if(m.app&&!m.app.some(a=>nrm(a)===nrm(c.app)))return false;
   return true;
 }
 const spec=m=>Object.keys(m).length+(m.app?1:0)+(m.key?3:0);
@@ -602,14 +608,29 @@ function demoPhoto(c){
   return cv;
 }
 const IMG={};
-function rareImg(c){if(!IMG[c.wineId])IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));return IMG[c.wineId]}
+const isDemoWine=c=>!!POOL_BY_KEY[c.key];
+const artUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${session.user.id}/${c.wineId}.jpg`;
+function rareImg(c){
+  if(IMG[c.wineId])return IMG[c.wineId];
+  if(session&&!isDemoWine(c))return artUrl(c);
+  return IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));
+}
+function artFallback(img){img.onerror=null;const c=cards.find(x=>x.wineId===img.dataset.w);if(c){IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));img.src=IMG[c.wineId]}}
+async function uploadArt(c,img){
+  try{
+    const url=posterize(img,areaOf(c));IMG[c.wineId]=url;
+    const blob=await (await fetch(url)).blob();
+    const {error}=await sb.storage.from('card-art').upload(`${session.user.id}/${c.wineId}.jpg`,blob,{upsert:true,contentType:'image/jpeg'});
+    if(error)console.warn('upload',error);
+  }catch(e){console.warn('upload',e)}
+}
 
 /* ---------- kaarten ---------- */
 const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class="glare"></div>':'<div class="shine"></div><div class="sparkle"></div><div class="glare"></div>';
 const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
 const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
 function artHTML(c){
-  if(c.rar==='rare'||c.rar==='superrare') return `<img src="${rareImg(c)}" alt="${esc(c.naam)}, flesfoto in posterstijl">`;
+  if(c.rar==='rare'||c.rar==='superrare') return `<img src="${rareImg(c)}" data-w="${c.wineId}" onerror="artFallback(this)" alt="${esc(c.naam)}, flesfoto in posterstijl">`;
   return scene(areaOf(c),c.v);
 }
 function bigCard(c){
@@ -889,28 +910,76 @@ function pickWine(){
   const src=icons.length&&(Math.random()<.05||!normal.length)?icons:normal;
   return src[Math.floor(Math.random()*src.length)];
 }
-$('#scan').onclick=async()=>{
+$('#scan').onclick=()=>{
   if(!session){toast('Log eerst in om te scannen.');return}
   if(document.querySelector('.overlay'))return;
   if(scansToday()>=LIMIT){toast(limitMsg());return}
+  if(settings.demo&&LIMIT>3)return demoScan();
+  openCamera();
+};
+async function demoScan(){
   const pick=pickWine();
   if(!pick){toast('Je hebt alle demowijnen al verzameld.');return}
   const before=snapshot();
-  const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Etiket wordt herkend</p><p class="hint">In de echte app richt je hier je camera op het etiket.</p>`);
+  const o=overlay(`<div class="scanframe"><div class="bottle"></div></div><p class="status">Etiket wordt herkend</p><p class="hint">Testmodus: een willekeurige demowijn.</p>`);
   const payload={naam:pick.naam,maker:pick.maker,jaar:pick.jaar,druif:pick.druif,stijl:pick.stijl,regio:pick.regio,land:pick.land,app:pick.app,grape:pick.grape,style:pick.style,color:pick.color,tags:pick.tags};
   const [res]=await Promise.all([sb.rpc('scan_wine',{p_wine:payload}),wait(reduced?200:1400)]);
   if(!o.isConnected)return;
   if(res.error){closeOverlay();toast('Scannen lukte niet. Controleer je verbinding en probeer het opnieuw.');console.error(res.error);return}
-  const d=res.data;
-  if(d.status==='limit'){closeOverlay();await loadAlbum();toast(limitMsg());return}
-  if(d.status==='duplicate'){showDup(cards.find(c=>c.wineId===d.wine.id));return}
+  handleScanResult(res.data,before,null);
+}
+function handleScanResult(d,before,photo){
+  if(d.status==='limit'){closeOverlay();loadAlbum().then(()=>toast(limitMsg()));return}
+  if(d.status==='duplicate'){const c=cards.find(x=>x.wineId===d.wine.id);lastPhoto=photo&&c?{img:photo,wineId:c.wineId}:null;showDup(c);return}
   ownedKeys.add(d.wine.wine_key);
   if(typeof d.scans_today==='number'&&serverToday!=null)serverToday=d.scans_today;
   const card=toCard(d.card,d.wine);
-  if(!card.app&&pick.app)Object.assign(card,{app:pick.app,grape:pick.grape,style:pick.style,color:pick.color,tags:pick.tags});
+  if(photo)uploadArt(card,photo);
   cards.push(card);refresh();renderChrome();
   reveal(card,newsSince(before));
+}
+
+/* ---------- camera en herkenning ---------- */
+let lastPhoto=null;
+const SCAN_MSG={
+  month_cap:'Het maandbudget voor etiketherkenning is op. Volgende maand kun je weer scannen.',
+  day_cap:'Je hebt vandaag al heel vaak een foto laten herkennen. Morgen kan het weer.',
+  not_authenticated:'Je sessie is verlopen. Log opnieuw in.',
+  bad_image:'Deze foto kon niet worden verwerkt. Probeer een andere foto.',
+  ai_error:'De herkenning is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
 };
+function openCamera(){const inp=$('#cam');inp.value='';inp.click()}
+$('#cam').onchange=async()=>{
+  const f=$('#cam').files&&$('#cam').files[0];if(!f)return;
+  if(!/^image\//.test(f.type)){toast('Dit bestand is geen foto.');return}
+  let img;
+  try{img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=URL.createObjectURL(f)})}
+  catch(e){toast('Deze foto kon niet worden geladen. Probeer het opnieuw.');return}
+  const max=1280,sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+  const cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*sc);cv.height=Math.round(img.naturalHeight*sc);
+  cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+  const dataUrl=cv.toDataURL('image/jpeg',.82),b64=dataUrl.split(',')[1];
+  const before=snapshot();
+  const o=overlay(`<div class="scanframe snapframe"><img class="snap" src="${dataUrl}" alt="Je foto van het etiket"></div><p class="status">Etiket wordt gelezen…</p><p class="hint">Even geduld, we herkennen de wijn.</p>`);
+  let data=null,status='';
+  try{
+    const r=await sb.functions.invoke('recognize',{body:{image:b64,mediaType:'image/jpeg'}});
+    if(r.error){try{status=(await r.error.context.json()).status||''}catch(e){status='error'}}
+    else{data=r.data;status=data.status}
+  }catch(e){status='error'}
+  if(!o.isConnected)return;
+  if(status==='ok')return handleScanResult(data.result,before,cv);
+  if(status==='not_recognized')return showNotRecognized(dataUrl,data&&data.wine);
+  closeOverlay();toast(SCAN_MSG[status]||'Herkennen lukte niet. Controleer je verbinding en probeer het opnieuw.');
+};
+function showNotRecognized(dataUrl,w){
+  const o=overlay(`<p class="status">Geen etiket herkend</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
+    <p class="hint">${w&&w.naam?`We lazen iets als "${esc(w.naam)}", maar we weten het niet zeker. `:''}Fotografeer het etiket recht van voren, scherp en goed belicht, met de naam en de producent leesbaar.</p>
+    <p class="hint">Deze poging telt niet mee voor je scans.</p>
+    <div class="actions"><button class="btn" id="close">Sluiten</button><button class="btn primary" id="again">Opnieuw</button></div>`);
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  const a=o.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};
+}
 function showDup(c){
   const today=amsDay(new Date()),cool=!!c&&((c.created&&amsDay(new Date(c.created))===today)||retriedToday.has(c.wineId));
   const left=LIMIT-scansToday(),canRetry=c&&c.rar!=='icon'&&left>0&&!cool;
@@ -938,7 +1007,7 @@ async function doRetry(c){
   retriedToday.add(c.wineId);
   if(typeof d.scans_today==='number')serverToday=d.scans_today;
   if(d.upgraded){
-    c.rar=d.rolled_tier;refresh();renderChrome();
+    c.rar=d.rolled_tier;if(lastPhoto&&lastPhoto.wineId===c.wineId)uploadArt(c,lastPhoto.img);refresh();renderChrome();
     reveal(c,newsSince(before),`Opgewaardeerd: ${TIERS[d.old_tier].label} → ${TIERS[d.rolled_tier].label}`);
   }else{
     renderChrome();
@@ -1012,6 +1081,7 @@ function openInfo(){
       <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
     <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: bedoeld voor een nieuwe fles van dezelfde wijn. Het kost een scan, kan hooguit één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
+    <p class="hint">Scannen: maak een foto van het etiket, recht van voren en scherp. De app leest naam, producent, jaargang en herkomst, en maakt de kaart. Bij een Rare wordt jouw foto de posterafbeelding.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vin’d It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
