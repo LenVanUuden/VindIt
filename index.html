@@ -371,6 +371,14 @@ button{font:inherit;color:inherit}
 .qnum{font-size:11px;letter-spacing:.04em;text-transform:none;font-variant-numeric:tabular-nums}
 .snapframe{overflow:hidden;padding:0}
 .snap{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.fbkinds{display:flex;flex-wrap:wrap;gap:8px}
+.fbkinds label{position:relative}
+.fbkinds input{position:absolute;opacity:0;width:1px;height:1px}
+.fbkinds span{display:inline-block;border:1px solid rgba(233,211,160,.35);color:var(--gold-soft);border-radius:999px;padding:7px 13px;font-size:13px;cursor:pointer}
+.fbkinds input:checked+span{background:var(--gold);border-color:var(--gold);color:#2B1308}
+.fbkinds input:focus-visible+span{outline:2px solid var(--cream);outline-offset:2px}
+.upl textarea{min-height:130px;border-radius:8px;border:1px solid rgba(233,211,160,.35);background:#24161A;color:var(--cream);padding:10px;font:inherit;font-size:14px;line-height:1.45;box-sizing:border-box;width:100%;resize:vertical}
+.fbcount{font-size:11px;color:var(--gold-soft);opacity:.6;text-align:right;margin:-6px 0 0}
 /* Scanner */
 .overlay.leather{background-color:var(--leather-dark);background-image:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.45)),var(--leathergrain)}
 .overlay.scanner{justify-content:space-between;gap:12px}
@@ -423,6 +431,7 @@ button{font:inherit;color:inherit}
   <div class="extras">
     <button class="reset" data-act="settings">Instellingen</button>
     <button class="reset" data-act="info">Uitleg</button>
+    <button class="reset" data-act="feedback">Feedback</button>
   </div>
 </div>
 
@@ -474,6 +483,33 @@ async function loadSettings(){
     const {data,error}=await sb.from('collectors').select('*').maybeSingle();
     if(!error&&data){LIMIT=data.daily_limit||3;settings={...settings,name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
+}
+function openFeedback(){
+  if(!session){toast('Log eerst in om feedback te sturen.');return}
+  const KINDS={bug:'🐞 Iets werkt niet',idee:'💡 Idee',compliment:'😍 Compliment',anders:'💬 Anders'};
+  const o=overlay(`<p class="status">Feedback</p>
+    <p class="hint">Wat valt je op? Alles helpt: wat je leuk vindt, wat onduidelijk is of wat niet werkt.</p>
+    <form class="upl" id="fbf" novalidate>
+      <div class="fbkinds" role="radiogroup" aria-label="Soort feedback">${Object.entries(KINDS).map(([k,l],i)=>`<label><input type="radio" name="kind" value="${k}"${i===0?' checked':''}><span>${l}</span></label>`).join('')}</div>
+      <label for="fbm">Je bericht<textarea id="fbm" maxlength="2000" placeholder="Bijvoorbeeld: bij deze wijn kwam de kaart in de verkeerde set…"></textarea></label>
+      <p class="fbcount" id="fbc">0 / 2000</p>
+      <div class="actions"><button type="button" class="btn" id="close">Annuleren</button><button type="submit" class="btn primary" id="fbs">Versturen</button></div>
+    </form>`);
+  const ta=o.querySelector('#fbm'),cnt=o.querySelector('#fbc'),btn=o.querySelector('#fbs');
+  ta.oninput=()=>cnt.textContent=`${ta.value.length} / 2000`;
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  setTimeout(()=>ta.focus(),50);
+  o.querySelector('#fbf').onsubmit=async e=>{
+    e.preventDefault();
+    const msg=ta.value.trim();if(!msg){ta.focus();toast('Schrijf eerst iets op.');return}
+    btn.disabled=true;btn.textContent='Versturen…';
+    const kind=o.querySelector('input[name=kind]:checked').value;
+    const pg=pages[cur]||{};
+    const context={blad:cur,pagina:pg.t||'',set:pg.set?pg.set.name:(pg.land||''),kaarten:cards.length,scans_vandaag:scansToday(),limiet:LIMIT,scherm:`${innerWidth}x${innerHeight}`,browser:navigator.userAgent.slice(0,200)};
+    const {error}=await sb.from('feedback').insert({kind,message:msg,context});
+    if(error){btn.disabled=false;btn.textContent='Versturen';toast('Versturen lukte niet. Probeer het zo nog eens.');console.error(error);return}
+    closeOverlay();toast('Bedankt! Je feedback is verstuurd.');
+  };
 }
 function openSettings(){
   const o=overlay(`<p class="status">Instellingen</p>
@@ -868,6 +904,7 @@ document.addEventListener('click',e=>{
   if(swiped){swiped=false;return}
   if(e.target.closest('[data-act="info"]')){openInfo();return}
   if(e.target.closest('[data-act="settings"]')){openSettings();return}
+  if(e.target.closest('[data-act="feedback"]')){openFeedback();return}
   if(e.target.closest('[data-act="lands"]')){openLands();return}
   if(e.target.closest('[data-act="lists"]')){openLists();return}
   const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
