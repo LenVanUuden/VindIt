@@ -371,6 +371,37 @@ button{font:inherit;color:inherit}
 .qnum{font-size:11px;letter-spacing:.04em;text-transform:none;font-variant-numeric:tabular-nums}
 .snapframe{overflow:hidden;padding:0}
 .snap{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+/* Scanner */
+.overlay.leather{background-color:var(--leather-dark);background-image:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.45)),var(--leathergrain)}
+.overlay.scanner{justify-content:space-between;gap:12px}
+.leather::before{content:"";position:fixed;inset:8px;border:1.5px dashed rgba(210,174,98,.38);border-radius:18px;pointer-events:none}
+.sc-top{display:grid;gap:6px;justify-items:center;position:relative}
+.sc-top .status{font-size:24px}
+.sc-left{display:flex;gap:6px;justify-content:center;margin-top:2px}
+.sc-left i{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gold);display:block}
+.sc-left i.used{background:var(--gold)}
+.viewfinder{position:relative;width:min(80vw,330px,calc((100dvh - 290px)*.75));aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#140809;flex:none;
+  box-shadow:0 0 0 1px rgba(210,174,98,.45),0 0 0 7px rgba(0,0,0,.25),0 20px 44px rgba(0,0,0,.55)}
+.viewfinder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.viewfinder .corners{position:absolute;inset:12px;pointer-events:none;
+  background:linear-gradient(var(--gold),var(--gold)) 0 0/30px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 0 0/3px 30px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 0/30px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 0/3px 30px no-repeat,
+  linear-gradient(var(--gold),var(--gold)) 0 100%/30px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 0 100%/3px 30px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 100%/30px 3px no-repeat,linear-gradient(var(--gold),var(--gold)) 100% 100%/3px 30px no-repeat;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.viewfinder .vtag{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft);background:rgba(20,8,9,.6);padding:3px 10px;border-radius:999px;pointer-events:none;white-space:nowrap}
+.viewfinder .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+.viewfinder.shot .flash{animation:flash .4s ease-out}
+@keyframes flash{0%{opacity:.85}100%{opacity:0}}
+.viewfinder .vmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;color:var(--gold-soft);font-size:13px;line-height:1.45}
+.viewfinder .vmsg .seal{opacity:.7}
+.sc-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:min(86vw,360px);position:relative}
+.sc-l{display:flex;justify-content:center;gap:2px}
+.shutter{width:78px;height:78px;border-radius:50%;border:3px solid var(--gold);background:transparent;padding:5px;cursor:pointer;justify-self:center;transition:transform .12s}
+.shutter span{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold-soft),var(--gold) 60%)}
+.shutter:active{transform:scale(.92)}
+.shutter:disabled{opacity:.35;cursor:default}
+.sc-side{background:none;border:0;color:var(--gold-soft);font-size:11.5px;letter-spacing:.04em;display:grid;justify-items:center;gap:5px;cursor:pointer;padding:6px}
+.sc-side svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6}
+.sc-side[aria-pressed="true"]{color:var(--gold)}
 .settings .chk{display:flex;flex-direction:row;gap:8px;align-items:center;font-size:13px;color:var(--cream)}
 </style>
 </head>
@@ -388,6 +419,7 @@ button{font:inherit;color:inherit}
     <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
   </div>
   <input type="file" id="cam" accept="image/*" capture="environment" hidden>
+  <input type="file" id="gal" accept="image/*" hidden>
   <div class="extras">
     <button class="reset" data-act="settings">Instellingen</button>
     <button class="reset" data-act="info">Uitleg</button>
@@ -861,7 +893,7 @@ function tilt(card){
 
 /* ---------- overlays ---------- */
 function overlay(html){closeOverlay(true);const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML=html;document.body.appendChild(o);return o}
-function closeOverlay(keepPulled){document.querySelectorAll('.overlay').forEach(o=>o.remove());if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
+function closeOverlay(keepPulled){stopCam();document.querySelectorAll('.overlay').forEach(o=>o.remove());if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
 function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(m.dataset.id),reduced?0:300)}
 const HINT={
   common:'Common: de regio als reisposter. Sleep over de kaart om hem te kantelen.',
@@ -948,19 +980,76 @@ const SCAN_MSG={
   bad_image:'Deze foto kon niet worden verwerkt. Probeer een andere foto.',
   ai_error:'De herkenning is tijdelijk niet beschikbaar. Probeer het zo opnieuw.'
 };
-function openCamera(){const inp=$('#cam');inp.value='';inp.click()}
-$('#cam').onchange=async()=>{
-  const f=$('#cam').files&&$('#cam').files[0];if(!f)return;
-  if(!/^image\//.test(f.type)){toast('Dit bestand is geen foto.');return}
+let camStream=null;
+function stopCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null}}
+const ICO={
+  gal:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg>',
+  close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  torch:'<svg viewBox="0 0 24 24"><path d="M9 3h6l-1 6h-4zM10 9h4v12h-4z"/></svg>'
+};
+function openCamera(){
+  const used=scansToday();
+  const o=overlay(`<div class="sc-top"><p class="eyebrow">Vined It · scanner</p><p class="status">Richt op het etiket</p>
+      <div class="sc-left" aria-label="${Math.max(0,LIMIT-used)} scans over vandaag">${LIMIT<=10?Array.from({length:LIMIT},(_,i)=>`<i class="${i<used?'used':''}"></i>`).join(''):`<span class="note">${Math.max(0,LIMIT-used)} scans over</span>`}</div></div>
+    <div class="viewfinder" id="vf"><video id="vid" playsinline muted autoplay></video><div class="corners"></div><span class="vtag">Etiket in het kader</span><div class="flash"></div></div>
+    <p class="hint" id="schint">Houd de fles recht, met naam en producent scherp in het kader.</p>
+    <div class="sc-bar"><div class="sc-l"><button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button></div>
+      <button class="shutter" id="shut" type="button" aria-label="Foto maken" disabled><span></span></button>
+      <button class="sc-side" id="scx" type="button">${ICO.close}Sluiten</button></div>`);
+  o.classList.add('leather','scanner');
+  o.querySelector('#scx').onclick=()=>closeOverlay();
+  o.querySelector('#scgal').onclick=()=>{const g=$('#gal');g.value='';g.click()};
+  const vid=o.querySelector('#vid'),shut=o.querySelector('#shut'),vf=o.querySelector('#vf');
+  const fail=(msg)=>{stopCam();vid.remove();o.querySelector('.vtag').remove();
+    vf.insertAdjacentHTML('beforeend',`<div class="vmsg"><div class="seal">VI</div><p style="margin:0">${msg}</p><button class="btn primary" id="native" type="button">Gewone camera openen</button></div>`);
+    vf.querySelector('#native').onclick=()=>{const c=$('#cam');c.value='';c.click()};
+    shut.hidden=true};
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){fail('Deze browser ondersteunt de ingebouwde scanner niet.');return}
+  navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}}}).then(stream=>{
+    if(!o.isConnected){stream.getTracks().forEach(t=>t.stop());return}
+    camStream=stream;vid.srcObject=stream;
+    const track=stream.getVideoTracks()[0];
+    track.addEventListener('ended',()=>{if(o.isConnected)fail('De camera is gestopt.')});
+    const caps=track.getCapabilities?track.getCapabilities():{};
+    if(caps.torch){const bar=o.querySelector('.sc-bar');const tb=document.createElement('button');tb.className='sc-side';tb.type='button';tb.setAttribute('aria-pressed','false');tb.innerHTML=ICO.torch+'Lamp';
+      tb.onclick=()=>{const on=tb.getAttribute('aria-pressed')!=='true';track.applyConstraints({advanced:[{torch:on}]}).then(()=>tb.setAttribute('aria-pressed',String(on))).catch(()=>{})};
+      bar.querySelector('.sc-l').append(tb)}
+    const ready=()=>{if(vid.videoWidth){shut.disabled=false;shut.focus()}};
+    vid.addEventListener('loadedmetadata',ready);vid.play().catch(()=>{});ready();
+  }).catch(err=>{
+    const denied=err&&(err.name==='NotAllowedError'||err.name==='SecurityError');
+    fail(denied?'Vined It mag je camera niet gebruiken. Geef toestemming in de instellingen van je browser, of gebruik de gewone camera.':'De camera kon niet worden gestart.');
+  });
+  shut.onclick=()=>{
+    if(!vid.videoWidth)return;
+    const vw=vid.videoWidth,vh=vid.videoHeight,r=vf.getBoundingClientRect();
+    const scl=Math.max(r.width/vw,r.height/vh),sw=r.width/scl,sh=r.height/scl,sx=(vw-sw)/2,sy=(vh-sh)/2;
+    const out=Math.min(1,1280/Math.max(sw,sh));
+    const cv=document.createElement('canvas');cv.width=Math.round(sw*out);cv.height=Math.round(sh*out);
+    cv.getContext('2d').drawImage(vid,sx,sy,sw,sh,0,0,cv.width,cv.height);
+    vf.classList.add('shot');shut.disabled=true;
+    if(navigator.vibrate)navigator.vibrate(30);
+    setTimeout(()=>{stopCam();recognize(cv)},reduced?0:260);
+  };
+}
+async function fileToCanvas(f){
+  if(!f)return null;
+  if(!/^image\//.test(f.type)){toast('Dit bestand is geen foto.');return null}
   let img;
   try{img=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=URL.createObjectURL(f)})}
-  catch(e){toast('Deze foto kon niet worden geladen. Probeer het opnieuw.');return}
-  const max=1280,sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+  catch(e){toast('Deze foto kon niet worden geladen. Probeer het opnieuw.');return null}
+  const sc=Math.min(1,1280/Math.max(img.naturalWidth,img.naturalHeight));
   const cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*sc);cv.height=Math.round(img.naturalHeight*sc);
   cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+  return cv;
+}
+$('#cam').onchange=async()=>{const cv=await fileToCanvas($('#cam').files&&$('#cam').files[0]);if(cv)recognize(cv)};
+$('#gal').onchange=async()=>{const cv=await fileToCanvas($('#gal').files&&$('#gal').files[0]);if(cv)recognize(cv)};
+async function recognize(cv){
   const dataUrl=cv.toDataURL('image/jpeg',.82),b64=dataUrl.split(',')[1];
   const before=snapshot();
   const o=overlay(`<div class="scanframe snapframe"><img class="snap" src="${dataUrl}" alt="Je foto van het etiket"></div><p class="status">Etiket wordt gelezen…</p><p class="hint">Even geduld, we herkennen de wijn.</p>`);
+  o.classList.add('leather');
   let data=null,status='';
   try{
     const r=await sb.functions.invoke('recognize',{body:{image:b64,mediaType:'image/jpeg'}});
@@ -971,12 +1060,13 @@ $('#cam').onchange=async()=>{
   if(status==='ok')return handleScanResult(data.result,before,cv);
   if(status==='not_recognized')return showNotRecognized(dataUrl,data&&data.wine);
   closeOverlay();toast(SCAN_MSG[status]||'Herkennen lukte niet. Controleer je verbinding en probeer het opnieuw.');
-};
+}
 function showNotRecognized(dataUrl,w){
   const o=overlay(`<p class="status">Geen etiket herkend</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
     <p class="hint">${w&&w.naam?`We lazen iets als "${esc(w.naam)}", maar we weten het niet zeker. `:''}Fotografeer het etiket recht van voren, scherp en goed belicht, met de naam en de producent leesbaar.</p>
     <p class="hint">Deze poging telt niet mee voor je scans.</p>
     <div class="actions"><button class="btn" id="close">Sluiten</button><button class="btn primary" id="again">Opnieuw</button></div>`);
+  o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const a=o.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};
 }
