@@ -1,5 +1,5 @@
 -- =====================================================================
--- Vin’d It database – migratie 006: dagelimiet per account (testers)
+-- Vined It database – migratie 006: dagelimiet per account (testers)
 -- Draai NA 005_herproeven_wachttijd.sql. Plak in Supabase → SQL Editor → Run.
 -- Veilig om opnieuw te draaien.
 --

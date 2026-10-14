@@ -1,5 +1,5 @@
 -- =====================================================================
--- Vin’d It database – migratie 004: herproeven
+-- Vined It database – migratie 004: herproeven
 -- Draai NA 003_instellingen.sql. Plak in Supabase → SQL Editor → New query → Run.
 -- Veilig om opnieuw te draaien.
 --

@@ -1,5 +1,5 @@
 // =====================================================================
-// Vin’d It – Edge Function "recognize"
+// Vined It – Edge Function "recognize"
 // Leest een foto van een wijnetiket met Claude en maakt via scan_wine()
 // de kaart aan. De API-sleutel staat als geheim in Supabase
 // (ANTHROPIC_API_KEY) en komt nooit in de app.

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Vin’d It database – migratie 007: echt scannen
+-- Vined It database – migratie 007: echt scannen
 -- Draai NA 006_testerlimiet.sql. Plak in Supabase → SQL Editor → New query → Run.
 -- Veilig om opnieuw te draaien.
 -- =====================================================================
