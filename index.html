@@ -12,7 +12,7 @@
 <title>Vined It</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&family=Dancing+Script:wght@500;600&display=swap">
 <style>
 /* Layout: een dik, in leer gebonden insteekalbum op een houten tafel. Kartonnen bladen met 9 doorzichtige sleeves; vijf kaartklassen die je in één oogopslag uit elkaar houdt. Bewust één donkere wereld. */
 :root{
@@ -392,6 +392,58 @@ button{font:inherit;color:inherit}
 .gidcard h4{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#8B6A3A;margin:12px 0 4px;font-weight:600}
 .gidcard p.gt{margin:0;font-size:14px;line-height:1.5}
 .gidcard .gnote{font-size:11px;color:#8B6A3A;margin:14px 0 0}
+[hidden]{display:none!important}
+/* Top 10 */
+.favpage{gap:10px}
+.favtop{display:grid;grid-template-columns:34% 1fr;gap:12px;align-items:center}
+.favhead .note{margin-top:6px}
+.fgrid{width:84%;margin:0 auto;gap:6px 8px}
+.fslot{position:relative}
+.frank{position:absolute;left:-4px;top:-6px;z-index:9;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:var(--gold);color:#2B1308;font-size:10.5px;font-weight:600;line-height:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.fbig .frank{min-width:24px;height:24px;line-height:24px;border-radius:12px;font-size:13px;left:-6px;top:-8px}
+.fbig .sleeve{box-shadow:inset 0 2px 3px rgba(0,0,0,.45),0 0 0 1px rgba(210,174,98,.55),0 0 18px rgba(210,174,98,.25)}
+.mpen{position:absolute;left:3px;top:3px;z-index:6;font-size:10px;line-height:14px;width:14px;height:14px;text-align:center;border-radius:50%;background:rgba(255,250,240,.9);color:#5A1F2A}
+/* Kaart omdraaien en herinnering */
+.spin{width:min(78vw,300px);display:grid;transform-style:preserve-3d;transform:rotateY(var(--spin,0deg));transition:transform .7s cubic-bezier(.3,.1,.2,1);cursor:grab;touch-action:pan-y}
+.spin.drag{transition:none;cursor:grabbing}
+.spin>*{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.spin .card{width:100%}
+.memoback{transform:rotateY(180deg);background:#F6EEDD;color:#3B2A1C;padding:10px;box-sizing:border-box;box-shadow:0 20px 40px rgba(0,0,0,.5);display:flex}
+.mbin{flex:1;border:1.5px solid rgba(139,106,58,.5);outline:1px solid rgba(139,106,58,.25);outline-offset:3px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;text-align:left;
+  background-image:repeating-linear-gradient(180deg,transparent 0 31px,rgba(90,60,30,.14) 31px 32px);background-position:0 54px}
+.mbhead{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#8B6A3A}
+.mbseal{width:34px;height:40px;border:1.5px dashed rgba(139,106,58,.6);display:flex;align-items:center;justify-content:center;font-family:var(--display);letter-spacing:0;font-size:13px;color:#5A1F2A;transform:rotate(4deg)}
+.mbtext{font-family:"Dancing Script",cursive;font-size:25px;line-height:32px;color:#26324F;margin:4px 0 0;flex:1;word-wrap:break-word;transform:rotate(-1.2deg)}
+.mbdate{font-family:"Dancing Script",cursive;font-size:20px;color:#26324F;text-align:right;margin:0}
+.mbempty{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font-family:"Dancing Script",cursive;font-size:22px;line-height:1.35;color:rgba(38,50,79,.55)}
+.mbwine{margin:0;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8B6A3A;border-top:1px dotted rgba(139,106,58,.5);padding-top:8px}
+.memopad{width:min(88vw,340px);background:#F6EEDD;border-radius:4px;padding:14px 16px 10px;box-sizing:border-box;box-shadow:0 18px 36px rgba(0,0,0,.45);outline:1.5px dashed rgba(139,106,58,.5);outline-offset:-7px}
+.memopad textarea{width:100%;box-sizing:border-box;border:0;resize:none;background:repeating-linear-gradient(180deg,transparent 0 31px,rgba(90,60,30,.18) 31px 32px);font-family:"Dancing Script",cursive;font-size:24px;line-height:32px;color:#26324F;padding:0;outline:none;min-height:128px}
+.memopad textarea::placeholder{color:rgba(38,50,79,.35)}
+/* Spectaculair openen */
+.flipper.charge{animation:charge var(--ct,1s) cubic-bezier(.5,0,.9,.5) forwards}
+.flipper.charge .back{animation:glow var(--ct,1s) ease-in forwards}
+.flipper.g-superrare.charge .back{animation:glow var(--ct,1s) ease-in forwards,hue .5s linear infinite}
+@keyframes charge{0%{transform:scale(1) rotate(0)}10%{transform:scale(1.01) rotate(-1deg)}20%{transform:scale(1.01) rotate(1deg)}30%{transform:scale(1.02) rotate(-1.5deg)}40%{transform:scale(1.02) rotate(1.5deg)}50%{transform:scale(1.03) rotate(-2deg)}60%{transform:scale(1.03) rotate(2.5deg)}70%{transform:scale(1.04) rotate(-3deg)}80%{transform:scale(1.05) rotate(3deg)}90%{transform:scale(1.06) rotate(-3.5deg)}100%{transform:scale(1.08) rotate(0)}}
+@keyframes glow{0%{box-shadow:0 20px 40px rgba(0,0,0,.45),0 0 0 0 var(--g)}100%{box-shadow:0 20px 40px rgba(0,0,0,.45),0 0 0 3px var(--g),0 0 60px 18px var(--g)}}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+.flipper.open{transition:transform .75s cubic-bezier(.2,1.35,.35,1)}
+.flipper.open.g-ultra,.flipper.open.g-icon{transition-duration:1s}
+.status.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.fxflash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff,rgba(255,255,255,.6) 40%,rgba(255,255,255,0) 75%);animation:fxflash .7s ease-out forwards}
+.fx-common .fxflash{display:none}
+@keyframes fxflash{0%{opacity:.95}100%{opacity:0}}
+.fxrays{position:absolute;left:50%;top:45%;width:220vmax;height:220vmax;transform:translate(-50%,-50%);opacity:0;
+  background:repeating-conic-gradient(from 0deg,rgba(255,214,120,0) 0deg 7deg,rgba(255,214,120,.38) 9deg 12deg,rgba(255,214,120,0) 14deg 22deg);
+  -webkit-mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 18%,transparent 45%);mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 18%,transparent 45%);animation:rays 2.4s ease-out forwards}
+.fx-superrare .fxrays{background:repeating-conic-gradient(from 0deg,rgba(255,143,177,0) 0 7deg,rgba(201,168,255,.35) 9deg 12deg,rgba(143,227,193,0) 14deg 22deg)}
+@keyframes rays{0%{opacity:0;transform:translate(-50%,-50%) rotate(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) rotate(40deg) scale(1)}}
+.fx i{position:absolute;left:50%;top:45%;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);animation:spark var(--t) cubic-bezier(.1,.75,.3,1) forwards}
+.fx-ultra i:nth-child(3n),.fx-icon i:nth-child(3n),.fx-superrare i:nth-child(4n){border-radius:1px;transform:rotate(45deg)}
+@keyframes spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+@media (prefers-reduced-motion: reduce){.spin{transition:none}.flipper.open{transition:none}}
 /* Scanner */
 .overlay.leather{background-color:var(--leather-dark);background-image:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.45)),var(--leathergrain)}
 .overlay.scanner{justify-content:space-between;gap:12px}
@@ -662,6 +714,7 @@ const visSets=land=>SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
 function buildPages(){
   const P=[{t:'cover'},{t:'inhoud'}];
   if(session){
+    P.push({t:'fav'});
     for(const land of st.allLands){
       if(!st.lands.includes(land))continue;          // groeiend album: een land verschijnt bij je eerste wijn
       const vis=visSets(land),sets=vis.filter(started);
@@ -763,7 +816,7 @@ function bigCard(c){
 function mini(c){
   const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
-  const ms=c.first?'<span class="mstamp" aria-hidden="true"></span>':'';
+  const ms=(c.first?'<span class="mstamp" aria-hidden="true"></span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">✎</span>':'');
   if(c.rar==='ultra') return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face">${ultraFill(areaOf(c),c.v)}${layers('ultra')}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
@@ -858,12 +911,22 @@ function makePage(i){
       return `<li><button data-go="${idx}"><span>${esc(l)}</span><span>${x.tot?x.have+' / '+x.tot:x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button></li>`;
     }).join('');
     const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
-    el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Inhoud</h2></div>
+    el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Kelderboek</h2></div>
       <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
       <p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>
       <p class="eyebrow toch">Verzamellijsten</p><ul class="toc">${ltoc}</ul>
       <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} verzamellijsten zijn nog verborgen`:''}.</p>
       ${pageFoot(1)}`;
+    return el;
+  }
+  if(p.t==='fav'){
+    const favs=cards.filter(c=>c.fav).sort((a,b)=>a.fav-b.fav),at=r=>favs.find(c=>c.fav===r)||null;
+    const fslot=(r,big)=>{const c=at(r);return `<div class="slot fslot${big?' fbig':''}"><span class="frank">${r}</span><div class="sleeve">${c?mini(c):`<div class="empty"></div>`}</div>${big?'':`<span class="slabel">${c?esc(c.naam):'&nbsp;'}</span>`}</div>`};
+    const one=at(1);
+    el.classList.add('favpage');
+    el.innerHTML=`<div class="favtop">${fslot(1,true)}<div class="favhead"><p class="eyebrow">Mijn favorieten</p><h2 class="foil">Top 10</h2>
+        <p class="note">${favs.length?(one?esc(one.naam)+' staat op nummer 1.':''):'Open een kaart en tik op ★ Top 10 om hem hier te zetten.'}</p></div></div>
+      <div class="grid fgrid">${[2,3,4,5,6,7,8,9,10].map(r=>fslot(r,false)).join('')}</div>${pageFoot(i)}`;
     return el;
   }
   if(p.t==='chapter'){
@@ -910,11 +973,12 @@ function toCard(row,w){
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:w.jaar,druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
+    rar:row.tier,memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
 }
 async function loadAlbum(){
   await loadSettings();
-  const {data,error}=await sb.from('cards').select('id,tier,created_at,wine:wines(*)').order('created_at');
+  let {data,error}=await sb.from('cards').select('id,tier,created_at,memo,memo_at,fav_rank,wine:wines(*)').order('created_at');
+  if(error){const r=await sb.from('cards').select('id,tier,created_at,wine:wines(*)').order('created_at');data=r.data;error=r.error}
   cards=[];ownedKeys=new Set();
   if(error){toast('Je album kon niet worden geladen. Controleer je verbinding.');console.error(error)}
   for(const r of data||[]){if(!r.wine)continue;ownedKeys.add(r.wine.wine_key);cards.push(toCard(r,r.wine))}
@@ -936,7 +1000,7 @@ function renderChrome(){
   const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land),inLists=pg.set&&pg.set.part===2;
   const firstList=firstPageOf(x=>x.set&&x.set.part===2);
   const inLand=!!curLand&&!inLists;
-  $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Inhoud</button>`+
+  $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Kelderboek</button><button data-go="2" aria-current="${cur===2}">★ Top 10</button>`+
     `<button data-act="lands" aria-current="${inLand}" aria-haspopup="dialog">${inLand?esc(curLand):'Landen'} <span class="caret" aria-hidden="true">▾</span></button>`+
     (firstList>0?`<button data-act="lists" aria-current="${!!inLists}" aria-haspopup="dialog">Verzamellijsten <span class="caret" aria-hidden="true">▾</span></button>`:'');
 }
@@ -996,11 +1060,75 @@ const HINT={
   icon:'Icon: deze wijn staat op de lijst met iconische wijnen.'
 };
 function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&filledOf(s).some(x=>x&&x.id===c.id)).map(s=>s.name)}
-function openCard(id){
+function memoBack(c){
+  const d=c.memoAt?fmtDate(c.memoAt):'';
+  return `<div class="memoback"><div class="mbin">
+    <div class="mbhead"><span>Herinnering</span><span class="mbseal">VI</span></div>
+    ${c.memo?`<p class="mbtext">${esc(c.memo)}</p><p class="mbdate">${esc(d)}</p>`:`<p class="mbempty">Nog geen herinnering bij deze wijn.<br>Met wie dronk je hem, en waar?</p>`}
+    <p class="mbwine">${esc(c.naam)}${c.jaar?' · '+c.jaar:''}</p></div></div>`;
+}
+function spinCard(o,c){
+  const sp=o.querySelector('.spin');if(!sp)return;
+  let base=0,start=null,cur0=0;
+  const setA=a=>{sp.style.setProperty('--spin',a+'deg')};
+  sp.addEventListener('pointerdown',e=>{start=e.clientX;cur0=base;sp.classList.add('drag');sp.setPointerCapture&&sp.setPointerCapture(e.pointerId)});
+  sp.addEventListener('pointermove',e=>{if(start===null)return;setA(cur0+(e.clientX-start)*.9)});
+  const end=e=>{if(start===null)return;const dx=(e.clientX??start)-start;start=null;sp.classList.remove('drag');
+    base=Math.abs(dx)<6?base+180:Math.round((cur0+dx*.9)/180)*180;setA(base)};
+  sp.addEventListener('pointerup',end);sp.addEventListener('pointercancel',end);
+  o.querySelector('#turn').onclick=()=>{base+=180;setA(base)};
+}
+function openCard(id,showBack){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
-  const o=overlay(`${bigCard(c)}<p class="hint">${HINT[c.rar]}${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}<div class="actions"><button class="btn" id="close">Terug in de sleeve</button></div>`);
-  tilt(o.querySelector('.card'));const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+  const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
+    <p class="hint">Veeg of tik op de kaart om hem om te draaien.${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
+    <div class="actions"><button class="btn" id="turn">↻ Omdraaien</button><button class="btn" id="memo">✎ ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">★ ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
+    <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`);
+  tilt(o.querySelector('.card'));spinCard(o,c);
+  o.querySelector('#memo').onclick=()=>openMemo(c.id);
+  o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
+  const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+}
+function openMemo(id,after){
+  const c=cards.find(x=>x.id===id);if(!c)return;
+  const o=overlay(`<p class="status">Herinnering schrijven</p>
+    <p class="hint">Met wie dronk je ${esc(c.naam)}, waar was je, wat maakte het bijzonder? Je tekst komt in handschrift op de achterkant van de kaart, met de datum erbij.</p>
+    <div class="memopad"><textarea id="mt" maxlength="140" rows="4" placeholder="Gedronken met Pietje, heerlijk aan het strand in Frankrijk!">${esc(c.memo)}</textarea><p class="mbdate">${esc(fmtDate(c.memoAt||new Date().toISOString()))}</p></div>
+    <p class="fbcount" id="mc" style="width:min(88vw,340px)">${c.memo.length} / 140</p>
+    <div class="actions"><button class="btn" id="cancel">Annuleren</button>${c.memo?'<button class="btn" id="wipe">Wissen</button>':''}<button class="btn primary" id="save">Bewaren</button></div>`);
+  const ta=o.querySelector('#mt'),mc=o.querySelector('#mc');
+  ta.oninput=()=>mc.textContent=`${ta.value.length} / 140`;setTimeout(()=>ta.focus(),50);
+  const done=()=>after?after():openCard(c.id,true);
+  o.querySelector('#cancel').onclick=()=>after?after():openCard(c.id);
+  const save=async txt=>{
+    o.querySelectorAll('button').forEach(b=>b.disabled=true);
+    const {data,error}=await sb.rpc('set_memo',{p_card:c.id,p_text:txt});
+    if(error){o.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Bewaren lukte niet. Probeer het zo nog eens.');console.error(error);return}
+    c.memo=data.memo||'';c.memoAt=data.memo_at||null;refresh();renderChrome();toast(c.memo?'Herinnering bewaard.':'Herinnering gewist.');done();
+  };
+  o.querySelector('#save').onclick=()=>save(ta.value);
+  const w=o.querySelector('#wipe');if(w)w.onclick=()=>save('');
+}
+function openFavPicker(id){
+  const c=cards.find(x=>x.id===id);if(!c)return;
+  const favs=cards.filter(x=>x.fav).sort((a,b)=>a.fav-b.fav);
+  const rows=Array.from({length:10},(_,k)=>{const r=k+1,occ=favs.find(x=>x.fav===r);
+    return `<button data-rank="${r}" class="${occ&&occ.id===c.id?'on':''}"><b>#${r}${r===1?' · bovenaan':''}</b><span>${occ?esc(occ.naam):'vrij'}</span></button>`}).join('');
+  const o=overlay(`<p class="status">Top 10</p><p class="hint">Kies een plek voor ${esc(c.naam)}. Staat daar al een kaart, dan schuift die (en de rest) een plek op.</p>
+    <div class="lands">${rows}</div>
+    <div class="actions"><button class="btn" id="back">‹ Terug</button>${c.fav?'<button class="btn" id="out">Uit top 10</button>':''}</div>`);
+  const apply=async rank=>{
+    o.querySelectorAll('button').forEach(b=>b.disabled=true);
+    const {data,error}=await sb.rpc('set_favorite',{p_card:c.id,p_rank:rank});
+    if(error){o.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Opslaan lukte niet. Probeer het zo nog eens.');console.error(error);return}
+    cards.forEach(x=>x.fav=null);(data||[]).forEach(r=>{const x=cards.find(y=>y.id===r.id);if(x)x.fav=r.fav_rank});
+    refresh();renderChrome();toast(rank?`${c.naam} staat op #${c.fav||rank} in je top 10.`:'Uit je top 10 gehaald.');openCard(c.id);
+  };
+  o.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>apply(+b.dataset.rank));
+  o.querySelector('#back').onclick=()=>openCard(c.id);
+  const out=o.querySelector('#out');if(out)out.onclick=()=>apply(null);
+  (o.querySelector('.lands .on')||o.querySelector('.lands button')).focus();
 }
 function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3600)}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -1202,18 +1330,41 @@ async function doRetry(c){
 function pageOfCard(c){
   return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.physical[p.set.id]||[]).some(x=>x&&x.id===c.id))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
 }
+const GLOW={common:'#F1E6D6',rare:'#DCE3EC',superrare:'#C9A8FF',ultra:'#F2C65E',icon:'#E9C46A'};
+const SPARKS={common:10,rare:22,superrare:40,ultra:64,icon:64};
+function fxBurst(rar){
+  if(reduced)return;
+  const fx=document.createElement('div');fx.className='fx fx-'+rar;
+  let h='';
+  if(rar!=='common')h+='<div class="fxflash"></div>';
+  if(rar==='ultra'||rar==='icon'||rar==='superrare')h+='<div class="fxrays"></div>';
+  const cols=rar==='superrare'?['#FF8FB1','#FFD36E','#8FE3C1','#8FB8FF','#C9A8FF']:[GLOW[rar],'#FFFFFF',rar==='common'?'#D2AE62':GLOW[rar]];
+  for(let k=0;k<SPARKS[rar];k++){const a=Math.random()*Math.PI*2,d=120+Math.random()*(rar==='common'?120:260);
+    h+=`<i style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--c:${cols[k%cols.length]};--s:${(4+Math.random()*7).toFixed(1)}px;--t:${(.7+Math.random()*.7).toFixed(2)}s"></i>`}
+  fx.innerHTML=h;document.body.appendChild(fx);setTimeout(()=>fx.remove(),2600);
+}
+function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 function reveal(c,news,title){
-  const o=overlay(`<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper" id="flip" tabindex="0" role="button" aria-label="Kaart omdraaien"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem om te draaien.</p><div class="actions" id="acts" hidden><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+  const o=overlay(`<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">✎ Herinnering schrijven</button><button class="btn primary" id="place">In een sleeve steken</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
-  const open=()=>{if(flip.classList.contains('open'))return;flip.classList.add('open');
-    setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
-      o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:650)};
+  let busy=false;
+  const open=()=>{if(busy||flip.classList.contains('open'))return;busy=true;
+    const charge=reduced?0:(c.rar==='common'?700:c.rar==='rare'?1000:1400);
+    o.querySelector('#h').textContent=reduced?'':'…';
+    if(charge){flip.classList.add('charge');flip.style.setProperty('--ct',charge+'ms');buzz(c.rar==='common'?[20]:[15,60,15,60,25])}
+    setTimeout(()=>{flip.classList.remove('charge');flip.classList.add('open');fxBurst(c.rar);
+      buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar]);
+      setTimeout(()=>{tilt(card);if(c.rar!=='common'){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+'!'}
+        o.querySelector('.status').classList.add('pop');
+        o.querySelector('#h').textContent=HINT[c.rar]+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   flip.onclick=open;flip.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}};flip.focus();
-  o.querySelector('#place').onclick=()=>{
+  const place=()=>{
     closeOverlay();lastNewId=c.id;const pg=pageOfCard(c);go(pg>0?pg:1,true);
     setTimeout(()=>{lastNewId=null},2500);
     if(news.length)setTimeout(()=>showNews(news),reduced?300:2300);
   };
+  o.querySelector('#place').onclick=place;
+  o.querySelector('#wmemo').onclick=()=>openMemo(c.id,place);
 }
 function showNews(news){
   const o=overlay(`<p class="status">Nieuws in je album</p><ul class="news">${news.map(([k,n,t])=>`<li><span>${esc(k)}</span><b>${esc(n)}</b><em>${esc(t)}</em></li>`).join('')}</ul><div class="actions"><button class="btn primary" id="close">Verder</button></div>`);
@@ -1288,7 +1439,7 @@ function openInfo(){
     <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: bedoeld voor een nieuwe fles van dezelfde wijn. Het kost een scan, kan hooguit één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
     <p class="hint">Scannen: maak een foto van het etiket, recht van voren en scherp. De app leest naam, producent, jaargang en herkomst, en maakt de kaart. Bij een Rare wordt jouw foto de posterafbeelding.</p>
     <p class="hint">Tik op een leeg vak voor uitleg: wat het is, wat het ongeveer kost en waar je zo'n fles vindt.</p>
-    <p class="hint">Je album groeit mee: een land of regio krijgt pas een bladzijde als je er je eerste wijn van scant. Op de Inhoud zie je wat er nog te ontdekken valt.</p>
+    <p class="hint">Je album groeit mee: een land of regio krijgt pas een bladzijde als je er je eerste wijn van scant. In het Kelderboek zie je wat er nog te ontdekken valt.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vined It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);

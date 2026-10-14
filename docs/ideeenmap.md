@@ -4,10 +4,10 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 
 | # | Idee | Bron | Waarde | Werk | Status |
 |---|---|---|---|---|---|
-| 1 | **Flessenpost**: een eigen, handgeschreven notitie op de achterkant van een kaart | Len | Hoog: herinneringen maken van kaarten, onderscheidend | Middel | Idee |
-| 2 | **Spectaculairder omdraaien** van een nieuwe kaart | Tester | Hoog: het piekmoment van de app | Middel | Idee |
-| 3 | **Mijn favorieten**: een eigen bladzijde direct na de Inhoud | Tester | Middel | Klein | Idee |
-| 4 | **"Inhoud" hernoemen** (bijvoorbeeld "Kelderboek") | Tester | Klein, maar sfeerverhogend | Heel klein | Idee |
+| 1 | **Herinnering schrijven**: een eigen, handgeschreven notitie op de achterkant van een kaart | Len | Hoog: herinneringen maken van kaarten, onderscheidend | Middel | Klaar (wacht op livegang) |
+| 2 | **Spectaculairder omdraaien** van een nieuwe kaart | Tester | Hoog: het piekmoment van de app | Middel | Klaar (wacht op livegang) |
+| 3 | **Top 10**: eigen bladzijde direct na het Kelderboek, #1 bovenaan en 3×3 eronder | Tester | Middel | Klein | Klaar (wacht op livegang) |
+| 4 | **"Inhoud" hernoemen** naar "Kelderboek" (naam kan later nog veranderen) | Tester | Klein, maar sfeerverhogend | Heel klein | Klaar (wacht op livegang) |
 | 5 | **Verbinden met andere gebruikers**: elkaars album bekijken | Tester | Hoog voor groei, maar pas zinvol met meer gebruikers | Groot | Later |
 | 6 | Druivenjager: open logboek voor zeldzame druiven | Len | Hoog | Klein | Idee |
 | 7 | Eigen sets ("Vakantie Toscane 2026") | Claude | Hoog | Middel | Idee |
@@ -15,7 +15,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 9 | "Koop deze fles" vanuit een leeg vak | Len | Verdienmodel | Middel (partners nodig) | Later |
 | 10 | Overzicht "Mijn kaarten" op datum | Claude | Middel | Klein | Idee |
 
-## 1. Flessenpost
+## 1. Herinnering schrijven (eerder: Flessenpost)
 
 - Optioneel bij elke kaart: na het scannen ("Schrijf flessenpost") of later vanuit de kaart.
 - Maximaal ±140 tekens, zodat het op de achterkant past en kort en persoonlijk blijft.
