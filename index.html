@@ -1194,8 +1194,8 @@ function makePage0(i){
       <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
       ${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">🗺 Mijn wijnwereld · ${worldStats().have} van ${worldStats().tot} wijnlanden</button>`:''}
       <p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>
-      <p class="eyebrow toch">Verzamellijsten</p><ul class="toc">${ltoc}</ul>
-      <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} verzamellijsten zijn nog verborgen`:''}.</p>
+      <p class="eyebrow toch">Uitdagingen</p><ul class="toc">${ltoc}</ul>
+      <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} uitdagingen zijn nog verborgen`:''}.</p>
       ${pageFoot(1)}`;
     return el;
   }
@@ -1234,7 +1234,7 @@ function makePage0(i){
   if(p.t==='overige'){
     const list=st.overflow[p.land]||[],chapN=st.allLands.indexOf(p.land)+1;
     el.innerHTML=(p.noSets?`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
-      <p class="note">${p.land==='Overige landen'?'Wijnen uit landen zonder eigen hoofdstuk, zoals Griekenland, Hongarije of Georgië. Ze tellen mee voor de verzamellijsten, zoals Wereldreiziger II.':(list.length?'Je wijnen uit '+esc(p.land)+'.':'Nog geen wijn uit '+esc(p.land)+'.')+' Voor dit land zijn er nog geen regiosets. Elke wijn krijgt hier een plek en telt mee voor de verzamellijsten, zoals Wereldreiziger.'}</p>`
+      <p class="note">${p.land==='Overige landen'?'Wijnen uit landen zonder eigen hoofdstuk, zoals Griekenland, Hongarije of Georgië. Ze tellen mee voor de uitdagingen, zoals Wereldreiziger II.':(list.length?'Je wijnen uit '+esc(p.land)+'.':'Nog geen wijn uit '+esc(p.land)+'.')+' Voor dit land zijn er nog geen regiosets. Elke wijn krijgt hier een plek en telt mee voor de uitdagingen, zoals Wereldreiziger.'}</p>`
      :`<div><p class="eyebrow">Hoofdstuk ${chapN} · ${esc(p.land)}</p><h2 class="foil">Overige</h2></div>
       <p class="note">Wijnen die (nog) in geen vak passen. Ze gaan nooit verloren en schuiven vanzelf door als er een passend vak bijkomt.</p>`)
       +`<div class="grid">${list.map(c=>slotHTML(c,p.land==='Overige landen'?c.land:(c.app||c.regio))).join('')}${list.length?'':'<div class="slot"><div class="sleeve"><div class="empty"></div></div></div>'.repeat(6)}</div>${pageFoot(i)}`;
@@ -1243,7 +1243,7 @@ function makePage0(i){
   const s=p.set,f=filledOf(s),have=f.filter(Boolean).length,done=have===s.slots.length;
   if(done)el.classList.add('done');
   const chap=s.part===1?st.allLands.indexOf(s.land)+1:0;
-  const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Verzamellijst';
+  const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Uitdaging';
   el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)} ${infoBtn(s.part===1?'set':'lijst')}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
     ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
     <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k,stackOf(s,k).length)).join('')}</div>${pageFoot(i)}`;
@@ -1504,7 +1504,7 @@ function newsSince(b){
       const have=filledOf(s).filter(Boolean).length;
       if(s.unlock)out.push(['Nieuwe set vrijgespeeld',s.name,`Je hebt er al ${have} van de ${s.slots.length}.`]);
       else if(s.secret)out.push(['Geheime set ontdekt',s.name,`${have} van de ${s.slots.length} gevonden.`]);
-      else if(s.part===2&&!s.always)out.push(['Nieuwe verzamellijst',s.name,`${have} van de ${s.slots.length} gevuld.`]);
+      else if(s.part===2&&!s.always)out.push(['Nieuwe uitdaging',s.name,`${have} van de ${s.slots.length} gevuld.`]);
     }
     if(st.visible[s.id]&&isDone(s)&&!b.done[s.id])out.push(['Set voltooid',s.name,'Alle '+s.slots.length+' vakken gevuld.']);
   }
@@ -1791,7 +1791,7 @@ function openLands(land,nest){
 function openLandPreview(land){
   const sets=visSets(land);
   const o=overlay(`<p class="eyebrow">Nog te ontdekken</p><p class="status">${esc(land)}</p>
-    <p class="hint">Scan je eerste wijn uit ${esc(land)} en dit hoofdstuk komt in je album.${sets.length?' Tik op een set om te zien wat erin hoort.':' Elke wijn uit dit land krijgt een plek en telt mee voor de verzamellijsten.'}</p>
+    <p class="hint">Scan je eerste wijn uit ${esc(land)} en dit hoofdstuk komt in je album.${sets.length?' Tik op een set om te zien wat erin hoort.':' Elke wijn uit dit land krijgt een plek en telt mee voor de uitdagingen.'}</p>
     ${sets.length?`<div class="lands">${sets.map(set=>`<button data-preview="${set.id}"><b>${esc(set.name)}</b><span>${set.slots.length} vakken</span></button>`).join('')}</div>`:''}
     <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
   o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
@@ -1813,7 +1813,7 @@ function openLists(nest){
     const f=filledOf(q.set),h=f.filter(Boolean).length;
     return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
   }).join('');
-  const o=overlay(`<p class="status">Verzamellijsten</p><div class="lands">${rows}</div>
+  const o=overlay(`<p class="status">Uitdagingen</p><div class="lands">${rows}</div>
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
@@ -1823,7 +1823,7 @@ function openLists(nest){
 function crumbOf(p){
   if(p.t==='cover')return 'Omslag';if(p.t==='inhoud')return '📖 Kelderboek';if(p.t==='fav')return '★ Top 10';if(p.t==='world')return '🗺 Mijn wijnwereld';
   if(p.t==='chapter')return esc(p.land);if(p.t==='overige')return esc(p.land)+(p.noSets?'':' › Overige');
-  if(p.t==='set')return p.set.part===1?`${esc(p.set.land)} <span class="sep">›</span> ${esc(p.set.name)}`:`Verzamellijst <span class="sep">›</span> ${esc(p.set.name)}`;
+  if(p.t==='set')return p.set.part===1?`${esc(p.set.land)} <span class="sep">›</span> ${esc(p.set.name)}`:`Uitdaging <span class="sep">›</span> ${esc(p.set.name)}`;
   return '';
 }
 function openMenu(){
@@ -1833,7 +1833,7 @@ function openMenu(){
       <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">✕</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>`:''}
       ${session?`<p class="mgroup">Album</p>
       ${it('📖','Kelderboek',`data-mgo="1"`)}${it('★','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?it('🗺','Mijn wijnwereld',`data-mgo="${pg('world')}"`):''}
-      ${it('🍇','Landen','data-mact="lands"')}${it('📜','Verzamellijsten','data-mact="lists"')}`:''}
+      ${it('🍇','Landen','data-mact="lands"')}${it('🏆','Uitdagingen','data-mact="lists"')}`:''}
       <p class="mgroup">Hulp</p>
       ${it('❔','Hoe werkt Vined It?','data-mact="info"')}${it('▶','Rondleiding','data-mact="tour"')}
       ${session?`<p class="mgroup">Account</p>${it('⚙','Instellingen','data-mact="settings"')}${it('💬','Feedback','data-mact="feedback"')}${it('⎋','Uitloggen','data-mact="logout"')}`:''}
@@ -1852,7 +1852,7 @@ function openJump(){
   const tile=(ic,l,k)=>k>=0?`<button class="jtile${k===cur?' on':''}" data-pg="${k}"><span>${ic}</span>${l}</button>`:'';
   const o=overlay(`<p class="status">Ga naar</p>
     <div class="jtiles">${tile('📖','Kelderboek',1)}${tile('★','Top 10',pg('fav'))}${tile('🗺','Wereld',pg('world'))}</div>
-    <div class="lands jrows"><button data-jact="lands"><b>Landen ›</b><span>${st.lands.filter(l=>l!=='Overige landen').length} ontdekt</span></button><button data-jact="lists"><b>Verzamellijsten ›</b><span>${SETS.filter(s=>s.part===2&&st.visible[s.id]).length} zichtbaar</span></button></div>`);
+    <div class="lands jrows"><button data-jact="lands"><b>Landen ›</b><span>${st.lands.filter(l=>l!=='Overige landen').length} ontdekt</span></button><button data-jact="lists"><b>Uitdagingen ›</b><span>${SETS.filter(s=>s.part===2&&st.visible[s.id]).length} zichtbaar</span></button></div>`);
   o.querySelector('[data-jact="lands"]').onclick=()=>openLands(null,true);
   o.querySelector('[data-jact="lists"]').onclick=()=>openLists(true);
   (o.querySelector('.jtile')||o.querySelector('.ovx')).focus();
@@ -1864,9 +1864,9 @@ function askConfirm(title,text,yes,fn){
 }
 const INFO={
   scans:['Scans vandaag',`Je kunt elke dag ${'${LIMIT}'} wijnen scannen. Zo blijft het verzamelen spannend en gaat het om ontdekken, niet om meer drinken. Om middernacht krijg je nieuwe scans.`,'scan'],
-  kelder:['Kelderboek','Je inhoudsopgave: hoeveel kaarten je hebt per klasse, welke landen je al ontdekte en welke verzamellijsten zichtbaar zijn. Grijze landen zijn nog te ontdekken: tik erop om te zien wat er in hoort.','album'],
+  kelder:['Kelderboek','Je inhoudsopgave: hoeveel kaarten je hebt per klasse, welke landen je al ontdekte en welke uitdagingen zichtbaar zijn. Grijze landen zijn nog te ontdekken: tik erop om te zien wat er in hoort.','album'],
   set:['Een set','Elk vak hoort bij een wijngebied. Scan een passende wijn en hij komt vanzelf in het juiste vak. Tik op een leeg vak voor tips: wat het is, wat het kost en waar je hem vindt. Heb je meerdere kaarten voor één vak, dan liggen ze op een stapel (×2, ×3…).','album'],
-  lijst:['Verzamellijst','Een lijst over het hele album heen, zoals een druif of een stijl. Je kaarten tellen hier automatisch mee, naast hun eigen set. Sommige lijsten verschijnen pas als je de eerste passende wijn vindt.','album'],
+  lijst:['Uitdaging','Een opdracht dwars door je hele album heen, zoals één druif uit negen gebieden of wijn uit twaalf landen. Je kaarten tellen hier automatisch mee, naast hun eigen set. Sommige lijsten verschijnen pas als je de eerste passende wijn vindt.','album'],
   fav:['Top 10','Je favoriete kaarten, met nummer 1 bovenaan. Open een kaart en tik op ★ Top 10 om hem een plek te geven. De kaart blijft ook gewoon in zijn set.','top'],
   world:['Mijn wijnwereld','Landen waar je een kaart uit hebt, kleuren goud: hoe voller, hoe meer kaarten. De rode speldjes zijn regio\'s die je hebt ontdekt. Tik op een land om erheen te gaan.','kaarten'],
   stack:['Stapels','Passen meerdere kaarten in hetzelfde vak, dan liggen ze op een stapel. Bovenop ligt de zeldzaamste, tenzij je zelf een andere kiest met "Bovenop leggen".','herproeven']
@@ -1887,7 +1887,7 @@ function openInfo(open,nest){
     <div class="howtos">
     ${sec('scan','📸','Scannen',`<p>Tik op <b>Scan een wijn</b> en richt de camera op het voorste etiket: recht, scherp en goed belicht. De app leest naam, maker, jaargang en herkomst, en maakt er een kaart van.</p><p>Je hebt <b>${LIMIT} scans per dag</b>. Een foto die niet herkend wordt, telt niet mee. Elke wijn levert één kaart op; de jaargang maakt niet uit.</p>`)}
     ${sec('klassen','✨','Kaarten en klassen',`<p>Elke kaart heeft een klasse. Welke je krijgt, is een verrassing:</p>${tiers}<p class="small">Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100.</p>`)}
-    ${sec('album','📖','Je album',`<p>Het <b>Kelderboek</b> is je inhoudsopgave. Daarna volgen je <b>Top 10</b>, je <b>wijnwereld</b> en de hoofdstukken per land.</p><p>Je album <b>groeit mee</b>: een land of streek krijgt pas een bladzijde bij je eerste wijn daarvan. Elke kaart gaat vanzelf naar het juiste vak, en telt ook mee voor de <b>verzamellijsten</b> achterin.</p><p>Tik op een <b>leeg vak</b> voor tips: wat het is, wat het kost en waar je hem vindt. <b>Veeg</b> of gebruik de pijltjes om te bladeren; tik bovenaan op de naam van de bladzijde om snel te springen.</p>`)}
+    ${sec('album','📖','Je album',`<p>Het <b>Kelderboek</b> is je inhoudsopgave. Daarna volgen je <b>Top 10</b>, je <b>wijnwereld</b> en de hoofdstukken per land.</p><p>Je album <b>groeit mee</b>: een land of streek krijgt pas een bladzijde bij je eerste wijn daarvan. Elke kaart gaat vanzelf naar het juiste vak, en telt ook mee voor de <b>uitdagingen</b> achterin.</p><p>Tik op een <b>leeg vak</b> voor tips: wat het is, wat het kost en waar je hem vindt. <b>Veeg</b> of gebruik de pijltjes om te bladeren; tik bovenaan op de naam van de bladzijde om snel te springen.</p>`)}
     ${sec('herproeven','📚','Stapels en herproeven',`<p>Scan je een <b>andere</b> wijn voor een vak dat al gevuld is, dan komt hij op de <b>stapel</b> (×2, ×3…). De zeldzaamste ligt bovenop; tik op de stapel om zelf te kiezen.</p><p>Scan je <b>dezelfde</b> wijn nog eens (een nieuwe fles), dan kun je <b>herproeven</b>: een nieuwe trekking die je kaart alleen vervangt als hij zeldzamer is. Dat kost een scan en kan één keer per dag per wijn.</p>`)}
     ${sec('top','★','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Veeg over de kaart om hem om te draaien.</p>`)}
     ${sec('kaarten','🗺','Kaarten',`<p>Rechtsboven op een bladzijde staat een kaartje van het land met speldjes. Tik erop voor een grote kaart met namen. Op <b>Mijn wijnwereld</b> zie je in één oogopslag welke landen je al ontdekte.</p>`)}

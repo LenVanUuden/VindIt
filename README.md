@@ -9,7 +9,7 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 - Maximaal **3 nieuwe scans per dag**. Dat gaat valsspelen tegen en moedigt geen extra alcoholgebruik aan.
 - **Eén kaart per wijn** (producent + cuvée; de jaargang is alleen een detail).
 - **Herproeven:** scan je een wijn die je al hebt, dan kun je kiezen voor een nieuwe trekking. Dat kost één van je 3 scans en kan één keer per dag per wijn; alleen een hogere klasse vervangt je kaart. Icon-kaarten kun je niet herproeven. Kies je niet, dan telt de scan niet mee.
-- Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **verzamellijsten** (druiven, bubbels, Wereldreiziger, Icons).
+- Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **uitdagingen** (druiven, bubbels, Wereldreiziger, Icons).
 - **Kelderboek** (de inhoudsopgave) en **Top 10**: zet je favoriete kaarten op een eigen bladzijde, met nummer 1 bovenaan.
 - **Herinnering schrijven:** een korte tekst (max. 140 tekens) in handschrift op de achterkant van een kaart, met datum. De grote kaart is rond te draaien.
 - **Stapels:** past een nieuwe kaart in een vak dat al gevuld is, dan komt hij op de stapel in dat vak (onbeperkt, teller ×n). Bovenop ligt de zeldzaamste, tenzij je zelf een andere kiest (tik op de stapel).
