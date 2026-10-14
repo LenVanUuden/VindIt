@@ -55,8 +55,9 @@ button{font:inherit;color:inherit}
 
 /* Header */
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.06em;line-height:1;margin:0;color:var(--gold-soft)}
-.quota{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft)}
+.brand{font-family:var(--display);font-weight:400;font-size:24px;letter-spacing:.06em;line-height:1;margin:0;color:var(--gold-soft);flex:1}
+.quota{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);background:none;border:0;padding:4px 0 4px 8px;cursor:pointer}
+.quota .ic{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;border:1px solid currentColor;font-size:9px;font-style:normal;font-family:Georgia,serif;letter-spacing:0;margin-left:3px;vertical-align:1px}
 .dots{display:flex;gap:6px}
 .dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--gold);display:block}
 .dots i.used{background:var(--gold)}
@@ -267,9 +268,22 @@ button{font:inherit;color:inherit}
 
 /* Dock */
 .dock{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
-.nav{width:44px;height:44px;border-radius:50%;border:1px solid rgba(233,211,160,.35);background:transparent;color:var(--gold-soft);cursor:pointer;font-size:20px;line-height:1}
+.nav{width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;font-size:22px;line-height:1;color:var(--gold-soft);background:radial-gradient(circle at 35% 30%,var(--leather),var(--leather-dark) 75%);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px rgba(210,174,98,.55),0 0 0 3px rgba(0,0,0,.35),0 4px 10px rgba(0,0,0,.45);transition:transform .12s}
+.nav:active{transform:scale(.94)}
 .nav:disabled{opacity:.3;cursor:default}
-.scan{flex:1;height:48px;border-radius:999px;border:0;background:var(--gold);color:#2B1308;font-weight:600;letter-spacing:.02em;cursor:pointer;font-size:15px}
+.scan{flex:1;position:relative;height:56px;border-radius:14px;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;overflow:hidden;
+  color:#3B2410;background:linear-gradient(180deg,#F6DE9C 0%,#E2BC6A 38%,#C89B47 62%,#B3843A 100%);
+  box-shadow:inset 0 1px 0 rgba(255,250,230,.75),inset 0 -2px 0 rgba(80,50,15,.35),0 0 0 1px #6B4A1A,0 0 0 3px rgba(43,19,8,.55),0 0 0 4px rgba(210,174,98,.45),0 8px 18px rgba(0,0,0,.55);transition:transform .12s}
+.scan::before{content:"";position:absolute;inset:4px;border-radius:10px;border:1px dashed rgba(90,58,18,.5);pointer-events:none}
+.scan::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,240,.55),transparent);transform:skewX(-18deg);animation:sheen 6s ease-in-out infinite}
+@keyframes sheen{0%,72%{left:-60%}100%{left:130%}}
+.scan:active{transform:translateY(1px) scale(.985)}
+.scan-ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#FFF2C8,#D9B060 60%,#A9782E);box-shadow:inset 0 0 0 1px rgba(90,58,18,.55),0 1px 0 rgba(255,255,255,.5)}
+.scan-ic svg{width:18px;height:18px;fill:none;stroke:#3B2410;stroke-width:1.7;stroke-linejoin:round}
+.scan-t{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;text-shadow:0 1px 0 rgba(255,245,215,.55)}
+.scan-t b{font-family:var(--display);font-weight:400;font-size:18px;letter-spacing:.05em}
+.scan-t small{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-top:2px}
+.scan-t small:empty{display:none}
 .extras{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
 .reset{background:none;border:0;color:var(--gold-soft);opacity:.55;font-size:12px;text-decoration:underline;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:60;max-width:min(88vw,380px);text-align:center}
@@ -279,7 +293,8 @@ button{font:inherit;color:inherit}
   .flipper,.mini{transition:none}
 }
 
-.scan.spent{background:transparent;border:1px solid rgba(233,211,160,.4);color:var(--gold-soft);font-weight:500}
+.scan.spent{background:linear-gradient(180deg,var(--leather),var(--leather-dark));color:var(--gold-soft);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(210,174,98,.5),0 0 0 3px rgba(0,0,0,.4),0 6px 14px rgba(0,0,0,.5)}
+.scan.spent::before{border-color:rgba(210,174,98,.35)}.scan.spent::after{display:none}.scan.spent .scan-t{text-shadow:none}.scan.spent .scan-ic{opacity:.6}
 
 /* Inloggen op de omslag */
 .login{display:grid;gap:10px;width:80%;max-width:280px;cursor:default}
@@ -364,9 +379,11 @@ button{font:inherit;color:inherit}
 .lands button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid rgba(233,211,160,.32);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;min-width:0}
 .lands b{font-weight:500;font-size:14px;line-height:1.2}
 .lands span{font-size:11.5px;color:var(--gold-soft);opacity:.8;font-variant-numeric:tabular-nums}
-.lands button.dim{opacity:.55}
+.lands button.dim{opacity:.85;border-style:dashed}
 .lands button.on{border-color:var(--gold);background:rgba(210,174,98,.12);opacity:1}
-.toc li.dim{opacity:.5}
+.toc li.dim{opacity:.8}
+.toc li.dim button{border-bottom-style:dashed}
+.toc li.dim button span:first-child{color:var(--gold-soft)}
 .lands small{font-weight:400;opacity:.6;font-size:11px}
 .qnum{font-size:11px;letter-spacing:.04em;text-transform:none;font-variant-numeric:tabular-nums}
 .snapframe{overflow:hidden;padding:0}
@@ -444,6 +461,99 @@ button{font:inherit;color:inherit}
 .fx-ultra i:nth-child(3n),.fx-icon i:nth-child(3n),.fx-superrare i:nth-child(4n){border-radius:1px;transform:rotate(45deg)}
 @keyframes spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
 @media (prefers-reduced-motion: reduce){.spin{transition:none}.flipper.open{transition:none}}
+/* Alles op één scherm: vaste hoogte, bladzijde scrolt zo nodig zelf */
+.app{height:100vh;height:100dvh;padding-block:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-bottom,0px) + 10px);gap:10px}
+.album{flex:1;min-height:0;display:flex;flex-direction:column}
+.stack{flex:1;min-height:0;grid-template-rows:minmax(0,1fr)}
+.leaf,.leaf>.page,.leaf>.leafback{min-height:0;height:100%}
+.leaf>.page{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.leaf>.page::-webkit-scrollbar{display:none}
+.grid{grid-template-columns:repeat(3,minmax(0,var(--sw,1fr)));justify-content:center}
+.fgrid{grid-template-columns:repeat(3,minmax(0,var(--fsw,1fr)))}
+.favtop{grid-template-columns:var(--f1,34%) 1fr}
+.dock{margin-top:0}
+@media (max-height:740px){
+  .app{gap:7px}
+  .brand{font-size:20px}
+  .menubtn{height:34px}
+  .crumbs{min-height:30px}.crumb{padding:4px 10px 4px 12px;font-size:12.5px}
+  .scan{height:50px}.scan-t b{font-size:16px}.nav{width:42px;height:42px}
+  .page{padding-top:12px}
+  .page h2{font-size:26px}
+}
+/* Navigatie en gebruiksgemak */
+.menubtn{width:40px;height:40px;margin-left:-6px;border:0;background:none;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:0 9px;cursor:pointer}
+.menubtn span{display:block;height:2px;border-radius:2px;background:var(--gold-soft)}
+.menubtn span:nth-child(2){width:75%}
+.crumbs{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px}
+.crumb{display:flex;align-items:center;gap:8px;min-width:0;max-width:78%;background:rgba(210,174,98,.08);border:1px solid rgba(233,211,160,.35);color:var(--cream);border-radius:999px;padding:6px 12px 6px 14px;font-size:13px;cursor:pointer}
+.crumb .crt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb .sep{color:var(--gold-soft);opacity:.7;margin:0 2px}
+.crumb .caret{color:var(--gold-soft)}
+.pageno{font-size:11px;letter-spacing:.08em;color:var(--gold-soft);opacity:.7;white-space:nowrap;font-variant-numeric:tabular-nums}
+.toc button{position:relative;padding-right:16px}
+.toc button::after{content:"›";position:absolute;right:2px;top:50%;transform:translateY(-52%);color:var(--gold-soft);opacity:.8;font-size:16px}
+.btn:active,.toc button:active,.lands button:active,.crumb:active,.jtile:active,.mitem:active,.minimap:active{transform:scale(.97)}
+.btn,.toc button,.lands button,.crumb,.jtile,.mitem{transition:transform .1s}
+.ovbar{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 8px);display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none;z-index:5}
+.ovbar button{pointer-events:auto;background:rgba(20,10,8,.55);border:1px solid rgba(233,211,160,.35);color:var(--cream);border-radius:999px;cursor:pointer;backdrop-filter:blur(4px)}
+.ovx{width:38px;height:38px;font-size:16px;line-height:1}
+.ovback{height:38px;padding:0 14px;font-size:13.5px}
+.overlay{padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+.overlay.drawer{align-items:flex-start;justify-content:flex-start;padding:0;background:rgba(10,5,4,.6)}
+.overlay.drawer .ovbar{display:none}
+.dhead{display:flex;align-items:center;justify-content:space-between}
+.dclose{width:36px;height:36px;border-radius:50%;border:1px solid rgba(233,211,160,.35);background:rgba(0,0,0,.2);color:var(--cream);cursor:pointer}
+.drawer-panel{width:78vw;max-width:320px;min-height:100%;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px 24px;text-align:left;display:flex;flex-direction:column;gap:2px;
+  background-color:var(--leather-dark);background-image:var(--leathergrain);box-shadow:8px 0 30px rgba(0,0,0,.6);border-right:1px solid rgba(210,174,98,.35);animation:drawerin .28s cubic-bezier(.2,.9,.3,1)}
+@keyframes drawerin{from{transform:translateX(-100%)}to{transform:none}}
+.drawer-panel .brand{flex:none;font-size:26px;margin-bottom:2px}
+.mwho{margin:0 0 8px;font-size:12px;color:var(--gold-soft);opacity:.75}
+.mgroup{margin:14px 0 4px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-soft);opacity:.7}
+.mitem{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px dotted rgba(233,211,160,.2);color:var(--cream);font-size:15px;padding:11px 2px;cursor:pointer;text-align:left}
+.mitem .mic{width:24px;text-align:center;color:var(--gold)}
+.mitem .chev{margin-left:auto;color:var(--gold-soft);opacity:.7}
+.jtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:min(88vw,340px)}
+.jtile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:12px;border:1px solid rgba(233,211,160,.32);background:rgba(255,255,255,.03);color:var(--cream);font-size:13px;cursor:pointer}
+.jtile span{font-size:22px;color:var(--gold)}
+.jtile.on{border-color:var(--gold);background:rgba(210,174,98,.12)}
+.jrows{grid-template-columns:1fr 1fr}
+.ibtn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;border:1px solid rgba(233,211,160,.6);background:rgba(0,0,0,.2);color:var(--gold-soft);font:italic 600 12px Georgia,serif;cursor:pointer;vertical-align:middle;padding:0;-webkit-text-fill-color:var(--gold-soft);filter:none}
+h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
+.ibtn.on{cursor:default}
+.tip{width:min(86vw,340px);background:#F6EEDD;color:#3B2A1C;border-radius:8px;padding:18px 18px 14px;text-align:left;box-shadow:0 18px 36px rgba(0,0,0,.5)}
+.tip .actions{margin-top:14px;justify-content:flex-end}
+.tip .btn{color:#3B2A1C;border-color:rgba(90,60,30,.4)}
+.tip .btn.primary{color:#2B1308}
+.tiph{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-family:var(--display);font-size:20px;color:#5A1F2A}
+.tiph .ibtn{border-color:#8B6A3A;color:#8B6A3A;-webkit-text-fill-color:#8B6A3A;background:none}
+.tipt{margin:0;font-size:14px;line-height:1.55}
+.confirm{display:flex;flex-direction:column;align-items:center;gap:12px}
+.howtos{width:min(90vw,380px);display:flex;flex-direction:column;gap:8px;text-align:left}
+.howto{border:1px solid rgba(233,211,160,.3);border-radius:10px;background:rgba(255,255,255,.03)}
+.howto summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-size:15px;color:var(--cream)}
+.howto summary::-webkit-details-marker{display:none}
+.howto summary::after{content:"›";margin-left:auto;color:var(--gold-soft);transition:transform .2s}
+.howto[open] summary::after{transform:rotate(90deg)}
+.howto .mic{width:22px;text-align:center}
+.hbody{padding:0 14px 12px;font-size:13.5px;line-height:1.55;color:rgba(241,230,214,.88)}
+.hbody p{margin:0 0 8px}
+.hbody b{color:var(--cream)}
+.small{font-size:12px;opacity:.75}
+.tierlist{display:flex;flex-direction:column;margin:4px 0 8px}
+.tierlist>div{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-bottom:1px dotted rgba(233,211,160,.2)}
+.tsym{color:var(--gold)}.todd{color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.tour{width:min(86vw,340px);display:flex;flex-direction:column;align-items:center;gap:18px;touch-action:pan-y}
+.tslide{min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.tic{width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:52px;background:radial-gradient(circle at 35% 30%,var(--leather),var(--leather-dark));box-shadow:0 0 0 2px var(--gold),0 0 0 6px rgba(0,0,0,.35),0 0 40px rgba(210,174,98,.25)}
+.tslide .hint{max-width:30ch;font-size:14px}
+.tdots{display:flex;gap:8px}
+.tdots i{width:8px;height:8px;border-radius:50%;background:rgba(233,211,160,.3)}
+.tdots i.on{background:var(--gold);width:22px;border-radius:4px}
+.swipehint{position:fixed;left:50%;top:46%;transform:translateX(-50%);z-index:40;background:rgba(20,10,8,.8);color:var(--cream);border:1px solid rgba(233,211,160,.4);padding:10px 16px;border-radius:999px;font-size:14px;pointer-events:none;animation:swh 4.2s ease forwards}
+.swipehint span{display:inline-block;animation:swipe 1.2s ease-in-out infinite}
+@keyframes swipe{0%,100%{transform:translateX(10px)}50%{transform:translateX(-14px)}}
+@keyframes swh{0%{opacity:0}10%,85%{opacity:1}100%{opacity:0}}
 /* Walk-out */
 .flipper.away{display:none}
 .overlay.blk{background:#000;transition:background .6s}
@@ -547,23 +657,19 @@ button{font:inherit;color:inherit}
 <body>
 <div class="app">
   <header class="top">
+    <button class="menubtn" data-act="menu" aria-label="Menu"><span></span><span></span><span></span></button>
     <p class="brand">Vined It</p>
-    <div class="quota" aria-live="polite"><span>Scans vandaag</span><div class="dots" id="dots"></div></div>
+    <button class="quota" data-info="scans" aria-label="Scans vandaag, uitleg"><span>Scans vandaag <i class="ic">i</i></span><div class="dots" id="dots"></div></button>
   </header>
-  <nav class="tabs" id="tabs" aria-label="Hoofdstukken"></nav>
+  <nav class="crumbs" id="tabs" aria-label="Waar ben ik"></nav>
   <div class="album"><main class="stack" id="stack" aria-live="polite"></main></div>
   <div class="dock">
     <button class="nav" id="prev" aria-label="Vorige blad">&#8249;</button>
-    <button class="scan" id="scan">Scan een wijn</button>
+    <button class="scan" id="scan"><span class="scan-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg></span><span class="scan-t"><b id="scanlab">Scan een wijn</b><small id="scansub"></small></span></button>
     <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
   </div>
   <input type="file" id="cam" accept="image/*" capture="environment" hidden>
   <input type="file" id="gal" accept="image/*" hidden>
-  <div class="extras">
-    <button class="reset" data-act="settings">Instellingen</button>
-    <button class="reset" data-act="info">Uitleg</button>
-    <button class="reset" data-act="feedback">Feedback</button>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -633,6 +739,7 @@ function gidTip(sl,set){
 }
 function openGids(gid){
   const [sid,k]=gid.split('|'),set=SETS.find(x=>x.id===sid),sl=set&&set.slots[+k];if(!sl)return;
+  const NEST={nest:true};
   const g=(typeof GIDS!=='undefined'&&GIDS[sid]&&GIDS[sid][sl.l])||[];
   const D=DIFFTXT[sl.d]||DIFFTXT[2],tip=g[2]||gidTip(sl,set);
   const canScan=session&&scansToday()<LIMIT;
@@ -645,7 +752,7 @@ function openGids(gid){
       ${tip?`<h4>Zo herken je hem</h4><p class="gt">${esc(tip)}</p>`:''}
       <p class="gnote">Prijzen zijn een indicatie voor een gangbare fles.</p>
     </div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button>${canScan?'<button class="btn primary" id="gscan">Gevonden? Scan hem</button>':''}</div>`);
+    <div class="actions"><button class="btn" id="close">Sluiten</button>${canScan?'<button class="btn primary" id="gscan">Gevonden? Scan hem</button>':''}</div>`,{nest:true});
   o.classList.add('leather');
   const c=o.querySelector('#close');c.onclick=()=>closeOverlay();c.focus();
   const gs=o.querySelector('#gscan');if(gs)gs.onclick=()=>{closeOverlay();$('#scan').click()};
@@ -1049,7 +1156,7 @@ function openMap(spec){
     ${pins.length?`<div class="lands legend">${legend}</div>`:''}<div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
   o.classList.add('leather');
   const act=n=>{const p=pins[n];if(!p)return;
-    if(p.card){closeOverlay();openCard(p.card);return}
+    if(p.card){openCard(p.card,false,true);return}
     if(p.gid){openGids(p.gid);return}
     if(p.go>=0){closeOverlay();go(p.go);return}
     if(p.prev)openSetPreview(p.prev)};
@@ -1079,11 +1186,11 @@ function makePage0(i){
     const landsLeft=LANDS.filter(l=>!st.lands.includes(l)).length;
     const toc=st.allLands.map(l=>{
       const x=landStats(l),idx=firstPageOf(p=>p.land===l);
-      if(idx<0)return `<li class="dim"><button data-pland="${esc(l)}"><span>${esc(l)}</span><span>nog te ontdekken</span></button></li>`;
+      if(idx<0)return `<li class="dim"><button data-pland="${esc(l)}"><span>${esc(l)}</span><span>nog te ontdekken · bekijk</span></button></li>`;
       return `<li><button data-go="${idx}"><span>${esc(l)}</span><span>${x.tot?x.have+' / '+x.tot:x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button></li>`;
     }).join('');
     const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
-    el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Kelderboek</h2></div>
+    el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Kelderboek ${infoBtn('kelder')}</h2></div>
       <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
       ${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">🗺 Mijn wijnwereld · ${worldStats().have} van ${worldStats().tot} wijnlanden</button>`:''}
       <p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>
@@ -1097,7 +1204,7 @@ function makePage0(i){
     const fslot=(r,big)=>{const c=at(r);return `<div class="slot fslot${big?' fbig':''}"><span class="frank">${r}</span><div class="sleeve">${c?mini(c):`<div class="empty"></div>`}</div>${big?'':`<span class="slabel">${c?esc(c.naam):'&nbsp;'}</span>`}</div>`};
     const one=at(1);
     el.classList.add('favpage');
-    el.innerHTML=`<div class="favtop">${fslot(1,true)}<div class="favhead"><p class="eyebrow">Mijn favorieten</p><h2 class="foil">Top 10</h2>
+    el.innerHTML=`<div class="favtop">${fslot(1,true)}<div class="favhead"><p class="eyebrow">Mijn favorieten</p><h2 class="foil">Top 10 ${infoBtn('fav')}</h2>
         <p class="note">${favs.length?(one?esc(one.naam)+' staat op nummer 1.':''):'Open een kaart en tik op ★ Top 10 om hem hier te zetten.'}</p></div></div>
       <div class="grid fgrid">${[2,3,4,5,6,7,8,9,10].map(r=>fslot(r,false)).join('')}</div>${pageFoot(i)}`;
     return el;
@@ -1105,7 +1212,7 @@ function makePage0(i){
   if(p.t==='world'){
     const ws=worldStats();
     el.classList.add('worldpage');
-    el.innerHTML=`<div><p class="eyebrow">${ws.have} van ${ws.tot} wijnlanden ontdekt</p><h2 class="foil">Mijn wijnwereld</h2></div>
+    el.innerHTML=`<div><p class="eyebrow">${ws.have} van ${ws.tot} wijnlanden ontdekt</p><h2 class="foil">Mijn wijnwereld ${infoBtn('world')}</h2></div>
       <div class="wmap">${worldSVG(MAPS.world,false)}</div>
       <p class="eyebrow toch">Europa</p>
       <div class="wmap">${worldSVG(MAPS.europe,true)}</div>
@@ -1116,7 +1223,7 @@ function makePage0(i){
     const x=landStats(p.land),chapN=st.allLands.indexOf(p.land)+1;
     const rows=visSets(p.land).map(set=>{
       const k=firstPageOf(q=>q.set===set),f=filledOf(set),h=f.filter(Boolean).length;
-      if(k<0)return `<li class="dim"><button data-preview="${set.id}"><span>${esc(set.name)}</span><span>nog te ontdekken</span></button></li>`;
+      if(k<0)return `<li class="dim"><button data-preview="${set.id}"><span>${esc(set.name)}</span><span>nog te ontdekken · bekijk</span></button></li>`;
       return `<li><button data-go="${k}"><span>${esc(set.name)}${isDone(set)?' <small>· voltooid</small>':''}</span><span>${h} / ${f.length}</span></button></li>`;
     }).join('')+((st.overflow[p.land]||[]).length?(()=>{const k=firstPageOf(q=>q.t==='overige'&&q.land===p.land),n=st.overflow[p.land].length;return `<li><button data-go="${k}"><span>Overige</span><span>${n} ${n===1?'kaart':'kaarten'}</span></button></li>`})():'');
     el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
@@ -1137,11 +1244,24 @@ function makePage0(i){
   if(done)el.classList.add('done');
   const chap=s.part===1?st.allLands.indexOf(s.land)+1:0;
   const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Verzamellijst';
-  el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
+  el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)} ${infoBtn(s.part===1?'set':'lijst')}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
     ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
     <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k,stackOf(s,k).length)).join('')}</div>${pageFoot(i)}`;
   return el;
 }
+function fitAlbum(){
+  const st_=document.getElementById('stack');if(!st_)return;
+  const H=st_.clientHeight,W=st_.clientWidth;if(!H||!W)return;
+  const colW=(W-32-16)/3;
+  const rows=H-28-104-30;                       // binnenruimte min kop en voet
+  const sw=Math.max(64,Math.min(colW,(rows/3-36)/1.48));
+  document.documentElement.style.setProperty('--sw',sw.toFixed(1)+'px');
+  // Top 10: #1 + 3 rijen
+  const rowsF=H-28-30, f1=Math.min(W*.34,(rowsF*.3)/1.48), fsw=Math.max(54,Math.min(colW*.86,((rowsF-f1*1.48-20)/3-34)/1.48));
+  document.documentElement.style.setProperty('--fsw',fsw.toFixed(1)+'px');
+  document.documentElement.style.setProperty('--f1',f1.toFixed(1)+'px');
+}
+addEventListener('resize',()=>fitAlbum());
 function makeLeaf(i){
   const leaf=document.createElement('div');leaf.className='leaf';leaf.dataset.i=i;
   const back=document.createElement('div');back.className='leafback'+(i===0?' endpaper':'');
@@ -1176,23 +1296,18 @@ const stack=$('#stack');
 function renderChrome(){
   const used=session?scansToday():0;
   const sc=$('#scan'),spent=!!session&&used>=LIMIT;
-  sc.classList.toggle('spent',spent);sc.textContent=spent?'Morgen weer scannen':'Scan een wijn';
+  sc.classList.toggle('spent',spent);$('#scanlab').textContent=spent?'Morgen weer scannen':'Scan een wijn';
+  $('#scansub').textContent=!session?'':spent?'je scans voor vandaag zijn op':LIMIT>5?`nog ${LIMIT-used} · tester`:`nog ${LIMIT-used} vandaag`;
   $('#dots').innerHTML=LIMIT<=5?Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}"></i>`).join(''):`<span class="qnum">${used} / ${LIMIT} · tester</span>`;
   $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
   if(!session||!st){$('#tabs').innerHTML='';return}
-  const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land),inLists=pg.set&&pg.set.part===2;
-  const firstList=firstPageOf(x=>x.set&&x.set.part===2);
-  const inLand=!!curLand&&!inLists;
-  $('#tabs').innerHTML=`<button data-go="1" aria-current="${cur===1}">Kelderboek</button><button data-go="2" aria-current="${cur===2}">★ Top 10</button>`+
-    `<button data-act="lands" aria-current="${inLand}" aria-haspopup="dialog">${inLand?esc(curLand):'Landen'} <span class="caret" aria-hidden="true">▾</span></button>`+
-    (firstList>0?`<button data-act="lists" aria-current="${!!inLists}" aria-haspopup="dialog">Verzamellijsten <span class="caret" aria-hidden="true">▾</span></button>`:'');
+  $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button><span class="pageno">Blad ${cur+1} / ${pages.length}</span>`;
 }
 function go(n,force){
   if(n<0||n>=pages.length||busy)return;
   if(n===cur&&!force)return;
   const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur;
   cur=n;renderChrome();
-  const t=document.querySelector('#tabs [aria-current="true"]');if(t)t.scrollIntoView({block:'nearest',inline:'nearest'});
   if(!old||reduced||+old.dataset.i===n){stack.replaceChildren(nu);return}
   busy=true;
   if(fwd){stack.insertBefore(nu,old);nu.classList.add('under');old.classList.add('flip-fwd')}
@@ -1203,6 +1318,10 @@ let sx0=null,swiped=false;
 document.addEventListener('click',e=>{
   if(swiped){swiped=false;return}
   if(e.target.closest('[data-act="info"]')){openInfo();return}
+  if(e.target.closest('[data-act="menu"]')){openMenu();return}
+  if(e.target.closest('[data-act="jump"]')){openJump();return}
+  if(e.target.closest('[data-act="tour"]')){openTour();return}
+  const ib=e.target.closest('[data-info]');if(ib){openInfoTip(ib.dataset.info);return}
   if(e.target.closest('[data-act="settings"]')){openSettings();return}
   if(e.target.closest('[data-act="feedback"]')){openFeedback();return}
   if(e.target.closest('[data-act="lands"]')){openLands();return}
@@ -1213,7 +1332,7 @@ document.addEventListener('click',e=>{
   const wl=e.target.closest('[data-wland]');if(wl){openWorldLand(wl.dataset.wland);return}
   const pl=e.target.closest('[data-pland]');if(pl){openLandPreview(pl.dataset.pland);return}
   const pv=e.target.closest('[data-preview]');if(pv){openSetPreview(pv.dataset.preview);return}
-  if(e.target.closest('[data-act="logout"]')){logout();return}
+  if(e.target.closest('[data-act="logout"]')){askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout);return}
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
   const gb=e.target.closest('.gidbtn');if(gb){openGids(gb.dataset.gid);return}
@@ -1223,7 +1342,7 @@ document.addEventListener('click',e=>{
 $('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
 stack.addEventListener('pointerdown',e=>{if(e.target.closest('form'))return;sx0=e.clientX;swiped=false});
 stack.addEventListener('pointerup',e=>{if(sx0===null)return;const dx=e.clientX-sx0;sx0=null;if(Math.abs(dx)>50){swiped=true;go(cur+(dx<0?1:-1))}});
-document.addEventListener('keydown',e=>{if(document.querySelector('.overlay')){if(e.key==='Escape')closeOverlay();return}if(e.target.closest('input'))return;if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+document.addEventListener('keydown',e=>{if(document.querySelector('.overlay')){if(e.key==='Escape')popOverlay();return}if(e.target.closest('input'))return;if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
 
 /* ---------- kantelen ---------- */
 function tilt(card){
@@ -1235,8 +1354,32 @@ function tilt(card){
 }
 
 /* ---------- overlays ---------- */
-function overlay(html){closeOverlay(true);const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.innerHTML=html;document.body.appendChild(o);return o}
-function closeOverlay(keepPulled){stopCam();document.querySelectorAll('.overlay').forEach(o=>o.remove());if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
+let histOpen=false,ignorePop=false;
+function overlay(html,opt={}){
+  const nest=!!opt.nest&&!!document.querySelector('.overlay:not([hidden])');
+  if(nest)document.querySelectorAll('.overlay').forEach(x=>x.hidden=true);else removeOverlays();
+  const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+  o.innerHTML=`<div class="ovbar">${nest?'<button class="ovback" type="button">‹ Terug</button>':'<span></span>'}<button class="ovx" type="button" aria-label="Sluiten">✕</button></div>`+html;
+  o.querySelector('.ovx').onclick=()=>closeOverlay();
+  const bk=o.querySelector('.ovback');if(bk)bk.onclick=()=>popOverlay();
+  document.body.appendChild(o);
+  if(!histOpen){try{history.pushState({vi:1},'');histOpen=true}catch(e){}}
+  return o;
+}
+function removeOverlays(){stopCam();document.querySelectorAll('.overlay').forEach(o=>o.remove())}
+function syncHist(){setTimeout(()=>{if(!document.querySelector('.overlay')&&histOpen){histOpen=false;ignorePop=true;try{history.back()}catch(e){ignorePop=false}}},80)}
+function closeOverlay(keepPulled){removeOverlays();if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'));syncHist()}
+function popOverlay(){const all=[...document.querySelectorAll('.overlay')];if(all.length<=1){closeOverlay();return}
+  stopCam();all[all.length-1].remove();const prev=all[all.length-2];prev.hidden=false;const f=prev.querySelector('.ovx');if(f)f.focus()}
+window.addEventListener('popstate',()=>{
+  if(ignorePop){ignorePop=false;return}
+  histOpen=false;
+  if(document.querySelector('.overlay')){
+    const all=document.querySelectorAll('.overlay');
+    if(all.length>1){popOverlay();try{history.pushState({vi:1},'');histOpen=true}catch(e){}}
+    else{removeOverlays();document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
+  }
+});
 function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(m.dataset.id),reduced?0:300)}
 const HINT={
   common:'Common: de regio als reisposter. Sleep over de kaart om hem te kantelen.',
@@ -1264,13 +1407,13 @@ function spinCard(o,c){
   sp.addEventListener('pointerup',end);sp.addEventListener('pointercancel',end);
   o.querySelector('#turn').onclick=()=>{base+=180;setA(base)};
 }
-function openCard(id,showBack){
+function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
     <p class="hint">Veeg of tik op de kaart om hem om te draaien.${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
     <div class="actions"><button class="btn" id="turn">↻ Omdraaien</button><button class="btn" id="memo">✎ ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">★ ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
-    <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`);
+    <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
   o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
@@ -1280,12 +1423,12 @@ function openStack(gid){
   const [sid,k]=gid.split('|'),set=SETS.find(x=>x.id===sid);if(!set)return;
   const S=stackOf(set,+k);if(!S.length)return;
   const o=overlay(`<p class="eyebrow">${esc(set.name)} · stapel</p><p class="status">${esc(set.slots[+k].l)}</p>
-    <p class="hint">${S.length} kaarten in dit vak. De bovenste zie je in je album. Tik op een kaart om hem te bekijken.</p>
+    <p class="hint">${S.length} kaarten in dit vak. De bovenste zie je in je album. Tik op een kaart om hem te bekijken. ${infoBtn('stack')}</p>
     <div class="fan">${S.map((c,n)=>`<div class="fanitem${n===0?' top':''}"><div class="sleeve">${mini(c)}</div>
       <span class="fanlab">${TIERS[c.rar].sym} ${esc(TIERS[c.rar].label)}</span>
       ${n===0?'<span class="fanon">Ligt bovenop</span>':`<button class="btn small" data-top="${c.id}">Bovenop leggen</button>`}</div>`).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
-  o.querySelectorAll('.fan .mini').forEach(m=>m.addEventListener('click',ev=>{ev.stopPropagation();openCard(m.dataset.id)}));
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
+  o.querySelectorAll('.fan .mini').forEach(m=>m.addEventListener('click',ev=>{ev.stopPropagation();openCard(m.dataset.id,false,true)}));
   o.querySelectorAll('[data-top]').forEach(b=>b.onclick=async()=>{
     o.querySelectorAll('button').forEach(x=>x.disabled=true);
     const {data,error}=await sb.rpc('pick_top',{p_card:b.dataset.top});
@@ -1301,11 +1444,11 @@ function openMemo(id,after){
     <p class="hint">Met wie dronk je ${esc(c.naam)}, waar was je, wat maakte het bijzonder? Je tekst komt in handschrift op de achterkant van de kaart, met de datum erbij.</p>
     <div class="memopad"><textarea id="mt" maxlength="140" rows="4" placeholder="Gedronken met Pietje, heerlijk aan het strand in Frankrijk!">${esc(c.memo)}</textarea><p class="mbdate">${esc(fmtDate(c.memoAt||new Date().toISOString()))}</p></div>
     <p class="fbcount" id="mc" style="width:min(88vw,340px)">${c.memo.length} / 140</p>
-    <div class="actions"><button class="btn" id="cancel">Annuleren</button>${c.memo?'<button class="btn" id="wipe">Wissen</button>':''}<button class="btn primary" id="save">Bewaren</button></div>`);
+    <div class="actions"><button class="btn" id="cancel">Annuleren</button>${c.memo?'<button class="btn" id="wipe">Wissen</button>':''}<button class="btn primary" id="save">Bewaren</button></div>`,{nest:true});
   const ta=o.querySelector('#mt'),mc=o.querySelector('#mc');
   ta.oninput=()=>mc.textContent=`${ta.value.length} / 140`;setTimeout(()=>ta.focus(),50);
   const done=()=>after?after():openCard(c.id,true);
-  o.querySelector('#cancel').onclick=()=>after?after():openCard(c.id);
+  o.querySelector('#cancel').onclick=()=>after?after():popOverlay();
   const save=async txt=>{
     o.querySelectorAll('button').forEach(b=>b.disabled=true);
     const {data,error}=await sb.rpc('set_memo',{p_card:c.id,p_text:txt});
@@ -1313,7 +1456,7 @@ function openMemo(id,after){
     c.memo=data.memo||'';c.memoAt=data.memo_at||null;refresh();renderChrome();toast(c.memo?'Herinnering bewaard.':'Herinnering gewist.');done();
   };
   o.querySelector('#save').onclick=()=>save(ta.value);
-  const w=o.querySelector('#wipe');if(w)w.onclick=()=>save('');
+  const w=o.querySelector('#wipe');if(w)w.onclick=()=>askConfirm('Herinnering wissen?','Je tekst op de achterkant verdwijnt. Dit kun je niet ongedaan maken.','Wissen',()=>save(''));
 }
 function openFavPicker(id){
   const c=cards.find(x=>x.id===id);if(!c)return;
@@ -1322,7 +1465,7 @@ function openFavPicker(id){
     return `<button data-rank="${r}" class="${occ&&occ.id===c.id?'on':''}"><b>#${r}${r===1?' · bovenaan':''}</b><span>${occ?esc(occ.naam):'vrij'}</span></button>`}).join('');
   const o=overlay(`<p class="status">Top 10</p><p class="hint">Kies een plek voor ${esc(c.naam)}. Staat daar al een kaart, dan schuift die (en de rest) een plek op.</p>
     <div class="lands">${rows}</div>
-    <div class="actions"><button class="btn" id="back">‹ Terug</button>${c.fav?'<button class="btn" id="out">Uit top 10</button>':''}</div>`);
+    <div class="actions"><button class="btn" id="back">‹ Terug</button>${c.fav?'<button class="btn" id="out">Uit top 10</button>':''}</div>`,{nest:true});
   const apply=async rank=>{
     o.querySelectorAll('button').forEach(b=>b.disabled=true);
     const {data,error}=await sb.rpc('set_favorite',{p_card:c.id,p_rank:rank});
@@ -1331,7 +1474,7 @@ function openFavPicker(id){
     refresh();renderChrome();toast(rank?`${c.naam} staat op #${c.fav||rank} in je top 10.`:'Uit je top 10 gehaald.');openCard(c.id);
   };
   o.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>apply(+b.dataset.rank));
-  o.querySelector('#back').onclick=()=>openCard(c.id);
+  o.querySelector('#back').onclick=()=>popOverlay();
   const out=o.querySelector('#out');if(out)out.onclick=()=>apply(null);
   (o.querySelector('.lands .on')||o.querySelector('.lands button')).focus();
 }
@@ -1555,7 +1698,7 @@ function walkout(o,c,done){
   const at=(ms,fn)=>timers.push(setTimeout(()=>{if(!over)fn()},ms));
   const finish=()=>{if(over)return;over=true;timers.forEach(clearTimeout);o.removeEventListener('click',skip,true);
     wo.hidden=true;o.classList.remove('blk');flip.classList.remove('away');status.style.visibility='';done()};
-  const skip=e=>{if(e.target.closest('.actions'))return;e.stopPropagation();e.preventDefault();finish()};
+  const skip=e=>{if(e.target.closest('.actions')||e.target.closest('.ovbar'))return;e.stopPropagation();e.preventDefault();finish()};
   setTimeout(()=>o.addEventListener('click',skip,true),50);
   // kaartje van het land met speldje
   const m=MAPS.lands[c.land],pin=cardPin(c);let svg='';
@@ -1614,7 +1757,7 @@ function showNews(news){
 
 /* ---------- landkiezer ---------- */
 function pickRow(k,title,sub,on,dim){return `<button data-pg="${k}" class="${dim?'dim':''}${on?' on':''}"><b>${title}</b><span>${sub}</span></button>`}
-function openLands(land){
+function openLands(land,nest){
   const pg=pages[cur]||{},curLand=pg.land||(pg.set&&pg.set.land);
   if(land){
     const own=pages.map((q,k)=>[q,k]).filter(([q])=>q.land===land);
@@ -1627,7 +1770,7 @@ function openLands(land){
         const f=filledOf(set),h=f.filter(Boolean).length;return pickRow(pk[1],esc(set.name)+(isDone(set)?' ✓':''),h+' / '+f.length+' vakken',pk[1]===cur,false)}).join('')+
       (ov?(()=>{const n=(st.overflow[land]||[]).length;return pickRow(ov[1],'Overige',n+' '+(n===1?'kaart':'kaarten'),ov[1]===cur,!n)})():'');
     const o=overlay(`<p class="status">${esc(land)}</p><div class="lands">${rows}</div>
-      <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`);
+      <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
     o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
     const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
     return;
@@ -1635,7 +1778,7 @@ function openLands(land){
   const o=overlay(`<p class="status">Kies een land</p>
     <div class="lands">${st.allLands.map(l=>{const x=landStats(l),n=SETS.filter(z=>z.part===1&&z.land===l&&st.visible[z.id]).length;
       return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}${n>1?` <small>· ${n} sets</small>`:''}</b><span>${!x.cards?'nog te ontdekken':x.tot?x.have+' / '+x.tot+' vakken':x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button>`}).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
 }
@@ -1644,7 +1787,7 @@ function openLandPreview(land){
   const o=overlay(`<p class="eyebrow">Nog te ontdekken</p><p class="status">${esc(land)}</p>
     <p class="hint">Scan je eerste wijn uit ${esc(land)} en dit hoofdstuk komt in je album.${sets.length?' Tik op een set om te zien wat erin hoort.':' Elke wijn uit dit land krijgt een plek en telt mee voor de verzamellijsten.'}</p>
     ${sets.length?`<div class="lands">${sets.map(set=>`<button data-preview="${set.id}"><b>${esc(set.name)}</b><span>${set.slots.length} vakken</span></button>`).join('')}</div>`:''}
-    <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
   o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
   const f=o.querySelector('.lands button')||o.querySelector('#close');f.focus();
 }
@@ -1653,38 +1796,123 @@ function openSetPreview(id){
   const o=overlay(`<p class="eyebrow">${set.part===1?esc(set.land)+' · ':''}nog te ontdekken</p><p class="status">${esc(set.name)}</p>
     <p class="hint">Deze bladzijde komt in je album zodra je er je eerste wijn voor scant. Tik op een vak voor tips.</p>
     <div class="lands">${set.slots.map((sl,k)=>`<button data-gid="${set.id}|${k}" class="gidbtn-row"><b>${esc(sl.l)}</b><span>${DIFF[sl.d]||''}</span></button>`).join('')}</div>
-    <div class="actions">${set.part===1?`<button class="btn" id="back">‹ ${esc(set.land)}</button>`:''}<button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions">${set.part===1?`<button class="btn" id="back">‹ ${esc(set.land)}</button>`:''}<button class="btn" id="close">Sluiten</button></div>`,{nest:true});
   const b=o.querySelector('#back');if(b)b.onclick=()=>openLands(set.land);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelectorAll('[data-gid]').forEach(x=>x.onclick=ev=>{ev.stopPropagation();openGids(x.dataset.gid)});
   o.querySelector('.lands button').focus();
 }
-function openLists(){
+function openLists(nest){
   const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.set&&q.set.part===2).map(([q,k])=>{
     const f=filledOf(q.set),h=f.filter(Boolean).length;
     return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
   }).join('');
   const o=overlay(`<p class="status">Verzamellijsten</p><div class="lands">${rows}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
 }
 
+/* ---------- navigatie: kruimel, menu, springen ---------- */
+function crumbOf(p){
+  if(p.t==='cover')return 'Omslag';if(p.t==='inhoud')return '📖 Kelderboek';if(p.t==='fav')return '★ Top 10';if(p.t==='world')return '🗺 Mijn wijnwereld';
+  if(p.t==='chapter')return esc(p.land);if(p.t==='overige')return esc(p.land)+(p.noSets?'':' › Overige');
+  if(p.t==='set')return p.set.part===1?`${esc(p.set.land)} <span class="sep">›</span> ${esc(p.set.name)}`:`Verzamellijst <span class="sep">›</span> ${esc(p.set.name)}`;
+  return '';
+}
+function openMenu(){
+  const it=(ic,label,attr)=>`<button class="mitem" ${attr}><span class="mic">${ic}</span>${label}<span class="chev">›</span></button>`;
+  const pg=t=>firstPageOf(x=>x.t===t);
+  const o=overlay(`<nav class="drawer-panel" aria-label="Menu">
+      <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">✕</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>`:''}
+      ${session?`<p class="mgroup">Album</p>
+      ${it('📖','Kelderboek',`data-mgo="1"`)}${it('★','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?it('🗺','Mijn wijnwereld',`data-mgo="${pg('world')}"`):''}
+      ${it('🍇','Landen','data-mact="lands"')}${it('📜','Verzamellijsten','data-mact="lists"')}`:''}
+      <p class="mgroup">Hulp</p>
+      ${it('❔','Hoe werkt Vined It?','data-mact="info"')}${it('▶','Rondleiding','data-mact="tour"')}
+      ${session?`<p class="mgroup">Account</p>${it('⚙','Instellingen','data-mact="settings"')}${it('💬','Feedback','data-mact="feedback"')}${it('⎋','Uitloggen','data-mact="logout"')}`:''}
+    </nav>`);
+  o.classList.add('drawer');o.querySelector('.dclose').onclick=()=>closeOverlay();
+  o.addEventListener('click',e=>{if(e.target===o)closeOverlay()});
+  o.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();closeOverlay();go(+b.dataset.mgo)});
+  o.querySelectorAll('[data-mact]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const a=b.dataset.mact;
+    if(a==='lands'){closeOverlay();openLands()}else if(a==='lists'){closeOverlay();openLists()}else if(a==='info'){closeOverlay();openInfo()}
+    else if(a==='tour'){closeOverlay();openTour()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
+    else if(a==='logout')askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout)});
+  const f=o.querySelector('.mitem');if(f)f.focus();
+}
+function openJump(){
+  const pg=t=>firstPageOf(x=>x.t===t);
+  const tile=(ic,l,k)=>k>=0?`<button class="jtile${k===cur?' on':''}" data-pg="${k}"><span>${ic}</span>${l}</button>`:'';
+  const o=overlay(`<p class="status">Ga naar</p>
+    <div class="jtiles">${tile('📖','Kelderboek',1)}${tile('★','Top 10',pg('fav'))}${tile('🗺','Wereld',pg('world'))}</div>
+    <div class="lands jrows"><button data-jact="lands"><b>Landen ›</b><span>${st.lands.filter(l=>l!=='Overige landen').length} ontdekt</span></button><button data-jact="lists"><b>Verzamellijsten ›</b><span>${SETS.filter(s=>s.part===2&&st.visible[s.id]).length} zichtbaar</span></button></div>`);
+  o.querySelector('[data-jact="lands"]').onclick=()=>openLands(null,true);
+  o.querySelector('[data-jact="lists"]').onclick=()=>openLists(true);
+  (o.querySelector('.jtile')||o.querySelector('.ovx')).focus();
+}
+function askConfirm(title,text,yes,fn){
+  const o=overlay(`<div class="confirm"><p class="status">${esc(title)}</p><p class="hint">${esc(text)}</p>
+    <div class="actions"><button class="btn" id="no">Annuleren</button><button class="btn primary" id="yes">${esc(yes)}</button></div></div>`,{nest:true});
+  o.querySelector('#no').onclick=()=>popOverlay();o.querySelector('#yes').onclick=()=>{popOverlay();fn()};o.querySelector('#no').focus();
+}
+const INFO={
+  scans:['Scans vandaag',`Je kunt elke dag ${'${LIMIT}'} wijnen scannen. Zo blijft het verzamelen spannend en gaat het om ontdekken, niet om meer drinken. Om middernacht krijg je nieuwe scans.`,'scan'],
+  kelder:['Kelderboek','Je inhoudsopgave: hoeveel kaarten je hebt per klasse, welke landen je al ontdekte en welke verzamellijsten zichtbaar zijn. Grijze landen zijn nog te ontdekken: tik erop om te zien wat er in hoort.','album'],
+  set:['Een set','Elk vak hoort bij een wijngebied. Scan een passende wijn en hij komt vanzelf in het juiste vak. Tik op een leeg vak voor tips: wat het is, wat het kost en waar je hem vindt. Heb je meerdere kaarten voor één vak, dan liggen ze op een stapel (×2, ×3…).','album'],
+  lijst:['Verzamellijst','Een lijst over het hele album heen, zoals een druif of een stijl. Je kaarten tellen hier automatisch mee, naast hun eigen set. Sommige lijsten verschijnen pas als je de eerste passende wijn vindt.','album'],
+  fav:['Top 10','Je favoriete kaarten, met nummer 1 bovenaan. Open een kaart en tik op ★ Top 10 om hem een plek te geven. De kaart blijft ook gewoon in zijn set.','top'],
+  world:['Mijn wijnwereld','Landen waar je een kaart uit hebt, kleuren goud: hoe voller, hoe meer kaarten. De rode speldjes zijn regio\'s die je hebt ontdekt. Tik op een land om erheen te gaan.','kaarten'],
+  stack:['Stapels','Passen meerdere kaarten in hetzelfde vak, dan liggen ze op een stapel. Bovenop ligt de zeldzaamste, tenzij je zelf een andere kiest met "Bovenop leggen".','herproeven']
+};
+function infoBtn(k){return `<button class="ibtn" data-info="${k}" aria-label="Uitleg">i</button>`}
+function openInfoTip(k){
+  const d=INFO[k];if(!d)return;
+  const o=overlay(`<div class="tip"><p class="tiph"><span class="ibtn on">i</span>${esc(d[0])}</p><p class="tipt">${esc(d[1].replace('${LIMIT}',LIMIT))}</p>
+    <div class="actions"><button class="btn" id="more">Meer in Hoe werkt het</button><button class="btn primary" id="ok">Begrepen</button></div></div>`,{nest:true});
+  o.querySelector('#ok').onclick=()=>popOverlay();o.querySelector('#more').onclick=()=>openInfo(d[2],true);o.querySelector('#ok').focus();
+}
 /* ---------- uitleg en uitloggen ---------- */
-function openInfo(){
-  const desc={common:'De regio als reisposter.',rare:'Jouw flesfoto in posterstijl, zilveren rand.',superrare:'Rare met regenboog-holo en glitter.',ultra:'Full art in lagen, goudrand.',icon:'Vaste lijst iconische wijnen. Hangt af van de wijn, niet van geluk.'};
-  const o=overlay(`<p class="status">Hoe Vined It werkt</p>
-    <div class="upl" style="gap:0">${TORDER.map(t=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-bottom:1px dotted rgba(233,211,160,.25)">
-      <span style="font-size:14px;color:var(--gold)">${TIERS[t].sym}</span><span><b style="font-weight:500;color:var(--cream)">${TIERS[t].label}</b><br><span style="font-size:12.5px;opacity:.7">${desc[t]}</span></span>
-      <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
-    <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: bedoeld voor een nieuwe fles van dezelfde wijn. Het kost een scan, kan hooguit één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
-    <p class="hint">Scannen: maak een foto van het etiket, recht van voren en scherp. De app leest naam, producent, jaargang en herkomst, en maakt de kaart. Bij een Rare wordt jouw foto de posterafbeelding.</p>
-    <p class="hint">Tik op een leeg vak voor uitleg: wat het is, wat het ongeveer kost en waar je zo'n fles vindt.</p>
-    <p class="hint">Je album groeit mee: een land of regio krijgt pas een bladzijde als je er je eerste wijn van scant. In het Kelderboek zie je wat er nog te ontdekken valt.</p>
-    <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vined It scande.</p>
-    ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
-    <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
-  const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
+function openInfo(open,nest){
+  const desc={common:'De regio als vintage reisposter.',rare:'Jouw eigen flesfoto in posterstijl, zilveren rand.',superrare:'Rare met regenboog-holo en glitter.',ultra:'Full art in lagen, goudrand.',icon:'Vaste lijst iconische wijnen. Hangt af van de wijn, niet van geluk.'};
+  const tiers=`<div class="tierlist">${TORDER.map(t=>`<div><span class="tsym">${TIERS[t].sym}</span><span><b>${TIERS[t].label}</b><br><small>${desc[t]}</small></span><span class="todd">${TIERS[t].odds}</span></div>`).join('')}</div>`;
+  const sec=(id,ic,title,body)=>`<details class="howto" id="h-${id}"${open===id?' open':''}><summary><span class="mic">${ic}</span>${title}</summary><div class="hbody">${body}</div></details>`;
+  const o=overlay(`<p class="status">Hoe werkt Vined It?</p>
+    <div class="howtos">
+    ${sec('scan','📸','Scannen',`<p>Tik op <b>Scan een wijn</b> en richt de camera op het voorste etiket: recht, scherp en goed belicht. De app leest naam, maker, jaargang en herkomst, en maakt er een kaart van.</p><p>Je hebt <b>${LIMIT} scans per dag</b>. Een foto die niet herkend wordt, telt niet mee. Elke wijn levert één kaart op; de jaargang maakt niet uit.</p>`)}
+    ${sec('klassen','✨','Kaarten en klassen',`<p>Elke kaart heeft een klasse. Welke je krijgt, is een verrassing:</p>${tiers}<p class="small">Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100.</p>`)}
+    ${sec('album','📖','Je album',`<p>Het <b>Kelderboek</b> is je inhoudsopgave. Daarna volgen je <b>Top 10</b>, je <b>wijnwereld</b> en de hoofdstukken per land.</p><p>Je album <b>groeit mee</b>: een land of streek krijgt pas een bladzijde bij je eerste wijn daarvan. Elke kaart gaat vanzelf naar het juiste vak, en telt ook mee voor de <b>verzamellijsten</b> achterin.</p><p>Tik op een <b>leeg vak</b> voor tips: wat het is, wat het kost en waar je hem vindt. <b>Veeg</b> of gebruik de pijltjes om te bladeren; tik bovenaan op de naam van de bladzijde om snel te springen.</p>`)}
+    ${sec('herproeven','📚','Stapels en herproeven',`<p>Scan je een <b>andere</b> wijn voor een vak dat al gevuld is, dan komt hij op de <b>stapel</b> (×2, ×3…). De zeldzaamste ligt bovenop; tik op de stapel om zelf te kiezen.</p><p>Scan je <b>dezelfde</b> wijn nog eens (een nieuwe fles), dan kun je <b>herproeven</b>: een nieuwe trekking die je kaart alleen vervangt als hij zeldzamer is. Dat kost een scan en kan één keer per dag per wijn.</p>`)}
+    ${sec('top','★','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Veeg over de kaart om hem om te draaien.</p>`)}
+    ${sec('kaarten','🗺','Kaarten',`<p>Rechtsboven op een bladzijde staat een kaartje van het land met speldjes. Tik erop voor een grote kaart met namen. Op <b>Mijn wijnwereld</b> zie je in één oogopslag welke landen je al ontdekte.</p>`)}
+    </div>
+    <div class="actions"><button class="btn" data-act="tour">▶ Rondleiding</button><button class="btn primary" id="close">Terug naar album</button></div>
+    ${session?`<p class="hint small">Ingelogd als ${esc(session.user.email)}</p>`:''}`,{nest:!!nest});
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  const op=open&&o.querySelector('#h-'+open);if(op)setTimeout(()=>op.scrollIntoView({block:'center'}),60);
+}
+const TOUR=[
+  ['📸','Scan je wijn','Drink je een wijn? Tik op Scan een wijn en fotografeer het etiket. De app herkent de wijn voor je.'],
+  ['🃏','Krijg een kaart','Elke wijn wordt een kaart, van Common tot Icon. Welke je krijgt, is elke keer een verrassing.'],
+  ['📖','Vul je album','Je kaart gaat vanzelf naar het juiste vak in je album. Veeg om te bladeren, tik op een kaart om hem te bekijken.'],
+  ['🗺','Ontdek de wereld','Je album groeit mee met elk nieuw land en elke nieuwe streek. Tik op een leeg vak voor tips. Veel plezier en proost!']
+];
+function openTour(){
+  let n=0;
+  const o=overlay(`<div class="tour"><div class="tslide" id="ts"></div><div class="tdots">${TOUR.map((_,k)=>`<i data-k="${k}"></i>`).join('')}</div>
+    <div class="actions"><button class="btn" id="tprev">‹ Vorige</button><button class="btn primary" id="tnext">Volgende ›</button></div></div>`);
+  const draw=()=>{const [ic,t,x]=TOUR[n];o.querySelector('#ts').innerHTML=`<div class="tic">${ic}</div><p class="status">${t}</p><p class="hint">${x}</p>`;
+    o.querySelectorAll('.tdots i').forEach((d,k)=>d.classList.toggle('on',k===n));
+    o.querySelector('#tprev').style.visibility=n?'visible':'hidden';o.querySelector('#tnext').textContent=n===TOUR.length-1?'Aan de slag':'Volgende ›'};
+  o.querySelector('#tprev').onclick=()=>{if(n>0){n--;draw()}};
+  o.querySelector('#tnext').onclick=()=>{if(n<TOUR.length-1){n++;draw()}else{closeOverlay();hintSwipe()}};
+  let x0=null;o.addEventListener('pointerdown',e=>x0=e.clientX);o.addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50){if(dx<0&&n<TOUR.length-1)n++;else if(dx>0&&n>0)n--;draw()}});
+  try{localStorage.setItem('vi.tour','1')}catch(e){}
+  draw();o.querySelector('#tnext').focus();
+}
+function hintSwipe(){
+  try{if(localStorage.getItem('vi.swipe'))return;localStorage.setItem('vi.swipe','1')}catch(e){}
+  const h=document.createElement('div');h.className='swipehint';h.innerHTML='<span>👆</span> Veeg om te bladeren';document.body.appendChild(h);setTimeout(()=>h.remove(),4200);
 }
 async function logout(){
   closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();LIMIT=3;serverToday=null;session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
@@ -1692,13 +1920,14 @@ async function logout(){
 
 /* ---------- start ---------- */
 (async function boot(){
-  refresh();go(0,true);
+  refresh();go(0,true);fitAlbum();
   try{const {data}=await sb.auth.getSession();session=data.session}catch(e){session=null}
   if(session)await loadAlbum();
-  loading=false;refresh();go(0,true);
+  loading=false;refresh();go(0,true);fitAlbum();
+  if(session){let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700)}
   sb.auth.onAuthStateChange((ev,s)=>{
     if(ev==='SIGNED_OUT'&&session){session=null;cards=[];ownedKeys=new Set();refresh();cur=0;go(0,true)}
-    else if(ev==='SIGNED_IN'&&s&&!session&&!verifying){session=s;loadAlbum().then(()=>go(0,true))}
+    else if(ev==='SIGNED_IN'&&s&&!session&&!verifying){session=s;loadAlbum().then(()=>{go(0,true);let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700)})}
     else if(s)session=s;
   });
 })();
