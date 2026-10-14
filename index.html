@@ -379,6 +379,19 @@ button{font:inherit;color:inherit}
 .fbkinds input:focus-visible+span{outline:2px solid var(--cream);outline-offset:2px}
 .upl textarea{min-height:130px;border-radius:8px;border:1px solid rgba(233,211,160,.35);background:#24161A;color:var(--cream);padding:10px;font:inherit;font-size:14px;line-height:1.45;box-sizing:border-box;width:100%;resize:vertical}
 .fbcount{font-size:11px;color:var(--gold-soft);opacity:.6;text-align:right;margin:-6px 0 0}
+.gidbtn{width:100%;cursor:pointer;background:transparent;position:relative;line-height:1.2;-webkit-appearance:none;appearance:none}
+.gidbtn .gq{position:absolute;right:4px;bottom:3px;width:13px;height:13px;border-radius:50%;border:1px solid currentColor;font-size:8.5px;line-height:11px;letter-spacing:0;opacity:.8}
+.gidbtn:hover,.gidbtn:focus-visible{border-color:rgba(233,211,160,.45);background:rgba(233,211,160,.05)}
+.gidcard{width:min(88vw,360px);background:#F4ECDB;color:#3B2A1C;border-radius:6px;padding:22px 20px 18px;text-align:left;position:relative;box-shadow:0 22px 44px rgba(0,0,0,.5);
+  background-image:radial-gradient(circle at 0 0,rgba(0,0,0,0) 0,rgba(0,0,0,0) 100%);outline:1.5px dashed rgba(139,106,58,.55);outline-offset:-9px}
+.gidcard .geb{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#8B6A3A;margin:0}
+.gidcard h3{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1;margin:6px 0 12px;color:#5A1F2A}
+.gchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.gchip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(139,106,58,.45);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:500;background:rgba(255,255,255,.45)}
+.gchip.d1{background:#E5EFD9;border-color:#9DB585}.gchip.d2{background:#F3E4C4;border-color:#C9A56A}.gchip.d3{background:#EBD8D8;border-color:#B88787}
+.gidcard h4{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#8B6A3A;margin:12px 0 4px;font-weight:600}
+.gidcard p.gt{margin:0;font-size:14px;line-height:1.5}
+.gidcard .gnote{font-size:11px;color:#8B6A3A;margin:14px 0 0}
 /* Scanner */
 .overlay.leather{background-color:var(--leather-dark);background-image:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.45)),var(--leathergrain)}
 .overlay.scanner{justify-content:space-between;gap:12px}
@@ -438,6 +451,7 @@ button{font:inherit;color:inherit}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="data.js"></script>
 <script src="art.js"></script>
+<script src="gids.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -483,6 +497,39 @@ async function loadSettings(){
     const {data,error}=await sb.from('collectors').select('*').maybeSingle();
     if(!error&&data){LIMIT=data.daily_limit||3;settings={...settings,name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
+}
+const DIFFTXT={1:['🛒','Supermarkt','Vaak gewoon in de supermarkt te vinden.'],2:['🍷','Wijnwinkel','Bij de slijter of een goede wijnwinkel.'],3:['🔎','Specialist','Bij een wijnspeciaalzaak, online of op reis.']};
+const LANDLBL={'Frankrijk':'Produit de France','Italië':'Prodotto in Italia','Spanje':'Producto de España','Portugal':'Produto de Portugal','Duitsland':'Deutschland','Nederland':'Nederlandse wijn','Zuid-Afrika':'Wine of South Africa','Chili':'Product of Chile','Argentinië':'Industria Argentina','Verenigde Staten':'Product of USA','Australië':'Product of Australia','Nieuw-Zeeland':'Product of New Zealand','Griekenland':'Product of Greece','Hongarije':'Product of Hungary','Georgië':'Product of Georgia','Libanon':'Product of Lebanon','Uruguay':'Producto de Uruguay','België':'Belgische wijn','Zwitserland':'Vin suisse / Schweizer Wein','Canada':'Product of Canada','Japan':'Product of Japan','Israël':'Product of Israel','Kroatië':'Product of Croatia','Luxemburg':'Moselle Luxembourgeoise'};
+function gidTip(sl,set){
+  const m=sl.m||{},q=x=>`„${x}"`;
+  if(m.app&&m.app.length)return `Zoek op het etiket naar ${m.app.slice(0,3).map(q).join(m.app.length>2?', ':' of ').replace(/, ([^,]*)$/,' of $1')}.`;
+  if(m.tag)return `Zoek op het etiket naar ${q(m.tag.replace(/^./,x=>x.toUpperCase()))}.`;
+  if(m.key)return `Herken hem aan de naam ${q(sl.l)} op het etiket.`;
+  const ra=m.regio&&SETS.find(x=>x.part===1&&x.area===m.regio),where=m.land||(ra?ra.name.replace(/ I+$/,''):(m.regio==='californie'?'Californië':m.regio==='oregon'?'Oregon':m.regio==='washington'?'Washington State':set.land||''));
+  if(m.grape)return `Kijk op het (achter)etiket naar de druif ${q(m.grape)}${where?` en de herkomst ${where}`:''}.`;
+  if(m.style==='mousserend')return `Mousserende wijn uit ${m.land}: kijk op het etiket naar het land van herkomst.`;
+  if(m.color)return `Zoek naar ${q(sl.l)} op het etiket.`;
+  if(m.land)return `Kijk op het etiket naar het land van herkomst, bijvoorbeeld ${q(LANDLBL[m.land]||m.land)}.`;
+  return '';
+}
+function openGids(gid){
+  const [sid,k]=gid.split('|'),set=SETS.find(x=>x.id===sid),sl=set&&set.slots[+k];if(!sl)return;
+  const g=(typeof GIDS!=='undefined'&&GIDS[sid]&&GIDS[sid][sl.l])||[];
+  const D=DIFFTXT[sl.d]||DIFFTXT[2],tip=g[2]||gidTip(sl,set);
+  const canScan=session&&scansToday()<LIMIT;
+  const o=overlay(`<div class="gidcard" role="document">
+      <p class="geb">${esc(set.name)} · leeg vak</p>
+      <h3>${esc(sl.l)}</h3>
+      <div class="gchips"><span class="gchip d${sl.d}">${D[0]} ${D[1]}</span>${g[1]?`<span class="gchip">€ ${esc(g[1].replace(/^€\s?/,''))}</span>`:''}</div>
+      ${g[0]?`<h4>Wat is het?</h4><p class="gt">${esc(g[0])}</p>`:''}
+      <h4>Waar vind je hem?</h4><p class="gt">${esc(D[2])}</p>
+      ${tip?`<h4>Zo herken je hem</h4><p class="gt">${esc(tip)}</p>`:''}
+      <p class="gnote">Prijzen zijn een indicatie voor een gangbare fles.</p>
+    </div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button>${canScan?'<button class="btn primary" id="gscan">Gevonden? Scan hem</button>':''}</div>`);
+  o.classList.add('leather');
+  const c=o.querySelector('#close');c.onclick=()=>closeOverlay();c.focus();
+  const gs=o.querySelector('#gscan');if(gs)gs.onclick=()=>{closeOverlay();$('#scan').click()};
 }
 function openFeedback(){
   if(!session){toast('Log eerst in om feedback te sturen.');return}
@@ -716,8 +763,9 @@ function mini(c){
   if(c.rar==='ultra') return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face">${ultraFill(areaOf(c),c.v)}${layers('ultra')}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
-function slotHTML(c,label,d){
-  return `<div class="slot"><div class="sleeve">${c?mini(c):`<div class="empty d${d||0}">${d?DIFF[d]:''}</div>`}</div><span class="slabel">${esc(label)}</span></div>`;
+function slotHTML(c,label,d,gid){
+  const empty=gid?`<button class="empty d${d||0} gidbtn" data-gid="${esc(gid)}" aria-label="Waar vind ik ${esc(label)}?">${d?DIFF[d]:''}<span class="gq" aria-hidden="true">?</span></button>`:`<div class="empty d${d||0}">${d?DIFF[d]:''}</div>`;
+  return `<div class="slot"><div class="sleeve">${c?mini(c):empty}</div><span class="slabel">${esc(label)}</span></div>`;
 }
 const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="none" stroke="#D2AE62" stroke-width="1.6"><path d="M30 4 C30 10 34 12 38 12"/><path d="M30 8 C24 6 18 9 17 14 C24 15 28 12 30 8Z"/>${[[22,22],[30,22],[38,22],[26,30],[34,30],[42,30],[18,30],[22,38],[30,38],[38,38],[26,46],[34,46],[30,54]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4.6"/>`).join('')}</g></svg>`;
 
@@ -840,7 +888,7 @@ function makePage(i){
   const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Verzamellijst';
   el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
     ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
-    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d)).join('')}</div>${pageFoot(i)}`;
+    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k)).join('')}</div>${pageFoot(i)}`;
   return el;
 }
 function makeLeaf(i){
@@ -912,6 +960,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="logout"]')){logout();return}
   const g=e.target.closest('[data-go]');if(g){go(+g.dataset.go);return}
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
+  const gb=e.target.closest('.gidbtn');if(gb){openGids(gb.dataset.gid);return}
   const m=e.target.closest('.mini');if(m)pullOut(m);
 });
 $('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
@@ -1209,6 +1258,7 @@ function openInfo(){
       <span style="font-size:13px;color:var(--gold-soft);font-variant-numeric:tabular-nums">${TIERS[t].odds}</span></div>`).join('')}</div>
     <p class="hint">Percentages zijn de kans per scan. Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. Je hebt 3 scans per dag. Elke wijn levert één kaart op. Scan je een wijn die je al hebt, dan kun je herproeven: bedoeld voor een nieuwe fles van dezelfde wijn. Het kost een scan, kan hooguit één keer per dag per wijn, en alleen een hogere klasse vervangt je kaart.</p>
     <p class="hint">Scannen: maak een foto van het etiket, recht van voren en scherp. De app leest naam, producent, jaargang en herkomst, en maakt de kaart. Bij een Rare wordt jouw foto de posterafbeelding.</p>
+    <p class="hint">Tik op een leeg vak voor uitleg: wat het is, wat het ongeveer kost en waar je zo'n fles vindt.</p>
     <p class="hint">Elk vak in een set heeft een naam. Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets verschijnen pas als je een andere voltooit, of als je de eerste passende wijn vindt. Een rode stempel betekent dat jij de wijn als eerste in Vined It scande.</p>
     ${session?`<p class="hint">Ingelogd als ${esc(session.user.email)}</p>`:''}
     <div class="actions">${session?'<button class="btn" data-act="logout">Uitloggen</button>':''}<button class="btn primary" id="close">Terug naar album</button></div>`);
