@@ -466,7 +466,7 @@ button{font:inherit;color:inherit}
 .album{flex:1;min-height:0;display:flex;flex-direction:column}
 .stack{flex:1;min-height:0;grid-template-rows:minmax(0,1fr)}
 .leaf,.leaf>.page,.leaf>.leafback{min-height:0;height:100%}
-.leaf>.page{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.leaf>.page{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;touch-action:pan-y}
 .leaf>.page::-webkit-scrollbar{display:none}
 .grid{grid-template-columns:repeat(3,minmax(0,var(--sw,1fr)));justify-content:center}
 .fgrid{grid-template-columns:repeat(3,minmax(0,var(--fsw,1fr)))}
@@ -1340,8 +1340,14 @@ document.addEventListener('click',e=>{
   const m=e.target.closest('.mini');if(m)pullOut(m);
 });
 $('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
-stack.addEventListener('pointerdown',e=>{if(e.target.closest('form'))return;sx0=e.clientX;swiped=false});
-stack.addEventListener('pointerup',e=>{if(sx0===null)return;const dx=e.clientX-sx0;sx0=null;if(Math.abs(dx)>50){swiped=true;go(cur+(dx<0?1:-1))}});
+// Bladeren: muis via pointer-events, vinger via touch-events (die blijven werken als de bladzijde zelf kan scrollen)
+stack.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.target.closest('form'))return;sx0=e.clientX;swiped=false});
+stack.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse'||sx0===null)return;const dx=e.clientX-sx0;sx0=null;if(Math.abs(dx)>50){swiped=true;go(cur+(dx<0?1:-1))}});
+let tx0=null,ty0=null;
+stack.addEventListener('touchstart',e=>{if(e.target.closest('form')||e.touches.length!==1){tx0=null;return}tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;swiped=false},{passive:true});
+stack.addEventListener('touchend',e=>{if(tx0===null)return;const t=e.changedTouches[0],dx=t.clientX-tx0,dy=t.clientY-ty0;tx0=null;
+  if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3){swiped=true;go(cur+(dx<0?1:-1));setTimeout(()=>{swiped=false},400)}},{passive:true});
+stack.addEventListener('touchcancel',()=>{tx0=null},{passive:true});
 document.addEventListener('keydown',e=>{if(document.querySelector('.overlay')){if(e.key==='Escape')popOverlay();return}if(e.target.closest('input'))return;if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
 
 /* ---------- kantelen ---------- */
