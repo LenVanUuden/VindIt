@@ -12,6 +12,7 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 - Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **verzamellijsten** (druiven, bubbels, Wereldreiziger, Icons).
 - **Kelderboek** (de inhoudsopgave) en **Top 10**: zet je favoriete kaarten op een eigen bladzijde, met nummer 1 bovenaan.
 - **Herinnering schrijven:** een korte tekst (max. 140 tekens) in handschrift op de achterkant van een kaart, met datum. De grote kaart is rond te draaien.
+- **Kaarten:** een bladzijde "Mijn wijnwereld" (wereld + Europa, ontdekte landen in goud, tik om erheen te gaan) en een kaartje rechtsboven op elke bladzijde met speldjes per streek of vak. De kaartdata (`maps.js`) is vooraf berekend uit Natural Earth (publiek domein); het speldje markeert waar een streek ligt, niet de officiële grenzen.
 - **Groeiend album:** een land of regioset krijgt pas een bladzijde bij je eerste passende wijn. Nog niet ontdekte landen en sets staan grijs op de Inhoud en zijn als voorbeeld te bekijken.
 - Tik op een leeg vak voor een gids: wat het is, prijsindicatie, type winkel en waar je op het etiket op let (`gids.js`).
 - Een kaart telt automatisch mee voor elke set waar hij past. Sommige sets worden pas zichtbaar als je een andere voltooit of de eerste passende wijn vindt. Zie `docs/setcatalogus.md`.

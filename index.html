@@ -444,6 +444,38 @@ button{font:inherit;color:inherit}
 .fx-ultra i:nth-child(3n),.fx-icon i:nth-child(3n),.fx-superrare i:nth-child(4n){border-radius:1px;transform:rotate(45deg)}
 @keyframes spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
 @media (prefers-reduced-motion: reduce){.spin{transition:none}.flipper.open{transition:none}}
+/* Kaarten */
+.minimap{position:absolute;top:12px;right:10px;z-index:3;width:58px;height:58px;padding:3px;border:1px solid rgba(233,211,160,.28);border-radius:8px;background:rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.minimap.wide{width:76px;height:42px}
+.minimap svg{width:100%;height:100%;display:block}
+.page.hasmap>div:nth-child(2){padding-right:66px}
+.page.hasmap h2{text-wrap:balance}
+.minimap .land,.bigmap .land{fill:rgba(233,211,160,.2);stroke:rgba(233,211,160,.7);stroke-width:.6;stroke-linejoin:round}
+.minimap.wide .land{stroke-width:1.5}
+.pin circle{fill:rgba(20,12,10,.6);stroke:var(--gold-soft);stroke-width:.7}
+.pin.on circle{fill:var(--gold);stroke:#2B1308}
+.pin.cur circle{stroke:#fff;stroke-width:1.1}
+.pin text{fill:#2B1308;text-anchor:middle;font-family:var(--body);font-weight:700}
+.pin:not(.on) text{fill:var(--gold-soft)}
+.bigmap{width:min(90vw,420px);max-height:56vh;display:flex;justify-content:center}
+.bigmap svg{max-width:100%;max-height:56vh;height:auto;width:100%}
+.bigmap .land{stroke-width:.35;fill:rgba(233,211,160,.16)}
+.bigmap .pin{cursor:pointer}
+.bigmap.world .land{stroke-width:1.2}
+.legend{max-height:30vh;overflow-y:auto}
+.legend b{font-size:13px}
+.wdot{fill:var(--gold);stroke:#2B1308;stroke-width:2}
+.maplink{background:rgba(210,174,98,.1);border:1px solid rgba(210,174,98,.45);color:var(--gold-soft);border-radius:999px;padding:7px 12px;font-size:12.5px;cursor:pointer;align-self:flex-start}
+.worldpage{gap:8px}
+.wmap{border-radius:6px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(233,211,160,.25)}
+.wmap svg{display:block;width:100%;height:auto}
+.wmap .sea{fill:#C8B48C}
+.wmap path{fill:#EFE4CC;stroke:#8B6A3A;stroke-width:.5;stroke-linejoin:round}
+.wmap .eu path{stroke-width:.8}
+.wmap path.wine{fill:#F8F0DE;stroke:#6B4E2A;cursor:pointer}
+.wmap path.own{fill:#B8862F;stroke:#5A3A12;cursor:pointer}
+.wmap .wpin{fill:#7A1F2A;stroke:#F8F0DE;stroke-width:1.6}
+.bigmap .sea,.minimap .sea{fill:none}
 /* Scanner */
 .overlay.leather{background-color:var(--leather-dark);background-image:radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0),rgba(0,0,0,.45)),var(--leathergrain)}
 .overlay.scanner{justify-content:space-between;gap:12px}
@@ -504,6 +536,7 @@ button{font:inherit;color:inherit}
 <script src="data.js"></script>
 <script src="art.js"></script>
 <script src="gids.js"></script>
+<script src="maps.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -715,6 +748,7 @@ function buildPages(){
   const P=[{t:'cover'},{t:'inhoud'}];
   if(session){
     P.push({t:'fav'});
+    if(typeof MAPS!=='undefined')P.push({t:'world'});
     for(const land of st.allLands){
       if(!st.lands.includes(land))continue;          // groeiend album: een land verschijnt bij je eerste wijn
       const vis=visSets(land),sets=vis.filter(started);
@@ -898,7 +932,93 @@ function wireLogin(el){
 function pageFoot(i){return `<div class="pfoot"><span>Vined It</span><span>Blad ${i}</span></div>`}
 function progress(have,n){return `<div class="progress"><span>${have} van ${n}</span><div class="bar"><span style="width:${have/n*100}%"></span></div></div>`}
 function firstPageOf(pred){return pages.findIndex(pred)}
+/* ---------- kaarten ---------- */
+const NAME_OF_ISO=typeof MAPS!=='undefined'?Object.fromEntries(Object.entries(MAPS.ISO).map(([n,i])=>[i,n])):{};
+function proj(m,lat,lon){return [(lon-m.b[0])*m.k*m.c,(m.b[3]-lat)*m.k]}
+function worldStats(){const tot=Object.keys(MAPS.ISO).length,have=Object.keys(MAPS.ISO).filter(n=>cards.some(c=>c.land===n)).length;return {have,tot}}
+function cardPin(c){
+  for(const set of SETS){if(set.part!==1||set.land!==c.land)continue;const f=filledOf(set),k=f.findIndex(x=>x&&x.id===c.id);if(k<0)continue;
+    const sp=PINS.slot[set.id]&&PINS.slot[set.id][set.slots[k].l];if(sp)return sp;if(PINS.set[set.id])return PINS.set[set.id]}
+  const ce=MAPS.centroid[c.land];return ce?[ce[1],ce[0]]:null;
+}
+function landPins(land){
+  const sets=SETS.filter(x=>x.part===1&&x.land===land&&st.visible[x.id]);
+  if(sets.length===1&&PINS.slot[sets[0].id])return setPins(sets[0]);
+  return sets.filter(x=>PINS.set[x.id]).map(x=>({ll:PINS.set[x.id],label:x.name,on:started(x),go:firstPageOf(q=>q.set===x),prev:x.id,sub:filledOf(x).filter(Boolean).length+' / '+x.slots.length}));
+}
+function setPins(set){
+  if(PINS.slot[set.id]){const f=filledOf(set);return set.slots.map((sl,k)=>({sl,k})).filter(o=>PINS.slot[set.id][o.sl.l]).map(o=>({ll:PINS.slot[set.id][o.sl.l],label:o.sl.l,on:!!f[o.k],gid:set.id+'|'+o.k,sub:f[o.k]?f[o.k].naam:'nog leeg'}))}
+  return landPins(set.land).map(p=>({...p,cur:p.prev===set.id}));
+}
+function pinSVG(m,pins,big){
+  const r=m.w*(big?.022:.05);
+  return pins.map((p,n)=>{const [x,y]=proj(m,p.ll[0],p.ll[1]);
+    return `<g class="pin${p.on?' on':''}${p.cur?' cur':''}"${big?` data-pin="${n}"`:''}><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(p.cur?r*1.35:r).toFixed(2)}"/>${big?`<text x="${x.toFixed(1)}" y="${(y+r*.42).toFixed(1)}" font-size="${(r*1.15).toFixed(2)}">${n+1}</text>`:''}</g>`}).join('');
+}
+function landSVG(land,pins,big){
+  const m=MAPS.lands[land];if(!m)return '';
+  return `<svg viewBox="0 0 ${m.w} ${m.h}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path class="land" d="${m.d}"/>${pinSVG(m,pins,big)}</svg>`;
+}
+function dotsWorld(list,r=13){const m=MAPS.world;return list.map(ll=>{const [x,y]=proj(m,ll[0],ll[1]);return `<circle class="wdot" cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r}"/>`}).join('')}
+function worldSVG(m,eu,dots){
+  const cnt={};cards.forEach(c=>{const id=MAPS.ISO[c.land];if(id)cnt[id]=(cnt[id]||0)+1});
+  const max=Math.max(1,...Object.values(cnt));
+  const paths=Object.entries(m.d).map(([id,d])=>{const n=cnt[id]||0,wine=!!NAME_OF_ISO[id];
+    const style=n?` style="fill-opacity:${(0.45+0.55*Math.min(1,n/Math.max(4,max))).toFixed(2)}"`:'';
+    return `<path d="${d}" class="${n?'own':wine?'wine':''}"${wine?` data-wland="${esc(NAME_OF_ISO[id])}"`:''}${style}/>`}).join('');
+  let pins='';
+  if(eu){const ps=[];for(const set of SETS){if(set.part!==1||!st.visible[set.id]||!started(set))continue;
+      if(PINS.set[set.id])ps.push({ll:PINS.set[set.id],on:true});else if(PINS.slot[set.id]){const f=filledOf(set);set.slots.forEach((sl,k)=>{if(f[k]&&PINS.slot[set.id][sl.l])ps.push({ll:PINS.slot[set.id][sl.l],on:true})})}}
+    pins=ps.map(p=>{const [x,y]=proj(m,p.ll[0],p.ll[1]);return `<circle class="wpin" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5"/>`}).join('')}
+  return `<svg viewBox="0 0 ${m.w} ${m.h}" class="${eu?'eu':'wd'}"><rect width="${m.w}" height="${m.h}" class="sea"/>${paths}${pins}${dots||''}</svg>`;
+}
+function miniMapFor(p){
+  if(typeof MAPS==='undefined')return '';
+  if(p.t==='set'&&p.set.part===1&&MAPS.lands[p.set.land])return `<button class="minimap" data-map="set:${p.set.id}" aria-label="Kaart van ${esc(p.set.name)}">${landSVG(p.set.land,setPins(p.set),false)}</button>`;
+  if((p.t==='chapter'||p.t==='overige')&&MAPS.lands[p.land])return `<button class="minimap" data-map="land:${esc(p.land)}" aria-label="Kaart van ${esc(p.land)}">${landSVG(p.land,landPins(p.land),false)}</button>`;
+  if((p.t==='set'&&p.set.part===2)||(p.t==='overige'&&p.land==='Overige landen')){
+    const list=(p.t==='set'?filledOf(p.set).filter(Boolean):(st.overflow['Overige landen']||[])).map(cardPin).filter(Boolean);
+    return `<button class="minimap wide" data-map="${p.t==='set'?'list:'+p.set.id:'list:overig'}" aria-label="Wereldkaart">${worldMini(list)}</button>`;
+  }
+  return '';
+}
+function worldMini(list){const m=MAPS.world;return `<svg viewBox="0 0 ${m.w} ${m.h}" aria-hidden="true"><path class="land" d="${Object.values(m.d).join('')}"/>${dotsWorld(list,34)}</svg>`}
+function openMap(spec){
+  const [kind,id]=[spec.slice(0,spec.indexOf(':')),spec.slice(spec.indexOf(':')+1)];
+  let title='',svg='',pins=[];
+  if(kind==='set'){const set=SETS.find(x=>x.id===id);title=set.name;pins=setPins(set);svg=landSVG(set.land,pins,true)}
+  else if(kind==='land'){title=id;pins=landPins(id);svg=landSVG(id,pins,true)}
+  else{const set=SETS.find(x=>x.id===id);title=set?set.name:'Overige landen';
+    const list=(set?filledOf(set).filter(Boolean):(st.overflow['Overige landen']||[]));
+    svg=`<svg viewBox="0 0 ${MAPS.world.w} ${MAPS.world.h}">${`<rect width="${MAPS.world.w}" height="${MAPS.world.h}" class="sea"/>`}<path class="land" d="${Object.values(MAPS.world.d).join('')}"/>${dotsWorld(list.map(cardPin).filter(Boolean))}</svg>`;
+    pins=list.map(c=>({label:c.naam,sub:c.land,on:true,card:c.id}))}
+  const legend=pins.map((p,n)=>`<button class="${p.on?'':'dim'}" data-leg="${n}"><b>${kind==='list'?'●':n+1} ${esc(p.label)}</b><span>${esc(p.sub||'')}</span></button>`).join('');
+  const o=overlay(`<p class="eyebrow">Kaart</p><p class="status">${esc(title)}</p><div class="bigmap${kind==='list'?' world':''}">${svg}</div>
+    ${pins.length?`<div class="lands legend">${legend}</div>`:''}<div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.classList.add('leather');
+  const act=n=>{const p=pins[n];if(!p)return;
+    if(p.card){closeOverlay();openCard(p.card);return}
+    if(p.gid){openGids(p.gid);return}
+    if(p.go>=0){closeOverlay();go(p.go);return}
+    if(p.prev)openSetPreview(p.prev)};
+  o.querySelectorAll('[data-leg]').forEach(b=>b.onclick=()=>act(+b.dataset.leg));
+  o.querySelectorAll('[data-pin]').forEach(g=>g.addEventListener('click',()=>act(+g.dataset.pin)));
+  o.querySelector('#close').onclick=()=>closeOverlay();o.querySelector('#close').focus();
+}
+function openWorldLand(land){
+  const k=firstPageOf(q=>q.land===land);
+  if(k>=0){go(k);return}
+  if(LANDS.includes(land)){openLandPreview(land);return}
+  const ok=firstPageOf(q=>q.land==='Overige landen');
+  if(cards.some(c=>c.land===land)&&ok>=0){go(ok);return}
+  toast(`Nog geen wijn uit ${land}. Een wijn uit ${land} telt mee voor Wereldreiziger II.`);
+}
 function makePage(i){
+  const el=makePage0(i),mm=miniMapFor(pages[i]);
+  if(mm){el.classList.add('hasmap');el.insertAdjacentHTML('afterbegin',mm)}
+  return el;
+}
+function makePage0(i){
   const p=pages[i],el=document.createElement('section');el.className='page';
   if(p.t==='cover'){el.classList.add('cover');el.innerHTML=coverHTML();wireLogin(el);return el}
   if(p.t==='inhoud'){
@@ -913,6 +1033,7 @@ function makePage(i){
     const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
     el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Kelderboek</h2></div>
       <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b>${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
+      ${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">🗺 Mijn wijnwereld · ${worldStats().have} van ${worldStats().tot} wijnlanden</button>`:''}
       <p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>
       <p class="eyebrow toch">Verzamellijsten</p><ul class="toc">${ltoc}</ul>
       <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} verzamellijsten zijn nog verborgen`:''}.</p>
@@ -927,6 +1048,16 @@ function makePage(i){
     el.innerHTML=`<div class="favtop">${fslot(1,true)}<div class="favhead"><p class="eyebrow">Mijn favorieten</p><h2 class="foil">Top 10</h2>
         <p class="note">${favs.length?(one?esc(one.naam)+' staat op nummer 1.':''):'Open een kaart en tik op ★ Top 10 om hem hier te zetten.'}</p></div></div>
       <div class="grid fgrid">${[2,3,4,5,6,7,8,9,10].map(r=>fslot(r,false)).join('')}</div>${pageFoot(i)}`;
+    return el;
+  }
+  if(p.t==='world'){
+    const ws=worldStats();
+    el.classList.add('worldpage');
+    el.innerHTML=`<div><p class="eyebrow">${ws.have} van ${ws.tot} wijnlanden ontdekt</p><h2 class="foil">Mijn wijnwereld</h2></div>
+      <div class="wmap">${worldSVG(MAPS.world,false)}</div>
+      <p class="eyebrow toch">Europa</p>
+      <div class="wmap">${worldSVG(MAPS.europe,true)}</div>
+      <p class="note">Tik op een land. Goud betekent ontdekt: hoe voller, hoe meer kaarten.</p>${pageFoot(i)}`;
     return el;
   }
   if(p.t==='chapter'){
@@ -1026,6 +1157,8 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="lists"]')){openLists();return}
   const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
   const lp=e.target.closest('[data-land]');if(lp){openLands(lp.dataset.land);return}
+  const mm=e.target.closest('[data-map]');if(mm){openMap(mm.dataset.map);return}
+  const wl=e.target.closest('[data-wland]');if(wl){openWorldLand(wl.dataset.wland);return}
   const pl=e.target.closest('[data-pland]');if(pl){openLandPreview(pl.dataset.pland);return}
   const pv=e.target.closest('[data-preview]');if(pv){openSetPreview(pv.dataset.preview);return}
   if(e.target.closest('[data-act="logout"]')){logout();return}

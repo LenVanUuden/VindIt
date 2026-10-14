@@ -626,3 +626,25 @@ const POOL = [
 ];
 
 if (typeof module !== 'undefined') module.exports = {LANDS, AREAS, LANDPAL, SETS, POOL};
+
+/* ---------- Kaartspeldjes: [breedte, lengte] ---------- */
+const PINS={
+  set:{'bordeaux-1':[44.9,-0.45],'bordeaux-2':[45.05,-0.35],'bourgogne-1':[47.05,4.85],'bourgogne-2':[46.9,4.75],'beaujolais':[46.1,4.6],'rhone':[44.6,4.8],
+    'loire':[47.3,0.4],'jura':[46.75,5.75],'champagne':[49.05,4.0],'elzas':[48.2,7.35],'languedoc':[43.4,3.1],'provence':[43.4,6.1],'zuidwest':[44.2,1.0],
+    'toscane':[43.35,11.2],'piemonte':[44.65,8.0],'veneto':[45.5,11.4],'midden-noord-italie':[43.6,12.6],'zuid-italie':[40.8,16.3],'sicilie':[37.55,14.2],
+    'rioja':[42.45,-2.55],'noordwest-spanje':[42.0,-5.6],'noordoost-spanje':[41.6,-0.6],'oost-spanje':[39.6,-0.9],'centraal-zuid-spanje':[38.9,-3.6]},
+  slot:{
+    'nieuw-zeeland':{'Marlborough':[-41.55,173.85],'Hawke\'s Bay':[-39.6,176.75],'Central Otago':[-45.0,169.2],'Martinborough / Wairarapa':[-41.2,175.45],'Nelson / Canterbury':[-43.0,172.7]},
+    'portugal':{'Vinho Verde':[41.75,-8.35],'Douro':[41.15,-7.6],'Alentejo':[38.55,-7.9],'Lisboa':[39.2,-9.15],'Porto':[41.13,-8.62],'Tejo':[39.35,-8.45],'Dão / Bairrada':[40.5,-8.0],'Setúbal':[38.5,-8.85]},
+    'duitsland':{'Mosel':[49.95,7.1],'Pfalz':[49.3,8.15],'Rheinhessen':[49.85,8.15],'Rheingau':[50.02,8.0],'Nahe':[49.78,7.7],'Baden':[48.2,7.8],'Franken':[49.8,10.0],'Württemberg':[48.9,9.25],'Ahr':[50.53,7.0]},
+    'oostenrijk':{'Weinviertel':[48.6,16.3],'Burgenland':[47.55,16.55],'Wachau':[48.37,15.42],'Kamptal':[48.5,15.72],'Kremstal':[48.38,15.62],'Neusiedlersee':[47.85,16.85],'Steiermark':[46.7,15.5],'Wien':[48.25,16.36],'Carnuntum':[48.1,16.85]},
+    'nederland':{'Limburg':[50.85,5.8],'Gelderland':[52.05,5.9],'Zeeland':[51.5,3.8],'Noord-Brabant':[51.55,5.1],'Utrecht / Overijssel':[52.25,5.9],'Holland en het Noorden':[52.95,6.0]},
+    'verenigd-koninkrijk':{'Sussex':[50.95,-0.3],'Kent':[51.2,0.8],'Hampshire':[51.05,-1.3],'Surrey / Essex':[51.5,0.2],'Wales':[52.3,-3.6]},
+    'zuid-afrika':{'Western Cape':[-33.4,20.0],'Stellenbosch':[-33.93,18.86],'Paarl':[-33.73,18.97],'Robertson':[-33.8,19.88],'Swartland':[-33.3,18.7],'Franschhoek':[-33.9,19.12],'Hemel-en-Aarde':[-34.37,19.3],'Elgin':[-34.17,19.05],'Constantia':[-34.02,18.42]},
+    'chili':{'Valle Central':[-35.2,-71.4],'Maipo':[-33.7,-70.7],'Colchagua':[-34.6,-71.3],'Casablanca':[-33.3,-71.4],'Curicó':[-35.0,-71.2],'Cachapoal':[-34.3,-70.9],'Maule':[-35.6,-71.6],'Aconcagua':[-32.8,-70.7],'Itata':[-36.6,-72.4]},
+    'argentinie':{'Mendoza':[-32.9,-68.85],'Luján de Cuyo':[-33.05,-68.9],'Valle de Uco':[-33.6,-69.2],'Maipú':[-32.98,-68.75],'Salta':[-26.0,-65.95],'San Juan':[-31.5,-68.5],'Patagonia':[-38.9,-68.1],'La Rioja':[-29.4,-66.9],'Catamarca':[-28.5,-65.8]},
+    'verenigde-staten':{'Californië':[37.0,-120.0],'Napa Valley':[38.5,-122.3],'Sonoma':[38.5,-122.9],'Lodi':[38.13,-121.27],'Paso Robles':[35.6,-120.7],'Santa Barbara':[34.65,-120.3],'Oregon':[45.1,-123.1],'Washington State':[46.3,-119.5],'New York':[42.6,-76.9]},
+    'australie':{'Barossa Valley':[-34.55,138.95],'McLaren Vale':[-35.22,138.55],'Coonawarra':[-37.29,140.83],'Margaret River':[-33.95,115.07],'Yarra Valley':[-37.7,145.5],'Hunter Valley':[-32.8,151.3],'Clare / Eden Valley':[-33.8,138.6],'Tasmanië':[-42.0,147.0]}
+  }
+};
+if(typeof module!=='undefined')module.exports.PINS=PINS;
