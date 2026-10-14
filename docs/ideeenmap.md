@@ -4,19 +4,20 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 
 | # | Idee | Bron | Waarde | Werk | Status |
 |---|---|---|---|---|---|
-| 1 | **Herinnering schrijven**: een eigen, handgeschreven notitie op de achterkant van een kaart | Len | Hoog: herinneringen maken van kaarten, onderscheidend | Middel | Klaar (wacht op livegang) |
-| 2 | **Spectaculairder omdraaien** van een nieuwe kaart | Tester | Hoog: het piekmoment van de app | Middel | Klaar (wacht op livegang) |
-| 3 | **Top 10**: eigen bladzijde direct na het Kelderboek, #1 bovenaan en 3×3 eronder | Tester | Middel | Klein | Klaar (wacht op livegang) |
-| 4 | **"Inhoud" hernoemen** naar "Kelderboek" (naam kan later nog veranderen) | Tester | Klein, maar sfeerverhogend | Heel klein | Klaar (wacht op livegang) |
+| 1 | **Herinnering schrijven**: een eigen, handgeschreven notitie op de achterkant van een kaart | Len | Hoog: herinneringen maken van kaarten, onderscheidend | Middel | Live |
+| 2 | **Spectaculairder omdraaien** van een nieuwe kaart | Tester | Hoog: het piekmoment van de app | Middel | Live |
+| 3 | **Top 10**: eigen bladzijde direct na het Kelderboek, #1 bovenaan en 3×3 eronder | Tester | Middel | Klein | Live |
+| 4 | **"Inhoud" hernoemen** naar "Kelderboek" (naam kan later nog veranderen) | Tester | Klein, maar sfeerverhogend | Heel klein | Live |
 | 5 | **Verbinden met andere gebruikers**: elkaars album bekijken | Tester | Hoog voor groei, maar pas zinvol met meer gebruikers | Groot | Later |
 | 6 | Druivenjager: open logboek voor zeldzame druiven | Len | Hoog | Klein | Idee |
 | 7 | Eigen sets ("Vakantie Toscane 2026") | Claude | Hoog | Middel | Idee |
 | 8 | Welkomstrondleiding (3 schermen) | Claude | Hoog voor nieuwe gebruikers | Klein | Idee |
 | 9 | "Koop deze fles" vanuit een leeg vak | Len | Verdienmodel | Middel (partners nodig) | Later |
 | 10 | Overzicht "Mijn kaarten" op datum | Claude | Middel | Klein | Idee |
-| 11 | **Interactieve wereldkaart** ("Mijn wijnwereld") | Tester | Middel-hoog: overzicht en trots | Middel | Klaar (wacht op livegang) |
-| 13 | **Stapels per vak**: extra kaarten op de stapel in hun vak, zeldzaamste bovenop, zelf te kiezen | Len | Hoog: elke kaart een plek in context, minder 'Overige' | Middel | Klaar (wacht op livegang) |
-| 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Klaar (wacht op livegang) |
+| 11 | **Interactieve wereldkaart** ("Mijn wijnwereld") | Tester | Middel-hoog: overzicht en trots | Middel | Live |
+| 13 | **Stapels per vak**: extra kaarten op de stapel in hun vak, zeldzaamste bovenop, zelf te kiezen | Len | Hoog: elke kaart een plek in context, minder 'Overige' | Middel | Live |
+| 14 | **Walk-out bij nieuwe kaart** (FIFA-stijl): land, druif, streek, kaart; Ultra/Icon extra drama; overslaan kan altijd | Len | Hoog: het piekmoment verlengen | Middel | Live |
+| 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)
 
