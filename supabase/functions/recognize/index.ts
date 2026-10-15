@@ -61,10 +61,12 @@ Label design (label_style): describe the FRONT label so the app can draw a simpl
 - font: letter style of the wine name: "condensed" (tall narrow), "classic" (old-style serif), "didone" (high-contrast elegant serif), "script" (handwriting), "gothic" (blackletter), "modern" (clean sans-serif), "display" (decorative art-deco).
 - upper: true if the name is in capitals.
 - layout: where the name sits: "top", "center" or "bottom".
-- emblem: the main picture: type "crest" (coat of arms, shield, crown), "castle" (château, building), "sun" (striped or round sun/circle), "abstract" (colourful shape), "bull" (animal), "grapes", "leaf", "stars" or "none"; color as hex, or "metal"; size "normal" or "large".
+- emblem: the main picture: type "crest" (coat of arms, shield, crown), "castle" (château, building), "sun" (striped or round sun/circle), "abstract" (only for a non-figurative colourful shape; a drawing, engraving or photo of a building is always "castle"), "bull" (animal), "grapes", "leaf", "stars" or "none"; color as hex, or "metal"; size "normal" or "large".
 - mark: an optional second, smaller graphic element (same types), with color; omit if none.
 - border: "none", "thin", "double", "frame" (thick) or "band" (colored band at the bottom); border_color as hex or "metal".
 - name_color: hex or "metal" if the name is printed in foil, else omit.
+- sub_color: hex if the appellation line is printed in a striking colour (e.g. red capitals), else omit.
+- layout "top" means: name at the top, picture below it, appellation below the picture.
 - lines: name = wine name as printed most prominently; top = small line above (e.g. "Grand Vin de Bordeaux"); sub = appellation or cuvée line; bottom = producer or small line at the bottom. Keep each line short (max ~30 characters).`;
 
 const TOOL = {
@@ -109,6 +111,7 @@ const TOOL = {
           border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] },
           border_color: { type: "string" },
           name_color: { type: "string" },
+          sub_color: { type: "string" },
           lines: { type: "object", properties: { name: { type: "string" }, top: { type: "string" }, sub: { type: "string" }, bottom: { type: "string" } } },
         },
         required: ["paper", "ink", "accent", "font", "layout", "emblem"],
@@ -135,7 +138,7 @@ function cleanStyle(s: Record<string, unknown>) {
     font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
     emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
     mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
-    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color),
+    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color), sub_color: col(s.sub_color),
     lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },
   };
 }

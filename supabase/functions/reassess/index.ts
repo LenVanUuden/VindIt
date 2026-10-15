@@ -54,8 +54,8 @@ const LABEL_SYSTEM = `You describe wine labels for a Dutch wine-collecting app t
 - paper / ink / accent: hex colors. metal: "gold", "silver" or "none".
 - font: "condensed" (tall narrow), "classic" (old-style serif), "didone" (elegant high-contrast serif), "script", "gothic" (blackletter), "modern" (sans-serif), "display" (art-deco).
 - upper: name in capitals? layout: name at "top", "center" or "bottom".
-- emblem: type "crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars" or "none"; color hex or "metal"; size "normal"/"large". mark: optional second small element.
-- border: "none", "thin", "double", "frame", "band"; border_color hex or "metal". name_color: hex or "metal" for foil names.
+- emblem: type "crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars" or "none" (a drawing or photo of a building is always "castle"; "abstract" only for non-figurative shapes); color hex or "metal"; size "normal"/"large". mark: optional second small element.
+- border: "none", "thin", "double", "frame", "band"; border_color hex or "metal". name_color: hex or "metal" for foil names. sub_color: hex if the appellation line is in a striking colour.
 - lines: name (as printed), top, sub, bottom; max ~30 characters each.`;
 const STYLE_SCHEMA = {
   type: "object",
@@ -66,7 +66,7 @@ const STYLE_SCHEMA = {
     upper: { type: "boolean" }, layout: { type: "string", enum: ["top", "center", "bottom"] },
     emblem: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] } } },
     mark: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
-    border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] }, border_color: { type: "string" }, name_color: { type: "string" },
+    border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] }, border_color: { type: "string" }, name_color: { type: "string" }, sub_color: { type: "string" },
     lines: { type: "object", properties: { name: { type: "string" }, top: { type: "string" }, sub: { type: "string" }, bottom: { type: "string" } } },
   },
   required: ["paper", "ink", "accent", "font", "layout", "emblem"],
@@ -82,7 +82,7 @@ function cleanStyle(s: Record<string, unknown>) {
     font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
     emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
     mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
-    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color),
+    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color), sub_color: col(s.sub_color),
     lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },
   };
 }

@@ -36,7 +36,9 @@ const ETK_EMB={
     <path d="M10 82c20-3 60-3 80 0" stroke-width="1"/></g>`,
   sun:(c)=>`<g><defs><clipPath id="etks${ETK_N}"><circle cx="50" cy="50" r="30"/></clipPath></defs>
     <g clip-path="url(#etks${ETK_N})" stroke="${c}" stroke-width="2.6">${Array.from({length:16},(_,i)=>`<path d="M14 ${21+i*3.8}h72"/>`).join('')}</g></g>`,
-  abstract:()=>`<g transform="translate(50 50)">${['#E8582C','#F2B33D','#F6D86B','#9BC57A','#3D9A7A','#3E79B8','#5B5FA8','#B4557E'].map((col,i,a)=>{const a0=i/a.length*Math.PI*2,a1=(i+1)/a.length*Math.PI*2;return `<path d="M0 0L${(Math.cos(a0)*38).toFixed(1)} ${(Math.sin(a0)*26).toFixed(1)}A38 26 0 0 1 ${(Math.cos(a1)*38).toFixed(1)} ${(Math.sin(a1)*26).toFixed(1)}Z" fill="${col}" opacity=".88"/>`}).join('')}<ellipse rx="38" ry="26" fill="url(#etkgl${ETK_N})"/></g>`,
+  /* abstract: rustige vormen in tinten van de etiketkleur (geen regenboog) */
+  abstract:(c)=>{const sh=(t)=>{if(!/^#[0-9a-f]{6}$/i.test(c))return c;const n=parseInt(c.slice(1),16),r=n>>16&255,g=n>>8&255,b=n&255,m=t<0?0:255,k=Math.abs(t);return '#'+[r,g,b].map(v=>Math.round(v+(m-v)*k).toString(16).padStart(2,'0')).join('')};
+    return `<g transform="translate(50 50)"><ellipse cx="-9" cy="-3" rx="24" ry="20" fill="${sh(.35)}" opacity=".85"/><ellipse cx="10" cy="4" rx="22" ry="18" fill="${sh(0)}" opacity=".85"/><path d="M-30 14 Q0 -4 30 14" fill="none" stroke="${sh(-.35)}" stroke-width="3" stroke-linecap="round"/><ellipse cx="2" cy="-6" rx="9" ry="7" fill="${sh(.6)}" opacity=".7"/></g>`},
   bull:(c)=>`<path d="M18 50c0-6 6-10 14-10h30c4-4 10-6 16-4 4 1 6 5 5 9l-2 6c-1 3-4 4-7 4v15h-6l-2-10c-8 3-18 3-26 0l-2 10h-6l1-12c-6 0-10-3-12-6-2 2-4 6-4 9l-2-1c0-5 2-8 3-10z" fill="${c}"/><path d="M74 37c-2-6-8-9-14-8 5 2 8 4 9 8M82 38c4-5 10-6 14-3-4 0-8 2-10 6" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`,
   grapes:(c,ink)=>`<g fill="${c}" stroke="${ink}" stroke-width=".8">${[[38,38],[50,36],[62,38],[44,49],[56,49],[38,60],[50,60],[62,60],[44,71],[56,71],[50,82]].map(([x,y])=>`<circle cx="${x}" cy="${y-6}" r="6.4"/>`).join('')}</g><path d="M50 30V16c6-6 16-6 20 0" fill="none" stroke="${c}" stroke-width="2"/>`,
   leaf:(c)=>`<path d="M50 84V54M50 54c-4-8-14-8-20-14 6-1 9-5 8-11-6 2-12 0-16-6 8-2 14-1 18 3 0-8 4-14 10-18 6 4 10 10 10 18 4-4 10-5 18-3-4 6-10 8-16 6-1 6 2 10 8 11-6 6-16 6-20 14z" fill="${c}" stroke="${c}" stroke-width="1.4"/>`,
@@ -67,10 +69,11 @@ function makeLabelSVG(st,c){
   const txt=(s,y,size,fill,fam,wt,ls,extra='')=>`<text x="150" y="${y.toFixed(1)}" text-anchor="middle" font-family="${fam}" font-weight="${wt}" font-size="${size.toFixed(1)}" letter-spacing="${ls}" fill="${fill}" ${extra}>${esc(s)}</text>`;
   const fit=s=>s.length*fs*(st.font==='condensed'?.5:.62)>236?`textLength="236" lengthAdjust="spacingAndGlyphs"`:'';
   const nameSvg=lines.map((s,i)=>txt(s,yName+i*fs*1.02,fs,nameFill,F.f,F.w,(F.ls*fs).toFixed(1),fit(s)+(st.font==='condensed'?' transform="scale(1 1.18)" transform-origin="150 '+(yName+i*fs*1.02).toFixed(0)+'"':''))).join('');
-  let y=yName+nameH-fs*.55;
+  // bij 'top' staan jaar en herkomst onder het embleem, zoals op de meeste Bordeaux-etiketten
+  let y=(layout==='top'&&emb!=='none')?yEmb+44*embS-10:yName+nameH-fs*.55;
   const yearSvg=(c&&c.jaar||L.year)?txt(String(L.year||c.jaar),(layout==='top'?y+20:y+24),17,st.year_color||ink,ETK_SMALL,600,2):'';
   if(yearSvg)y+=layout==='top'?20:24;
-  const subSvg=L.sub?txt(L.sub,y+24,13,ink,ETK_SMALL,600,1,'font-style="italic"'):'';
+  const subSvg=L.sub?(st.sub_color?txt(String(L.sub).toUpperCase(),y+24,12.5,st.sub_color,F.f,F.w,1):txt(L.sub,y+24,13,ink,ETK_SMALL,600,1,'font-style="italic"')):'';
   const topSvg=L.top?txt(String(L.top).toUpperCase(),48,9.5,ink,ETK_SMALL,600,3):'';
   const botSvg=L.bottom?txt(String(L.bottom).toUpperCase(),362,st.bottom_big?15:9.5,st.bottom_big?ink:ink,st.bottom_big?F.f:ETK_SMALL,st.bottom_big?F.w:600,st.bottom_big?3:2.4):'';
   const embSvg=emb==='none'?'':`<g transform="translate(${150-50*embS*1.2} ${yEmb-50*embS*1.2}) scale(${1.2*embS})">${ETK_EMB[emb](embCol,ink)}</g>`;
