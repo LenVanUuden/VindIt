@@ -106,7 +106,8 @@ Elements (els), in drawing order:
 - {"t":"lines","x":…,"y":…,"w":…,"h":…,"cols":1-3,"color":"#hex"}: a block of small print.
 - {"t":"rule","y":…,"w":…,"thick":…,"color":"#hex"}: a horizontal line or colour band.
 
-Also: paper (label colour, hex), ink (main text colour), metal ("gold","silver","none"), border ("none","thin","double","frame") and border_color. Typical sizes: main name 26–44, small lines 6–10. Keep everything inside the label.`;
+Also: paper (label colour, hex), ink (main text colour), metal ("gold","silver","none"), border ("none","thin","double","frame") and border_color. Typical sizes: main name 26–44, small lines 6–10. Keep everything inside the label.
+Always answer by calling the "tekening" tool exactly once (no other text).`;
 const DRAW_SCHEMA = {
   type: "object",
   properties: {
@@ -143,12 +144,18 @@ async function drawLabel(model: string, img: string | null, mediaType: string, d
     method: "POST",
     headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
     body: JSON.stringify({ model: DRAW_MODELS[model] ?? DRAW_MODELS.opus, max_tokens: 8000, system: DRAW_SYSTEM,
-      tools: [{ name: "tekening", description: "Tekening van het etiket", input_schema: DRAW_SCHEMA }], tool_choice: { type: "tool", name: "tekening" },
+      tools: [{ name: "tekening", description: "Tekening van het etiket. Roep deze tool altijd precies één keer aan.", input_schema: DRAW_SCHEMA }], tool_choice: { type: "auto" },
       messages: [{ role: "user", content }] }),
   });
   if (!r.ok) { const t = await r.text(); console.error("draw", r.status, t); LAST_DRAW_ERR = `api ${r.status}: ${t.slice(0, 160)}`; return null; }
   const out = await r.json();
-  const st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+  // Nieuwere modellen ondersteunen geen verplichte tool-keuze: neem de tool-aanroep, of anders JSON uit de tekst
+  let st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+  if (!st) {
+    const txt = (out.content ?? []).filter((c: { type: string }) => c.type === "text").map((c: { text: string }) => c.text).join("\n");
+    const m = txt.match(/\{[\s\S]*\}/);
+    if (m) { try { st = JSON.parse(m[0]); } catch (_) { /* geen geldige JSON */ } }
+  }
   if (!st) { LAST_DRAW_ERR = `geen tekening (stop: ${out.stop_reason})`; return null; }
   const clean = cleanDraw(st);
   if (!clean) LAST_DRAW_ERR = `leeg (stop: ${out.stop_reason}, elementen: ${Array.isArray(st.els) ? st.els.length : typeof st.els})`;
