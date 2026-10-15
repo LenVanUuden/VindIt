@@ -47,11 +47,10 @@ async function openFriends(nest){
   L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>askConfirm(`${b.dataset.name} verwijderen?`,'Jullie kunnen dan elkaars album niet meer bekijken. Je kunt later altijd opnieuw uitnodigen.','Verwijderen',async()=>{
     const {error}=await sb.rpc('remove_friend',{p_id:b.dataset.del});
     if(error){toast('Verwijderen lukte niet. Probeer het zo nog eens.');return}
-    closeOverlay();toast(`${b.dataset.name} is verwijderd als wijnvriend.`);setTimeout(()=>openFriends(),260)}));
+    closeOverlay();setTimeout(()=>openFriends(),260)}));
 }
 
 async function viewFriend(id,name){
-  toast(`Album van ${name} wordt geopend…`);
   const {data,error}=await sb.rpc('friend_album',{p_id:id});
   if(error||!data||data.status!=='ok'){toast(data&&data.status==='not_friends'?'Jullie zijn geen wijnvrienden meer.':'Het album kon niet worden geopend.');console.error(error);return}
   if(!viewing)mineSaved={cards,ownedKeys,settings,cur,LBL:{...LBL}};
@@ -73,7 +72,6 @@ function exitFriend(){
   const back=mineSaved.cur;mineSaved=null;
   document.body.classList.remove('viewing');document.getElementById('viewbar').hidden=true;
   closeOverlay();refresh();cur=Math.min(back,pages.length-1);go(cur,true);renderChrome();fitAlbum();
-  toast('Terug in je eigen album.');
 }
 
 /* Uitnodigingslink geopend: na inloggen meteen wijnvrienden worden */

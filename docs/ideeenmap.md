@@ -24,6 +24,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 19 | **Lakzegels en voorbladen**: voorblad per land met omtrek, weetjes en iconen; 58 unieke lakzegels voor landen, sets en uitdagingen | Len | Hoog: minder zakelijk, meer album | Middel | Live |
 | 20 | **Getekende etiketten** op basis van het echte etiket (Claude beschrijft, app tekent); foto op de achterkant | Len | Hoog: herkenbaar en in stijl | Middel | Live |
 | 21 | **Legendes en Iconen**: 20 Legendes als topklasse (prijs telt niet), ✦ Icoon-stempel met "Waarom icoon?" (3 per land, ook betaalbaar), overzicht Iconen van de wereld; stempel Eerste ontdekker weg | Len | Hoog: topklasse echt legendarisch, elk land een verhaal | Middel | Live |
+| 22 | **Kelderboek en menu vernieuwd**: klassen als postzegels (tik = blad met al je kaarten van die klasse), landen als lakzegels, menu met tegels; bevestigingsmeldingen weg | Len | Middel-hoog: vriendelijker en minder lijst | Klein | Live |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)

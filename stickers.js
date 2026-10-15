@@ -193,7 +193,6 @@ async function stkClose(save){
   if(save&&JSON.stringify(STK[pk]||[])!==before){
     const ok=await saveStickers(pk);
     if(!ok){toast('Opslaan lukte niet. Controleer je verbinding en probeer het opnieuw.');return}
-    toast('Stickers geplakt.');
   }else if(!save){STK[pk]=JSON.parse(before)}
   stkEdit=null;document.body.classList.remove('stkedit');
   if(tray){tray.classList.remove('in');setTimeout(()=>tray.remove(),260)}

@@ -313,6 +313,29 @@ button{font:inherit;color:inherit}
 .tiers span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);opacity:.8;white-space:nowrap}
 .tiers em{font-style:normal;font-size:10px;color:var(--cream);opacity:.5;font-variant-numeric:tabular-nums}
 .toc{list-style:none;margin:0;padding:0;display:grid}
+.etip{letter-spacing:.04em;text-transform:none;opacity:.65;font-size:10.5px}
+.kstamps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:4px 0 2px}
+.kstamp{position:relative;aspect-ratio:.8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:0;cursor:pointer;color:#3A2A1C;font:inherit;padding:4px 2px;
+  background:var(--kbg,#F1E6D6);border:5px solid transparent;background-origin:border-box;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45));transition:transform .12s;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box,radial-gradient(circle 2.4px,#0000 92%,#000) -3.5px -3.5px/7px 7px round border-box;mask:linear-gradient(#000 0 0) padding-box,radial-gradient(circle 2.4px,#0000 92%,#000) -3.5px -3.5px/7px 7px round border-box}
+.kstamp::before{content:"";position:absolute;inset:3px;border:1px solid var(--kln,rgba(58,42,28,.35));border-radius:2px;pointer-events:none}
+.kcell{background:none;border:0;padding:0;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--gold-soft)}
+.kcell .kstamp{width:100%;box-sizing:border-box}.kcell{min-width:0}.kcell:active .kstamp{transform:scale(.94)}.kcell.none{opacity:.45}
+.kcell .kl{font-size:9px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+[data-pages="creme"] .kcell{color:#7A5A2A}
+.kstamp .ks{font-size:11px;color:var(--ksy,#8C8574)}.kstamp b{font:400 24px/1.05 var(--display);font-variant-numeric:tabular-nums}
+.k-rare{--kbg:linear-gradient(150deg,#EEF1F4,#B9C2CB);--ksy:#56606A}
+.k-superrare{--kbg:linear-gradient(150deg,#E9DEFF,#A98BE8);--ksy:#5B3FA0;color:#2E1D52}
+.k-ultra{--kbg:linear-gradient(150deg,#FBE7B0,#C9A253);--ksy:#7A5512;color:#3E2A08}
+.k-icon{--kbg:linear-gradient(150deg,#2A2320,#0E0B0A);--ksy:#E9C46A;--kln:rgba(201,162,83,.7);color:#F3D9A0}
+.kstamp.big{width:64px;flex:none;box-sizing:border-box}.kstamp.big b{font-size:26px}
+.kseals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0 2px;margin-top:2px}
+.kseals .wseal .wax{width:min(70px,100%)}.kseals .wseal .nm{font-size:10px;font-weight:600;margin-top:-6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.kseals .wseal:nth-child(n){transform:none}.kseals .wseal:nth-child(2n){transform:translateY(3px) rotate(2deg)}.kseals .wseal:nth-child(3n){transform:rotate(-3deg)}
+.kbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.kbtns .maplink{margin:0;justify-content:center;font-size:12.5px;padding:8px 6px}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px;width:min(92vw,360px);--sw:104px}
+.tcell{display:flex;flex-direction:column;align-items:center;gap:4px}.tcell .mini{width:100%;height:auto;aspect-ratio:1/1.48}
+.tland{font-size:10.5px;color:var(--gold-soft);opacity:.8}
 .toc button{width:100%;display:flex;justify-content:space-between;gap:10px;background:none;border:0;border-bottom:1px dotted rgba(233,211,160,.25);padding:8px 2px;color:var(--cream);cursor:pointer;font-variant-numeric:tabular-nums;text-align:left}
 .toc small{opacity:.55}
 .toc button span:last-child{color:var(--gold-soft);font-size:13px}
@@ -612,6 +635,22 @@ button{font:inherit;color:inherit}
 .mitem{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px dotted rgba(233,211,160,.2);color:var(--cream);font-size:15px;padding:11px 2px;cursor:pointer;text-align:left}
 .mitem .mic{width:24px;text-align:center;color:var(--gold)}
 .mitem .chev{margin-left:auto;color:var(--gold-soft);opacity:.7}
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:2px 0 4px}
+.mstats div{display:flex;flex-direction:column;align-items:center;padding:7px 2px;border-radius:10px;background:rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px rgba(233,211,160,.18)}
+.mstats b{font:400 20px/1.1 var(--display);color:var(--gold)}.mstats span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft);opacity:.8}
+.mtiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mtile{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px 10px;border-radius:14px;border:0;cursor:pointer;color:var(--cream);font:inherit;font-size:12.5px;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.12));box-shadow:inset 0 0 0 1px rgba(233,211,160,.28),0 2px 6px rgba(0,0,0,.25);transition:transform .1s}
+.mtile small{font-size:10px;color:var(--gold-soft);opacity:.75;margin-top:-3px}
+.mtile .medal{transform:scale(1.12)}
+.mwides{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mwide{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:999px;border:0;cursor:pointer;color:var(--cream);font:inherit;font-size:13px;text-align:left;
+  background:rgba(0,0,0,.16);box-shadow:inset 0 0 0 1px rgba(233,211,160,.25);transition:transform .1s}
+.mwide .medal{transform:scale(.8);margin:-4px -2px}
+.mtile:active,.mwide:active{transform:scale(.95)}
+.mfoot{margin-top:auto;padding-top:18px;display:flex;flex-wrap:wrap;gap:4px 14px;border-top:1px dotted rgba(233,211,160,.25)}
+.mfoot button{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;padding:6px 0;cursor:pointer;opacity:.85}
+.mfoot .ico{width:14px;height:14px}
 .jtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:min(88vw,340px)}
 .jtile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:12px;border:1px solid rgba(233,211,160,.32);background:rgba(255,255,255,.03);color:var(--cream);font-size:13px;cursor:pointer}
 .jtile span{font-size:22px;color:var(--gold)}
@@ -1023,17 +1062,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-140131'</script>
-<script src="data.js?v=20261015-140131"></script>
-<script src="art.js?v=20261015-140131"></script>
-<script src="gids.js?v=20261015-140131"></script>
-<script src="maps.js?v=20261015-140131"></script>
-<script src="zegels.js?v=20261015-140131"></script>
-<script src="landen.js?v=20261015-140131"></script>
-<script src="etiket.js?v=20261015-140131"></script>
-<script src="stickers.js?v=20261015-140131"></script>
-<script src="vrienden.js?v=20261015-140131"></script>
-<script src="wereldbol.js?v=20261015-140131"></script>
+<script>window.VI_V='20261015-143743'</script>
+<script src="data.js?v=20261015-143743"></script>
+<script src="art.js?v=20261015-143743"></script>
+<script src="gids.js?v=20261015-143743"></script>
+<script src="maps.js?v=20261015-143743"></script>
+<script src="zegels.js?v=20261015-143743"></script>
+<script src="landen.js?v=20261015-143743"></script>
+<script src="etiket.js?v=20261015-143743"></script>
+<script src="stickers.js?v=20261015-143743"></script>
+<script src="vrienden.js?v=20261015-143743"></script>
+<script src="wereldbol.js?v=20261015-143743"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1086,7 +1125,7 @@ async function loadSettings(){
     if(!error&&data){LIMIT=data.daily_limit||3;settings={...settings,name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
 }
-const ICONS={"book": "<path d=\"M3.8 5.6c2.7-1.1 5.4-1 8.2.9 2.8-1.9 5.5-2 8.2-.9v13.2c-2.7-1.1-5.4-1-8.2.9-2.8-1.9-5.5-2-8.2-.9z\"/><path d=\"M12 6.5v13.2\"/>", "star": "<path d=\"M12 3.6l2.5 5.2 5.7.8-4.2 4 1 5.7L12 16.6l-5 2.7 1-5.7-4.2-4 5.7-.8z\"/>", "globe": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M3.6 12h16.8M12 3.6c2.5 2.6 3.5 5.5 3.5 8.4s-1 5.8-3.5 8.4M12 3.6C9.5 6.2 8.5 9.1 8.5 12s1 5.8 3.5 8.4\"/>", "map": "<path d=\"M3.8 6.6l5.2-2 6 2 5.2-2v12.8l-5.2 2-6-2-5.2 2z\"/><path d=\"M9 4.6v12.8M15 6.6v12.8\"/>", "grapes": "<circle cx=\"9\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"17.6\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"11.2\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"15.5\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"17.2\" r=\"2.1\"/><path d=\"M13.4 7.5V4.2M13.4 5c1.2-1.4 3.2-1.6 4.6-.6\"/>", "trophy": "<path d=\"M8 4h8v5.2a4 4 0 0 1-8 0z\"/><path d=\"M8 6H5.2a2.6 2.6 0 0 0 3.2 4.2M16 6h2.8a2.6 2.6 0 0 1-3.2 4.2M12 13.2v3.6M9.5 16.8h5l.8 3.2H8.7z\"/>", "question": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8v.5\"/><circle cx=\"12\" cy=\"16.9\" r=\".5\"/>", "play": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M10 8.4l5.6 3.6-5.6 3.6z\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"2.6\"/><path d=\"M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M6 18l1.6-1.6M16.4 7.6L18 6\"/><circle cx=\"12\" cy=\"12\" r=\"5.6\"/>", "chat": "<path d=\"M4.4 6.4a2 2 0 0 1 2-2h11.2a2 2 0 0 1 2 2v8.2a2 2 0 0 1-2 2H11l-4.6 3.4v-3.4a2 2 0 0 1-2-2z\"/><path d=\"M8.2 9.2h7.6M8.2 12.4h5\"/>", "logout": "<path d=\"M13.6 4.4H7a1.6 1.6 0 0 0-1.6 1.6v12A1.6 1.6 0 0 0 7 19.6h6.6\"/><path d=\"M10.4 12h9.4M16.6 8.6 20 12l-3.4 3.4\"/>", "camera": "<path d=\"M4 8h3l2-2.5h6L17 8h3v11H4z\"/><circle cx=\"12\" cy=\"13.2\" r=\"3.6\"/>", "cards": "<rect x=\"5\" y=\"5.6\" width=\"10.4\" height=\"14\" rx=\"1.4\"/><path d=\"M8.6 3.4h9a1.4 1.4 0 0 1 1.4 1.4v12.4\"/><path d=\"M7.6 9.6h5.2M7.6 15.4h5.2\"/>", "cart": "<path d=\"M3.4 5h2.2l2 10h10.2l2-7.2H7\"/><circle cx=\"9.2\" cy=\"19\" r=\"1.2\"/><circle cx=\"16.4\" cy=\"19\" r=\"1.2\"/>", "glass": "<path d=\"M7.8 3.6h8.4c0 4.4-1.4 7.6-4.2 8-2.8-.4-4.2-3.6-4.2-8z\"/><path d=\"M12 11.6v7.6M8.6 20h6.8M8.1 7.2h7.8\"/>", "search": "<circle cx=\"10.6\" cy=\"10.6\" r=\"5.8\"/><path d=\"M15 15l5 5\"/>", "bug": "<path d=\"M8 10.4a4 4 0 0 1 8 0v3.8a4 4 0 0 1-8 0z\"/><path d=\"M12 10.4v7.8M8 12.4H4.6M19.4 12.4H16M8.4 16.4l-2.8 1.8M15.6 16.4l2.8 1.8M8.8 7.6 6.6 5.2M15.2 7.6l2.2-2.4\"/>", "bulb": "<path d=\"M9 17h6M10 20h4M8.6 14c-1.6-1.3-2.6-3.1-2.6-5a6 6 0 0 1 12 0c0 1.9-1 3.7-2.6 5-.6.5-.9 1.2-.9 2H9.5c0-.8-.3-1.5-.9-2z\"/>", "heart": "<path d=\"M12 19.6s-7.2-4.3-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.2c0 5.1-7.2 9.4-7.2 9.4z\"/>", "pen": "<path d=\"M15.4 4.8l3.8 3.8L9 18.8l-4.8 1 1-4.8z\"/><path d=\"M13.4 6.8l3.8 3.8\"/>", "turn": "<path d=\"M19 12a7 7 0 1 1-2.2-5.1\"/><path d=\"M19 4.4V8h-3.6\"/>", "sparkle": "<path d=\"M11 3.6l1.7 5.1 5.1 1.7-5.1 1.7L11 17.2l-1.7-5.1-5.1-1.7 5.1-1.7z\"/><path d=\"M18.2 15.4l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z\"/>", "stack": "<rect x=\"4.4\" y=\"8.4\" width=\"10.8\" height=\"11.2\" rx=\"1.2\"/><path d=\"M7.6 5.6h10.4a1.2 1.2 0 0 1 1.2 1.2v10M10.8 3h9a1.2 1.2 0 0 1 1.2 1.2v8.6\"/>", "close": "<path d=\"M6.6 6.6l10.8 10.8M17.4 6.6 6.6 17.4\"/>", "swipe": "<path d=\"M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4\"/>", "pin": "<path d=\"M12 20.6s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z\"/><circle cx=\"12\" cy=\"9.6\" r=\"2.1\"/>", "arrowl": "<path d=\"M14.5 5.5 8 12l6.5 6.5\"/>", "sticker": "<path d=\"M5 5.6A1.6 1.6 0 0 1 6.6 4h10.8A1.6 1.6 0 0 1 19 5.6V13l-6 6H6.6A1.6 1.6 0 0 1 5 17.4z\"/><path d=\"M19 13h-4.4a1.6 1.6 0 0 0-1.6 1.6V19\"/><circle cx=\"9.6\" cy=\"9.6\" r=\"1\"/><circle cx=\"14.4\" cy=\"9.6\" r=\"1\"/><path d=\"M9.4 13.2c1.4 1.2 3.2 1.2 4.4 0\"/>"};
+const ICONS={"crown": "<path d=\"M4.6 8.4l3.4 3 4-6 4 6 3.4-3-1.4 9H6z\"/><path d=\"M6.4 19.6h11.2\"/>", "book": "<path d=\"M3.8 5.6c2.7-1.1 5.4-1 8.2.9 2.8-1.9 5.5-2 8.2-.9v13.2c-2.7-1.1-5.4-1-8.2.9-2.8-1.9-5.5-2-8.2-.9z\"/><path d=\"M12 6.5v13.2\"/>", "star": "<path d=\"M12 3.6l2.5 5.2 5.7.8-4.2 4 1 5.7L12 16.6l-5 2.7 1-5.7-4.2-4 5.7-.8z\"/>", "globe": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M3.6 12h16.8M12 3.6c2.5 2.6 3.5 5.5 3.5 8.4s-1 5.8-3.5 8.4M12 3.6C9.5 6.2 8.5 9.1 8.5 12s1 5.8 3.5 8.4\"/>", "map": "<path d=\"M3.8 6.6l5.2-2 6 2 5.2-2v12.8l-5.2 2-6-2-5.2 2z\"/><path d=\"M9 4.6v12.8M15 6.6v12.8\"/>", "grapes": "<circle cx=\"9\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"17.6\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"11.2\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"15.5\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"17.2\" r=\"2.1\"/><path d=\"M13.4 7.5V4.2M13.4 5c1.2-1.4 3.2-1.6 4.6-.6\"/>", "trophy": "<path d=\"M8 4h8v5.2a4 4 0 0 1-8 0z\"/><path d=\"M8 6H5.2a2.6 2.6 0 0 0 3.2 4.2M16 6h2.8a2.6 2.6 0 0 1-3.2 4.2M12 13.2v3.6M9.5 16.8h5l.8 3.2H8.7z\"/>", "question": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8v.5\"/><circle cx=\"12\" cy=\"16.9\" r=\".5\"/>", "play": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M10 8.4l5.6 3.6-5.6 3.6z\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"2.6\"/><path d=\"M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M6 18l1.6-1.6M16.4 7.6L18 6\"/><circle cx=\"12\" cy=\"12\" r=\"5.6\"/>", "chat": "<path d=\"M4.4 6.4a2 2 0 0 1 2-2h11.2a2 2 0 0 1 2 2v8.2a2 2 0 0 1-2 2H11l-4.6 3.4v-3.4a2 2 0 0 1-2-2z\"/><path d=\"M8.2 9.2h7.6M8.2 12.4h5\"/>", "logout": "<path d=\"M13.6 4.4H7a1.6 1.6 0 0 0-1.6 1.6v12A1.6 1.6 0 0 0 7 19.6h6.6\"/><path d=\"M10.4 12h9.4M16.6 8.6 20 12l-3.4 3.4\"/>", "camera": "<path d=\"M4 8h3l2-2.5h6L17 8h3v11H4z\"/><circle cx=\"12\" cy=\"13.2\" r=\"3.6\"/>", "cards": "<rect x=\"5\" y=\"5.6\" width=\"10.4\" height=\"14\" rx=\"1.4\"/><path d=\"M8.6 3.4h9a1.4 1.4 0 0 1 1.4 1.4v12.4\"/><path d=\"M7.6 9.6h5.2M7.6 15.4h5.2\"/>", "cart": "<path d=\"M3.4 5h2.2l2 10h10.2l2-7.2H7\"/><circle cx=\"9.2\" cy=\"19\" r=\"1.2\"/><circle cx=\"16.4\" cy=\"19\" r=\"1.2\"/>", "glass": "<path d=\"M7.8 3.6h8.4c0 4.4-1.4 7.6-4.2 8-2.8-.4-4.2-3.6-4.2-8z\"/><path d=\"M12 11.6v7.6M8.6 20h6.8M8.1 7.2h7.8\"/>", "search": "<circle cx=\"10.6\" cy=\"10.6\" r=\"5.8\"/><path d=\"M15 15l5 5\"/>", "bug": "<path d=\"M8 10.4a4 4 0 0 1 8 0v3.8a4 4 0 0 1-8 0z\"/><path d=\"M12 10.4v7.8M8 12.4H4.6M19.4 12.4H16M8.4 16.4l-2.8 1.8M15.6 16.4l2.8 1.8M8.8 7.6 6.6 5.2M15.2 7.6l2.2-2.4\"/>", "bulb": "<path d=\"M9 17h6M10 20h4M8.6 14c-1.6-1.3-2.6-3.1-2.6-5a6 6 0 0 1 12 0c0 1.9-1 3.7-2.6 5-.6.5-.9 1.2-.9 2H9.5c0-.8-.3-1.5-.9-2z\"/>", "heart": "<path d=\"M12 19.6s-7.2-4.3-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.2c0 5.1-7.2 9.4-7.2 9.4z\"/>", "pen": "<path d=\"M15.4 4.8l3.8 3.8L9 18.8l-4.8 1 1-4.8z\"/><path d=\"M13.4 6.8l3.8 3.8\"/>", "turn": "<path d=\"M19 12a7 7 0 1 1-2.2-5.1\"/><path d=\"M19 4.4V8h-3.6\"/>", "sparkle": "<path d=\"M11 3.6l1.7 5.1 5.1 1.7-5.1 1.7L11 17.2l-1.7-5.1-5.1-1.7 5.1-1.7z\"/><path d=\"M18.2 15.4l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z\"/>", "stack": "<rect x=\"4.4\" y=\"8.4\" width=\"10.8\" height=\"11.2\" rx=\"1.2\"/><path d=\"M7.6 5.6h10.4a1.2 1.2 0 0 1 1.2 1.2v10M10.8 3h9a1.2 1.2 0 0 1 1.2 1.2v8.6\"/>", "close": "<path d=\"M6.6 6.6l10.8 10.8M17.4 6.6 6.6 17.4\"/>", "swipe": "<path d=\"M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4\"/>", "pin": "<path d=\"M12 20.6s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z\"/><circle cx=\"12\" cy=\"9.6\" r=\"2.1\"/>", "arrowl": "<path d=\"M14.5 5.5 8 12l6.5 6.5\"/>", "sticker": "<path d=\"M5 5.6A1.6 1.6 0 0 1 6.6 4h10.8A1.6 1.6 0 0 1 19 5.6V13l-6 6H6.6A1.6 1.6 0 0 1 5 17.4z\"/><path d=\"M19 13h-4.4a1.6 1.6 0 0 0-1.6 1.6V19\"/><circle cx=\"9.6\" cy=\"9.6\" r=\"1\"/><circle cx=\"14.4\" cy=\"9.6\" r=\"1\"/><path d=\"M9.4 13.2c1.4 1.2 3.2 1.2 4.4 0\"/>"};
 const I=(n,c='')=>`<svg class="ico ${c}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const MED=(n)=>`<span class="medal">${I(n)}</span>`;
 const DIFFTXT={1:[I('cart'),'Supermarkt','Vaak gewoon in de supermarkt te vinden.'],2:[I('glass'),'Wijnwinkel','Bij de slijter of een goede wijnwinkel.'],3:[I('search'),'Specialist','Bij een wijnspeciaalzaak, online of op reis.']};
@@ -1147,7 +1186,7 @@ function openFeedback(){
     const context={blad:cur,pagina:pg.t||'',set:pg.set?pg.set.name:(pg.land||''),kaarten:cards.length,scans_vandaag:scansToday(),limiet:LIMIT,scherm:`${innerWidth}x${innerHeight}`,browser:navigator.userAgent.slice(0,200)};
     const {error}=await sb.from('feedback').insert({kind,message:msg,context});
     if(error){btn.disabled=false;btn.textContent='Versturen';toast('Versturen lukte niet. Probeer het zo nog eens.');console.error(error);return}
-    closeOverlay();toast('Bedankt! Je feedback is verstuurd.');
+    closeOverlay();
   };
 }
 const isAdmin=()=>!!session&&/^l\.v\.uuden3@gmail\.com$/i.test(session.user.email||'');
@@ -1208,7 +1247,7 @@ function openSettings(){
     if(session){const {error}=await sb.rpc('update_settings',{p_name:name,p_cover:next.cover,p_pages:next.pages});synced=!error;if(error)console.error(error)}
     settings=next;applySettings();closeOverlay();
     if(stack.querySelector('.leaf'))go(cur,true);
-    toast(synced||!session?'Instellingen opgeslagen.':'Opgeslagen op dit toestel. Synchroniseren met je account lukte niet.');
+    if(!(synced||!session))toast('Opgeslagen op dit toestel. Synchroniseren met je account lukte niet.');
   };
   sn.focus();
 }
@@ -1638,18 +1677,18 @@ function makePage0(i){
     const lists=SETS.filter(s=>s.part===2&&st.visible[s.id]);
     const hiddenLists=SETS.filter(s=>s.part===2&&!st.visible[s.id]).length;
     const landsLeft=LANDS.filter(l=>!st.lands.includes(l)).length;
-    const toc=st.allLands.map(l=>{
-      const x=landStats(l),idx=firstPageOf(p=>p.land===l);
-      if(idx<0)return `<li class="dim"><button data-pland="${esc(l)}"><span>${esc(l)}</span><span>nog te ontdekken · bekijk</span></button></li>`;
-      return `<li><button data-go="${idx}"><span>${esc(l)}</span><span>${x.tot?x.have+' / '+x.tot:x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button></li>`;
+    const seals=st.allLands.map(l=>{
+      const x=landStats(l),idx=firstPageOf(p=>p.land===l),nm=l==='Overige landen'?'Overige':l==='Verenigd Koninkrijk'?'VK':l==='Verenigde Staten'?'VS':l;
+      if(idx<0)return `<button class="wseal ghost" data-pland="${esc(l)}">${waxSeal(l,nm,{ghost:true})}<span class="nm">${esc(nm)}</span></button>`;
+      return `<button class="wseal" data-go="${idx}">${waxSeal(l,nm,x.tot&&x.have===x.tot?{done:true}:{count:x.cards})}<span class="nm">${esc(nm)}</span></button>`;
     }).join('');
-    const ltoc=lists.map(s=>{const f=filledOf(s);return `<li><button data-go="${firstPageOf(x=>x.set===s)}"><span>${esc(s.name)}${isDone(s)?' <small>· voltooid</small>':''}</span><span>${f.filter(Boolean).length} / ${f.length}</span></button></li>`}).join('');
+    const doneL=lists.filter(isDone).length;
     el.innerHTML=`<div><p class="eyebrow">${cards.length} ${cards.length===1?'kaart':'kaarten'} verzameld</p><h2 class="foil">Kelderboek ${infoBtn('kelder')}</h2></div>
-      <div class="tiers">${TORDER.map(t=>`<div>${symHTML(t)}<b data-n="${cards.filter(c=>c.rar===t).length}">${cards.filter(c=>c.rar===t).length}</b><span>${TIERS[t].label}</span></div>`).join('')}</div>
-      ${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">${I('globe')} Mijn wijnwereld · ${worldStats().have} van ${worldStats().tot} wijnlanden</button>`:''}
-      <p class="eyebrow toch">Landen</p><ul class="toc">${toc}</ul>
-      <p class="eyebrow toch">Uitdagingen</p><ul class="toc">${ltoc}</ul>
-      <p class="note" style="text-align:center">Uit ${landsLeft} landen heb je nog geen wijn${hiddenLists?`, en ${hiddenLists} uitdagingen zijn nog verborgen`:''}.</p>
+      <p class="eyebrow toch">Mijn klassen <span class="etip">· tik voor je kaarten</span></p>
+      <div class="kstamps">${TORDER.map(t=>{const n=cards.filter(c=>c.rar===t).length;return `<button class="kcell${n?'':' none'}" data-tier="${t}" aria-label="${n} ${TIERS[t].label}, bekijken"><span class="kstamp k-${t}"><span class="ks">${TIERS[t].sym}</span><b>${n}</b></span><span class="kl">${TIERS[t].label}</span></button>`}).join('')}</div>
+      <p class="eyebrow toch">Landen</p>
+      <div class="kseals">${seals}</div>
+      <div class="kbtns">${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">${I('globe')} Wereld · ${worldStats().have}/${worldStats().tot}</button>`:''}<button class="maplink" data-act="lists">${I('trophy')} Uitdagingen · ${doneL}/${lists.length}</button></div>
       ${pageFoot(1)}`;
     return el;
   }
@@ -1812,6 +1851,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="lands"]')){openLands();return}
   if(e.target.closest('[data-act="lists"]')){openLists();return}
   if(e.target.closest('[data-act="iconen"]')){openIconen();return}
+  const tb=e.target.closest('[data-tier]');if(tb){openTier(tb.dataset.tier);return}
   const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
   const lp=e.target.closest('[data-land]');if(lp){openLands(lp.dataset.land);return}
   const mm=e.target.closest('[data-map]');if(mm){openMap(mm.dataset.map);return}
@@ -1910,7 +1950,7 @@ function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
-    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
+    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
     <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
@@ -1934,7 +1974,7 @@ function openStack(gid){
     const {data,error}=await sb.rpc('pick_top',{p_card:b.dataset.top});
     if(error){o.querySelectorAll('button').forEach(x=>x.disabled=false);toast('Opslaan lukte niet. Probeer het zo nog eens.');console.error(error);return}
     const c=cards.find(x=>x.id===b.dataset.top);c.topAt=(data&&data.top_at)||new Date().toISOString();
-    refresh();renderChrome();toast(`${c.naam} ligt nu bovenop.`);openStack(gid);
+    refresh();renderChrome();openStack(gid);
   });
   o.querySelector('#close').onclick=()=>{closeOverlay();go(cur,true)};o.querySelector('#close').focus();
 }
@@ -1954,7 +1994,7 @@ function openMemo(id,after){
     o.querySelectorAll('button').forEach(b=>b.disabled=true);
     const {data,error}=await sb.rpc('set_memo',{p_card:c.id,p_text:txt});
     if(error){o.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Bewaren lukte niet. Probeer het zo nog eens.');console.error(error);return}
-    c.memo=data.memo||'';c.memoAt=data.memo_at||null;refresh();renderChrome();toast(c.memo?'Herinnering bewaard.':'Herinnering gewist.');done();
+    c.memo=data.memo||'';c.memoAt=data.memo_at||null;refresh();renderChrome();done();
   };
   o.querySelector('#save').onclick=()=>save(ta.value);
   const w=o.querySelector('#wipe');if(w)w.onclick=()=>askConfirm('Herinnering wissen?','Je tekst op de achterkant verdwijnt. Dit kun je niet ongedaan maken.','Wissen',()=>save(''));
@@ -1973,7 +2013,7 @@ function openFavPicker(id){
     const {data,error}=await sb.rpc('set_favorite',{p_card:c.id,p_rank:rank});
     if(error){o.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Opslaan lukte niet. Probeer het zo nog eens.');console.error(error);return}
     cards.forEach(x=>x.fav=null);(data||[]).forEach(r=>{const x=cards.find(y=>y.id===r.id);if(x)x.fav=r.fav_rank});
-    refresh();renderChrome();toast(rank?`${c.naam} staat op #${c.fav||rank} in je top 10.`:'Uit je top 10 gehaald.');openCard(c.id);
+    refresh();renderChrome();openCard(c.id);
   };
   o.querySelectorAll('[data-rank]').forEach(b=>b.onclick=()=>apply(+b.dataset.rank));
   o.querySelector('#back').onclick=()=>popOverlay();
@@ -2284,7 +2324,7 @@ function reveal(c,news,title){
       buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar])}
       setTimeout(()=>{tilt(card);if(c.rar!=='common'||c.fa){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+(c.fa?' · Full Art!':'!')}
         o.querySelector('.status').classList.add('pop');
-        const si=stackInfo(c);o.querySelector('#h').textContent=(whyLine(c)?whyLine(c)+' ':HINT[c.rar])+(isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
+        const si=stackInfo(c);o.querySelector('#h').textContent=(whyLine(c)?whyLine(c)+' ':HINT[c.rar])+(isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   const walk=!reduced&&(c.rar!=='common'||c.fa)&&typeof MAPS!=='undefined';
   let begun=false;
   const begin=()=>{if(begun)return;begun=true;if(walk)walkout(o,c,open);else open()};
@@ -2367,6 +2407,19 @@ function openLists(nest){
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
 }
 
+/* Klasse-blad: al je kaarten van één klasse, per land */
+function openTier(t){
+  const L=cards.filter(c=>c.rar===t).sort((a,b)=>(a.land||'').localeCompare(b.land||'')||(a.naam||'').localeCompare(b.naam||''));
+  const T=TIERS[t],plural={common:'Commons',rare:'Rares',superrare:'Super Rares',ultra:'Ultra\'s',icon:'Legendes'}[t];
+  const o=overlay(`<div class="sealhead"><div class="kstamp big k-${t}"><span class="ks">${T.sym}</span><b>${L.length}</b></div><div><p class="eyebrow">Kelderboek</p><p class="status">Mijn ${plural}</p></div></div>
+    <p class="hint">${esc(HINT[t])}</p>
+    ${L.length?`<div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${esc(c.land||'')}</span></div>`).join('')}</div>`:`<p class="hint">Nog geen ${plural}. ${t==='icon'?'Achterin het album staan de twintig Legendes.':'Scan een wijn en wie weet!'}</p>`}
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.classList.add('leather');
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelectorAll('.mini').forEach(m=>m.onclick=()=>openCard(m.dataset.id,false,true));
+}
+
 /* Iconen van de wereld: per land de drie iconen (♛ = Legende) */
 function openIconen(nest){
   const [h,t]=iconCount();
@@ -2387,18 +2440,21 @@ function crumbOf(p){
   return '';
 }
 function openMenu(){
-  let n_=0;const it=(ic,label,attr)=>`<button class="mitem" style="--i:${n_++}" ${attr}>${MED(ic)}<span class="mlab">${label}</span><span class="chev">${I('arrowl','flip')}</span></button>`;
-  const pg=t=>firstPageOf(x=>x.t===t);
+  let n_=0;const pg=t=>firstPageOf(x=>x.t===t);
+  const tile=(ic,label,attr,sub)=>`<button class="mtile" style="--i:${n_++}" ${attr}>${MED(ic)}<span class="mlab">${label}</span>${sub?`<small>${sub}</small>`:''}</button>`;
+  const wide=(ic,label,attr)=>`<button class="mwide" style="--i:${n_++}" ${attr}>${MED(ic)}<span class="mlab">${label}</span></button>`;
+  const legK=firstPageOf(x=>x.set&&x.set.id==='icons'),nL=st?st.lands.filter(l=>l!=='Overige landen').length:0,lists=SETS.filter(x=>x.part===2&&st&&st.visible[x.id]);
   const o=overlay(`<nav class="drawer-panel" aria-label="Menu">
-      <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">${I('close')}</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>`:''}
+      <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">${I('close')}</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>
+      <div class="mstats"><div><b>${cards.length}</b><span>kaarten</span></div><div><b>${nL}</b><span>${nL===1?'land':'landen'}</span></div><div><b>${cards.filter(c=>c.rar==='icon').length}</b><span>legendes</span></div></div>`:''}
       ${session?`<p class="mgroup">Album</p>
-      ${it('book','Kelderboek',`data-mgo="1"`)}${it('star','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?it('globe','Mijn wijnwereld',`data-mgo="${pg('world')}"`):''}
-      ${it('grapes','Landen','data-mact="lands"')}${it('trophy','Uitdagingen','data-mact="lists"')}
-      <p class="mgroup">Persoonlijk</p>
-      ${viewing?it('arrowl','Terug naar mijn album','data-mact="mine"'):it('sticker','Stickers plakken','data-mact="stickers"')}${it('heart','Mijn wijnvrienden','data-mact="friends"')}`:''}
+      <div class="mtiles">${tile('book','Kelderboek','data-mgo="1"')}${tile('star','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?tile('globe','Wereld',`data-mgo="${pg('world')}"`):''}
+      ${tile('grapes','Landen','data-mact="lands"')}${tile('trophy','Uitdagingen','data-mact="lists"',`${lists.filter(isDone).length}/${lists.length}`)}${legK>=0?tile('crown','Legendes',`data-mgo="${legK}"`):''}</div>
+      <p class="mgroup">Voor jou</p>
+      <div class="mwides">${viewing?wide('arrowl','Mijn album','data-mact="mine"'):wide('sticker','Stickers','data-mact="stickers"')}${wide('heart','Wijnvrienden','data-mact="friends"')}</div>`:''}
       <p class="mgroup">Hulp</p>
-      ${it('question','Hoe werkt Vined It?','data-mact="info"')}${it('play','Rondleiding','data-mact="tour"')}
-      ${session?`<p class="mgroup">Account</p>${it('gear','Instellingen','data-mact="settings"')}${it('chat','Feedback','data-mact="feedback"')}${it('logout','Uitloggen','data-mact="logout"')}`:''}
+      <div class="mwides">${wide('question','Hoe werkt het?','data-mact="info"')}${wide('play','Rondleiding','data-mact="tour"')}</div>
+      ${session?`<div class="mfoot"><button data-mact="settings">${I('gear')} Instellingen</button><button data-mact="feedback">${I('chat')} Feedback</button><button data-mact="logout">${I('logout')} Uitloggen</button></div>`:''}
     </nav>`);
   o.classList.add('drawer');o.querySelector('.dclose').onclick=()=>closeOverlay();
   o.addEventListener('click',e=>{if(e.target===o)closeOverlay()});
@@ -2407,7 +2463,7 @@ function openMenu(){
     if(a==='lands'){closeOverlay();openLands()}else if(a==='lists'){closeOverlay();openLists()}else if(a==='info'){closeOverlay();openInfo()}
     else if(a==='tour'){closeOverlay();openTour()}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
     else if(a==='logout')askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout)});
-  const f=o.querySelector('.mitem');if(f)f.focus();
+  const f=o.querySelector('.mtile,.mwide');if(f)f.focus();
 }
 function openJump(){
   const pg=t=>firstPageOf(x=>x.t===t);
@@ -2484,7 +2540,7 @@ function hintSwipe(){
 }
 async function logout(){
   if(viewing)exitFriend();
-  closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();LIMIT=3;serverToday=null;session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
+  closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();LIMIT=3;serverToday=null;session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);
 }
 
 /* ---------- start ---------- */
