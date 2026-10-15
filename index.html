@@ -335,7 +335,7 @@ button{font:inherit;color:inherit}
 @property --ir{syntax:'<percentage>';inherits:false;initial-value:110%}
 .etkbox.inkin>svg{-webkit-mask:radial-gradient(circle at 50% 50%,#000 var(--ir),transparent calc(var(--ir) + 14%));mask:radial-gradient(circle at 50% 50%,#000 var(--ir),transparent calc(var(--ir) + 14%));animation:inkin 1.6s ease}
 @keyframes inkin{from{--ir:0%}to{--ir:110%}}
-@media (prefers-reduced-motion: reduce){.sketching .sk{animation:none;clip-path:none}.sketching .skpen{animation:none}}
+/* de schets en pen bewegen ook bij 'minder animaties' (rustig), anders lijkt de app vast te lopen */
 .etip{letter-spacing:.04em;text-transform:none;opacity:.65;font-size:10.5px}
 .kstamps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:4px 0 2px}
 .kstamp{position:relative;aspect-ratio:.8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:0;cursor:pointer;color:#3A2A1C;font:inherit;padding:4px 2px;
@@ -1151,18 +1151,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-210740'</script>
-<script src="data.js?v=20261015-210740"></script>
-<script src="art.js?v=20261015-210740"></script>
-<script src="gids.js?v=20261015-210740"></script>
-<script src="maps.js?v=20261015-210740"></script>
-<script src="zegels.js?v=20261015-210740"></script>
-<script src="landen.js?v=20261015-210740"></script>
-<script src="etiket.js?v=20261015-210740"></script>
-<script src="fullart.js?v=20261015-210740"></script>
-<script src="stickers.js?v=20261015-210740"></script>
-<script src="vrienden.js?v=20261015-210740"></script>
-<script src="wereldbol.js?v=20261015-210740"></script>
+<script>window.VI_V='20261015-211515'</script>
+<script src="data.js?v=20261015-211515"></script>
+<script src="art.js?v=20261015-211515"></script>
+<script src="gids.js?v=20261015-211515"></script>
+<script src="maps.js?v=20261015-211515"></script>
+<script src="zegels.js?v=20261015-211515"></script>
+<script src="landen.js?v=20261015-211515"></script>
+<script src="etiket.js?v=20261015-211515"></script>
+<script src="fullart.js?v=20261015-211515"></script>
+<script src="stickers.js?v=20261015-211515"></script>
+<script src="vrienden.js?v=20261015-211515"></script>
+<script src="wereldbol.js?v=20261015-211515"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2191,7 +2191,8 @@ function handleScanResult(d,before,photo,box,jaar){
   const card=toCard(d.card,d.wine);setVintage(card,jaar);
   if(photo)uploadArt(card,photo,box);
   /* Primeur: de eerste scan van deze wijn in heel Vined It */
-  if(photo&&d.status==='new'&&card.first){card.primeur=true;if(LABEL_TIERS.includes(card.rar)&&!(d.wine.label_style&&d.wine.label_style.v===2))addPending(card)}
+  const wineIsNew=d.wine&&d.wine.created_at&&d.card&&d.card.created_at&&Math.abs(new Date(d.wine.created_at)-new Date(d.card.created_at))<15000;
+  if(photo&&d.status==='new'&&card.first&&wineIsNew){card.primeur=true;if(LABEL_TIERS.includes(card.rar)&&!(d.wine.label_style&&d.wine.label_style.v===2))addPending(card)}
   cards.push(card);refresh();renderChrome();
   reveal(card,newsSince(before));
 }
