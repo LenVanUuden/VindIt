@@ -1130,18 +1130,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-202417'</script>
-<script src="data.js?v=20261015-202417"></script>
-<script src="art.js?v=20261015-202417"></script>
-<script src="gids.js?v=20261015-202417"></script>
-<script src="maps.js?v=20261015-202417"></script>
-<script src="zegels.js?v=20261015-202417"></script>
-<script src="landen.js?v=20261015-202417"></script>
-<script src="etiket.js?v=20261015-202417"></script>
-<script src="fullart.js?v=20261015-202417"></script>
-<script src="stickers.js?v=20261015-202417"></script>
-<script src="vrienden.js?v=20261015-202417"></script>
-<script src="wereldbol.js?v=20261015-202417"></script>
+<script>window.VI_V='20261015-203018'</script>
+<script src="data.js?v=20261015-203018"></script>
+<script src="art.js?v=20261015-203018"></script>
+<script src="gids.js?v=20261015-203018"></script>
+<script src="maps.js?v=20261015-203018"></script>
+<script src="zegels.js?v=20261015-203018"></script>
+<script src="landen.js?v=20261015-203018"></script>
+<script src="etiket.js?v=20261015-203018"></script>
+<script src="fullart.js?v=20261015-203018"></script>
+<script src="stickers.js?v=20261015-203018"></script>
+<script src="vrienden.js?v=20261015-203018"></script>
+<script src="wereldbol.js?v=20261015-203018"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2492,14 +2492,14 @@ async function callDraw(body){
 async function adminDraw(c){
   overlay(`<p class="status">Etiket wordt getekend…</p><p class="hint">Claude Opus bekijkt je foto en tekent ${esc(c.naam)}. Dit duurt ongeveer een halve minuut.</p>`,{nest:true});
   try{const d=await callDraw({mode:'draw',wine:c.wineId,model:'opus'});const st=d.styles&&d.styles.opus;
-    if(!st)throw new Error('geen tekening');setWineStyle(c,st);closeOverlay();openCard(c.id)}
+    if(!st)throw new Error((d.errors&&d.errors.opus)||'geen tekening');setWineStyle(c,st);closeOverlay();openCard(c.id)}
   catch(e){closeOverlay();toast('Tekenen lukte niet ('+e.message+'). Is reassess opnieuw gedeployd?')}
 }
 async function adminCompare(c){
   overlay(`<p class="status">Twee modellen tekenen…</p><p class="hint">Sonnet en Opus tekenen tegelijk ${esc(c.naam)}. Dit duurt ongeveer een halve minuut. Er wordt nog niets opgeslagen.</p>`,{nest:true});
   let d;try{d=await callDraw({mode:'draw',wine:c.wineId,models:['sonnet','opus'],dry:true})}catch(e){closeOverlay();toast('Vergelijken lukte niet ('+e.message+').');return}
   popOverlay();
-  const col=(m,lab,price)=>{const st=d.styles[m];return `<div class="cmpcol"><b>${lab}</b><small>${price}</small>${st?`<div class="cmplbl">${makeLabelSVG(st,c)}</div><ul>${(st.key||[]).map(k=>`<li>${esc(k)}</li>`).join('')}</ul><button class="btn small" data-pick="${m}">Deze gebruiken</button>`:'<p class="hint">Geen tekening</p>'}</div>`};
+  const col=(m,lab,price)=>{const st=d.styles[m];return `<div class="cmpcol"><b>${lab}</b><small>${price}</small>${st?`<div class="cmplbl">${makeLabelSVG(st,c)}</div><ul>${(st.key||[]).map(k=>`<li>${esc(k)}</li>`).join('')}</ul><button class="btn small" data-pick="${m}">Deze gebruiken</button>`:`<p class="hint">Geen tekening${d.errors&&d.errors[m]?'<br><small>'+esc(d.errors[m])+'</small>':''}</p>`}</div>`};
   const o=overlay(`<p class="status">Sonnet vs Opus</p><p class="hint">${d.foto?'Getekend vanaf je foto.':'Geen foto gevonden: getekend uit kennis.'}</p>
     <div class="cmp">${col('sonnet','Sonnet','±2,5 cent')}${col('opus','Opus','±5,5 cent')}</div>
     <div class="actions"><button class="btn" id="close">Sluiten zonder opslaan</button></div>`,{nest:true});

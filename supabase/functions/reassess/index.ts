@@ -136,19 +136,23 @@ function cleanDraw(s: Record<string, unknown>) {
   return { v: 2, key: (Array.isArray(s.key) ? s.key : []).slice(0, 6).map((k) => String(k).slice(0, 80)),
     paper: col(s.paper), ink: col(s.ink), metal: str(s.metal, 8), border: str(s.border, 8), border_color: col(s.border_color), els };
 }
+let LAST_DRAW_ERR = "";
 async function drawLabel(model: string, img: string | null, mediaType: string, desc: string) {
   const content: unknown[] = img ? [{ type: "image", source: { type: "base64", media_type: mediaType, data: img } }, { type: "text", text: desc }] : [{ type: "text", text: desc + "\nGeen foto: teken het echte etiket zoals je het kent; ken je de wijn niet, ontwerp dan een passend, geloofwaardig etiket." }];
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: DRAW_MODELS[model] ?? DRAW_MODELS.opus, max_tokens: 4000, system: DRAW_SYSTEM,
+    body: JSON.stringify({ model: DRAW_MODELS[model] ?? DRAW_MODELS.opus, max_tokens: 8000, system: DRAW_SYSTEM,
       tools: [{ name: "tekening", description: "Tekening van het etiket", input_schema: DRAW_SCHEMA }], tool_choice: { type: "tool", name: "tekening" },
       messages: [{ role: "user", content }] }),
   });
-  if (!r.ok) { console.error("draw", r.status, await r.text()); return null; }
+  if (!r.ok) { const t = await r.text(); console.error("draw", r.status, t); LAST_DRAW_ERR = `api ${r.status}: ${t.slice(0, 160)}`; return null; }
   const out = await r.json();
   const st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
-  return st ? cleanDraw(st) : null;
+  if (!st) { LAST_DRAW_ERR = `geen tekening (stop: ${out.stop_reason})`; return null; }
+  const clean = cleanDraw(st);
+  if (!clean) LAST_DRAW_ERR = `leeg (stop: ${out.stop_reason}, elementen: ${Array.isArray(st.els) ? st.els.length : typeof st.els})`;
+  return clean;
 }
 
 function b64(buf: ArrayBuffer) {
@@ -198,12 +202,13 @@ Deno.serve(async (req) => {
       const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}`;
       const models: string[] = Array.isArray(body.models) ? body.models : [body.model ?? "opus"];
       const styles: Record<string, unknown> = {};
-      await Promise.all(models.slice(0, 2).map(async (m) => { styles[m] = await drawLabel(m, img, "image/jpeg", desc); }));
+      const errors: Record<string, string> = {};
+      await Promise.all(models.slice(0, 2).map(async (m) => { styles[m] = await drawLabel(m, img, "image/jpeg", desc); if (!styles[m]) errors[m] = LAST_DRAW_ERR; }));
       if (!body.dry) {
         const st = styles[models[0]];
         if (st) await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
       }
-      return json({ status: "ok", foto: !!img, styles });
+      return json({ status: "ok", foto: !!img, styles, errors });
     }
 
     if (body.mode === "label") {
