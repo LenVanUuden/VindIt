@@ -143,6 +143,70 @@ function cleanStyle(s: Record<string, unknown>) {
   };
 }
 
+
+// ---------- Etiket zelf tekenen (vrije opbouw) ----------
+// Een sterker model bekijkt het etiket, noemt de herkenbare elementen en tekent ze
+// zelf op een leeg etiket van 300 × 400. De app tekent het na (alleen eenvoudige vormen).
+const DRAW_MODELS: Record<string, string> = {
+  opus: Deno.env.get("LABEL_MODEL_OPUS") ?? "claude-opus-5-5",
+  sonnet: Deno.env.get("LABEL_MODEL_SONNET") ?? "claude-sonnet-5-5",
+};
+const DRAW_SYSTEM = `You redraw wine labels for a Dutch wine-collecting app. The app shows a simplified illustration of the FRONT label; someone holding the real bottle must recognise it at a glance. Return the drawing via the "tekening" tool.
+
+Step 1 – key: list the 2 to 5 most recognisable elements of this label (e.g. "tall narrow black name", "red striped sun lower centre", "gold coat of arms under the year", "mountain range along the top edge").
+Step 2 – draw the label on an empty label of 300 wide × 400 high (y = 0 at the top). Place every element where it really is, with its real size, colour and capitals. Leave out small print; show a block of small text as "lines".
+
+Elements (els), in drawing order:
+- {"t":"text","s":"…","y":baseline,"size":font size,"font":"condensed|classic|didone|script|gothic|modern|display","weight":400-900,"color":"#hex" or "metal","ls":letter spacing,"italic":bool,"upper":bool,"w":optional exact width,"x":optional,"align":"center|left|right"}. Copy text EXACTLY as printed (same words, language, accents). Use "{year}" for the vintage.
+- {"t":"art","x":…,"y":…,"w":…,"h":…,"svg":"…"}: your own simplified drawing of a picture, emblem, crest, building, animal, sun, mountains etc. The svg uses a 0–100 × 0–100 coordinate box that is stretched to w × h, so choose w:h close to the real proportions. Allowed: path, circle, ellipse, rect, polygon, polyline, line, g with fill, stroke, stroke-width, opacity, fill-opacity, stroke-opacity, transform, stroke-linecap, stroke-linejoin. Colours as hex, "none" or "metal" (gold or silver foil). No text inside svg, no gradients, no images. Keep it clean: 3 to 40 shapes. Draw a recognisable simplified version, not an exact copy of a logo or artwork.
+- {"t":"lines","x":…,"y":…,"w":…,"h":…,"cols":1-3,"color":"#hex"}: a block of small print.
+- {"t":"rule","y":…,"w":…,"thick":…,"color":"#hex"}: a horizontal line or colour band.
+
+Also: paper (label colour, hex), ink (main text colour), metal ("gold","silver","none"), border ("none","thin","double","frame") and border_color. Typical sizes: main name 26–44, small lines 6–10. Keep everything inside the label.`;
+const DRAW_SCHEMA = {
+  type: "object",
+  properties: {
+    key: { type: "array", items: { type: "string" } },
+    paper: { type: "string" }, ink: { type: "string" },
+    metal: { type: "string", enum: ["gold", "silver", "none"] },
+    border: { type: "string", enum: ["none", "thin", "double", "frame"] }, border_color: { type: "string" },
+    els: { type: "array", items: { type: "object", properties: {
+      t: { type: "string", enum: ["text", "art", "lines", "rule"] },
+      s: { type: "string" }, x: { type: "number" }, y: { type: "number" }, w: { type: "number" }, h: { type: "number" },
+      size: { type: "number" }, font: { type: "string" }, weight: { type: "number" }, color: { type: "string" },
+      ls: { type: "number" }, italic: { type: "boolean" }, upper: { type: "boolean" }, align: { type: "string" },
+      svg: { type: "string" }, cols: { type: "number" }, thick: { type: "number" } }, required: ["t"] } },
+  },
+  required: ["key", "paper", "ink", "els"],
+};
+function cleanDraw(s: Record<string, unknown>) {
+  const col = (v: unknown) => (typeof v === "string" && (/^#[0-9a-fA-F]{6}$/.test(v) || v === "metal") ? v : undefined);
+  const num = (v: unknown) => (typeof v === "number" && isFinite(v) ? Math.round(v * 10) / 10 : undefined);
+  const str = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : undefined);
+  const els = (Array.isArray(s.els) ? s.els : []).slice(0, 24).map((e: Record<string, unknown>) => ({
+    t: str(e.t, 6), s: str(e.s, 48), x: num(e.x), y: num(e.y), w: num(e.w), h: num(e.h), size: num(e.size),
+    font: str(e.font, 12), weight: num(e.weight), color: col(e.color), ls: num(e.ls), italic: e.italic === true || undefined,
+    upper: e.upper === true || undefined, align: str(e.align, 6), svg: str(e.svg, 6000), cols: num(e.cols), thick: num(e.thick),
+  })).filter((e) => ["text", "art", "lines", "rule"].includes(e.t ?? ""));
+  if (!els.length) return null;
+  return { v: 2, key: (Array.isArray(s.key) ? s.key : []).slice(0, 6).map((k) => String(k).slice(0, 80)),
+    paper: col(s.paper), ink: col(s.ink), metal: str(s.metal, 8), border: str(s.border, 8), border_color: col(s.border_color), els };
+}
+async function drawLabel(model: string, img: string | null, mediaType: string, desc: string) {
+  const content: unknown[] = img ? [{ type: "image", source: { type: "base64", media_type: mediaType, data: img } }, { type: "text", text: desc }] : [{ type: "text", text: desc + "\nGeen foto: teken het echte etiket zoals je het kent; ken je de wijn niet, ontwerp dan een passend, geloofwaardig etiket." }];
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    body: JSON.stringify({ model: DRAW_MODELS[model] ?? DRAW_MODELS.opus, max_tokens: 4000, system: DRAW_SYSTEM,
+      tools: [{ name: "tekening", description: "Tekening van het etiket", input_schema: DRAW_SCHEMA }], tool_choice: { type: "tool", name: "tekening" },
+      messages: [{ role: "user", content }] }),
+  });
+  if (!r.ok) { console.error("draw", r.status, await r.text()); return null; }
+  const out = await r.json();
+  const st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+  return st ? cleanDraw(st) : null;
+}
+
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
@@ -237,6 +301,17 @@ Deno.serve(async (req) => {
         const { error: lsErr } = await admin.rpc("set_label_style", { p_wine: result.wine.id, p_style: labelStyle });
         if (lsErr) console.error("label_style", lsErr); else result.wine.label_style = labelStyle;
       }
+    }
+    // Daarna: het etiket in de achtergrond zelf laten tekenen door het sterkere model (eenmalig per wijn)
+    const curStyle = result?.wine?.label_style as Record<string, unknown> | null | undefined;
+    if (result?.wine?.id && !(curStyle && (curStyle.v === 2 || curStyle.locked))) {
+      const wid = result.wine.id;
+      const desc = `Wijn: ${payload.naam}\nMaker: ${payload.maker || "onbekend"}\nJaargang: ${payload.jaar ?? "geen"}\nHerkomst: ${payload.app || ""} (${payload.regio}, ${payload.land || ""})\nStijl: ${payload.stijl || ""}\nDe foto toont de hele fles; teken het hoofdetiket.`;
+      const job = drawLabel("opus", image, mediaType, desc).then(async (st) => {
+        if (st) { const { error: de } = await admin.rpc("set_label_style", { p_wine: wid, p_style: st, p_force: true }); if (de) console.error("draw save", de); }
+      }).catch((e) => console.error("draw", e));
+      // @ts-ignore EdgeRuntime bestaat in Supabase Edge Functions
+      if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(job);
     }
     const lb = w.label_box && ["x", "y", "w", "h"].every((k) => typeof w.label_box[k] === "number") ? w.label_box : null;
     return json({ status: "ok", recognized: payload, confidence: w.confidence, result, label_box: lb, label_style: labelStyle });

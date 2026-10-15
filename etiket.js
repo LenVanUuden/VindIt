@@ -100,6 +100,7 @@ const ETK_EMB={
 };
 /* ---- het etiket ---- */
 function makeLabelSVG(st,c){
+  if(st&&Array.isArray(st.els)&&st.els.length)return makeLabelFree(st,c);
   ETK_N++;const id='etk'+ETK_N;
   st=st||{};const L=st.lines||{};
   const paper=st.paper||'#F3E9D2',ink=st.ink||'#2B2118',acc=st.accent||'#8E1F31';
@@ -149,5 +150,76 @@ function makeLabelSVG(st,c){
   </defs>
   <rect width="300" height="400" fill="${paper}"/><rect width="300" height="400" fill="${paper}" filter="url(#${id}g)"/>
   ${border}${topSvg}${embSvg}${nameSvg}${yearSvg}${subSvg}${mk}${botSvg}
+  <rect width="300" height="400" fill="url(#${id}sh)"/></svg>`;
+}
+
+/* =====================================================================
+   Vrije opbouw: Claude tekent het etiket zelf, element voor element.
+   st.els = [
+     {t:'text', s, y, size, font, color, ls, italic, upper, w},   // tekstregel (gecentreerd, of x)
+     {t:'art',  x, y, w, h, svg},     // eigen lijntekening in een vak van 100×100
+     {t:'lines',x, y, w, h, cols},    // blok kleine tekst (als grijze regels)
+     {t:'rule', y, w, color}          // lijntje
+   ]   (alle maten in het etiket van 300 × 400)
+   Alleen eenvoudige vormen en kleuren worden doorgelaten.
+   ===================================================================== */
+const ETK_TAGS=new Set(['path','circle','ellipse','rect','polygon','polyline','line','g']);
+const ETK_ATTR=new Set(['d','cx','cy','r','rx','ry','x','y','width','height','points','x1','y1','x2','y2','fill','stroke','stroke-width','opacity','fill-opacity','stroke-opacity','transform','stroke-linecap','stroke-linejoin','stroke-dasharray']);
+function etkSafeSvg(src,metalUrl){
+  if(typeof src!=='string'||src.length>6000||typeof DOMParser==='undefined')return '';
+  let doc;try{doc=new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${src}</svg>`,'image/svg+xml')}catch(e){return ''}
+  if(doc.querySelector('parsererror'))return '';
+  let n=0;
+  const walk=el=>[...el.children].map(ch=>{
+    const tag=ch.tagName.toLowerCase();if(!ETK_TAGS.has(tag)||++n>120)return '';
+    const at=[...ch.attributes].filter(a=>ETK_ATTR.has(a.name)).map(a=>{
+      let v=String(a.value);
+      if(a.name==='fill'||a.name==='stroke'){if(v==='metal')v=metalUrl||'#C9A253';else if(!/^(#[0-9a-f]{3,8}|none|currentColor)$/i.test(v))return ''}
+      else if(!/^[-0-9.,\s a-zA-Z()]*$/.test(v)||/url|script|expression/i.test(v))return '';
+      return `${a.name}="${v.replace(/"/g,'')}"`}).filter(Boolean).join(' ');
+    return tag==='g'?`<g ${at}>${walk(ch)}</g>`:`<${tag} ${at}/>`;
+  }).join('');
+  return walk(doc.documentElement);
+}
+function makeLabelFree(st,c){
+  ETK_N++;const id='etk'+ETK_N;
+  const paper=st.paper||'#F3E9D2',ink=st.ink||'#2B2118',metal=st.metal==='silver'?'silver':st.metal==='gold'?'gold':null,mu=metal?`url(#${id}m)`:null;
+  const col=v=>v==='metal'&&mu?mu:(typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v)?v:ink);
+  const num=(v,d,lo,hi)=>{v=+v;return isFinite(v)?Math.max(lo,Math.min(hi,v)):d};
+  const name=String(c&&c.naam||'');
+  const parts=(st.els||[]).slice(0,24).map(e=>{
+    if(!e||typeof e!=='object')return '';
+    if(e.t==='text'){
+      const F=ETK_FONTS[e.font]||ETK_FONTS.classic,size=num(e.size,14,5,70),y=num(e.y,200,8,396);
+      let s=String(e.s||'').slice(0,48);if(s==='{year}')s=String(c&&c.jaar||'');if(e.upper)s=s.toUpperCase();
+      const w=num(e.w,0,0,280),x=num(e.x,150,0,300),anchor=e.align==='left'?'start':e.align==='right'?'end':'middle';
+      const fit=w?`textLength="${w}" lengthAdjust="spacingAndGlyphs"`:'';
+      const sc=e.font==='condensed'?` transform="scale(1 1.18)" transform-origin="${x} ${y}"`:'';
+      return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${F.f}" font-weight="${e.weight||F.w}" font-size="${size}" letter-spacing="${num(e.ls,0,-2,12)}" fill="${col(e.color)}" ${e.italic?'font-style="italic"':''} ${fit}${sc}>${esc(s)}</text>`;
+    }
+    if(e.t==='art'){
+      const x=num(e.x,100,0,300),y=num(e.y,100,0,400),w=num(e.w,100,4,300),h=num(e.h,100,4,400);
+      const inner=etkSafeSvg(e.svg,mu);if(!inner)return '';
+      return `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible">${inner}</svg>`;
+    }
+    if(e.t==='lines'){
+      const x=num(e.x,30,0,300),y=num(e.y,250,0,400),w=num(e.w,240,10,300),h=num(e.h,40,4,200),cols=num(e.cols,1,1,3)|0,gap=10,cw=(w-gap*(cols-1))/cols;
+      let o='';for(let k=0;k<cols;k++)for(let yy=0;yy<h;yy+=5.5){const lw=cw*(yy+5.5>=h?.55:(.82+((k*7+yy)%5)*.04));o+=`<rect x="${(x+k*(cw+gap)).toFixed(1)}" y="${(y+yy).toFixed(1)}" width="${Math.min(cw,lw).toFixed(1)}" height="1.6" rx=".8" fill="${col(e.color)}" opacity=".55"/>`}
+      return o;
+    }
+    if(e.t==='rule'){const y=num(e.y,300,0,400),w=num(e.w,120,4,290);return `<rect x="${150-w/2}" y="${y}" width="${w}" height="${num(e.thick,1.2,.4,8)}" fill="${col(e.color)}"/>`}
+    return '';
+  }).join('');
+  const bd=st.border||'none',bc=st.border_color==='metal'&&mu?mu:(st.border_color||ink);
+  const border=bd==='thin'?`<rect x="14" y="14" width="272" height="372" fill="none" stroke="${bc}" stroke-width="2"/>`
+    :bd==='double'?`<rect x="12" y="12" width="276" height="376" fill="none" stroke="${bc}" stroke-width="2.4"/><rect x="19" y="19" width="262" height="362" fill="none" stroke="${bc}" stroke-width="1"/>`
+    :bd==='frame'?`<rect x="10" y="10" width="280" height="380" fill="none" stroke="${bc}" stroke-width="7"/>`:'';
+  return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Etiket ${esc(name)}">
+  <defs>${metal?etkMetal(id+'m',metal):''}
+    <linearGradient id="${id}sh" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".18" stop-color="#000" stop-opacity="0"/><stop offset=".55" stop-color="#fff" stop-opacity=".10"/><stop offset=".85" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient>
+    <filter id="${id}g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${ETK_N%9}"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+  </defs>
+  <rect width="300" height="400" fill="${paper}"/><rect width="300" height="400" fill="${paper}" filter="url(#${id}g)"/>
+  ${border}${parts}
   <rect width="300" height="400" fill="url(#${id}sh)"/></svg>`;
 }

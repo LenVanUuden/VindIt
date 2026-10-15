@@ -27,6 +27,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 22 | **Kelderboek en menu vernieuwd**: klassen als postzegels (tik = blad met al je kaarten van die klasse), landen als lakzegels, menu met tegels; bevestigingsmeldingen weg | Len | Middel-hoog: vriendelijker en minder lijst | Klein | Live |
 | 23 | **Nieuwe Full Arts**: Rare = papieren etiket op zilverglitter (kantelt), Super Rare = fles voor het etiket op goudglitter (wiegt, met schaduw), Ultra = nachtelijke streek met gedetailleerd landmark, noorderlicht, open fles met bewegende kurk; scheurtjes uniek per wijn | Len | Hoog: elke klasse een eigen soort kaart | Groot | Live |
 | 24 | **Legendes altijd Full Art met een eigen tekening** per wijn (fles, etiket, plek, glitter); geen 5%-kans meer voor Legendes | Len | Hoog: de topklasse echt uniek | Groot | Idee (later) |
+| 25 | **Etiketten zelf laten tekenen** door Claude Opus: herkenbare elementen benoemen en als eigen lijntekening plaatsen (vrije opbouw, `els`); beheerder kan per kaart opnieuw tekenen, Sonnet vs Opus vergelijken en vastzetten | Len | Hoog: elke kaart herkenbaar als díe wijn | Middel | Live (test) |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)

@@ -116,7 +116,7 @@ button{font:inherit;color:inherit}
 .card::before,.mini::before{content:"";position:absolute;pointer-events:none;z-index:5}
 .card::before{inset:-4px;background:radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 100%/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/8px 12px repeat-y,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 100% 0/8px 12px repeat-y}
 .mini::before{inset:-2.5px;background:radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 100%/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/5px 7px repeat-y,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 100% 0/5px 7px repeat-y}
-.art svg,.art img{display:block;width:100%;height:auto}
+.art>svg,.art>img,.art>.lart>.etkbox>svg{display:block;width:100%;height:auto}
 .art img{aspect-ratio:10/7}
 /* Rare+: het echte etiket op de streekposter */
 .lart{position:relative;aspect-ratio:10/7;overflow:hidden}
@@ -131,7 +131,7 @@ button{font:inherit;color:inherit}
 .mini .lbox{top:4%;height:80%}
 /* Getekend etiket op de streekposter */
 .etkbox{position:absolute;z-index:5;left:50%;top:6%;height:76%;aspect-ratio:3/4;transform:translateX(-50%) rotate(-1.5deg);filter:drop-shadow(0 0 .8px rgba(255,251,240,.9)) drop-shadow(0 3px 6px rgba(0,0,0,.5))}
-.etkbox svg,.etkfa svg{width:100%;height:100%;display:block}
+.etkbox>svg,.etkfa>svg{width:100%;height:100%;display:block}
 .etkbox .lfoil,.etkfa .lfoil{position:absolute;inset:0}
 .t-superrare .etkbox .lfoil{opacity:.22}
 .falbl.etkfa{aspect-ratio:3/4;max-width:none;z-index:6}
@@ -313,6 +313,8 @@ button{font:inherit;color:inherit}
 .tiers span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);opacity:.8;white-space:nowrap}
 .tiers em{font-style:normal;font-size:10px;color:var(--cream);opacity:.5;font-variant-numeric:tabular-nums}
 .toc{list-style:none;margin:0;padding:0;display:grid}
+.adm .btn{font-size:11.5px;padding:5px 9px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(94vw,520px)}.cmpcol{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}.cmpcol small{opacity:.7;margin-top:-4px}.cmplbl{width:100%}.cmplbl>svg{width:100%;height:auto;border-radius:3px;box-shadow:0 4px 10px rgba(0,0,0,.5)}.cmpcol ul{text-align:left;font-size:11px;margin:0;padding-left:16px;opacity:.85}
 .etip{letter-spacing:.04em;text-transform:none;opacity:.65;font-size:10.5px}
 .kstamps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:4px 0 2px}
 .kstamp{position:relative;aspect-ratio:.8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:0;cursor:pointer;color:#3A2A1C;font:inherit;padding:4px 2px;
@@ -1128,18 +1130,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-195425'</script>
-<script src="data.js?v=20261015-195425"></script>
-<script src="art.js?v=20261015-195425"></script>
-<script src="gids.js?v=20261015-195425"></script>
-<script src="maps.js?v=20261015-195425"></script>
-<script src="zegels.js?v=20261015-195425"></script>
-<script src="landen.js?v=20261015-195425"></script>
-<script src="etiket.js?v=20261015-195425"></script>
-<script src="fullart.js?v=20261015-195425"></script>
-<script src="stickers.js?v=20261015-195425"></script>
-<script src="vrienden.js?v=20261015-195425"></script>
-<script src="wereldbol.js?v=20261015-195425"></script>
+<script>window.VI_V='20261015-202417'</script>
+<script src="data.js?v=20261015-202417"></script>
+<script src="art.js?v=20261015-202417"></script>
+<script src="gids.js?v=20261015-202417"></script>
+<script src="maps.js?v=20261015-202417"></script>
+<script src="zegels.js?v=20261015-202417"></script>
+<script src="landen.js?v=20261015-202417"></script>
+<script src="etiket.js?v=20261015-202417"></script>
+<script src="fullart.js?v=20261015-202417"></script>
+<script src="stickers.js?v=20261015-202417"></script>
+<script src="vrienden.js?v=20261015-202417"></script>
+<script src="wereldbol.js?v=20261015-202417"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1302,8 +1304,8 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Ook wijnen die al een ontwerp hebben, gaan opnieuw langs Claude (met de foto als die er is). Handmatig ingestelde ontwerpen worden overschreven. Dit kost ongeveer een cent per wijn en duurt even.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
-  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp gaan langs Claude. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost een paar cent en duurt even.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
+  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen worden opnieuw getekend door Claude Opus (met de foto als die er is). Vastgezette etiketten worden overgeslagen. Dit kost ongeveer 5 à 6 cent per wijn en duurt ongeveer een halve minuut per twee wijnen.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
+  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Opus. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 5 à 6 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
@@ -2023,11 +2025,13 @@ function openCard(id,showBack,nest){
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
     ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
     <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
+    ${isAdmin()&&!viewing?`<div class="actions adm"><button class="btn small" id="adraw">${I('pen')} Etiket opnieuw tekenen</button><button class="btn small" id="acmp">${I('sparkle')} Sonnet vs Opus</button><button class="btn small" id="alock">${c.style&&c.style.locked?'🔓 Losmaken':'🔒 Vastzetten'}</button></div>`:''}
     <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
   if(c.fa)setTimeout(()=>faRays(o,o.querySelector('.spin')),30);
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
   o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
+  if(o.querySelector('#adraw')){o.querySelector('#adraw').onclick=()=>adminDraw(c);o.querySelector('#acmp').onclick=()=>adminCompare(c);o.querySelector('#alock').onclick=()=>adminLock(c)}
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 function openStack(gid){
@@ -2476,6 +2480,36 @@ function openLists(nest){
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
+}
+
+/* Beheer: één etiket opnieuw laten tekenen, modellen vergelijken, vastzetten */
+const setWineStyle=(c,st)=>{cards.filter(x=>x.wineId===c.wineId).forEach(x=>x.style=st);refresh();renderChrome()};
+async function callDraw(body){
+  const r=await sb.functions.invoke('reassess',{body});
+  if(r.error){let msg='';try{const j=await r.error.context.clone().json();msg=j.status||''}catch(e){}throw new Error(msg||'mislukt')}
+  return r.data;
+}
+async function adminDraw(c){
+  overlay(`<p class="status">Etiket wordt getekend…</p><p class="hint">Claude Opus bekijkt je foto en tekent ${esc(c.naam)}. Dit duurt ongeveer een halve minuut.</p>`,{nest:true});
+  try{const d=await callDraw({mode:'draw',wine:c.wineId,model:'opus'});const st=d.styles&&d.styles.opus;
+    if(!st)throw new Error('geen tekening');setWineStyle(c,st);closeOverlay();openCard(c.id)}
+  catch(e){closeOverlay();toast('Tekenen lukte niet ('+e.message+'). Is reassess opnieuw gedeployd?')}
+}
+async function adminCompare(c){
+  overlay(`<p class="status">Twee modellen tekenen…</p><p class="hint">Sonnet en Opus tekenen tegelijk ${esc(c.naam)}. Dit duurt ongeveer een halve minuut. Er wordt nog niets opgeslagen.</p>`,{nest:true});
+  let d;try{d=await callDraw({mode:'draw',wine:c.wineId,models:['sonnet','opus'],dry:true})}catch(e){closeOverlay();toast('Vergelijken lukte niet ('+e.message+').');return}
+  popOverlay();
+  const col=(m,lab,price)=>{const st=d.styles[m];return `<div class="cmpcol"><b>${lab}</b><small>${price}</small>${st?`<div class="cmplbl">${makeLabelSVG(st,c)}</div><ul>${(st.key||[]).map(k=>`<li>${esc(k)}</li>`).join('')}</ul><button class="btn small" data-pick="${m}">Deze gebruiken</button>`:'<p class="hint">Geen tekening</p>'}</div>`};
+  const o=overlay(`<p class="status">Sonnet vs Opus</p><p class="hint">${d.foto?'Getekend vanaf je foto.':'Geen foto gevonden: getekend uit kennis.'}</p>
+    <div class="cmp">${col('sonnet','Sonnet','±2,5 cent')}${col('opus','Opus','±5,5 cent')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten zonder opslaan</button></div>`,{nest:true});
+  o.querySelector('#close').onclick=()=>popOverlay();
+  o.querySelectorAll('[data-pick]').forEach(b=>b.onclick=async()=>{b.disabled=true;
+    try{const r=await callDraw({mode:'save',wine:c.wineId,style:d.styles[b.dataset.pick]});setWineStyle(c,r.style);closeOverlay();openCard(c.id)}catch(e){b.disabled=false;toast('Opslaan lukte niet.')}});
+}
+async function adminLock(c){
+  const want=!(c.style&&c.style.locked);
+  try{const r=await callDraw({mode:'lock',wine:c.wineId,locked:want});setWineStyle(c,r.style);closeOverlay();openCard(c.id)}catch(e){toast('Vastzetten lukte niet.')}
 }
 
 /* Beheer: voorbeelden van alle Full Arts (niets wordt opgeslagen) */
