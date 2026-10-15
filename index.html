@@ -860,6 +860,53 @@ h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
 .t-common.fa{background:#EFE6D2;padding:6px}.mini.t-common.fa{padding:3px}
 .fa .stamp{color:#F3D9A0;border-color:rgba(243,217,160,.8);outline-color:rgba(243,217,160,.5);background:rgba(0,0,0,.2)}
 .whyline{color:var(--gold-soft);font-style:italic}
+/* ===== Stickers ===== */
+.stklayer{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden;border-radius:inherit}
+.stk{position:absolute;aspect-ratio:1;pointer-events:none;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.45));transform-origin:50% 50%}
+.stk svg{display:block;width:100%;height:100%;overflow:visible}
+.stk.ink{filter:none;mix-blend-mode:multiply}
+[data-pages="zwart"] .page:not(.cover) .stk.ink,.page.cover .stk.ink{mix-blend-mode:screen;filter:invert(1) hue-rotate(180deg) brightness(1.15) opacity(.9)}
+.stkholo{position:absolute;inset:6%;border-radius:50%;pointer-events:none;background:conic-gradient(from var(--fang),#ff8db5,#ffd76e,#8dffc8,#79b9ff,#c995ff,#ff8db5);mix-blend-mode:color-dodge;opacity:.45;animation:fang 4s linear infinite}
+.stkedit .stklayer{pointer-events:auto;outline:2px dashed rgba(233,211,160,.55);outline-offset:-6px}
+.stkedit .stk{pointer-events:auto;touch-action:none;cursor:grab}
+.stk.sel{outline:1.5px dashed #E9D3A0;outline-offset:3px;z-index:2}
+.stkx{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:1.5px solid #E9D3A0;background:#5a1622;color:#F6E6BE;font-size:18px;line-height:24px;padding:0;cursor:pointer}
+.stkrot{position:absolute;right:-13px;bottom:-13px;width:26px;height:26px;border-radius:50%;border:1.5px solid #5a1622;background:#E9D3A0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a1622' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M19 12a7 7 0 1 1-2.2-5.1'/%3E%3Cpath d='M19 4.4V8h-3.6'/%3E%3C/svg%3E") center/16px no-repeat;cursor:nwse-resize}
+.stkedit .dock{visibility:hidden}
+.stktray{position:fixed;left:0;right:0;bottom:0;z-index:55;max-height:44dvh;display:flex;flex-direction:column;background:var(--leather-dark,#2a0c12);background-image:var(--leathergrain);border-top:1.5px solid rgba(201,162,83,.7);border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.5);padding:10px 14px calc(max(env(safe-area-inset-bottom,0px),var(--navfix,0px)) + 10px);transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);color:var(--cream)}
+.stktray.in{transform:none}
+.stkhead{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}.stkhead b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--gold-soft)}.stkhead span{font-size:11.5px;opacity:.75}
+.stkgrid{overflow-y:auto;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;padding-bottom:6px}
+.stkg{width:100%;margin:6px 0 0;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);opacity:.85}
+.stkpick{position:relative;width:62px;height:62px;border-radius:12px;border:1px solid rgba(201,162,83,.55);background:#F3E6CC;background-image:var(--grain);padding:6px;cursor:pointer;box-shadow:inset 0 1px 3px rgba(0,0,0,.25)}
+.stkpick svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.stkpick .stkholo{inset:10px}
+.stklock{flex:1 1 140px;border:1px dashed rgba(201,162,83,.35);border-radius:10px;padding:6px 8px;font-size:11px;opacity:.7;display:flex;flex-direction:column}
+.stklock b{font-weight:600;color:var(--gold-soft)}
+.stkacts{display:flex;gap:10px;justify-content:flex-end;padding-top:8px}
+.stkbtn{background:none;border:1px solid rgba(201,162,83,.45);color:var(--gold-soft);border-radius:999px;width:30px;height:30px;padding:5px;margin-right:8px;vertical-align:middle;cursor:pointer}
+.stkbtn .ico{width:18px;height:18px}
+.backcover{justify-content:center}
+.bcin{border:1.5px solid rgba(210,174,98,.55);outline:1px solid rgba(210,174,98,.3);outline-offset:5px;padding:26px 22px;text-align:center;display:flex;flex-direction:column;gap:8px;width:62%}
+.bcbrand{font-family:var(--display);font-size:30px;margin:0}
+.bchint{font-size:12.5px;color:var(--gold-soft);opacity:.75;text-align:center;max-width:70%}
+/* ===== Wijnvrienden ===== */
+.viewbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 10px 6px 12px;border-radius:12px;background:linear-gradient(90deg,rgba(201,162,83,.22),rgba(201,162,83,.08));border:1px solid rgba(201,162,83,.5);color:var(--cream);animation:popcard .4s backwards}
+.viewbar .btn{white-space:nowrap;flex:none}
+.viewbar>span{display:flex;align-items:center;gap:8px;min-width:0}
+@media (max-width:430px){.viewbar small{display:none}}.viewbar b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.viewbar small{opacity:.7;font-size:11px}
+.viewbar .ico{width:18px;height:18px;color:var(--gold-soft);flex:none}
+body.viewing #scan,body.viewing .quota{visibility:hidden}
+body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbtn{display:none!important}
+.flist{display:flex;flex-direction:column;gap:8px;width:min(92vw,420px)}
+.frow{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:rgba(246,230,190,.06);border:1px solid rgba(201,162,83,.3);text-align:left;animation:popcard .35s calc(var(--i)*50ms) backwards}
+.fname{flex:1;min-width:0;display:flex;flex-direction:column}.fname b{font-weight:600}.fname small{font-size:11.5px;opacity:.7}
+.fbook{flex:none;width:30px}.fbook .swbook{display:block;width:30px;height:40px}
+.fdel{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid rgba(201,162,83,.35);background:none;color:var(--cream);opacity:.7;padding:6px;cursor:pointer}.fdel .ico{width:16px;height:16px}
+.fempty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;opacity:.85}
+.finvite{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(92vw,420px)}
+.hint.small{font-size:12px}
+.flink{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}.flink code{font-size:12px;word-break:break-all;background:rgba(0,0,0,.25);padding:6px 10px;border-radius:8px;user-select:all}
 </style>
 </head>
 <body>
@@ -885,6 +932,8 @@ h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
 <script src="art.js"></script>
 <script src="gids.js"></script>
 <script src="maps.js"></script>
+<script src="stickers.js"></script>
+<script src="vrienden.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -924,11 +973,11 @@ const COVERS={bordeaux:'Bordeaux',groen:'Groen',blauw:'Blauw',cognac:'Cognac',zw
 const PAGESTYLE={zwart:'Zwart karton',creme:'Crème karton'};
 let settings={name:'',cover:'bordeaux',pages:'zwart'};
 try{const s=JSON.parse(localStorage.getItem('winex.settings')||'null');if(s)settings={...settings,...s}}catch(e){}
-const coverName=()=>settings.name||firstName();
+const coverName=()=>viewing?viewing.name:(settings.name||firstName());
 function applySettings(){
   document.documentElement.dataset.cover=COVERS[settings.cover]?settings.cover:'bordeaux';
   document.documentElement.dataset.pages=PAGESTYLE[settings.pages]?settings.pages:'zwart';
-  try{localStorage.setItem('winex.settings',JSON.stringify(settings))}catch(e){}
+  if(!viewing)try{localStorage.setItem('winex.settings',JSON.stringify(settings))}catch(e){}
 }
 applySettings();
 async function loadSettings(){
@@ -937,7 +986,7 @@ async function loadSettings(){
     if(!error&&data){LIMIT=data.daily_limit||3;settings={...settings,name:data.display_name||'',cover:data.cover_color||'bordeaux',pages:data.page_color||'zwart'};applySettings()}
   }catch(e){}
 }
-const ICONS={"book": "<path d=\"M3.8 5.6c2.7-1.1 5.4-1 8.2.9 2.8-1.9 5.5-2 8.2-.9v13.2c-2.7-1.1-5.4-1-8.2.9-2.8-1.9-5.5-2-8.2-.9z\"/><path d=\"M12 6.5v13.2\"/>", "star": "<path d=\"M12 3.6l2.5 5.2 5.7.8-4.2 4 1 5.7L12 16.6l-5 2.7 1-5.7-4.2-4 5.7-.8z\"/>", "globe": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M3.6 12h16.8M12 3.6c2.5 2.6 3.5 5.5 3.5 8.4s-1 5.8-3.5 8.4M12 3.6C9.5 6.2 8.5 9.1 8.5 12s1 5.8 3.5 8.4\"/>", "map": "<path d=\"M3.8 6.6l5.2-2 6 2 5.2-2v12.8l-5.2 2-6-2-5.2 2z\"/><path d=\"M9 4.6v12.8M15 6.6v12.8\"/>", "grapes": "<circle cx=\"9\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"17.6\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"11.2\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"15.5\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"17.2\" r=\"2.1\"/><path d=\"M13.4 7.5V4.2M13.4 5c1.2-1.4 3.2-1.6 4.6-.6\"/>", "trophy": "<path d=\"M8 4h8v5.2a4 4 0 0 1-8 0z\"/><path d=\"M8 6H5.2a2.6 2.6 0 0 0 3.2 4.2M16 6h2.8a2.6 2.6 0 0 1-3.2 4.2M12 13.2v3.6M9.5 16.8h5l.8 3.2H8.7z\"/>", "question": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8v.5\"/><circle cx=\"12\" cy=\"16.9\" r=\".5\"/>", "play": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M10 8.4l5.6 3.6-5.6 3.6z\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"2.6\"/><path d=\"M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M6 18l1.6-1.6M16.4 7.6L18 6\"/><circle cx=\"12\" cy=\"12\" r=\"5.6\"/>", "chat": "<path d=\"M4.4 6.4a2 2 0 0 1 2-2h11.2a2 2 0 0 1 2 2v8.2a2 2 0 0 1-2 2H11l-4.6 3.4v-3.4a2 2 0 0 1-2-2z\"/><path d=\"M8.2 9.2h7.6M8.2 12.4h5\"/>", "logout": "<path d=\"M13.6 4.4H7a1.6 1.6 0 0 0-1.6 1.6v12A1.6 1.6 0 0 0 7 19.6h6.6\"/><path d=\"M10.4 12h9.4M16.6 8.6 20 12l-3.4 3.4\"/>", "camera": "<path d=\"M4 8h3l2-2.5h6L17 8h3v11H4z\"/><circle cx=\"12\" cy=\"13.2\" r=\"3.6\"/>", "cards": "<rect x=\"5\" y=\"5.6\" width=\"10.4\" height=\"14\" rx=\"1.4\"/><path d=\"M8.6 3.4h9a1.4 1.4 0 0 1 1.4 1.4v12.4\"/><path d=\"M7.6 9.6h5.2M7.6 15.4h5.2\"/>", "cart": "<path d=\"M3.4 5h2.2l2 10h10.2l2-7.2H7\"/><circle cx=\"9.2\" cy=\"19\" r=\"1.2\"/><circle cx=\"16.4\" cy=\"19\" r=\"1.2\"/>", "glass": "<path d=\"M7.8 3.6h8.4c0 4.4-1.4 7.6-4.2 8-2.8-.4-4.2-3.6-4.2-8z\"/><path d=\"M12 11.6v7.6M8.6 20h6.8M8.1 7.2h7.8\"/>", "search": "<circle cx=\"10.6\" cy=\"10.6\" r=\"5.8\"/><path d=\"M15 15l5 5\"/>", "bug": "<path d=\"M8 10.4a4 4 0 0 1 8 0v3.8a4 4 0 0 1-8 0z\"/><path d=\"M12 10.4v7.8M8 12.4H4.6M19.4 12.4H16M8.4 16.4l-2.8 1.8M15.6 16.4l2.8 1.8M8.8 7.6 6.6 5.2M15.2 7.6l2.2-2.4\"/>", "bulb": "<path d=\"M9 17h6M10 20h4M8.6 14c-1.6-1.3-2.6-3.1-2.6-5a6 6 0 0 1 12 0c0 1.9-1 3.7-2.6 5-.6.5-.9 1.2-.9 2H9.5c0-.8-.3-1.5-.9-2z\"/>", "heart": "<path d=\"M12 19.6s-7.2-4.3-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.2c0 5.1-7.2 9.4-7.2 9.4z\"/>", "pen": "<path d=\"M15.4 4.8l3.8 3.8L9 18.8l-4.8 1 1-4.8z\"/><path d=\"M13.4 6.8l3.8 3.8\"/>", "turn": "<path d=\"M19 12a7 7 0 1 1-2.2-5.1\"/><path d=\"M19 4.4V8h-3.6\"/>", "sparkle": "<path d=\"M11 3.6l1.7 5.1 5.1 1.7-5.1 1.7L11 17.2l-1.7-5.1-5.1-1.7 5.1-1.7z\"/><path d=\"M18.2 15.4l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z\"/>", "stack": "<rect x=\"4.4\" y=\"8.4\" width=\"10.8\" height=\"11.2\" rx=\"1.2\"/><path d=\"M7.6 5.6h10.4a1.2 1.2 0 0 1 1.2 1.2v10M10.8 3h9a1.2 1.2 0 0 1 1.2 1.2v8.6\"/>", "close": "<path d=\"M6.6 6.6l10.8 10.8M17.4 6.6 6.6 17.4\"/>", "swipe": "<path d=\"M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4\"/>", "pin": "<path d=\"M12 20.6s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z\"/><circle cx=\"12\" cy=\"9.6\" r=\"2.1\"/>", "arrowl": "<path d=\"M14.5 5.5 8 12l6.5 6.5\"/>"};
+const ICONS={"book": "<path d=\"M3.8 5.6c2.7-1.1 5.4-1 8.2.9 2.8-1.9 5.5-2 8.2-.9v13.2c-2.7-1.1-5.4-1-8.2.9-2.8-1.9-5.5-2-8.2-.9z\"/><path d=\"M12 6.5v13.2\"/>", "star": "<path d=\"M12 3.6l2.5 5.2 5.7.8-4.2 4 1 5.7L12 16.6l-5 2.7 1-5.7-4.2-4 5.7-.8z\"/>", "globe": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M3.6 12h16.8M12 3.6c2.5 2.6 3.5 5.5 3.5 8.4s-1 5.8-3.5 8.4M12 3.6C9.5 6.2 8.5 9.1 8.5 12s1 5.8 3.5 8.4\"/>", "map": "<path d=\"M3.8 6.6l5.2-2 6 2 5.2-2v12.8l-5.2 2-6-2-5.2 2z\"/><path d=\"M9 4.6v12.8M15 6.6v12.8\"/>", "grapes": "<circle cx=\"9\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"17.6\" cy=\"9.6\" r=\"2.1\"/><circle cx=\"11.2\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"15.5\" cy=\"13.4\" r=\"2.1\"/><circle cx=\"13.4\" cy=\"17.2\" r=\"2.1\"/><path d=\"M13.4 7.5V4.2M13.4 5c1.2-1.4 3.2-1.6 4.6-.6\"/>", "trophy": "<path d=\"M8 4h8v5.2a4 4 0 0 1-8 0z\"/><path d=\"M8 6H5.2a2.6 2.6 0 0 0 3.2 4.2M16 6h2.8a2.6 2.6 0 0 1-3.2 4.2M12 13.2v3.6M9.5 16.8h5l.8 3.2H8.7z\"/>", "question": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2 1-1.2 1.8v.5\"/><circle cx=\"12\" cy=\"16.9\" r=\".5\"/>", "play": "<circle cx=\"12\" cy=\"12\" r=\"8.4\"/><path d=\"M10 8.4l5.6 3.6-5.6 3.6z\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"2.6\"/><path d=\"M12 3.6v2.2M12 18.2v2.2M3.6 12h2.2M18.2 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M6 18l1.6-1.6M16.4 7.6L18 6\"/><circle cx=\"12\" cy=\"12\" r=\"5.6\"/>", "chat": "<path d=\"M4.4 6.4a2 2 0 0 1 2-2h11.2a2 2 0 0 1 2 2v8.2a2 2 0 0 1-2 2H11l-4.6 3.4v-3.4a2 2 0 0 1-2-2z\"/><path d=\"M8.2 9.2h7.6M8.2 12.4h5\"/>", "logout": "<path d=\"M13.6 4.4H7a1.6 1.6 0 0 0-1.6 1.6v12A1.6 1.6 0 0 0 7 19.6h6.6\"/><path d=\"M10.4 12h9.4M16.6 8.6 20 12l-3.4 3.4\"/>", "camera": "<path d=\"M4 8h3l2-2.5h6L17 8h3v11H4z\"/><circle cx=\"12\" cy=\"13.2\" r=\"3.6\"/>", "cards": "<rect x=\"5\" y=\"5.6\" width=\"10.4\" height=\"14\" rx=\"1.4\"/><path d=\"M8.6 3.4h9a1.4 1.4 0 0 1 1.4 1.4v12.4\"/><path d=\"M7.6 9.6h5.2M7.6 15.4h5.2\"/>", "cart": "<path d=\"M3.4 5h2.2l2 10h10.2l2-7.2H7\"/><circle cx=\"9.2\" cy=\"19\" r=\"1.2\"/><circle cx=\"16.4\" cy=\"19\" r=\"1.2\"/>", "glass": "<path d=\"M7.8 3.6h8.4c0 4.4-1.4 7.6-4.2 8-2.8-.4-4.2-3.6-4.2-8z\"/><path d=\"M12 11.6v7.6M8.6 20h6.8M8.1 7.2h7.8\"/>", "search": "<circle cx=\"10.6\" cy=\"10.6\" r=\"5.8\"/><path d=\"M15 15l5 5\"/>", "bug": "<path d=\"M8 10.4a4 4 0 0 1 8 0v3.8a4 4 0 0 1-8 0z\"/><path d=\"M12 10.4v7.8M8 12.4H4.6M19.4 12.4H16M8.4 16.4l-2.8 1.8M15.6 16.4l2.8 1.8M8.8 7.6 6.6 5.2M15.2 7.6l2.2-2.4\"/>", "bulb": "<path d=\"M9 17h6M10 20h4M8.6 14c-1.6-1.3-2.6-3.1-2.6-5a6 6 0 0 1 12 0c0 1.9-1 3.7-2.6 5-.6.5-.9 1.2-.9 2H9.5c0-.8-.3-1.5-.9-2z\"/>", "heart": "<path d=\"M12 19.6s-7.2-4.3-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.2c0 5.1-7.2 9.4-7.2 9.4z\"/>", "pen": "<path d=\"M15.4 4.8l3.8 3.8L9 18.8l-4.8 1 1-4.8z\"/><path d=\"M13.4 6.8l3.8 3.8\"/>", "turn": "<path d=\"M19 12a7 7 0 1 1-2.2-5.1\"/><path d=\"M19 4.4V8h-3.6\"/>", "sparkle": "<path d=\"M11 3.6l1.7 5.1 5.1 1.7-5.1 1.7L11 17.2l-1.7-5.1-5.1-1.7 5.1-1.7z\"/><path d=\"M18.2 15.4l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z\"/>", "stack": "<rect x=\"4.4\" y=\"8.4\" width=\"10.8\" height=\"11.2\" rx=\"1.2\"/><path d=\"M7.6 5.6h10.4a1.2 1.2 0 0 1 1.2 1.2v10M10.8 3h9a1.2 1.2 0 0 1 1.2 1.2v8.6\"/>", "close": "<path d=\"M6.6 6.6l10.8 10.8M17.4 6.6 6.6 17.4\"/>", "swipe": "<path d=\"M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4\"/>", "pin": "<path d=\"M12 20.6s6-6.2 6-11a6 6 0 0 0-12 0c0 4.8 6 11 6 11z\"/><circle cx=\"12\" cy=\"9.6\" r=\"2.1\"/>", "arrowl": "<path d=\"M14.5 5.5 8 12l6.5 6.5\"/>", "sticker": "<path d=\"M5 5.6A1.6 1.6 0 0 1 6.6 4h10.8A1.6 1.6 0 0 1 19 5.6V13l-6 6H6.6A1.6 1.6 0 0 1 5 17.4z\"/><path d=\"M19 13h-4.4a1.6 1.6 0 0 0-1.6 1.6V19\"/><circle cx=\"9.6\" cy=\"9.6\" r=\"1\"/><circle cx=\"14.4\" cy=\"9.6\" r=\"1\"/><path d=\"M9.4 13.2c1.4 1.2 3.2 1.2 4.4 0\"/>"};
 const I=(n,c='')=>`<svg class="ico ${c}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const MED=(n)=>`<span class="medal">${I(n)}</span>`;
 const DIFFTXT={1:[I('cart'),'Supermarkt','Vaak gewoon in de supermarkt te vinden.'],2:[I('glass'),'Wijnwinkel','Bij de slijter of een goede wijnwinkel.'],3:[I('search'),'Specialist','Bij een wijnspeciaalzaak, online of op reis.']};
@@ -1025,6 +1074,7 @@ async function runReassess(force){
   await loadAlbum();toast(`Klaar: ${done} wijnen opnieuw beoordeeld.`);
 }
 function openSettings(){
+  if(viewing){toast('Ga eerst terug naar je eigen album.');return}
   const o=overlay(`<p class="status">Instellingen</p>
     <form class="upl settings" id="sf" novalidate>
       <label for="sn">Naam op de omslag
@@ -1157,6 +1207,7 @@ function buildPages(){
       if(!vis.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!vis.length});
     }
     for(const set of SETS)if(set.part===2&&st.visible[set.id])P.push({t:'set',set});
+    P.push({t:'back'});
   }
   pages=P;
 }
@@ -1173,7 +1224,7 @@ const IMG={},LBL={};
 /* Full Art vanaf Rare: het etiket groot op de poster */
 const faLabel=c=>['rare','superrare','ultra'].includes(c.rar)?`<div class="falbl"><img class="lbl" src="${labelSrc(c)}" data-w="${c.wineId}" onerror="lblFallback(this)" alt="Etiket van ${esc(c.naam)}"><i class="lfoil"></i></div>`:'';
 const isDemoWine=c=>!!POOL_BY_KEY[c.key];
-const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${session.user.id}/${c.wineId}.label.jpg`;
+const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${ownerId()}/${c.wineId}.label.jpg`;
 /* Etiket uit de foto knippen: met het kader van Claude (procenten), anders het midden van de zoeker */
 function cropLabel(src,box){
   const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
@@ -1419,11 +1470,13 @@ function openWorldLand(land){
 function makePage(i){
   const el=makePage0(i),mm=miniMapFor(pages[i]);
   if(mm){el.classList.add('hasmap');el.insertAdjacentHTML('afterbegin',mm)}
+  if(session&&!loading)el.insertAdjacentHTML('beforeend',stkLayer(i));
   return el;
 }
 function makePage0(i){
   const p=pages[i],el=document.createElement('section');el.className='page';
   if(p.t==='cover'){el.classList.add('cover');el.innerHTML=coverHTML();wireLogin(el);return el}
+  if(p.t==='back'){el.classList.add('cover','backcover');el.innerHTML=`<div class="bcin"><p class="eyebrow">Wijnzegelalbum</p><p class="bcbrand foil">Vined It</p><p class="eyebrow">${cards.length} ${cards.length===1?'wijn':'wijnen'} · ${st.lands.length} ${st.lands.length===1?'land':'landen'}</p></div>${!viewing&&!(STK.back||[]).length?`<p class="bchint">De achterkant is van jou. Plak hier je stickers.</p>`:''}`;return el}
   if(p.t==='inhoud'){
     const lists=SETS.filter(s=>s.part===2&&st.visible[s.id]);
     const hiddenLists=SETS.filter(s=>s.part===2&&!st.visible[s.id]).length;
@@ -1520,7 +1573,7 @@ function toCard(row,w){
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:w.jaar,druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,fa:!!row.full_art,bottles:row.bottles||1,why:w.tier_reason||'',memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===session.user.id};
+    rar:row.tier,fa:!!row.full_art,bottles:row.bottles||1,why:w.tier_reason||'',memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
 }
 async function loadAlbum(){
   await loadSettings();
@@ -1533,6 +1586,7 @@ async function loadAlbum(){
   retriedToday=new Set();
   try{const rt=await sb.from('retries').select('wine_id,created_at').order('created_at',{ascending:false}).limit(200);const td=amsDay(new Date());(rt.data||[]).forEach(r=>{if(amsDay(new Date(r.created_at))===td)retriedToday.add(r.wine_id)})}catch(e){}
   try{const t=await sb.rpc('scans_today');serverToday=(!t.error&&typeof t.data==='number')?t.data:null}catch(e){serverToday=null}
+  await loadStickers();
   refresh();renderChrome();
 }
 
@@ -1547,7 +1601,7 @@ function renderChrome(){
   $('#dots').innerHTML=LIMIT<=5?Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}${popDot&&k===used-1?' pop':''}"></i>`).join(''):`<span class="qnum">${used} / ${LIMIT} · tester</span>`;
   $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
   if(!session||!st){$('#tabs').innerHTML='';return}
-  $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button><span class="pageno">Blad ${cur+1} / ${pages.length}</span>`;
+  $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button><span class="pageno">${!viewing&&pages[cur]?`<button class="stkbtn" data-act="stickers" aria-label="Stickers plakken op deze bladzijde">${I('sticker')}</button>`:''}Blad ${cur+1} / ${pages.length}</span>`;
 }
 function countUp(pg){
   const els=pg.querySelectorAll('[data-n]');if(!els.length)return;
@@ -1558,7 +1612,7 @@ function countUp(pg){
 }
 let lastUsed=null;
 function go(n,force){
-  if(n<0||n>=pages.length||busy)return;
+  if(n<0||n>=pages.length||busy||stkEdit)return;
   if(n===cur&&!force)return;
   const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur,moved=n!==cur||!old;
   if(moved&&!reduced){const pg=nu.querySelector('.page');pg.classList.add('enter');if(old)pg.classList.add('late');countUp(pg)}
@@ -1576,6 +1630,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="menu"]')){openMenu();return}
   if(e.target.closest('[data-act="jump"]')){openJump();return}
   if(e.target.closest('[data-act="tour"]')){openTour();return}
+  if(e.target.closest('[data-act="stickers"]')){openStickers();return}
   const ib=e.target.closest('[data-info]');if(ib){openInfoTip(ib.dataset.info);return}
   if(e.target.closest('[data-act="settings"]')){openSettings();return}
   if(e.target.closest('[data-act="feedback"]')){openFeedback();return}
@@ -1656,7 +1711,7 @@ function memoBack(c){
   const d=c.memoAt?fmtDate(c.memoAt):'';
   return `<div class="memoback"><div class="mbin">
     <div class="mbhead"><span>Herinnering</span><span class="mbseal">VI</span></div>
-    ${c.memo?`<p class="mbtext">${esc(c.memo)}</p><p class="mbdate">${esc(d)}</p>`:`<p class="mbempty">Nog geen herinnering bij deze wijn.<br>Met wie dronk je hem, en waar?</p>`}
+    ${c.memo?`<p class="mbtext">${esc(c.memo)}</p><p class="mbdate">${esc(d)}</p>`:(viewing?`<p class="mbempty">Herinneringen zijn privé.<br>Alleen ${esc(viewing.name)} kan ze lezen.</p>`:`<p class="mbempty">Nog geen herinnering bij deze wijn.<br>Met wie dronk je hem, en waar?</p>`)}
     <p class="mbwine">${esc(c.naam)}${c.jaar?' · '+c.jaar:''}</p></div></div>`;
 }
 function spinCard(o,c){
@@ -1704,6 +1759,7 @@ function openStack(gid){
   o.querySelector('#close').onclick=()=>{closeOverlay();go(cur,true)};o.querySelector('#close').focus();
 }
 function openMemo(id,after){
+  if(viewing)return;
   const c=cards.find(x=>x.id===id);if(!c)return;
   const o=overlay(`<p class="status">Herinnering schrijven</p>
     <p class="hint">Met wie dronk je ${esc(c.naam)}, waar was je, wat maakte het bijzonder? Je tekst komt in handschrift op de achterkant van de kaart, met de datum erbij.</p>
@@ -1724,6 +1780,7 @@ function openMemo(id,after){
   const w=o.querySelector('#wipe');if(w)w.onclick=()=>askConfirm('Herinnering wissen?','Je tekst op de achterkant verdwijnt. Dit kun je niet ongedaan maken.','Wissen',()=>save(''));
 }
 function openFavPicker(id){
+  if(viewing)return;
   const c=cards.find(x=>x.id===id);if(!c)return;
   const favs=cards.filter(x=>x.fav).sort((a,b)=>a.fav-b.fav);
   const rows=Array.from({length:10},(_,k)=>{const r=k+1,occ=favs.find(x=>x.fav===r);
@@ -2119,7 +2176,7 @@ function openLists(nest){
 
 /* ---------- navigatie: kruimel, menu, springen ---------- */
 function crumbOf(p){
-  if(p.t==='cover')return 'Omslag';if(p.t==='inhoud')return I('book')+' Kelderboek';if(p.t==='fav')return I('star')+' Top 10';if(p.t==='world')return I('globe')+' Mijn wijnwereld';
+  if(p.t==='cover')return 'Omslag';if(p.t==='back')return 'Achterkant';if(p.t==='inhoud')return I('book')+' Kelderboek';if(p.t==='fav')return I('star')+' Top 10';if(p.t==='world')return I('globe')+' Mijn wijnwereld';
   if(p.t==='chapter')return esc(p.land);if(p.t==='overige')return esc(p.land)+(p.noSets?'':' › Overige');
   if(p.t==='set')return p.set.part===1?`${esc(p.set.land)} <span class="sep">›</span> ${esc(p.set.name)}`:`Uitdaging <span class="sep">›</span> ${esc(p.set.name)}`;
   return '';
@@ -2131,7 +2188,9 @@ function openMenu(){
       <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">${I('close')}</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>`:''}
       ${session?`<p class="mgroup">Album</p>
       ${it('book','Kelderboek',`data-mgo="1"`)}${it('star','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?it('globe','Mijn wijnwereld',`data-mgo="${pg('world')}"`):''}
-      ${it('grapes','Landen','data-mact="lands"')}${it('trophy','Uitdagingen','data-mact="lists"')}`:''}
+      ${it('grapes','Landen','data-mact="lands"')}${it('trophy','Uitdagingen','data-mact="lists"')}
+      <p class="mgroup">Persoonlijk</p>
+      ${viewing?it('arrowl','Terug naar mijn album','data-mact="mine"'):it('sticker','Stickers plakken','data-mact="stickers"')}${it('heart','Mijn wijnvrienden','data-mact="friends"')}`:''}
       <p class="mgroup">Hulp</p>
       ${it('question','Hoe werkt Vined It?','data-mact="info"')}${it('play','Rondleiding','data-mact="tour"')}
       ${session?`<p class="mgroup">Account</p>${it('gear','Instellingen','data-mact="settings"')}${it('chat','Feedback','data-mact="feedback"')}${it('logout','Uitloggen','data-mact="logout"')}`:''}
@@ -2141,7 +2200,7 @@ function openMenu(){
   o.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();closeOverlay();go(+b.dataset.mgo)});
   o.querySelectorAll('[data-mact]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const a=b.dataset.mact;
     if(a==='lands'){closeOverlay();openLands()}else if(a==='lists'){closeOverlay();openLists()}else if(a==='info'){closeOverlay();openInfo()}
-    else if(a==='tour'){closeOverlay();openTour()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
+    else if(a==='tour'){closeOverlay();openTour()}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
     else if(a==='logout')askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout)});
   const f=o.querySelector('.mitem');if(f)f.focus();
 }
@@ -2219,19 +2278,21 @@ function hintSwipe(){
   const h=document.createElement('div');h.className='swipehint';h.innerHTML='<span>'+I('swipe')+'</span> Veeg om te bladeren';document.body.appendChild(h);setTimeout(()=>h.remove(),4200);
 }
 async function logout(){
+  if(viewing)exitFriend();
   closeOverlay();await sb.auth.signOut();settings={name:'',cover:'bordeaux',pages:'zwart'};applySettings();LIMIT=3;serverToday=null;session=null;cards=[];ownedKeys=new Set();authStep='email';busy=false;refresh();cur=0;go(0,true);toast('Je bent uitgelogd.');
 }
 
 /* ---------- start ---------- */
 (async function boot(){
+  initViewbar();
   refresh();go(0,true);fitAlbum();
   try{const {data}=await sb.auth.getSession();session=data.session}catch(e){session=null}
   if(session)await loadAlbum();
   loading=false;refresh();go(0,true);fitAlbum();
-  if(session){let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700)}
+  if(session){let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700);else acceptPendingInvite()}
   sb.auth.onAuthStateChange((ev,s)=>{
     if(ev==='SIGNED_OUT'&&session){session=null;cards=[];ownedKeys=new Set();refresh();cur=0;go(0,true)}
-    else if(ev==='SIGNED_IN'&&s&&!session&&!verifying){session=s;loadAlbum().then(()=>{go(0,true);let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700)})}
+    else if(ev==='SIGNED_IN'&&s&&!session&&!verifying){session=s;loadAlbum().then(()=>{go(0,true);let seen=null;try{seen=localStorage.getItem('vi.tour')}catch(e){seen='1'}if(!seen)setTimeout(openTour,700);else acceptPendingInvite()})}
     else if(s)session=s;
   });
 })();

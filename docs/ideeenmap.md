@@ -8,7 +8,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 2 | **Spectaculairder omdraaien** van een nieuwe kaart | Tester | Hoog: het piekmoment van de app | Middel | Live |
 | 3 | **Top 10**: eigen bladzijde direct na het Kelderboek, #1 bovenaan en 3×3 eronder | Tester | Middel | Klein | Live |
 | 4 | **"Inhoud" hernoemen** naar "Kelderboek" (naam kan later nog veranderen) | Tester | Klein, maar sfeerverhogend | Heel klein | Live |
-| 5 | **Verbinden met andere gebruikers**: elkaars album bekijken | Tester | Hoog voor groei, maar pas zinvol met meer gebruikers | Groot | Later |
+| 5 | **Mijn wijnvrienden**: uitnodigen met een link, elkaars album alleen-lezen bekijken (herinneringen privé) | Tester / Len | Hoog voor groei | Middel | Live |
 | 6 | Druivenjager: open logboek voor zeldzame druiven | Len | Hoog | Klein | Idee |
 | 7 | Eigen sets ("Vakantie Toscane 2026") | Claude | Hoog | Middel | Idee |
 | 8 | Welkomstrondleiding (4 schermen) | Claude | Hoog voor nieuwe gebruikers | Klein | Live |
@@ -19,6 +19,8 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 14 | **Walk-out bij nieuwe kaart** (FIFA-stijl): land, druif, streek, kaart; Ultra/Icon extra drama; overslaan kan altijd | Len | Hoog: het piekmoment verlengen | Middel | Live |
 | 15 | **Gebruiksgemak**: menu linksboven, 'waar ben ik'-knop, vaste ✕ en ‹ Terug, telefoon-terugknop sluit vensters, ⓘ-uitleg, nieuwe 'Hoe werkt Vined It?', bevestigingen, alles op één scherm, premium scanknop | Len | Hoog | Middel | Live |
 | 16 | **De wijn bepaalt de klasse**: signalen (prijs, classificatie, producent, productie, zeldzaamheid NL, jaar, leeftijd, magnum) → vaste klasse per wijn, met reden; Full Art (5%) als geluk; 'Nieuwe fles' telt flessen | Len | Hoog: eerlijk en uitlegbaar, Opus One is altijd Icon | Middel | Live |
+| 17 | **Stickers**: verdiende stickers plakken op omslag, achterkant en bladzijden; verdienen via ontdekken, niet via drinken. Kopen pas bij ±100+ gebruikers | Len | Hoog: echt eigen album | Middel | Live (kopen: later) |
+| 18 | **Deel deze bladzijde** als afbeelding voor WhatsApp/Instagram | Claude | Middel-hoog: zichtbaarheid | Klein | Idee |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)
