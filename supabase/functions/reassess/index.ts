@@ -67,8 +67,8 @@ Deno.serve(async (req) => {
     const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const cols = "id,naam,maker,jaar,druif,stijl,regio,land,appellation,color,is_icon";
     const q = body.force
-      ? admin.from("wines").select(cols).order("created_at").range(body.offset ?? 0, (body.offset ?? 0) + BATCH - 1)
-      : admin.from("wines").select(cols).is("signals", null).order("created_at").limit(BATCH);
+      ? admin.from("wines").select(cols).order("created_at").order("id").range(body.offset ?? 0, (body.offset ?? 0) + BATCH - 1)
+      : admin.from("wines").select(cols).is("signals", null).order("created_at").order("id").limit(BATCH);
     const { data: wines, error } = await q;
     if (error) throw error;
 

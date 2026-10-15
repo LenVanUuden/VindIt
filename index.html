@@ -944,7 +944,7 @@ async function runReassess(force){
     if(bad.length&&bad.length===(r.data.results||[]).length){toast('Opnieuw beoordelen lukte niet: '+(bad[0].error==='db'?'de database kent de nieuwe functie nog niet. Draai eerst migratie 010.':'Claude gaf geen antwoord ('+bad[0].error+').'),9000);return}
     done+=r.data.done||0;offset+=r.data.done||0;
     toast(`Beoordeeld: ${done} wijnen${r.data.remaining?' · bezig…':''}`);
-    if(!r.data.remaining||!r.data.done)break;
+    if(!r.data.remaining||!r.data.done||(bad.length&&bad.length===(r.data.results||[]).length))break;
   }
   await loadAlbum();toast(`Klaar: ${done} wijnen opnieuw beoordeeld.`);
 }
@@ -970,7 +970,7 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Alle wijnen gaan opnieuw door de nieuwe formule. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(true)});
+  const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
     e.preventDefault();
     const name=sn.value.trim().replace(/\s+/g,' ');
@@ -2068,7 +2068,7 @@ function openInfoTip(k){
 }
 /* ---------- uitleg en uitloggen ---------- */
 function openInfo(open,nest){
-  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€12–25, een betere herkomst of een ongewone vondst.',superrare:'Bijzonder: gerenommeerde maker, Cru-niveau of ±€25–80.',ultra:'Topwijn: grote naam, topclassificatie of ±€80+. Gouden lijst.',icon:'Legendarische wijnen, zoals Pétrus of Opus One.'};
+  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Gouden lijst.',icon:'Legendarische wijnen, zoals Pétrus of Opus One.'};
   const tiers=`<div class="tierlist">${TORDER.map(t=>`<div><span class="tsym">${TIERS[t].sym}</span><span><b>${TIERS[t].label}</b><br><small>${desc[t]}</small></span><span class="todd">${TIERS[t].odds}</span></div>`).join('')}</div>`;
   const sec=(id,ic,title,body)=>`<details class="howto" id="h-${id}"${open===id?' open':''}><summary>${MED(ic)}<span>${title}</span></summary><div class="hbody">${body}</div></details>`;
   const o=overlay(`<p class="status">Hoe werkt Vined It?</p>
