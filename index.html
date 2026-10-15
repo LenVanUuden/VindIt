@@ -128,6 +128,56 @@ button{font:inherit;color:inherit}
 .t-superrare .lfoil{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:260% 260%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.33;filter:brightness(.8) contrast(1.2)}
 .t-ultra .lfoil{background:linear-gradient(115deg,rgba(201,162,83,0) calc(var(--mx)*100% - 35%),rgba(255,226,150,.7) calc(var(--mx)*100%),rgba(201,162,83,0) calc(var(--mx)*100% + 35%)),linear-gradient(180deg,rgba(233,200,120,.35),rgba(150,110,40,.25));mix-blend-mode:overlay;box-shadow:inset 0 0 0 1.5px rgba(233,200,120,.8)}
 .mini .lbox{top:4%;height:80%}
+/* ===== Full Art: in één oogopslag herkenbaar ===== */
+@property --fang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes fang{to{--fang:360deg}}
+.card.fa.fa{background:conic-gradient(from var(--fang),#ff8db5,#ffd76e,#8dffc8,#79b9ff,#c995ff,#ff8db5);animation:fang 5s linear infinite}
+.card.fa.fa{box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 26px rgba(255,190,240,.45),0 20px 40px rgba(0,0,0,.5)}
+/* In het album (ongeopend) rustig: alleen een lichte live glans */
+.mini .fatw,.mini .fastamp{display:none}
+.mini .fasweep::before{animation-duration:6s;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.4),rgba(255,255,255,0))}
+/* 2. twinkelende glitters, ook als de kaart stil ligt */
+.fatw,.fatw::before,.fatw::after{position:absolute;inset:0;pointer-events:none}
+.fatw{z-index:5;mix-blend-mode:screen;-webkit-mask:linear-gradient(#000 0,#000 50%,rgba(0,0,0,.25) 66%,rgba(0,0,0,.1));mask:linear-gradient(#000 0,#000 50%,rgba(0,0,0,.25) 66%,rgba(0,0,0,.1))}
+.fatw::before,.fatw::after{content:"";background-image:
+  radial-gradient(circle,#fff 0 1px,rgba(255,255,255,0) 2.2px),radial-gradient(circle,#fff6c8 0 .8px,rgba(255,255,255,0) 1.8px),radial-gradient(circle,#ffd9f4 0 1.2px,rgba(255,255,255,0) 2.6px),
+  linear-gradient(rgba(255,255,255,0) 45%,rgba(255,255,255,.95) 50%,rgba(255,255,255,0) 55%),linear-gradient(90deg,rgba(255,255,255,0) 45%,rgba(255,255,255,.95) 50%,rgba(255,255,255,0) 55%);
+  background-size:61px 73px,83px 47px,109px 97px,11px 11px,11px 11px;background-repeat:repeat,repeat,repeat,no-repeat,no-repeat;
+  background-position:3px 5px,11px 2px,20px 30px,22% 18%,22% 18%;animation:twinkle 1.9s ease-in-out infinite alternate}
+.fatw::after{background-size:89px 101px,53px 67px,127px 113px,13px 13px,13px 13px;background-position:17px 13px,5px 19px,8px 4px,78% 62%,78% 62%;animation-duration:2.6s;animation-delay:-1.2s}
+@keyframes twinkle{0%{opacity:.15}50%{opacity:1}100%{opacity:.35}}
+/* 3. lichtstreep om de paar seconden */
+.fasweep{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
+.fasweep::before{content:"";position:absolute;top:-20%;bottom:-20%;width:45%;left:-60%;transform:skewX(-18deg);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));mix-blend-mode:overlay;animation:sweep 4.2s ease-in-out infinite}
+@keyframes sweep{0%,55%{left:-60%}85%,100%{left:130%}}
+/* 7. foliestempel */
+.fastamp{position:absolute;z-index:6;left:10px;top:34px;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font:700 9px/1.05 var(--display);letter-spacing:.08em;color:#3a1a2a;
+  background:conic-gradient(from var(--fang),#ffd76e,#ff8db5,#c995ff,#79b9ff,#8dffc8,#ffd76e);animation:fang 5s linear infinite reverse;box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 0 3.5px rgba(58,26,42,.35),0 3px 8px rgba(0,0,0,.45);transform:rotate(-12deg)}
+.fastamp::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1px dashed rgba(58,26,42,.5)}
+/* 4. lichtstralen achter de grote kaart */
+.farayw{position:absolute;z-index:-1;left:0;top:0;width:100%;overflow:hidden;pointer-events:none}
+.farays{position:absolute;left:var(--cx,50%);top:var(--cy,45%);width:170vmax;height:170vmax;transform:translate(-50%,-50%);pointer-events:none;
+  -webkit-mask:radial-gradient(circle,#000 6%,rgba(0,0,0,.6) 22%,transparent 46%);mask:radial-gradient(circle,#000 6%,rgba(0,0,0,.6) 22%,transparent 46%);animation:rayin 1s ease-out backwards}
+.farays::before,.farays::after{content:"";position:absolute;inset:0;border-radius:50%}
+.farays::before{background:repeating-conic-gradient(from 0deg,rgba(255,141,181,0) 0 6deg,rgba(255,215,110,.55) 8deg 10deg,rgba(255,141,181,0) 12deg 20deg,rgba(121,185,255,.45) 22deg 24deg,rgba(201,149,255,0) 26deg 30deg);animation:rayspin 26s linear infinite}
+.farays::after{background:repeating-conic-gradient(from 7deg,rgba(255,255,255,0) 0 9deg,rgba(255,255,255,.28) 11deg 12deg,rgba(255,255,255,0) 14deg 24deg);animation:rayspin 40s linear infinite reverse,raypulse 2.4s ease-in-out infinite alternate}
+@keyframes rayspin{to{transform:rotate(360deg)}}
+@keyframes raypulse{from{opacity:.35}to{opacity:1}}
+@keyframes rayin{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}}
+/* 6. showmoment */
+.fafw{position:fixed;left:0;top:0;width:100vw;height:100dvh;z-index:61;pointer-events:none}
+.overlay{overflow-x:hidden}
+.faflash{position:fixed;inset:0;z-index:62;pointer-events:none;background:radial-gradient(circle at 50% 45%,#fff 0,#fff 30%,rgba(255,220,250,.8) 55%,rgba(255,255,255,0) 85%);animation:faflash .9s ease-out forwards}
+@keyframes faflash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+.faslam{position:fixed;left:50%;top:40%;z-index:63;pointer-events:none;font:400 clamp(34px,11vw,60px)/1 var(--display);letter-spacing:.06em;white-space:nowrap;
+  background:linear-gradient(90deg,#ff8db5,#ffd76e,#8dffc8,#79b9ff,#c995ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 4px 12px rgba(0,0,0,.6));
+  animation:faslam 2.4s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes faslam{0%{opacity:0;transform:translate(-50%,0) scale(3)}18%{opacity:1;transform:translate(-50%,0) scale(1)}75%{opacity:1;transform:translate(-50%,0) scale(1.04)}100%{opacity:0;transform:translate(-50%,-20px) scale(1)}}
+@media (prefers-reduced-motion: reduce){.card.fa.fa,.fastamp,.fatw::before,.fatw::after,.fasweep::before,.farays::before,.farays::after{animation:none}}
+.falbl{position:absolute;z-index:1;left:50%;top:13%;height:43%;max-width:74%;transform:translateX(-50%) rotate(-2deg);filter:drop-shadow(0 0 1px #fbf6ea) drop-shadow(0 0 1px #fbf6ea) drop-shadow(0 6px 10px rgba(0,0,0,.55))}
+.falbl img.lbl{display:block;height:100%;width:auto;max-width:100%;object-fit:cover;aspect-ratio:auto}
+.mini .falbl{top:9%;height:46%}
+.fa .lfoil{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:260% 260%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.35;filter:brightness(.8) contrast(1.2);box-shadow:none}
 
 /* Mini card */
 .mini{--hole:var(--pocket);border:0;padding:4px 4px 5px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;height:100%;box-sizing:border-box;transition:transform .28s cubic-bezier(.2,.7,.2,1)}
@@ -1114,6 +1164,8 @@ function ultraFill(A,v){
 }
 
 const IMG={},LBL={};
+/* Full Art vanaf Rare: het etiket groot op de poster */
+const faLabel=c=>['rare','superrare','ultra'].includes(c.rar)?`<div class="falbl"><img class="lbl" src="${labelSrc(c)}" data-w="${c.wineId}" onerror="lblFallback(this)" alt="Etiket van ${esc(c.naam)}"><i class="lfoil"></i></div>`:'';
 const isDemoWine=c=>!!POOL_BY_KEY[c.key];
 const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${session.user.id}/${c.wineId}.label.jpg`;
 /* Etiket uit de foto knippen: met het kader van Claude (procenten), anders het midden van de zoeker */
@@ -1176,7 +1228,7 @@ async function uploadArt(c,img,box){
 
 /* ---------- kaarten ---------- */
 const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class="glare"></div>':'<div class="shine"></div><div class="sparkle"></div><div class="glare"></div>';
-const FA_LAYERS='<div class="shine fashine"></div><div class="sparkle"></div><div class="glare"></div>';
+const FA_LAYERS='<div class="shine fashine"></div><div class="sparkle"></div><div class="glare"></div><div class="fatw"></div><div class="fasweep"></div><span class="fastamp">FULL<br>ART</span>';
 const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
 const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
 function artHTML(c){
@@ -1188,14 +1240,14 @@ function bigCard(c){
   const top=`<div class="toprow"><span class="tloc">${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${c.fa?'Full Art':T.label}</span></div>`;
   const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
     <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif||'Onbekend')}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl||'—')}</dd></div><div><dt>${c.bottles>1?'Gedronken':'Gescand'}</dt><dd>${c.bottles>1?c.bottles+'× · sinds '+esc(c.datum):esc(c.datum)}</dd></div></dl>`;
-  if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${ultraFill(areaOf(c),c.v)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
+  if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${ultraFill(areaOf(c),c.v)}${faLabel(c)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
   return `<div class="card t-${c.rar} idle"><div class="face">${top}${stampHTML(c)}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
 }
 function mini(c){
   const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
   const ms=(c.first?'<span class="mstamp" aria-hidden="true"></span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
-  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${ultraFill(areaOf(c),c.v)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
+  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${ultraFill(areaOf(c),c.v)}${faLabel(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
 function slotHTML(c,label,d,gid,n){
@@ -1621,6 +1673,7 @@ function openCard(id,showBack,nest){
     <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
+  if(c.fa)setTimeout(()=>faRays(o,o.querySelector('.spin')),30);
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
   o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
@@ -1904,6 +1957,38 @@ function fxBurst(rar){
     h+=`<i style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--c:${cols[k%cols.length]};--s:${(4+Math.random()*7).toFixed(1)}px;--t:${(.7+Math.random()*.7).toFixed(2)}s"></i>`}
   fx.innerHTML=h;document.body.appendChild(fx);setTimeout(()=>fx.remove(),2600);
 }
+/* Full Art: lichtstralen achter de grote kaart */
+function faRays(o,card){
+  if(!card||o.querySelector('.farayw'))return;
+  const r=card.getBoundingClientRect(),q=o.getBoundingClientRect();
+  o.insertAdjacentHTML('afterbegin',`<div class="farayw" style="height:${o.scrollHeight}px"><div class="farays" style="--cx:${(r.left+r.width/2-q.left).toFixed(0)}px;--cy:${(r.top+r.height/2-q.top+o.scrollTop).toFixed(0)}px"></div></div>`);
+}
+/* Full Art: flits, vuurwerk achter de kaart vandaan en FULL ART! */
+function fxFullArt(card){
+  buzz([60,40,60,40,60,40,220]);
+  if(reduced)return;
+  const fl=document.createElement('div');fl.className='faflash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
+  const sl=document.createElement('div');sl.className='faslam';sl.textContent='FULL ART!';document.body.appendChild(sl);setTimeout(()=>sl.remove(),2500);
+  const cv=document.createElement('canvas');cv.className='fafw';const dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';document.body.appendChild(cv);const g=cv.getContext('2d');g.scale(dpr,dpr);
+  const r=card?card.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  const cx=r.left+r.width/2,cy=r.top+r.height/2,COLS=['#ff8db5','#ffd76e','#8dffc8','#79b9ff','#c995ff','#ffffff'];
+  const P=[];
+  const burst=(x,y,n,sp)=>{const col=COLS[(Math.random()*COLS.length)|0];for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=sp*(.35+Math.random()*.65);P.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,c:Math.random()<.3?'#fff':col,s:2+Math.random()*2.8})}};
+  // eerste knal: vanachter de kaart naar alle kanten
+  burst(cx,cy,220,12);
+  const spots=[[-.75,-.55],[.8,-.4],[-.6,.55],[.7,.6],[0,-.9],[-.95,0],[.95,.05]];
+  spots.forEach(([dx,dy],i)=>setTimeout(()=>burst(cx+dx*Math.max(r.width,160)*.95,cy+dy*Math.max(r.height,220)*.75,70,5.5),220+i*230));
+  let t0=performance.now();
+  const step=now=>{
+    g.clearRect(0,0,innerWidth,innerHeight);g.globalCompositeOperation='lighter';
+    for(const p of P){if(p.life<=0)continue;p.vx*=.97;p.vy=p.vy*.97+.07;p.x+=p.vx;p.y+=p.vy;p.life-=.011;
+      g.globalAlpha=Math.max(0,p.life);g.fillStyle=p.c;g.beginPath();g.arc(p.x,p.y,p.s*(.6+p.life*.6),0,Math.PI*2);g.fill();
+      if(Math.random()<.04){g.globalAlpha=Math.max(0,p.life);g.fillRect(p.x-3,p.y-.5,6,1);g.fillRect(p.x-.5,p.y-3,1,6)}}
+    if(now-t0<3600)requestAnimationFrame(step);else cv.remove();
+  };
+  requestAnimationFrame(step);
+}
 function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 function walkout(o,c,done){
   const wo=o.querySelector('#wo'),flip=o.querySelector('#flip'),hint=o.querySelector('#h'),status=o.querySelector('.status');
@@ -1946,8 +2031,8 @@ function reveal(c,news,title){
     const charge=reduced?0:(c.rar==='common'?700:c.rar==='rare'?1000:1400);
     o.querySelector('#h').textContent=reduced?'':'…';
     if(charge){flip.classList.add('charge');flip.style.setProperty('--ct',charge+'ms');buzz(c.rar==='common'?[20]:[15,60,15,60,25])}
-    setTimeout(()=>{flip.classList.remove('charge');flip.classList.add('open');fxBurst(c.fa&&c.rar!=='ultra'&&c.rar!=='icon'?'superrare':c.rar);
-      buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar]);
+    setTimeout(()=>{flip.classList.remove('charge');flip.classList.add('open');if(c.fa){fxBurst(c.rar==='common'||c.rar==='rare'?'superrare':c.rar);fxFullArt(flip);faRays(o,flip)}else{fxBurst(c.rar);
+      buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar])}
       setTimeout(()=>{tilt(card);if(c.rar!=='common'||c.fa){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+(c.fa?' · Full Art!':'!')}
         o.querySelector('.status').classList.add('pop');
         const si=stackInfo(c);o.querySelector('#h').textContent=(c.why?whyLine(c)+' ':HINT[c.rar])+(c.fa?' En het is een Full Art: puur geluk!':'')+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};

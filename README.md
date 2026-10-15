@@ -32,7 +32,7 @@ De **wijn bepaalt de klasse**, voor iedereen gelijk. Bij de eerste scan schat Cl
 
 Vanaf Rare knipt de app het etiket uit je foto (Claude geeft het kader, `label_box`; anders het midden van de zoeker). Demowijnen en kaarten van vóór deze versie tonen een getekend etiket tot de eerste echte scan van die wijn; scan je een wijn opnieuw, dan wordt de foto vervangen.
 
-**Full Art** is de geluksvariant: elke nieuwe kaart of nieuwe fles heeft 5% kans, in elke klasse. Bestaande wijnen worden opnieuw beoordeeld met de Edge Function `reassess` (alleen beheerder, knop in Instellingen).
+**Full Art** is de geluksvariant (streekposter over de hele kaart, vanaf Rare met je etiket groot erop). Groot geopend: regenboogrand, twinkelende glitters, lichtstreep, foliestempel en lichtstralen erachter; bij het trekken flits, vuurwerk en "FULL ART!". In het album alleen een lichte glans. Elke nieuwe kaart of nieuwe fles heeft 5% kans, in elke klasse. Bestaande wijnen worden opnieuw beoordeeld met de Edge Function `reassess` (alleen beheerder, knop in Instellingen).
 
 ## Bouwplan
 
