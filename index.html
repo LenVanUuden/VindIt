@@ -916,6 +916,22 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .finvite{display:flex;flex-direction:column;align-items:center;gap:6px;width:min(92vw,420px)}
 .hint.small{font-size:12px}
 .flink{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}.flink code{font-size:12px;word-break:break-all;background:rgba(0,0,0,.25);padding:6px 10px;border-radius:8px;user-select:all}
+/* ===== Wereldbol ===== */
+.gwrap{position:relative;width:min(100%,calc(100dvh - 330px));aspect-ratio:1;margin:0 auto;flex:none}
+.gwrap canvas.globe{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;opacity:0;transition:opacity .5s}
+.gwrap.live canvas.globe{opacity:1}
+.gfall{position:absolute;inset:0;display:flex;align-items:center;transition:opacity .4s}
+.gfall svg{width:100%;height:auto;border-radius:6px}
+.gfall .sea{fill:#C8B48C}.gfall path{fill:#EFE4CC;stroke:#8B6A3A;stroke-width:.5}.gfall path.own{fill:#B8862F}
+.gwrap.live .gfall{opacity:0;pointer-events:none}
+.gctl{position:absolute;right:0;bottom:0;display:flex;flex-direction:column;gap:6px;opacity:0;transition:opacity .4s}
+.gwrap.live .gctl{opacity:1}
+.gbtn{width:34px;height:34px;border-radius:50%;border:1.5px solid #C9A253;background:radial-gradient(circle at 35% 30%,#7a2a36,#4a1520 70%);box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);color:var(--gold-soft);font-size:20px;line-height:1;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.gbtn .ico{width:18px;height:18px}
+.gchipsw{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.gland{border:1px solid rgba(201,162,83,.55);background:rgba(201,162,83,.12);color:var(--gold-soft);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer}
+.gland b{color:var(--cream);font-weight:600;margin-left:2px}
+[data-pages="creme"] .gland{color:#6B4A16;background:rgba(201,162,83,.18)}[data-pages="creme"] .gland b{color:#3A2418}
 </style>
 </head>
 <body>
@@ -943,6 +959,7 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 <script src="maps.js"></script>
 <script src="stickers.js"></script>
 <script src="vrienden.js"></script>
+<script src="wereldbol.js"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1519,10 +1536,11 @@ function makePage0(i){
     const ws=worldStats();
     el.classList.add('worldpage');
     el.innerHTML=`<div><p class="eyebrow">${ws.have} van ${ws.tot} wijnlanden ontdekt</p><h2 class="foil">Mijn wijnwereld ${infoBtn('world')}</h2></div>
-      <div class="wmap">${worldSVG(MAPS.world,false)}</div>
-      <p class="eyebrow toch">Europa</p>
-      <div class="wmap">${worldSVG(MAPS.europe,true)}</div>
-      <p class="note">Tik op een land. Goud betekent ontdekt: hoe voller, hoe meer kaarten.</p>${pageFoot(i)}`;
+      ${globeHTML()}
+      <p class="note">Draai met je vinger, knijp om in te zoomen en tik op een land. Goud betekent ontdekt: hoe voller, hoe meer kaarten.</p>
+      ${(()=>{const L=[...new Set(cards.map(c=>c.land))].filter(Boolean).map(l=>[l,cards.filter(c=>c.land===l).length]).sort((a,b)=>b[1]-a[1]);
+        return L.length?`<div class="gchipsw">${L.map(([l,n])=>`<button class="gland" data-wland="${esc(l)}">${esc(l)} <b>${n}</b></button>`).join('')}</div>`:''})()}${pageFoot(i)}`;
+    setTimeout(()=>initGlobe(el.querySelector('.gwrap')),0);
     return el;
   }
   if(p.t==='chapter'){
@@ -2234,7 +2252,7 @@ const INFO={
   set:['Een set','Elk vak hoort bij een wijngebied. Scan een passende wijn en hij komt vanzelf in het juiste vak. Tik op een leeg vak voor tips: wat het is, wat het kost en waar je hem vindt. Heb je meerdere kaarten voor één vak, dan liggen ze op een stapel (×2, ×3…).','album'],
   lijst:['Uitdaging','Een opdracht dwars door je hele album heen, zoals één druif uit negen gebieden of wijn uit twaalf landen. Je kaarten tellen hier automatisch mee, naast hun eigen set. Sommige lijsten verschijnen pas als je de eerste passende wijn vindt.','album'],
   fav:['Top 10','Je favoriete kaarten, met nummer 1 bovenaan. Open een kaart en tik op ★ Top 10 om hem een plek te geven. De kaart blijft ook gewoon in zijn set.','top'],
-  world:['Mijn wijnwereld','Landen waar je een kaart uit hebt, kleuren goud: hoe voller, hoe meer kaarten. De rode speldjes zijn regio\'s die je hebt ontdekt. Tik op een land om erheen te gaan.','kaarten'],
+  world:['Mijn wijnwereld','Een wereldbol in leer en goud. Sleep om te draaien en een beetje te kantelen, knijp met twee vingers om in te zoomen (dan verschijnen ook de namen van wijnlanden). Landen waar je een kaart uit hebt, kleuren goud: hoe voller, hoe meer kaarten. De rode speldjes zijn je wijnen. Tik op een land om erheen te gaan.','kaarten'],
   stack:['Stapels','Passen meerdere kaarten in hetzelfde vak, dan liggen ze op een stapel. Bovenop ligt de zeldzaamste, tenzij je zelf een andere kiest met "Bovenop leggen".','herproeven']
 };
 function infoBtn(k){return `<button class="ibtn" data-info="${k}" aria-label="Uitleg">i</button>`}
