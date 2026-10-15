@@ -41,7 +41,18 @@ Rules:
 - tags: only these lowercase values when they apply: joven, crianza, reserva, gran reserva, rioja alta, rioja alavesa, rioja oriental, crémant, brut, blanc de blancs, blanc de noirs, brut nature, millésime, prestige, récoltant, vin jaune, grand cru, vendanges tardives, pét-nat. ("crémant" for any Crémant; "récoltant" if the label shows RM / récoltant-manipulant; "prestige" for a house's top cuvée; "brut nature" also for Extra Brut / zero dosage.)
 - Iconic wines: if the wine is one of these, use EXACTLY this naam / maker:
   Cloudy Bay Sauvignon Blanc / Cloudy Bay · Tignanello / Marchesi Antinori · Dom Pérignon / Moët & Chandon · Krug Grande Cuvée / Krug · Sassicaia / Tenuta San Guido · Vega Sicilia Único / Vega Sicilia · Château d'Yquem / Château d'Yquem · Penfolds Grange / Penfolds · Opus One / Opus One · Château Margaux / Château Margaux · Pétrus / Pétrus · Romanée-Conti / Domaine de la Romanée-Conti.
-- Be consistent: the same wine photographed twice must give the same naam and maker.`;
+- Be consistent: the same wine photographed twice must give the same naam and maker.
+
+Rarity signals (used to decide the card class; estimate honestly, prefer the lower option when unsure):
+- price_eur_low / price_eur_high: typical retail price range in a Dutch shop for this exact wine and vintage, in euros (75 cl). Use your knowledge of the producer, appellation and vintage. Supermarket brands are usually €5–10.
+- classification: "basis" (table/country wine, IGP, generic brand), "kwaliteit" (regular AOC/DOC/DO village or regional level), "premium" (Cru, Premier Cru, Riserva, Reserva/Gran Reserva, Grosses Gewächs, Cru Classé, single-vineyard), "top" (Grand Cru, Premier Grand Cru Classé, first growths and equivalent top tiers).
+- producer_fame: "merk" (mass-market brand, e.g. Barefoot, Jacob's Creek, supermarket labels), "regionaal" (normal estate or co-op), "gerenommeerd" (well-known quality producer among wine lovers), "wereldberoemd" (world-famous house or estate).
+- production: "massa" (millions of bottles), "gemiddeld", "klein" (small estate, single vineyard), "zeer klein" (tiny/numbered/cult).
+- rarity_nl: how hard to find in the Netherlands: "algemeen" (common in shops), "ongewoon" (specialist shops, unusual region or grape), "zeldzaam" (rarely seen in NL: e.g. Georgia, Lebanon, Jura vin jaune, rare grapes).
+- vintage_quality: quality of this vintage for this region: "top", "goed", "gemiddeld", "slecht", or "onbekend" if non-vintage or you don't know the region's vintages.
+- large_format: true only if the label shows a magnum or larger (1,5 L+).
+- iconic: true only for truly iconic, world-famous wines (e.g. Pétrus, Opus One, DRC, Sassicaia, Krug).
+Do NOT count medals, stickers or competition awards.`;
 
 const TOOL = {
   name: "wijnetiket",
@@ -63,8 +74,17 @@ const TOOL = {
       style: { type: "string", enum: ["stil", "mousserend", "zoet", "versterkt"] },
       color: { type: "string", enum: ["rood", "wit", "rosé"] },
       tags: { type: "array", items: { type: "string" } },
+      price_eur_low: { type: "number" },
+      price_eur_high: { type: "number" },
+      classification: { type: "string", enum: ["basis", "kwaliteit", "premium", "top"] },
+      producer_fame: { type: "string", enum: ["merk", "regionaal", "gerenommeerd", "wereldberoemd"] },
+      production: { type: "string", enum: ["massa", "gemiddeld", "klein", "zeer klein"] },
+      rarity_nl: { type: "string", enum: ["algemeen", "ongewoon", "zeldzaam"] },
+      vintage_quality: { type: "string", enum: ["top", "goed", "gemiddeld", "slecht", "onbekend"] },
+      large_format: { type: "boolean" },
+      iconic: { type: "boolean" },
     },
-    required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color"],
+    required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color", "price_eur_low", "price_eur_high", "classification", "producer_fame", "production", "rarity_nl", "vintage_quality"],
   },
 };
 
@@ -104,7 +124,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 700,
+        max_tokens: 900,
         system: SYSTEM,
         tools: [TOOL],
         tool_choice: { type: "tool", name: "wijnetiket" },
@@ -140,6 +160,17 @@ Deno.serve(async (req) => {
       style: w.style ?? "stil",
       color: w.color ?? "",
       tags: Array.isArray(w.tags) ? w.tags.map((t: string) => String(t).toLowerCase()) : [],
+      signals: {
+        price_eur_low: Number(w.price_eur_low) || null,
+        price_eur_high: Number(w.price_eur_high) || null,
+        classification: w.classification ?? null,
+        producer_fame: w.producer_fame ?? null,
+        production: w.production ?? null,
+        rarity_nl: w.rarity_nl ?? null,
+        vintage_quality: w.vintage_quality ?? "onbekend",
+        large_format: !!w.large_format,
+        iconic: !!w.iconic,
+      },
     };
     const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: payload });
     if (scanErr) throw scanErr;

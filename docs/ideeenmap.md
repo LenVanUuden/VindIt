@@ -18,6 +18,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 13 | **Stapels per vak**: extra kaarten op de stapel in hun vak, zeldzaamste bovenop, zelf te kiezen | Len | Hoog: elke kaart een plek in context, minder 'Overige' | Middel | Live |
 | 14 | **Walk-out bij nieuwe kaart** (FIFA-stijl): land, druif, streek, kaart; Ultra/Icon extra drama; overslaan kan altijd | Len | Hoog: het piekmoment verlengen | Middel | Live |
 | 15 | **Gebruiksgemak**: menu linksboven, 'waar ben ik'-knop, vaste ✕ en ‹ Terug, telefoon-terugknop sluit vensters, ⓘ-uitleg, nieuwe 'Hoe werkt Vined It?', bevestigingen, alles op één scherm, premium scanknop | Len | Hoog | Middel | Live |
+| 16 | **De wijn bepaalt de klasse**: signalen (prijs, classificatie, producent, productie, zeldzaamheid NL, jaar, leeftijd, magnum) → vaste klasse per wijn, met reden; Full Art (5%) als geluk; 'Nieuwe fles' telt flessen | Len | Hoog: eerlijk en uitlegbaar, Opus One is altijd Icon | Middel | Live |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)

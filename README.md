@@ -8,7 +8,7 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 
 - Maximaal **3 nieuwe scans per dag**. Dat gaat valsspelen tegen en moedigt geen extra alcoholgebruik aan.
 - **Eén kaart per wijn** (producent + cuvée; de jaargang is alleen een detail).
-- **Herproeven:** scan je een wijn die je al hebt, dan kun je kiezen voor een nieuwe trekking. Dat kost één van je 3 scans en kan één keer per dag per wijn; alleen een hogere klasse vervangt je kaart. Icon-kaarten kun je niet herproeven. Kies je niet, dan telt de scan niet mee.
+- **Nieuwe fles:** scan je een wijn die je al hebt, dan kies je "Nieuwe fles" (kost één scan, één keer per dag per wijn): de teller "N× gedronken" gaat omhoog en je maakt opnieuw 5% kans op een Full Art. De klasse zelf verandert niet, want die hoort bij de wijn. Kies je "Niet tellen", dan telt de scan niet mee.
 - Het album is ingedeeld in **hoofdstukken per land**, met per regio een set van 9 **benoemde** vakken (appellations). Achterin staan de **uitdagingen** (druiven, bubbels, Wereldreiziger, Icons).
 - **Kelderboek** (de inhoudsopgave) en **Top 10**: zet je favoriete kaarten op een eigen bladzijde, met nummer 1 bovenaan.
 - **Herinnering schrijven:** een korte tekst (max. 140 tekens) in handschrift op de achterkant van een kaart, met datum. De grote kaart is rond te draaien.
@@ -20,15 +20,17 @@ Een digitaal wijnzegelalbum. Scan het etiket van een wijn die je drinkt, krijg e
 
 ## Kaartklassen
 
-| Klasse | Symbool | Uiterlijk | Bepaald door |
-|---|---|---|---|
-| Common | ● | Regio als vintage reisposter | Geluk (~76%) |
-| Rare | ◆ | Eigen flesfoto in posterstijl, zilveren rand | Geluk (~18%) |
-| Super Rare | ◆◆ | Rare met regenboog-holo en glitter | Geluk (5%) |
-| Ultra | ★ | Full art in lagen, goudrand | Geluk (~1%) |
-| Icon | ♛ | Onyx en goud | De wijn (vaste lijst) |
+De **wijn bepaalt de klasse**, voor iedereen gelijk. Bij de eerste scan schat Claude signalen in (prijs in NL, classificatie, faam van de producent, productieomvang, zeldzaamheid in NL, kwaliteit van het jaar, flesleeftijd, magnum). De formule `wine_tier()` in `supabase/010_klasse_door_wijn.sql` maakt daar een klasse van, met een korte reden ("Waarom Rare? ±€12 · topjaar 2020"). Het jaar, de leeftijd en het flesformaat tellen samen maar beperkt mee. Medailles en scores tellen niet mee. Een beheerder kan per wijn `tier_override` zetten.
 
-Garantie: een Super Rare binnen 25 scans en een Ultra binnen 100. De kansen zijn niet zichtbaar in het album, alleen onder "Uitleg".
+| Klasse | Symbool | Uiterlijk | Typisch |
+|---|---|---|---|
+| Common | ● | Regio als vintage reisposter | Supermarktwijn, alledaags |
+| Rare | ◆ | Eigen flesfoto, zilveren rand | Een stap hoger, ±€15–45 of bijzondere herkomst |
+| Super Rare | ◆◆ | Regenboog-holo en glitter | Bekende producent, ±€50–150 |
+| Ultra | ★ | Goud metallic | Topwijn, ±€150+ of zeer schaars |
+| Icon | ♛ | Onyx en goud | Wereldiconen (vaste lijst of iconisch en ±€300+) |
+
+**Full Art** is de geluksvariant: elke nieuwe kaart of nieuwe fles heeft 5% kans, in elke klasse. Bestaande wijnen worden opnieuw beoordeeld met de Edge Function `reassess` (alleen beheerder, knop in Instellingen).
 
 ## Bouwplan
 
@@ -44,4 +46,4 @@ Live: https://lenvanuuden.github.io/VinedIt/ — of open `index.html` in een bro
 
 ## Database
 
-Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur) `supabase/004_herproeven.sql` (herproeven en de dagteller) `supabase/005_herproeven_wachttijd.sql` (één poging per wijn per dag) `supabase/006_testerlimiet.sql` (hogere dagelimiet voor testaccounts) en `supabase/007_scannen.sql` (budgetteller, daglimiet herkenningen, opslag voor kaartafbeeldingen) `supabase/008_feedback.sql` (feedback van testers; bekijken met `select * from public.feedback_overzicht;`) en `supabase/009_herinneringen_top10.sql` (herinneringen op de achterkant, de top 10 en de bovenste kaart van een stapel). De Edge Function staat in `supabase/functions/recognize/index.ts` en heeft het geheim `ANTHROPIC_API_KEY` nodig. De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klassetrekking en de garantie aan de serverkant afhandelt.
+Het schema staat in `supabase/schema.sql`, gevolgd door `supabase/002_sets.sql` (extra wijnvelden voor sets en de echte Icons) `supabase/003_instellingen.sql` (omslagkleur, naam en bladkleur) `supabase/004_herproeven.sql` (herproeven en de dagteller) `supabase/005_herproeven_wachttijd.sql` (één poging per wijn per dag) `supabase/006_testerlimiet.sql` (hogere dagelimiet voor testaccounts) en `supabase/007_scannen.sql` (budgetteller, daglimiet herkenningen, opslag voor kaartafbeeldingen) `supabase/008_feedback.sql` (feedback van testers; bekijken met `select * from public.feedback_overzicht;`) `supabase/009_herinneringen_top10.sql` (herinneringen op de achterkant, de top 10 en de bovenste kaart van een stapel) en `supabase/010_klasse_door_wijn.sql` (klasse per wijn, Full Art, nieuwe fles). De Edge Function `reassess` (`supabase/functions/reassess/index.ts`) beoordeelt bestaande wijnen opnieuw. De Edge Function staat in `supabase/functions/recognize/index.ts` en heeft het geheim `ANTHROPIC_API_KEY` nodig. De sets zelf staan in `data.js`. De app mag alleen lezen; kaarten ontstaan uitsluitend via de functie `scan_wine()`, die de dagelijkse limiet, de dubbelcheck, de klasse en de Full Art-kans aan de serverkant afhandelt.
