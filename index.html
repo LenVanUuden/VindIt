@@ -152,7 +152,8 @@ button{font:inherit;color:inherit}
 .facts dd{margin:0;text-align:right}
 /* Randmarge voor tekst op de kaart (de afbeelding blijft volle breedte) */
 .card .face>.toprow{padding:4px 8px 0}
-.card .toprow{gap:8px}.card .tloc{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .toprow{gap:8px}.card .tloc{flex:1 1 0;width:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.flipper>*,.spin>*{min-width:0}
 .card .face>h3,.card .face>.maker,.card .face>.facts{margin-left:10px;margin-right:10px}
 .card .face>.facts{padding-bottom:6px}
 .uinfo h3,.uinfo .maker,.uinfo .facts{margin-left:6px;margin-right:6px}
