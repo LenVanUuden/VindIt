@@ -1041,6 +1041,54 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .sealgrid .wseal .wax{width:min(98px,100%)}.sealgrid .wseal .nm{font-size:11.5px;color:var(--cream)}
 .wseal.on .wax{filter:drop-shadow(0 0 10px rgba(240,210,130,.7))}
 .wseal{border-radius:14px}.wseal:focus{outline:none}.wseal:focus-visible{outline:1.5px dashed rgba(233,211,160,.7);outline-offset:2px}
+
+/* ===== Klassen in één oogopslag: Common crème mat · Rare zilver · Super Rare goud · Ultra diamant · Legende onyx ===== */
+:root{--diamond-old:linear-gradient(135deg,#5F97D0,#EAF6FF 22%,#4C82BE 40%,#D6ECFF 58%,#6FA8E0 76%,#F2FAFF 90%,#5A90C8)}
+.t-common:not(.fa){background:#EDE3CC}
+.t-common:not(.fa) .face{background:#F4ECDA}
+.t-superrare:not(.fa){background:var(--gilt)}
+.t-superrare:not(.fa) .face{outline-color:#B88A3C}
+.t-superrare .toprow .pill{color:#8A5A12;border-color:#C9A253}
+.t-superrare .shine{background:repeating-linear-gradient(115deg,rgba(255,226,150,0) 0%,rgba(255,226,150,.5) 9%,rgba(255,255,255,.18) 12%,rgba(255,226,150,0) 20%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:overlay;opacity:1;filter:none}
+.t-superrare .lfoil{background:linear-gradient(115deg,rgba(201,162,83,0) calc(var(--mx)*100% - 35%),rgba(255,226,150,.6) calc(var(--mx)*100%),rgba(201,162,83,0) calc(var(--mx)*100% + 35%));mix-blend-mode:overlay}
+.t-superrare .etkbox .lfoil{opacity:1}
+.t-ultra:not(.fa){background:conic-gradient(from 20deg at 28% 18%,rgba(255,255,255,.55),rgba(140,190,235,.25),rgba(255,255,255,.6),rgba(110,160,210,.3),rgba(255,255,255,.55)),conic-gradient(from 200deg at 74% 82%,rgba(255,255,255,.45),rgba(120,170,220,.3),rgba(255,255,255,.5),rgba(150,200,240,.25),rgba(255,255,255,.45)),var(--diamond)}
+.t-ultra:not(.fa) .face{background:#F3F7FA;outline:1.5px solid #6E95B8}
+.t-ultra:not(.fa) .art{outline-color:#8DB4D8}
+.t-ultra:not(.fa) .toprow .pill{color:#2E5C86;border-color:#8DB4D8}
+.t-ultra:not(.fa) h3{background:linear-gradient(180deg,#24507A,#5E93C4 55%,#1E4468);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-ultra:not(.fa) .shine{background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(210,235,255,.7) 6%,rgba(255,255,255,0) 10%,rgba(180,220,255,0) 14%,rgba(255,255,255,.55) 17%,rgba(255,255,255,0) 21%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:overlay}
+.t-ultra .lfoil{background:linear-gradient(115deg,rgba(160,200,240,0) calc(var(--mx)*100% - 30%),rgba(235,248,255,.75) calc(var(--mx)*100%),rgba(160,200,240,0) calc(var(--mx)*100% + 30%))}
+.card.t-ultra:not(.fa){box-shadow:0 0 0 1px #4D7398,0 0 28px rgba(150,200,255,.4),0 20px 40px rgba(0,0,0,.5)}
+.mini.t-ultra:not(.fa){padding:4px;box-shadow:0 0 12px rgba(130,190,255,.5)}
+.card.t-ultra:not(.fa){padding:10px}
+.mini.t-superrare{padding:3px}
+.s-superrare{color:#B8862E}.s-ultra{color:#5E93C4}
+.tiers .s-superrare{color:var(--gold)}.tiers .s-ultra{color:#9EC4E6}
+:root[data-pages="creme"] .tiers .s-superrare{color:#9A6E22}:root[data-pages="creme"] .tiers .s-ultra{color:#3E6E9A}
+.k-superrare{--kbg:linear-gradient(150deg,#FBE7B0,#C9A253);--ksy:#7A5512;color:#3E2A08}
+.k-ultra{--kbg:radial-gradient(120% 80% at 30% 0%,#2C5290,#0D1B36 75%);--ksy:#BFE0FF;--kln:rgba(198,230,255,.7);color:#E6F3FF}
+
+/* Legende: donker roodgoud */
+:root{--redgold:linear-gradient(135deg,#5E1E14,#B9714A 30%,#6E2618 50%,#D69A68 72%,#5A1C12)}
+.t-icon:not(.fa){background:var(--redgold);box-shadow:0 0 0 1px #3A120C,0 0 24px rgba(200,110,70,.3),0 20px 40px rgba(0,0,0,.5)}
+.mini.t-icon:not(.fa){box-shadow:0 0 10px rgba(200,110,70,.35)}
+.t-icon .face{outline:1px solid #B9714A;outline-offset:2px}
+.t-icon h3{background:linear-gradient(180deg,#F6D2A8,#C47E52 55%,#EBB98A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-icon .toprow,.t-icon .maker{color:#E2B48C}.t-icon .toprow .pill{color:#F0C49A;border-color:#B9714A}
+.mini.t-icon .mname{color:#F0CDA6}.mini.t-icon .mnr{color:#D69A68}
+.k-icon{--kbg:linear-gradient(150deg,#2A1410,#120806);--ksy:#D69A68;--kln:rgba(214,154,104,.7);color:#F0C49A}
+/* Ultra: saffier (donker vlak, prismalijst) */
+.t-ultra:not(.fa){background:conic-gradient(from 0deg,#C6E6FF,#FFFFFF,#B5C8FF,#E0D2FF,#C6FFF0,#FFFFFF,#C6E6FF);box-shadow:0 0 0 1px #2B4A7A,0 0 26px rgba(120,170,255,.45),0 20px 40px rgba(0,0,0,.5)}
+.mini.t-ultra:not(.fa){box-shadow:0 0 12px rgba(120,170,255,.55)}
+.t-ultra:not(.fa) .face{background:radial-gradient(120% 80% at 30% 0%,#25457A,#0D1B36 70%);outline:1px solid #9EC4F0}
+.t-ultra:not(.fa) h3{background:linear-gradient(180deg,#FFFFFF,#A9D2FF 55%,#E6F3FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-ultra:not(.fa) .toprow,.t-ultra:not(.fa) .maker{color:#B9D6F5}
+.t-ultra:not(.fa) .toprow .pill{color:#DDEEFF;border-color:#9EC4F0}
+.t-ultra:not(.fa) .facts{color:#E6F0FA;border-top-color:rgba(158,196,240,.35)}.t-ultra:not(.fa) .facts dt{color:#8FB3DA}
+.mini.t-ultra:not(.fa){background:radial-gradient(120% 70% at 30% 0%,#25457A,#0D1B36 75%);box-shadow:inset 0 0 0 1.5px #C6E6FF,inset 0 0 0 3px rgba(181,200,255,.45),0 0 12px rgba(120,170,255,.55)}
+.mini.t-ultra .mname{color:#E6F3FF}.mini.t-ultra .mnr{color:#9EC4F0}
+.t-ultra:not(.fa) .shine{background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(190,225,255,.35) 6%,rgba(255,255,255,0) 12%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:screen}
 </style>
 </head>
 <body>
@@ -1062,17 +1110,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-143743'</script>
-<script src="data.js?v=20261015-143743"></script>
-<script src="art.js?v=20261015-143743"></script>
-<script src="gids.js?v=20261015-143743"></script>
-<script src="maps.js?v=20261015-143743"></script>
-<script src="zegels.js?v=20261015-143743"></script>
-<script src="landen.js?v=20261015-143743"></script>
-<script src="etiket.js?v=20261015-143743"></script>
-<script src="stickers.js?v=20261015-143743"></script>
-<script src="vrienden.js?v=20261015-143743"></script>
-<script src="wereldbol.js?v=20261015-143743"></script>
+<script>window.VI_V='20261015-145128'</script>
+<script src="data.js?v=20261015-145128"></script>
+<script src="art.js?v=20261015-145128"></script>
+<script src="gids.js?v=20261015-145128"></script>
+<script src="maps.js?v=20261015-145128"></script>
+<script src="zegels.js?v=20261015-145128"></script>
+<script src="landen.js?v=20261015-145128"></script>
+<script src="etiket.js?v=20261015-145128"></script>
+<script src="stickers.js?v=20261015-145128"></script>
+<script src="vrienden.js?v=20261015-145128"></script>
+<script src="wereldbol.js?v=20261015-145128"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1918,8 +1966,8 @@ function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull
 const HINT={
   common:'Common: een alledaagse wijn, met de regio als reisposter.',
   rare:'Rare: een stap boven het gewone. Het echte etiket uit jouw foto, met zilveren glans.',
-  superrare:'Super Rare: een bijzondere wijn. Kantel de kaart en kijk hoe hij glanst.',
-  ultra:'Ultra: een topwijn, in een gouden lijst.',
+  superrare:'Super Rare: een bijzondere wijn, in een gouden lijst. Kantel de kaart en kijk hoe hij glanst.',
+  ultra:'Ultra: een topwijn, saffierblauw met een prismalijst.',
   icon:'Legende: een van de twintig legendarische wijnen van de wereld.'
 };
 function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id))).map(s=>s.name)}
@@ -2233,7 +2281,7 @@ async function doRetry(c){
 function pageOfCard(c){
   return pages.findIndex(p=>(p.t==='set'&&p.set.part===1&&(st.stacks[p.set.id]||[]).some(x=>x.some(y=>y.id===c.id)))||(p.t==='overige'&&(st.overflow[p.land]||[]).some(x=>x.id===c.id)));
 }
-const GLOW={common:'#F1E6D6',rare:'#DCE3EC',superrare:'#C9A8FF',ultra:'#F2C65E',icon:'#E9C46A'};
+const GLOW={common:'#F1E6D6',rare:'#DCE3EC',superrare:'#F2C65E',ultra:'#BFE0FF',icon:'#E9C46A'};
 const SPARKS={common:10,rare:22,superrare:40,ultra:64,icon:64};
 function fxBurst(rar){
   if(reduced)return;
@@ -2498,7 +2546,7 @@ function openInfoTip(k){
 }
 /* ---------- uitleg en uitloggen ---------- */
 function openInfo(open,nest){
-  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Gouden lijst.',icon:'De twintig Legendes van de wereld, zoals Pétrus en Screaming Eagle. Prijs telt niet.'};
+  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau. Gouden lijst.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Saffierblauw.',icon:'De twintig Legendes van de wereld, zoals Pétrus en Screaming Eagle. Prijs telt niet.'};
   const tiers=`<div class="tierlist">${TORDER.map(t=>`<div><span class="tsym">${TIERS[t].sym}</span><span><b>${TIERS[t].label}</b><br><small>${desc[t]}</small></span><span class="todd">${TIERS[t].odds}</span></div>`).join('')}</div>`;
   const sec=(id,ic,title,body)=>`<details class="howto" id="h-${id}"${open===id?' open':''}><summary>${MED(ic)}<span>${title}</span></summary><div class="hbody">${body}</div></details>`;
   const o=overlay(`<p class="status">Hoe werkt Vined It?</p>
