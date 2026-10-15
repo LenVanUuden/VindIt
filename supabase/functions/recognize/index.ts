@@ -53,7 +53,19 @@ Rarity signals (used to decide the card class; estimate honestly, prefer the low
 - vintage_quality: quality of this vintage for this region: "top", "goed", "gemiddeld", "slecht", or "onbekend" if non-vintage or you don't know the region's vintages.
 - large_format: true only if the label shows a magnum or larger (1,5 L+).
 - iconic: true only for truly iconic, world-famous wines (e.g. Pétrus, Opus One, DRC, Sassicaia, Krug).
-Do NOT count medals, stickers or competition awards.`;
+Do NOT count medals, stickers or competition awards.
+
+Label design (label_style): describe the FRONT label so the app can draw a simplified, generic illustration of it in its own style. Describe what you see, do not copy logos exactly.
+- paper / ink / accent: hex colors of the label paper, the main text and the most striking accent color (e.g. a red seal).
+- metal: "gold", "silver" or "none" if the label has metallic foil.
+- font: letter style of the wine name: "condensed" (tall narrow), "classic" (old-style serif), "didone" (high-contrast elegant serif), "script" (handwriting), "gothic" (blackletter), "modern" (clean sans-serif), "display" (decorative art-deco).
+- upper: true if the name is in capitals.
+- layout: where the name sits: "top", "center" or "bottom".
+- emblem: the main picture: type "crest" (coat of arms, shield, crown), "castle" (château, building), "sun" (striped or round sun/circle), "abstract" (colourful shape), "bull" (animal), "grapes", "leaf", "stars" or "none"; color as hex, or "metal"; size "normal" or "large".
+- mark: an optional second, smaller graphic element (same types), with color; omit if none.
+- border: "none", "thin", "double", "frame" (thick) or "band" (colored band at the bottom); border_color as hex or "metal".
+- name_color: hex or "metal" if the name is printed in foil, else omit.
+- lines: name = wine name as printed most prominently; top = small line above (e.g. "Grand Vin de Bordeaux"); sub = appellation or cuvée line; bottom = producer or small line at the bottom. Keep each line short (max ~30 characters).`;
 
 const TOOL = {
   name: "wijnetiket",
@@ -84,6 +96,23 @@ const TOOL = {
       vintage_quality: { type: "string", enum: ["top", "goed", "gemiddeld", "slecht", "onbekend"] },
       large_format: { type: "boolean" },
       iconic: { type: "boolean" },
+      label_style: {
+        type: "object",
+        properties: {
+          paper: { type: "string" }, ink: { type: "string" }, accent: { type: "string" },
+          metal: { type: "string", enum: ["gold", "silver", "none"] },
+          font: { type: "string", enum: ["condensed", "classic", "didone", "script", "gothic", "modern", "display"] },
+          upper: { type: "boolean" },
+          layout: { type: "string", enum: ["top", "center", "bottom"] },
+          emblem: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] } } },
+          mark: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
+          border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] },
+          border_color: { type: "string" },
+          name_color: { type: "string" },
+          lines: { type: "object", properties: { name: { type: "string" }, top: { type: "string" }, sub: { type: "string" }, bottom: { type: "string" } } },
+        },
+        required: ["paper", "ink", "accent", "font", "layout", "emblem"],
+      },
       label_box: {
         type: "object",
         properties: { x: { type: "number" }, y: { type: "number" }, w: { type: "number" }, h: { type: "number" } },
@@ -93,6 +122,23 @@ const TOOL = {
     required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color", "price_eur_low", "price_eur_high", "classification", "producer_fame", "production", "rarity_nl", "vintage_quality"],
   },
 };
+
+// Alleen bekende velden en geldige kleuren doorlaten
+const HEX = /^#[0-9a-fA-F]{6}$/;
+function cleanStyle(s: Record<string, unknown>) {
+  const col = (v: unknown) => (typeof v === "string" && (HEX.test(v) || v === "metal") ? v : undefined);
+  const str = (v: unknown, n = 40) => (typeof v === "string" ? v.slice(0, n) : undefined);
+  const obj = (v: unknown) => (v && typeof v === "object" ? v as Record<string, unknown> : {});
+  const e = obj(s.emblem), m = obj(s.mark), l = obj(s.lines);
+  return {
+    paper: col(s.paper), ink: col(s.ink), accent: col(s.accent), metal: str(s.metal, 8),
+    font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
+    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
+    mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
+    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color),
+    lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },
+  };
+}
 
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
@@ -130,7 +176,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 900,
+        max_tokens: 1300,
         system: SYSTEM,
         tools: [TOOL],
         tool_choice: { type: "tool", name: "wijnetiket" },
@@ -180,8 +226,17 @@ Deno.serve(async (req) => {
     };
     const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: payload });
     if (scanErr) throw scanErr;
+    // Etiketontwerp bewaren bij de wijn (alleen als die er nog geen heeft)
+    let labelStyle = null;
+    if (w.label_style && typeof w.label_style === "object" && result?.wine?.id) {
+      labelStyle = cleanStyle(w.label_style);
+      if (!result.wine.label_style) {
+        const { error: lsErr } = await admin.rpc("set_label_style", { p_wine: result.wine.id, p_style: labelStyle });
+        if (lsErr) console.error("label_style", lsErr); else result.wine.label_style = labelStyle;
+      }
+    }
     const lb = w.label_box && ["x", "y", "w", "h"].every((k) => typeof w.label_box[k] === "number") ? w.label_box : null;
-    return json({ status: "ok", recognized: payload, confidence: w.confidence, result, label_box: lb });
+    return json({ status: "ok", recognized: payload, confidence: w.confidence, result, label_box: lb, label_style: labelStyle });
   } catch (e) {
     console.error(e);
     return json({ status: "error", message: String((e as Error)?.message ?? e) }, 500);

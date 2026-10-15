@@ -5,6 +5,7 @@
 // op alle kaarten van die wijn. Alleen voor beheerders (ADMIN_EMAILS).
 // Per aanroep een beperkt aantal wijnen; de app roept herhaald aan tot alles klaar is.
 // Body: { force?: boolean }  – force: ook wijnen die al signalen hebben opnieuw doen
+// Body: { mode: "label", force?: boolean } – etiketontwerp beschrijven (met een bewaarde foto als die er is)
 // =====================================================================
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -49,6 +50,48 @@ const TOOL = {
   },
 };
 
+const LABEL_SYSTEM = `You describe wine labels for a Dutch wine-collecting app that draws a simplified, generic illustration of each label in its own style. Return the design via the "etiket" tool. If a photo is given, describe what you see. Without a photo, describe the real label as you remember it; if you don't know the wine, invent a tasteful, plausible design that fits its region, price level and style. Do not copy logos exactly.
+- paper / ink / accent: hex colors. metal: "gold", "silver" or "none".
+- font: "condensed" (tall narrow), "classic" (old-style serif), "didone" (elegant high-contrast serif), "script", "gothic" (blackletter), "modern" (sans-serif), "display" (art-deco).
+- upper: name in capitals? layout: name at "top", "center" or "bottom".
+- emblem: type "crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars" or "none"; color hex or "metal"; size "normal"/"large". mark: optional second small element.
+- border: "none", "thin", "double", "frame", "band"; border_color hex or "metal". name_color: hex or "metal" for foil names.
+- lines: name (as printed), top, sub, bottom; max ~30 characters each.`;
+const STYLE_SCHEMA = {
+  type: "object",
+  properties: {
+    paper: { type: "string" }, ink: { type: "string" }, accent: { type: "string" },
+    metal: { type: "string", enum: ["gold", "silver", "none"] },
+    font: { type: "string", enum: ["condensed", "classic", "didone", "script", "gothic", "modern", "display"] },
+    upper: { type: "boolean" }, layout: { type: "string", enum: ["top", "center", "bottom"] },
+    emblem: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] } } },
+    mark: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
+    border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] }, border_color: { type: "string" }, name_color: { type: "string" },
+    lines: { type: "object", properties: { name: { type: "string" }, top: { type: "string" }, sub: { type: "string" }, bottom: { type: "string" } } },
+  },
+  required: ["paper", "ink", "accent", "font", "layout", "emblem"],
+};
+const HEX = /^#[0-9a-fA-F]{6}$/;
+function cleanStyle(s: Record<string, unknown>) {
+  const col = (v: unknown) => (typeof v === "string" && (HEX.test(v) || v === "metal") ? v : undefined);
+  const str = (v: unknown, n = 40) => (typeof v === "string" ? v.slice(0, n) : undefined);
+  const obj = (v: unknown) => (v && typeof v === "object" ? v as Record<string, unknown> : {});
+  const e = obj(s.emblem), m = obj(s.mark), l = obj(s.lines);
+  return {
+    paper: col(s.paper), ink: col(s.ink), accent: col(s.accent), metal: str(s.metal, 8),
+    font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
+    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
+    mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
+    border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color),
+    lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },
+  };
+}
+function b64(buf: ArrayBuffer) {
+  const u = new Uint8Array(buf); let s = "";
+  for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
@@ -65,6 +108,46 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    if (body.mode === "label") {
+      const LB = 6;
+      const cols = "id,naam,maker,jaar,regio,land,appellation,stijl,tier";
+      const q = body.force
+        ? admin.from("wines").select(cols).order("created_at").order("id").range(body.offset ?? 0, (body.offset ?? 0) + LB - 1)
+        : admin.from("wines").select(cols).is("label_style", null).order("created_at").order("id").limit(LB);
+      const { data: wines, error } = await q;
+      if (error) throw error;
+      const results: unknown[] = [];
+      for (const w of wines ?? []) {
+        // een bewaarde etiketfoto zoeken bij iemand die deze wijn heeft
+        let img: string | null = null;
+        const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", w.id).limit(5);
+        for (const o of owners ?? []) {
+          const { data: f } = await admin.storage.from("card-art").download(`${o.user_id}/${w.id}.label.jpg`);
+          if (f) { img = b64(await f.arrayBuffer()); break; }
+        }
+        const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}\nKlasse: ${w.tier || ""}`;
+        const content: unknown[] = img ? [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img } }, { type: "text", text: desc }] : [{ type: "text", text: desc }];
+        const r = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+          body: JSON.stringify({ model: MODEL, max_tokens: 600, system: LABEL_SYSTEM, tools: [{ name: "etiket", description: "Ontwerp van het etiket", input_schema: STYLE_SCHEMA }], tool_choice: { type: "tool", name: "etiket" }, messages: [{ role: "user", content }] }),
+        });
+        if (!r.ok) { console.error("anthropic", r.status, await r.text()); results.push({ id: w.id, error: "ai" }); continue; }
+        const out = await r.json();
+        const st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+        if (!st) { results.push({ id: w.id, error: "leeg" }); continue; }
+        const { error: e2 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: cleanStyle(st), p_force: !!body.force });
+        if (e2) { console.error(e2); results.push({ id: w.id, error: "db" }); continue; }
+        results.push({ id: w.id, naam: w.naam, foto: !!img });
+      }
+      let remaining = 0;
+      if (!body.force) {
+        const { count } = await admin.from("wines").select("id", { count: "exact", head: true }).is("label_style", null);
+        remaining = count ?? 0;
+      } else remaining = (wines?.length ?? 0) < LB ? 0 : 1;
+      return json({ status: "ok", done: results.length, remaining, results });
+    }
     const cols = "id,naam,maker,jaar,druif,stijl,regio,land,appellation,color,is_icon";
     const q = body.force
       ? admin.from("wines").select(cols).order("created_at").order("id").range(body.offset ?? 0, (body.offset ?? 0) + BATCH - 1)

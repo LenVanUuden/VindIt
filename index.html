@@ -12,7 +12,7 @@
 <title>Vined It</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&family=Dancing+Script:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&family=Dancing+Script:wght@500;600&family=Oswald:wght@500;600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:wght@700&family=UnifrakturMaguntia&display=swap">
 <style>
 /* Layout: een dik, in leer gebonden insteekalbum op een houten tafel. Kartonnen bladen met 9 doorzichtige sleeves; vijf kaartklassen die je in één oogopslag uit elkaar houdt. Bewust één donkere wereld. */
 :root{
@@ -129,6 +129,25 @@ button{font:inherit;color:inherit}
 .t-icon .lfoil{background:linear-gradient(115deg,rgba(201,162,83,0) calc(var(--mx)*100% - 35%),rgba(255,226,150,.55) calc(var(--mx)*100%),rgba(201,162,83,0) calc(var(--mx)*100% + 35%));mix-blend-mode:overlay;box-shadow:inset 0 0 0 1.5px rgba(201,162,83,.9),0 0 0 2px rgba(20,14,10,.8)}
 .t-ultra .lfoil{background:linear-gradient(115deg,rgba(201,162,83,0) calc(var(--mx)*100% - 35%),rgba(255,226,150,.7) calc(var(--mx)*100%),rgba(201,162,83,0) calc(var(--mx)*100% + 35%)),linear-gradient(180deg,rgba(233,200,120,.35),rgba(150,110,40,.25));mix-blend-mode:overlay;box-shadow:inset 0 0 0 1.5px rgba(233,200,120,.8)}
 .mini .lbox{top:4%;height:80%}
+/* Getekend etiket op de streekposter */
+.etkbox{position:absolute;z-index:5;left:50%;top:6%;height:76%;aspect-ratio:3/4;transform:translateX(-50%) rotate(-1.5deg);filter:drop-shadow(0 0 .8px rgba(255,251,240,.9)) drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.etkbox svg,.etkfa svg{width:100%;height:100%;display:block}
+.etkbox .lfoil,.etkfa .lfoil{position:absolute;inset:0}
+.t-superrare .etkbox .lfoil{opacity:.22}
+.falbl.etkfa{aspect-ratio:3/4;max-width:none;z-index:6}
+.fa .fastamp{z-index:7}
+.mbphoto{display:flex;align-items:center;gap:8px;margin-top:auto}
+.mbphoto img{width:46px;height:58px;object-fit:cover;border:3px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.3);transform:rotate(-3deg)}
+.mbphoto span{font-family:'Dancing Script',cursive;font-size:15px;color:#8B6A3A}
+/* Het hele etiket in het venster, op een vervaagde versie van zichzelf; streeknaam eronder zoals op de posters */
+.lfull{background:#1b120c;container-type:inline-size}
+.card .lfull{aspect-ratio:1/1}
+.lfull img.lblbg{position:absolute;inset:-12%;width:124%;height:124%;object-fit:cover;filter:blur(10px) brightness(.5) saturate(1.15);aspect-ratio:auto}
+.art .lfull img.lbl{position:absolute;left:6%;right:6%;top:5%;width:88%;height:calc(88% - 5%);aspect-ratio:auto;object-fit:contain;filter:drop-shadow(0 0 1px rgba(255,250,235,.8)) drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+.lfull .lfoil{inset:0 0 12% 0}
+.lfull .lband{position:absolute;left:0;right:0;bottom:0;height:12%;display:flex;align-items:center;justify-content:center;box-shadow:0 -1px 0 rgba(255,255,255,.18),inset 0 1px 0 rgba(0,0,0,.35)}
+.lfull .lband span{font-family:Limelight,Georgia,serif;letter-spacing:.32em;font-size:clamp(6px,4.6cqw,14px);white-space:nowrap;padding-left:.32em}
+.mini .lfull .lband span{letter-spacing:.2em}
 /* ===== Full Art: in één oogopslag herkenbaar ===== */
 @property --fang{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes fang{to{--fang:360deg}}
@@ -954,14 +973,15 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-115539'</script>
-<script src="data.js?v=20261015-115539"></script>
-<script src="art.js?v=20261015-115539"></script>
-<script src="gids.js?v=20261015-115539"></script>
-<script src="maps.js?v=20261015-115539"></script>
-<script src="stickers.js?v=20261015-115539"></script>
-<script src="vrienden.js?v=20261015-115539"></script>
-<script src="wereldbol.js?v=20261015-115539"></script>
+<script>window.VI_V='20261015-123607'</script>
+<script src="data.js?v=20261015-123607"></script>
+<script src="art.js?v=20261015-123607"></script>
+<script src="gids.js?v=20261015-123607"></script>
+<script src="maps.js?v=20261015-123607"></script>
+<script src="etiket.js?v=20261015-123607"></script>
+<script src="stickers.js?v=20261015-123607"></script>
+<script src="vrienden.js?v=20261015-123607"></script>
+<script src="wereldbol.js?v=20261015-123607"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1079,11 +1099,11 @@ function openFeedback(){
   };
 }
 const isAdmin=()=>!!session&&/^l\.v\.uuden3@gmail\.com$/i.test(session.user.email||'');
-async function runReassess(force){
+async function runReassess(force,mode){
   let done=0,rounds=0,offset=0;
-  toast('Klassen worden opnieuw beoordeeld…');
+  toast(mode==='label'?'Etiketten worden getekend…':'Klassen worden opnieuw beoordeeld…');
   while(rounds<200){rounds++;
-    const r=await sb.functions.invoke('reassess',{body:force?{force:true,offset}:{}});
+    const r=await sb.functions.invoke('reassess',{body:{...(force?{force:true,offset}:{}),...(mode?{mode}:{})}});
     if(r.error){console.error(r.error);let st=0,msg='';
       try{const res=r.error.context;st=res&&res.status||0;const j=await res.clone().json();msg=j.status==='error'?(j.message||''):(j.status||'')}catch(e){}
       const why=st===404?'de functie "reassess" is niet gevonden. Controleer of hij precies zo heet en gedeployed is.'
@@ -1094,12 +1114,12 @@ async function runReassess(force){
       toast('Opnieuw beoordelen lukte niet: '+why,9000);
       if(done)await loadAlbum();return}
     const bad=(r.data.results||[]).filter(x=>x.error);
-    if(bad.length&&bad.length===(r.data.results||[]).length){toast('Opnieuw beoordelen lukte niet: '+(bad[0].error==='db'?'de database kent de nieuwe functie nog niet. Draai eerst migratie 010.':'Claude gaf geen antwoord ('+bad[0].error+').'),9000);return}
+    if(bad.length&&bad.length===(r.data.results||[]).length){toast('Opnieuw beoordelen lukte niet: '+(bad[0].error==='db'?(mode==='label'?'de database kent de nieuwe functie nog niet. Draai eerst migratie 015.':'de database kent de nieuwe functie nog niet. Draai eerst migratie 010.'):'Claude gaf geen antwoord ('+bad[0].error+').'),9000);return}
     done+=r.data.done||0;offset+=r.data.done||0;
-    toast(`Beoordeeld: ${done} wijnen${r.data.remaining?' · bezig…':''}`);
+    toast(`${mode==='label'?'Getekend':'Beoordeeld'}: ${done} wijnen${r.data.remaining?' · bezig…':''}`);
     if(!r.data.remaining||!r.data.done||(bad.length&&bad.length===(r.data.results||[]).length))break;
   }
-  await loadAlbum();toast(`Klaar: ${done} wijnen opnieuw beoordeeld.`);
+  await loadAlbum();go(cur,true);toast(mode==='label'?`Klaar: ${done} etiketten getekend.`:`Klaar: ${done} wijnen opnieuw beoordeeld.`);
 }
 function openSettings(){
   if(viewing){toast('Ga eerst terug naar je eigen album.');return}
@@ -1116,7 +1136,7 @@ function openSettings(){
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
       ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
-      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button>`:''}
+      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -1124,6 +1144,7 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
+  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp gaan langs Claude. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost een paar cent en duurt even.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -1250,10 +1271,46 @@ function ultraFill(A,v){
 
 const IMG={},LBL={};
 /* Full Art vanaf Rare: het etiket groot op de poster */
-const faLabel=c=>['rare','superrare','ultra','icon'].includes(c.rar)?`<div class="falbl"><img class="lbl" src="${labelSrc(c)}" data-w="${c.wineId}" onerror="lblFallback(this)" alt="Etiket van ${esc(c.naam)}"><i class="lfoil"></i></div>`:'';
+const faLabel=c=>LABEL_TIERS.includes(c.rar)?`<div class="falbl etkfa">${drawnLabel(c)}<i class="lfoil"></i></div>`:'';
 const isDemoWine=c=>!!POOL_BY_KEY[c.key];
 const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${ownerId()}/${c.wineId}.label.jpg`;
 /* Etiket uit de foto knippen: met het kader van Claude (procenten), anders het midden van de zoeker */
+/* Etiketranden zoeken: het papier van het etiket heeft één kleur (meestal licht),
+   de fles, het glas en de achtergrond niet. We zoeken rond het kader van Claude
+   naar de kolommen en rijen waar die papierkleur overheerst. */
+function refineLabel(src,sw,sh,x,y,w,h){
+  const ex=.14,X0=Math.max(0,x-w*ex),Y0=Math.max(0,y-h*ex),X1=Math.min(sw,x+w*(1+ex)),Y1=Math.min(sh,y+h*(1+ex));
+  const SW=X1-X0,SH=Y1-Y0,N=170,sc=N/Math.max(SW,SH),cw=Math.max(8,Math.round(SW*sc)),ch=Math.max(8,Math.round(SH*sc));
+  const cv=document.createElement('canvas');cv.width=cw;cv.height=ch;const g=cv.getContext('2d',{willReadFrequently:true});
+  g.drawImage(src,X0,Y0,SW,SH,0,0,cw,ch);const d=g.getImageData(0,0,cw,ch).data;
+  const bx0=Math.round((x-X0)*sc),by0=Math.round((y-Y0)*sc),bx1=Math.round((x+w-X0)*sc),by1=Math.round((y+h-Y0)*sc);
+  // papierkleur: mediaan van het midden van het kader
+  const R=[],G=[],B=[];
+  for(let j=Math.round(by0+(by1-by0)*.25);j<by0+(by1-by0)*.75;j++)for(let i=Math.round(bx0+(bx1-bx0)*.3);i<bx0+(bx1-bx0)*.7;i++){const o=(j*cw+i)*4;R.push(d[o]);G.push(d[o+1]);B.push(d[o+2])}
+  if(R.length<20)return null;
+  const med=a=>a.sort((p,q)=>p-q)[a.length>>1],pr=med(R),pg=med(G),pb=med(B);
+  // kleurtoon (los van licht en schaduw, want een etiket op een ronde fles is aan de randen donkerder)
+  const ps=pr+pg+pb||1,qr=pr/ps,qg=pg/ps,qb=pb/ps,neutral=Math.abs(qr-qg)+Math.abs(qg-qb)<.04;
+  const on=(i,j)=>{const o=(j*cw+i)*4,r=d[o],gg=d[o+1],b=d[o+2],t=r+gg+b;if(t<ps*.42||t>ps*1.5)return false;
+    const dc=Math.abs(r/t-qr)+Math.abs(gg/t-qg)+Math.abs(b/t-qb);return dc<(neutral?.05:.055)&&(!neutral||Math.abs(t-ps)<ps*.3)};
+  // aaneengesloten stuk rond het midden; korte onderbrekingen (grote letters, een logo) mogen
+  const run=(prof,seed,thr)=>{let a=seed,b=seed,gap=0;const G=Math.max(5,Math.round(prof.length*.12));
+    for(let i=seed;i>=0;i--){if(prof[i]>=thr){a=i;gap=0}else if(++gap>G)break}
+    gap=0;for(let i=seed;i<prof.length;i++){if(prof[i]>=thr){b=i;gap=0}else if(++gap>G)break}return [a,b]};
+  const col=new Float32Array(cw);
+  for(let i=0;i<cw;i++){let n=0,t=0;for(let j=by0;j<by1;j++){t++;if(on(i,j))n++}col[i]=t?n/t:0}
+  const cx=Math.round((bx0+bx1)/2),cmax=Math.max(...col.slice(Math.max(0,cx-10),cx+10));if(cmax<.25)return null;
+  const [c0,c1]=run(col,cx,cmax*.4);
+  const row=new Float32Array(ch);
+  for(let j=0;j<ch;j++){let n=0,t=0;for(let i=c0;i<=c1;i++){t++;if(on(i,j))n++}row[j]=t?n/t:0}
+  const cy=Math.round((by0+by1)/2),rmax=Math.max(...row.slice(Math.max(0,cy-10),cy+10));if(rmax<.25)return null;
+  const [r0,r1]=run(row,cy,rmax*.3);
+  const nw=(c1-c0+1)/sc,nh=(r1-r0+1)/sc;
+  if(nw<w*.3||nh<h*.3)return null;
+  const px=nw*.02,py=nh*.02;
+  const nx=Math.max(0,X0+c0/sc-px),ny=Math.max(0,Y0+r0/sc-py);
+  return [nx,ny,Math.min(sw-nx,nw+2*px),Math.min(sh-ny,nh+2*py)];
+}
 function cropLabel(src,box){
   const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
   const ok=box&&[box.x,box.y,box.w,box.h].every(n=>typeof n==='number'&&isFinite(n))&&box.w>=12&&box.h>=12&&box.x>=-2&&box.y>=-2&&box.x+box.w<=102&&box.y+box.h<=102;
@@ -1261,6 +1318,7 @@ function cropLabel(src,box){
   if(ok){const pw=box.w*.015,ph=box.h*.015;x=(box.x-pw)/100*sw;y=(box.y-ph)/100*sh;w=(box.w+2*pw)/100*sw;h=(box.h+2*ph)/100*sh}
   else{x=sw*.09;y=sh*.07;w=sw*.82;h=sh*.86}
   x=Math.max(0,x);y=Math.max(0,y);w=Math.min(sw-x,w);h=Math.min(sh-y,h);
+  try{const r=refineLabel(src,sw,sh,x,y,w,h);if(r){x=r[0];y=r[1];w=r[2];h=r[3]}}catch(e){}
   const k=Math.min(1,720/Math.max(w,h)),W=Math.max(1,Math.round(w*k)),H=Math.max(1,Math.round(h*k));
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
   g.imageSmoothingQuality='high';g.drawImage(src,x,y,w,h,0,0,W,H);
@@ -1291,10 +1349,7 @@ function labelSrc(c){
   return LBL[c.wineId]=demoLabel(c);
 }
 /* Nog geen eigen foto (demowijn of kaart van vóór deze versie): een getekend etiket in dezelfde stijl, tot de eerste echte scan */
-function lblFallback(img){
-  img.onerror=null;const c=cards.find(x=>x.wineId===img.dataset.w);if(!c)return;
-  LBL[c.wineId]=demoLabel(c);img.src=LBL[c.wineId];
-}
+function lblFallback(img){img.onerror=null;const p=img.closest('.mbphoto');if(p)p.remove();else img.remove()}
 /* Folie precies over het etiket leggen (in procenten, werkt op elke kaartgrootte) */
 const LBOX=(10*.86)/(7*.78);
 function lblFit(img){
@@ -1316,8 +1371,20 @@ const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class=
 const FA_LAYERS='<div class="shine fashine"></div><div class="sparkle"></div><div class="glare"></div><div class="fatw"></div><div class="fasweep"></div><span class="fastamp">FULL<br>ART</span>';
 const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
 const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
+/* Getekend etiket (ontwerp van Claude, of een passend standaardontwerp) */
+const LABEL_TIERS=['rare','superrare','ultra','icon'];
+function defaultStyle(c){
+  const A=areaOf(c),cc=A.c,mot=(A.motifs||[])[0];
+  const emb=mot==='chateau'?'castle':/church|village/.test(mot||'')?'castle':c.style==='mousserend'?'stars':'grapes';
+  return {paper:'#F3E9D2',ink:'#2B2118',accent:cc.near,metal:c.rar==='ultra'||c.rar==='icon'?'gold':'none',font:'classic',upper:false,layout:'center',
+    emblem:{type:emb,color:cc.near},border:'double',border_color:c.rar==='ultra'||c.rar==='icon'?'metal':cc.dark,lines:{name:c.naam,sub:c.app&&c.app!==c.maker?c.app:'',bottom:c.maker}};
+}
+function drawnLabel(c){
+  const st=c.style&&typeof c.style==='object'?c.style:defaultStyle(c);
+  return makeLabelSVG({...st,lines:{...(st.lines||{}),name:(st.lines&&st.lines.name)||c.naam}},c);
+}
 function artHTML(c){
-  if(c.rar==='rare'||c.rar==='superrare'||c.rar==='ultra'||c.rar==='icon') return `<div class="lart">${scene(areaOf(c),c.v)}<div class="lbox"><img class="lbl" src="${labelSrc(c)}" data-w="${c.wineId}" onload="lblFit(this)" onerror="lblFallback(this)" alt="Etiket van ${esc(c.naam)}"><i class="lfoil"></i></div></div>`;
+  if(LABEL_TIERS.includes(c.rar))return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox">${drawnLabel(c)}<i class="lfoil"></i></div></div>`;
   return scene(areaOf(c),c.v);
 }
 function bigCard(c){
@@ -1602,7 +1669,7 @@ function toCard(row,w){
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:(row.jaar!=null?row.jaar:w.jaar),druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,fa:!!row.full_art,bottles:row.bottles||1,why:w.tier_reason||'',memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
+    rar:row.tier,style:w.label_style||null,fa:!!row.full_art,bottles:row.bottles||1,why:w.tier_reason||'',memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
 }
 async function loadAlbum(){
   await loadSettings();
@@ -1742,6 +1809,7 @@ function memoBack(c){
   return `<div class="memoback"><div class="mbin">
     <div class="mbhead"><span>Herinnering</span><span class="mbseal">VI</span></div>
     ${c.memo?`<p class="mbtext">${esc(c.memo)}</p><p class="mbdate">${esc(d)}</p>`:(viewing?`<p class="mbempty">Herinneringen zijn privé.<br>Alleen ${esc(viewing.name)} kan ze lezen.</p>`:`<p class="mbempty">Nog geen herinnering bij deze wijn.<br>Met wie dronk je hem, en waar?</p>`)}
+    ${session&&!isDemoWine(c)?`<div class="mbphoto"><img src="${labelSrc(c)}" alt="Jouw foto van het etiket" onerror="this.parentNode.remove()"><span>Jouw foto</span></div>`:''}
     <p class="mbwine">${esc(c.naam)}${c.jaar?' · '+c.jaar:''}</p></div></div>`;
 }
 function spinCard(o,c){
@@ -1895,7 +1963,7 @@ function setVintage(c,jaar){
 }
 function handleScanResult(d,before,photo,box,jaar){
   if(d.status==='limit'){closeOverlay();loadAlbum().then(()=>toast(limitMsg()));return}
-  if(d.status==='duplicate'){const c=cards.find(x=>x.wineId===d.wine.id);if(c)setVintage(c,jaar);if(photo&&c){uploadArt(c,photo,box);refresh()}showDup(c);return}
+  if(d.status==='duplicate'){const c=cards.find(x=>x.wineId===d.wine.id);if(c&&d.wine.label_style&&!c.style)c.style=d.wine.label_style;if(c)setVintage(c,jaar);if(photo&&c){uploadArt(c,photo,box);refresh()}showDup(c,!!photo);return}
   ownedKeys.add(d.wine.wine_key);
   if(typeof d.scans_today==='number'&&serverToday!=null)serverToday=d.scans_today;
   const card=toCard(d.card,d.wine);setVintage(card,jaar);
@@ -2003,13 +2071,14 @@ function showNotRecognized(dataUrl,w){
   o.querySelector('#close').onclick=()=>closeOverlay();
   const a=o.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};
 }
-function showDup(c){
+function showDup(c,newPhoto){
   const today=amsDay(new Date()),cool=!!c&&((c.created&&amsDay(new Date(c.created))===today)||retriedToday.has(c.wineId));
   const left=LIMIT-scansToday(),canBottle=c&&left>0&&!cool;
-  const note=!c?'':cool?'Deze fles heb je vandaag al geteld. Drink je deze wijn een andere dag weer? Scan hem dan opnieuw: dan telt hij als nieuwe fles.'
+  const note=!c?'':cool?'Deze scan telt niet mee: deze fles heb je vandaag al geteld. Drink je deze wijn een andere dag weer, dan telt hij als nieuwe fles.'
     :left>0?`Nog een fles van deze wijn? Tel hem als nieuwe fles: dat kost 1 van je scans (nog ${left} vandaag). Je kaart krijgt ×${(c.bottles||1)+1} gedronken, en je maakt opnieuw kans op een Full Art.`
     :'Nieuwe flessen tellen weer als je nieuwe scans hebt. Deze scan telt niet mee.';
-  const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}<p class="hint">${note}</p>
+  const pnote=newPhoto&&c&&['rare','superrare','ultra','icon'].includes(c.rar)?'<p class="hint whyline">Je foto staat op de achterkant van je kaart.</p>':'';
+  const o=overlay(`<p class="status">Deze kaart heb je al</p>${c?bigCard(c):''}${pnote}<p class="hint">${note}</p>
     <div class="actions">${canBottle?'<button class="btn" id="close">Niet tellen</button><button class="btn primary" id="retry">Nieuwe fles</button>':'<button class="btn primary" id="close">Oké</button>'}</div>`);
   const k=o.querySelector('.card');if(k)tilt(k);
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();
