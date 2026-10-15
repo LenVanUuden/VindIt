@@ -94,7 +94,13 @@ function runGlobe(wrap){
     ctx.beginPath();ctx.arc(W/2,H/2,r+1.5,0,7);ctx.strokeStyle=gold;ctx.lineWidth=3;ctx.stroke();
     ctx.beginPath();ctx.arc(W/2,H/2,r+4.2,0,7);ctx.strokeStyle='rgba(42,16,10,.85)';ctx.lineWidth=1.2;ctx.stroke();
   };
-  const clampPhi=v=>Math.max(-35,Math.min(35,v));
+  // Kantelen: ±35° op de hele bol, verder naarmate je inzoomt (zodat ook Nederland of Nieuw-Zeeland in het midden kan)
+  const tiltMax=()=>Math.min(80,35+(GSTATE.z-1)*30);
+  const clampPhi=v=>{const m=tiltMax();return Math.max(-m,Math.min(m,v))};
+  const rel=e=>{const b=cv.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+  // Draai de bol zo dat punt ll onder schermpunt pt ligt (inzoomen rond je vingers)
+  const anchor=(ll,pt)=>{if(!ll)return;for(let k=0;k<3;k++){proj.scale(R*GSTATE.z).rotate([GSTATE.lam,GSTATE.phi]);const q=proj(ll);if(!q)return;const d=degPx();
+    GSTATE.lam+=(pt[0]-q[0])*d;GSTATE.phi=clampPhi(GSTATE.phi-(pt[1]-q[1])*d)}};
   const loop=()=>{
     if(!cv.isConnected)return;
     if(idle&&!reduced){GSTATE.lam+=.08;dirty=true}
@@ -110,7 +116,9 @@ function runGlobe(wrap){
     e.stopPropagation();stopIdle();vel=0;try{cv.setPointerCapture(e.pointerId)}catch(_){}
     P.set(e.pointerId,{x:e.clientX,y:e.clientY,t:performance.now()});
     if(P.size===1)tap={x:e.clientX,y:e.clientY,t:performance.now()};else tap=null;
-    if(P.size===2){const [a,b]=[...P.values()];g0={d:Math.hypot(a.x-b.x,a.y-b.y)||1,z:GSTATE.z}}
+    if(P.size>2){P.clear();P.set(e.pointerId,{x:e.clientX,y:e.clientY,t:performance.now()})}
+    if(P.size===2){const [a,b]=[...P.values()],b0=cv.getBoundingClientRect(),m=[(a.x+b.x)/2-b0.left,(a.y+b.y)/2-b0.top];
+      proj.scale(R*GSTATE.z).rotate([GSTATE.lam,GSTATE.phi]);g0={d:Math.hypot(a.x-b.x,a.y-b.y)||1,z:GSTATE.z,ll:proj.invert(m)}}
   });
   cv.addEventListener('pointermove',e=>{
     const p=P.get(e.pointerId);if(!p)return;e.stopPropagation();
@@ -118,7 +126,9 @@ function runGlobe(wrap){
       GSTATE.lam+=dx*k;GSTATE.phi=clampPhi(GSTATE.phi-dy*k);vel=Math.max(-2.5,Math.min(2.5,dx*k*.35));
       if(tap&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)>6)tap=null}
     p.x=e.clientX;p.y=e.clientY;p.t=performance.now();
-    if(P.size===2&&g0){const [a,b]=[...P.values()];GSTATE.z=Math.max(1,Math.min(10,g0.z*Math.hypot(a.x-b.x,a.y-b.y)/g0.d))}
+    if(P.size===2&&g0){const [a,b]=[...P.values()],b0=cv.getBoundingClientRect();
+      GSTATE.z=Math.max(1,Math.min(10,g0.z*Math.hypot(a.x-b.x,a.y-b.y)/g0.d));
+      anchor(g0.ll,[(a.x+b.x)/2-b0.left,(a.y+b.y)/2-b0.top]);GSTATE.phi=clampPhi(GSTATE.phi)}
     dirty=true;
   });
   const end=e=>{
@@ -131,13 +141,14 @@ function runGlobe(wrap){
     }
     tap=null;
   };
-  cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+  cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);cv.addEventListener('lostpointercapture',end);
   // bladeren met vegen niet laten afgaan op de bol
   ['touchstart','touchmove','touchend'].forEach(t=>cv.addEventListener(t,e=>e.stopPropagation(),{passive:true}));
   cv.addEventListener('click',e=>e.stopPropagation());
-  cv.addEventListener('wheel',e=>{e.preventDefault();stopIdle();GSTATE.z=Math.max(1,Math.min(10,GSTATE.z*Math.exp(-e.deltaY*.0015)));dirty=true},{passive:false});
+  cv.addEventListener('wheel',e=>{e.preventDefault();stopIdle();const pt=rel(e);proj.scale(R*GSTATE.z).rotate([GSTATE.lam,GSTATE.phi]);const ll=proj.invert(pt);
+    GSTATE.z=Math.max(1,Math.min(10,GSTATE.z*Math.exp(-e.deltaY*.0015)));anchor(ll,pt);GSTATE.phi=clampPhi(GSTATE.phi);dirty=true},{passive:false});
   wrap.querySelectorAll('[data-gz]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();stopIdle();const k=+b.dataset.gz;
-    if(k===0){GSTATE.lam=-12;GSTATE.phi=-30;GSTATE.z=1.6;vel=0}else GSTATE.z=Math.max(1,Math.min(10,GSTATE.z*(k>0?1.6:1/1.6)));dirty=true}));
+    if(k===0){GSTATE.lam=-8;GSTATE.phi=-47;GSTATE.z=2.4;vel=0}else{GSTATE.z=Math.max(1,Math.min(10,GSTATE.z*(k>0?1.6:1/1.6)));GSTATE.phi=clampPhi(GSTATE.phi)}dirty=true}));
   const ro=new ResizeObserver(()=>{if(!cv.isConnected){ro.disconnect();return}size();dirty=true});ro.observe(cv);
   loop();
 }
