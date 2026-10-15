@@ -168,6 +168,40 @@ function b64(buf: ArrayBuffer) {
   return btoa(s);
 }
 
+// Na het samenvoegen van dubbele wijnen staan etiketfoto's nog onder het oude wijn-id.
+// Verplaats ze naar de bewaarde wijn (alleen als daar nog geen foto staat).
+// deno-lint-ignore no-explicit-any
+async function movePhotos(admin: any) {
+  const { data: merges } = await admin.from("wine_merges").select("id,kept_id,dropped_id").not("dropped_id", "is", null).eq("photos_moved", false);
+  for (const m of merges ?? []) {
+    const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", m.kept_id);
+    for (const o of owners ?? []) {
+      const from = `${o.user_id}/${m.dropped_id}.label.jpg`, to = `${o.user_id}/${m.kept_id}.label.jpg`;
+      const { data: there } = await admin.storage.from("card-art").list(o.user_id, { search: `${m.kept_id}.label.jpg` });
+      if (there && there.length) continue;
+      const { error } = await admin.storage.from("card-art").move(from, to);
+      if (error && !/not.?found/i.test(error.message ?? "")) console.warn("move", from, error.message);
+    }
+    await admin.from("wine_merges").update({ photos_moved: true }).eq("id", m.id);
+  }
+}
+
+// De nieuwste etiketfoto van deze wijn, van wie hem ook heeft
+// deno-lint-ignore no-explicit-any
+async function newestPhoto(admin: any, wid: string): Promise<string | null> {
+  const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", wid).limit(20);
+  let best: { uid: string; t: string } | null = null;
+  for (const o of owners ?? []) {
+    const { data: f } = await admin.storage.from("card-art").list(o.user_id, { search: `${wid}.label.jpg` });
+    const hit = (f ?? []).find((x: { name: string }) => x.name === `${wid}.label.jpg`);
+    const t = hit?.updated_at ?? hit?.created_at;
+    if (hit && (!best || String(t) > best.t)) best = { uid: o.user_id, t: String(t ?? "") };
+  }
+  if (!best) return null;
+  const { data: file } = await admin.storage.from("card-art").download(`${best.uid}/${wid}.label.jpg`);
+  return file ? b64(await file.arrayBuffer()) : null;
+}
+
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
@@ -200,12 +234,8 @@ Deno.serve(async (req) => {
         const { error: e3 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
         return json({ status: e3 ? "error" : "ok", style: st });
       }
-      let img: string | null = null;
-      const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", w.id).limit(5);
-      for (const o of owners ?? []) {
-        const { data: f } = await admin.storage.from("card-art").download(`${o.user_id}/${w.id}.label.jpg`);
-        if (f) { img = b64(await f.arrayBuffer()); break; }
-      }
+      try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
+      const img = await newestPhoto(admin, w.id);
       const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}`;
       const models: string[] = Array.isArray(body.models) ? body.models : [body.model ?? "opus"];
       const styles: Record<string, unknown> = {};

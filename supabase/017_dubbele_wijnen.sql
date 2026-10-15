@@ -180,6 +180,8 @@ create table if not exists public.wine_merges (
   cards_moved int,
   merged_at  timestamptz not null default now()
 );
+alter table public.wine_merges add column if not exists dropped_id uuid;
+alter table public.wine_merges add column if not exists photos_moved boolean not null default false;
 alter table public.wine_merges enable row level security;
 
 create or replace function public.merge_wine(p_keep uuid, p_drop uuid)
@@ -249,8 +251,8 @@ begin
   -- Lukte de naam niet (sleutel bestaat al)? Dan in elk geval het etiket overnemen
   update public.wines set label_style = k.label_style where id = k.id and label_style is distinct from k.label_style;
 
-  insert into public.wine_merges (kept_id, kept_naam, dropped_naam, cards_moved)
-  values (k.id, v_naam, k.naam || ' + ' || d.naam, v_moved);
+  insert into public.wine_merges (kept_id, kept_naam, dropped_naam, cards_moved, dropped_id)
+  values (k.id, v_naam, k.naam || ' + ' || d.naam, v_moved, d.id);
 end;
 $$;
 revoke all on function public.merge_wine(uuid, uuid) from public, anon, authenticated;
