@@ -13,7 +13,7 @@ function globeLibs(){
       await loadScript('https://cdn.jsdelivr.net/npm/d3-array@3.2.4/dist/d3-array.min.js');
       await loadScript('https://cdn.jsdelivr.net/npm/d3-geo@3.1.1/dist/d3-geo.min.js');
     }
-    if(typeof GLOBE==='undefined')await loadScript('globe.js');
+    if(typeof GLOBE==='undefined')await loadScript('globe.js?v='+(window.VI_V||''));
     const name={};for(const [n,id] of Object.entries(MAPS.ISO))name[id]=n;
     GFEAT=GLOBE.map(c=>{
       const f={type:'Feature',id:c.id,properties:{name:name[c.id]||''},geometry:{type:'MultiPolygon',coordinates:c.p}};
