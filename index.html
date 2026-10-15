@@ -1110,17 +1110,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-145128'</script>
-<script src="data.js?v=20261015-145128"></script>
-<script src="art.js?v=20261015-145128"></script>
-<script src="gids.js?v=20261015-145128"></script>
-<script src="maps.js?v=20261015-145128"></script>
-<script src="zegels.js?v=20261015-145128"></script>
-<script src="landen.js?v=20261015-145128"></script>
-<script src="etiket.js?v=20261015-145128"></script>
-<script src="stickers.js?v=20261015-145128"></script>
-<script src="vrienden.js?v=20261015-145128"></script>
-<script src="wereldbol.js?v=20261015-145128"></script>
+<script>window.VI_V='20261015-155252'</script>
+<script src="data.js?v=20261015-155252"></script>
+<script src="art.js?v=20261015-155252"></script>
+<script src="gids.js?v=20261015-155252"></script>
+<script src="maps.js?v=20261015-155252"></script>
+<script src="zegels.js?v=20261015-155252"></script>
+<script src="landen.js?v=20261015-155252"></script>
+<script src="etiket.js?v=20261015-155252"></script>
+<script src="fullart.js?v=20261015-155252"></script>
+<script src="stickers.js?v=20261015-155252"></script>
+<script src="vrienden.js?v=20261015-155252"></script>
+<script src="wereldbol.js?v=20261015-155252"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1275,7 +1276,7 @@ function openSettings(){
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
       ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
-      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button>`:''}
+      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -1284,6 +1285,7 @@ function openSettings(){
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
   const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp gaan langs Claude. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost een paar cent en duurt even.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
+  const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -1417,6 +1419,7 @@ function ultraFill(A,v){
 
 const IMG={},LBL={};
 /* Full Art vanaf Rare: het etiket groot op de poster */
+const faScene=c=>typeof faArt==='function'&&['rare','superrare','ultra'].includes(c.rar)?faArt(c):ultraFill(areaOf(c),c.v)+faLabel(c);
 const faLabel=c=>LABEL_TIERS.includes(c.rar)?`<div class="falbl etkfa">${drawnLabel(c)}<i class="lfoil"></i></div>`:'';
 const isDemoWine=c=>!!POOL_BY_KEY[c.key];
 const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${ownerId()}/${c.wineId}.label.jpg`;
@@ -1539,14 +1542,14 @@ function bigCard(c){
   const top=`<div class="toprow"><span class="tloc">${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${c.fa?'Full Art':T.label}</span></div>`;
   const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
     <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif||'Onbekend')}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl||'—')}</dd></div><div><dt>${c.bottles>1?'Gedronken':'Gescand'}</dt><dd>${c.bottles>1?c.bottles+'× · sinds '+esc(c.datum):esc(c.datum)}</dd></div></dl>`;
-  if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${ultraFill(areaOf(c),c.v)}${faLabel(c)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
+  if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${faScene(c)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
   return `<div class="card t-${c.rar} idle"><div class="face">${top}${stampHTML(c)}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
 }
 function mini(c){
   const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
   const ms=(isIcoon(c)?'<span class="micon" aria-hidden="true">✦</span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
-  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${ultraFill(areaOf(c),c.v)}${faLabel(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
+  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${faScene(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
 function slotHTML(c,label,d,gid,n){
@@ -1834,7 +1837,7 @@ function toCard(row,w){
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:(row.jaar!=null?row.jaar:w.jaar),druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,style:w.label_style||null,fa:!!row.full_art,bottles:row.bottles||1,why:priceWords(w.tier_reason||''),memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
+    rar:row.tier,style:w.label_style||null,fa:!!row.full_art&&row.tier!=='icon',bottles:row.bottles||1,why:priceWords(w.tier_reason||''),memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
 }
 async function loadAlbum(){
   await loadSettings();
@@ -2453,6 +2456,23 @@ function openLists(nest){
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
+}
+
+/* Beheer: voorbeelden van alle Full Arts (niets wordt opgeslagen) */
+function openFaDemo(){
+  const base=cards.find(c=>c.rar!=='icon')||cards[0];if(!base){toast('Scan eerst een wijn.');return}
+  const ex=(rar,extra)=>({...base,id:'demo-'+rar+(extra&&extra.regio||''),rar,fa:true,...extra});
+  const kinds={chateau:'bordeaux',church:'bourgogne',village:'beaujolais',papal:'rhone',cathedral:'champagne',timber:'elzas',walled:'languedoc',farmhouse:'toscane',castle:'piemonte',campanile:'veneto',bodega:'rioja'};
+  const L=[ex('common'),ex('rare'),ex('superrare'),ex('ultra')]
+    .concat(Object.entries(kinds).map(([k,r])=>ex('ultra',{regio:r,land:AREAS[r]?AREAS[r].land:base.land,app:AREAS[r]?AREAS[r].naam:base.app})))
+    .concat([['Oostenrijk','abbey'],['Nederland','windmill'],['Zuid-Afrika','gable'],['Verenigde Staten','barn']].map(([l])=>ex('ultra',{regio:'x-'+l,land:l,app:l})));
+  const o=overlay(`<p class="status">Full Art-voorbeelden</p><p class="hint">Alleen om te bekijken: dit zijn tijdelijke kopieën van je kaart "${esc(base.naam)}". Er wordt niets opgeslagen. Sluit dit venster en ze zijn weg.</p>
+    <div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${TIERS[c.rar].label}${c.rar==='ultra'?' · '+esc(c.app||c.land):''}</span></div>`).join('')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.classList.add('leather');o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelectorAll('.mini').forEach(m=>m.onclick=()=>{const c=L.find(x=>x.id===m.dataset.id);
+    const p=overlay(`<div class="spin">${bigCard(c)}</div><div class="actions"><button class="btn primary" id="back">Terug</button></div>`,{nest:true});
+    tilt(p.querySelector('.card'));p.querySelector('#back').onclick=()=>popOverlay();});
 }
 
 /* Klasse-blad: al je kaarten van één klasse, per land */

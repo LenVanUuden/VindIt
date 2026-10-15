@@ -33,6 +33,8 @@ De **wijn bepaalt de klasse**, voor iedereen gelijk. Bij de eerste scan schat Cl
 | Ultra | ★ | Etiket met goudfolie, goud metallic | ±€200+ |
 | Legende | ♛ | Onyx en goud | Alleen de 20 Legendes (vaste lijst in `landen.js` en migratie 016; prijs telt niet) |
 
+Full Art (5% kans, niet bij Legendes): Common = reisposter over de hele kaart; Rare = papieren etiket op zilverglitter dat langzaam kantelt; Super Rare = fles voor het etiket op goudglitter, wiegt met schaduw; Ultra = nachtelijke streek met het landmark van de regio (15 gedetailleerde landmarks in `fullart.js`), noorderlicht, open fles met bewegende kurk en kantelend etiket. Scheurtjes in het etiket zijn per wijn verschillend. Beheerder: Instellingen → Full Art-voorbeelden.
+
 Kleuren in de sleeve: Common crème mat, Rare zilver, Super Rare goud, Ultra saffier (donker vlak, prismalijst), Legende onyx met donker roodgoud.
 
 **✦ Icoon** is geen klasse maar een stempel: een wijn die zijn land op de kaart zette (drie per land, `LANDINFO` in `landen.js`) krijgt op elke klasse een gouden stempel en een regel "Waarom icoon?". Alle iconen staan in het overzicht *Iconen van de wereld* (knop op Legendes blad 2). Het stempel "Eerste ontdekker" staat niet meer op de kaart.
