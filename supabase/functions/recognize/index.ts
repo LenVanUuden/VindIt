@@ -27,6 +27,7 @@ Rules:
 - is_wine_label: false if the photo does not clearly show a wine label (beer, spirits, a menu, no label, unreadable). Then fill the other fields as best you can or with empty strings.
 - confidence: 0..1, how sure you are the producer and wine name are read correctly.
 - naam: the wine/cuvée name WITHOUT vintage and without the producer. If the label has no separate cuvée name, use the appellation or grape as printed (e.g. "Chablis", "Sauvignon Blanc"). Keep original spelling and accents.
+  If the main wine simply carries the estate name (typical for a Bordeaux château or a domaine's grand vin), naam = the full estate name exactly as printed, including "Château"/"Domaine" (e.g. naam "Château Rozier", maker "Château Rozier"), never a shortened "Rozier".
 - maker: the producer/estate exactly as printed (e.g. "Domaine Laroche", "Château Lynch-Bages", "Bodegas Muga"). For négociant/supermarket brands use the brand.
 - jaar: vintage as a 4-digit number, or null if non-vintage/not visible.
 - druif: grape(s) as display text in Dutch-friendly form (e.g. "Merlot, Cabernet Franc"). Infer from the appellation if not printed (Chablis → Chardonnay, Sancerre → Sauvignon Blanc, Barolo → Nebbiolo, Rioja → Tempranillo).
@@ -245,7 +246,9 @@ Deno.serve(async (req) => {
     if (claimErr) throw claimErr;
     if (claim !== "ok") return json({ status: claim });
 
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
+    // temperature 0: dezelfde foto geeft zo vaker dezelfde schatting (en dus dezelfde klasse).
+    // Weigert het model dat, dan nog één keer zonder.
+    const ask = (withTemp: boolean) => fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!,
@@ -255,6 +258,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 1300,
+        ...(withTemp ? { temperature: 0 } : {}),
         system: SYSTEM,
         tools: [TOOL],
         tool_choice: { type: "tool", name: "wijnetiket" },
@@ -267,6 +271,12 @@ Deno.serve(async (req) => {
         }],
       }),
     });
+    let r = await ask(true);
+    if (r.status === 400) {
+      const t = await r.text();
+      if (/temperature/i.test(t)) { console.warn("temperature geweigerd, opnieuw zonder"); r = await ask(false); }
+      else { console.error("anthropic", 400, t); return json({ status: "ai_error" }, 502); }
+    }
     if (!r.ok) {
       console.error("anthropic", r.status, await r.text());
       return json({ status: "ai_error" }, 502);

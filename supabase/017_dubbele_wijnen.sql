@@ -7,8 +7,9 @@
 -- klasse en een eigen etiket.
 -- Nu: bij een nieuwe scan zoekt de app eerst naar een bestaande wijn met
 -- dezelfde naam zonder "Château/Domaine/…", accenten, jaartal en leestekens,
--- en dezelfde maker (of dezelfde streek als de maker onbekend is). Gevonden?
--- Dan wordt die bestaande wijn gebruikt.
+-- én dezelfde maker. Gevonden? Dan wordt die bestaande wijn gebruikt.
+-- Is de maker onbekend, dan wordt er nooit samengevoegd (anders zouden twee
+-- verschillende "Reserva"s uit Rioja één wijn worden).
 -- Daarnaast: bestaande dubbele wijnen worden samengevoegd (de oudste blijft;
 -- kaarten en een nieuw getekend etiket gaan mee). Onderaan zie je wat er is
 -- samengevoegd.
@@ -47,15 +48,13 @@ as $$
 declare
   v_n text := public.wine_norm(p_wine->>'naam');
   v_m text := public.wine_norm(p_wine->>'maker');
-  v_r text := lower(trim(coalesce(p_wine->>'regio', '')));
   v_c text := lower(trim(coalesce(p_wine->>'color', '')));
   v_w public.wines;
 begin
   if length(v_n) < 3 then return null; end if;
   select * into v_w from public.wines w
    where public.wine_norm(w.naam) = v_n
-     and ((v_m <> '' and public.wine_norm(w.maker) = v_m)
-          or (lower(trim(w.regio)) = v_r and (v_m = '' or public.wine_norm(w.maker) = '')))
+     and v_m <> '' and public.wine_norm(w.maker) = v_m
      and (v_c = '' or coalesce(w.color, '') = '' or lower(w.color) = v_c)
    order by w.created_at
    limit 1;
@@ -265,9 +264,7 @@ begin
         on public.wine_norm(a.naam) = public.wine_norm(b.naam)
        and (a.created_at, a.id) < (b.created_at, b.id)
      where length(public.wine_norm(a.naam)) >= 3
-       and ((public.wine_norm(a.maker) <> '' and public.wine_norm(a.maker) = public.wine_norm(b.maker))
-            or (lower(trim(a.regio)) = lower(trim(b.regio))
-                and (public.wine_norm(a.maker) = '' or public.wine_norm(b.maker) = '')))
+       and public.wine_norm(a.maker) <> '' and public.wine_norm(a.maker) = public.wine_norm(b.maker)
        and (coalesce(a.color, '') = '' or coalesce(b.color, '') = '' or lower(a.color) = lower(b.color))
      order by b.created_at
   loop
