@@ -21,6 +21,8 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 16 | **De wijn bepaalt de klasse**: signalen (prijs, classificatie, producent, productie, zeldzaamheid NL, jaar, leeftijd, magnum) → vaste klasse per wijn, met reden; Full Art (5%) als geluk; 'Nieuwe fles' telt flessen | Len | Hoog: eerlijk en uitlegbaar, Opus One is altijd Icon | Middel | Live |
 | 17 | **Stickers**: verdiende stickers plakken op omslag, achterkant en bladzijden; verdienen via ontdekken, niet via drinken. Kopen pas bij ±100+ gebruikers | Len | Hoog: echt eigen album | Middel | Live (kopen: later) |
 | 18 | **Deel deze bladzijde** als afbeelding voor WhatsApp/Instagram | Claude | Middel-hoog: zichtbaarheid | Klein | Idee |
+| 19 | **Lakzegels en voorbladen**: voorblad per land met omtrek, weetjes en iconen; 58 unieke lakzegels voor landen, sets en uitdagingen | Len | Hoog: minder zakelijk, meer album | Middel | Live |
+| 20 | **Getekende etiketten** op basis van het echte etiket (Claude beschrijft, app tekent); foto op de achterkant | Len | Hoog: herkenbaar en in stijl | Middel | Live |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)

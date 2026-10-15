@@ -952,6 +952,43 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .gland{border:1px solid rgba(201,162,83,.55);background:rgba(201,162,83,.12);color:var(--gold-soft);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer}
 .gland b{color:var(--cream);font-weight:600;margin-left:2px}
 [data-pages="creme"] .gland{color:#6B4A16;background:rgba(201,162,83,.18)}[data-pages="creme"] .gland b{color:#3A2418}
+/* ===== Voorbladen en lakzegels ===== */
+.cmedal{flex:none;width:72px;height:72px}.cmedal .cm-bg{fill:#14100c;stroke:#C9A253;stroke-width:1.5}
+.chapcover{gap:8px}
+.chtop{display:flex;align-items:center;gap:12px}.chtop h2{margin:0}
+.chip{display:inline-block;font:600 10px var(--sans,'Libre Franklin',sans-serif);letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid #C9A253;color:#F6E2A8;background:rgba(201,162,83,.12);margin-top:4px}
+.intro{display:flex;gap:10px;align-items:center}
+.outline{flex:none;width:104px;height:130px;padding:0;border:0;background:radial-gradient(circle,rgba(201,162,83,.12),transparent 70%);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.outline svg{max-width:100%;max-height:100%}.outline .olnd{fill:#3A2416;stroke:#C9A253;stroke-linejoin:round}.outline .opin{fill:#9E2A2B;stroke:#F6E2A8}
+.facts{flex:1;display:flex;flex-direction:column;gap:6px;text-align:left}
+.fact{display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.35;color:var(--cream)}.fact b{color:#F6E2A8;font-weight:600}
+.fdot{flex:none;width:21px;height:21px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#B8443F,#6E1418);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;color:#F6E2A8;font:700 10.5px Georgia,serif}
+.sec{text-align:center;margin:4px 0 0}
+.icrow{display:flex;gap:6px;justify-content:center;margin-top:6px}
+.icn{flex:1;max-width:110px;display:flex;flex-direction:column;align-items:center;font-size:10.5px;line-height:1.25;color:#E9D3A0}
+.icn b{font-weight:600}.icn small{opacity:.7;font-size:10px}
+.icn .coin{width:42px;height:42px;margin-bottom:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:15px Limelight,Georgia,serif;color:#4A3210;
+  background:radial-gradient(circle at 35% 30%,#F3DC96,#C9A253 55%,#8F6B22);box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35);filter:saturate(.3) brightness(.65);opacity:.75}
+.icn.own .coin{filter:none;opacity:1;box-shadow:0 0 16px rgba(240,210,130,.75),0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35);animation:coinglow 2.6s ease-in-out infinite alternate}
+.icn.own b{color:#F6E2A8}.icn.own small{opacity:1;color:#F6E2A8}
+@keyframes coinglow{from{box-shadow:0 0 8px rgba(240,210,130,.45),0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35)}to{box-shadow:0 0 20px rgba(240,210,130,.85),0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35)}}
+.seals{display:grid;grid-template-columns:1fr 1fr;gap:2px 2px}
+.seals.three{grid-template-columns:1fr 1fr 1fr}.seals.one{grid-template-columns:1fr}
+.wseal{display:flex;flex-direction:column;align-items:center;background:none;border:0;padding:2px;color:inherit;cursor:pointer;font:inherit}
+.wseal .wax{width:min(128px,100%);height:auto;aspect-ratio:1;overflow:visible}
+.seals.three .wseal .wax{width:min(96px,100%)}.seals.one .wseal .wax{width:150px}
+.wseal .nm{font-weight:600;font-size:12.5px;margin-top:-4px;text-align:center;line-height:1.2}.seals.three .nm{font-size:11px}
+.wseal .st{font-size:10.5px;color:var(--gold-soft);opacity:.8}
+.wseal.ghost .nm{opacity:.55}.wseal.ghost .st{opacity:.5}
+.wseal:nth-child(4n+1){transform:rotate(-4deg)}.wseal:nth-child(4n+2){transform:rotate(3deg) translateY(6px)}.wseal:nth-child(4n+3){transform:rotate(2deg)}.wseal:nth-child(4n){transform:rotate(-3deg) translateY(6px)}
+.wseal:active .wax{transform:scale(.94)}.wseal .wax{transition:transform .15s}
+[data-pages="creme"] .chapcover .fact,[data-pages="creme"] .chapcover .icn{color:#3A2A1C}[data-pages="creme"] .fact b,[data-pages="creme"] .icn.own b{color:#7A1E2C}
+[data-pages="creme"] .wseal .nm{color:#3A2A1C}
+.sealhead{display:flex;align-items:center;gap:12px;align-self:center}.sealhead .status{margin:0;font-size:28px}
+.sealgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 4px;width:min(96vw,440px)}
+.sealgrid .wseal .wax{width:min(98px,100%)}.sealgrid .wseal .nm{font-size:11.5px;color:var(--cream)}
+.wseal.on .wax{filter:drop-shadow(0 0 10px rgba(240,210,130,.7))}
+.wseal{border-radius:14px}.wseal:focus{outline:none}.wseal:focus-visible{outline:1.5px dashed rgba(233,211,160,.7);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -973,15 +1010,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-123607'</script>
-<script src="data.js?v=20261015-123607"></script>
-<script src="art.js?v=20261015-123607"></script>
-<script src="gids.js?v=20261015-123607"></script>
-<script src="maps.js?v=20261015-123607"></script>
-<script src="etiket.js?v=20261015-123607"></script>
-<script src="stickers.js?v=20261015-123607"></script>
-<script src="vrienden.js?v=20261015-123607"></script>
-<script src="wereldbol.js?v=20261015-123607"></script>
+<script>window.VI_V='20261015-130758'</script>
+<script src="data.js?v=20261015-130758"></script>
+<script src="art.js?v=20261015-130758"></script>
+<script src="gids.js?v=20261015-130758"></script>
+<script src="maps.js?v=20261015-130758"></script>
+<script src="zegels.js?v=20261015-130758"></script>
+<script src="landen.js?v=20261015-130758"></script>
+<script src="etiket.js?v=20261015-130758"></script>
+<script src="stickers.js?v=20261015-130758"></script>
+<script src="vrienden.js?v=20261015-130758"></script>
+<script src="wereldbol.js?v=20261015-130758"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1232,6 +1271,10 @@ function compute(){
   s.allLands=[...LANDS,...(other.length?['Overige landen']:[])];
   return s;
 }
+function countryMedal(have,tot){
+  const p=tot?have/tot:0,C=2*Math.PI*30;
+  return `<svg class="cmedal" viewBox="-40 -40 80 80" aria-label="${have} van ${tot}"><circle r="36" class="cm-bg"/><circle r="30" fill="none" stroke="rgba(233,211,160,.18)" stroke-width="5"/><circle r="30" fill="none" stroke="#C9A253" stroke-width="5" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90)" stroke-linecap="round"/><text y="-1" text-anchor="middle" font-family="Limelight,Georgia,serif" font-size="${String(have).length>2?13:16}" fill="#F6E2A8">${have}</text><text y="12" text-anchor="middle" font-family="Libre Franklin,sans-serif" font-size="8" fill="#E9D3A0">van ${tot}</text></svg>`;
+}
 function landStats(l){
   const sets=SETS.filter(s=>s.part===1&&s.land===l&&st.visible[s.id]);
   return {have:sets.reduce((a,s)=>a+filledOf(s).filter(Boolean).length,0),tot:sets.reduce((a,s)=>a+s.slots.length,0),cards:cards.filter(c=>c.land===l||(l==='Overige landen'&&!LANDS.includes(c.land))).length};
@@ -1251,7 +1294,7 @@ function buildPages(){
     for(const land of st.allLands){
       if(!st.lands.includes(land))continue;          // groeiend album: een land verschijnt bij je eerste wijn
       const vis=visSets(land),sets=vis.filter(started);
-      if(vis.length>1||sets.length<vis.length)P.push({t:'chapter',land});
+      if(land!=='Overige landen')P.push({t:'chapter',land});   // elk land begint met een voorblad
       for(const set of sets)P.push({t:'set',set,land});
       if(!vis.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!vis.length});
     }
@@ -1564,7 +1607,7 @@ function openWorldLand(land){
 }
 function makePage(i){
   const el=makePage0(i),mm=miniMapFor(pages[i]);
-  if(mm){el.classList.add('hasmap');el.insertAdjacentHTML('afterbegin',mm)}
+  if(mm&&pages[i].t!=='chapter'){el.classList.add('hasmap');el.insertAdjacentHTML('afterbegin',mm)}
   if(session&&!loading)el.insertAdjacentHTML('beforeend',stkLayer(i));
   return el;
 }
@@ -1613,15 +1656,25 @@ function makePage0(i){
     return el;
   }
   if(p.t==='chapter'){
-    const x=landStats(p.land),chapN=st.allLands.indexOf(p.land)+1;
-    const rows=visSets(p.land).map(set=>{
+    const x=landStats(p.land),chapN=st.allLands.indexOf(p.land)+1,info=LANDINFO[p.land];
+    el.classList.add('chapcover');
+    const seals=visSets(p.land).map(set=>{
       const k=firstPageOf(q=>q.set===set),f=filledOf(set),h=f.filter(Boolean).length;
-      if(k<0)return `<li class="dim"><button data-preview="${set.id}"><span>${esc(set.name)}</span><span>nog te ontdekken · bekijk</span></button></li>`;
-      return `<li><button data-go="${k}"><span>${esc(set.name)}${isDone(set)?' <small>· voltooid</small>':''}</span><span>${h} / ${f.length}</span></button></li>`;
-    }).join('')+((st.overflow[p.land]||[]).length?(()=>{const k=firstPageOf(q=>q.t==='overige'&&q.land===p.land),n=st.overflow[p.land].length;return `<li><button data-go="${k}"><span>Overige</span><span>${n} ${n===1?'kaart':'kaarten'}</span></button></li>`})():'');
-    el.innerHTML=`<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2></div>
-      ${progress(x.have,x.tot)}
-      <p class="eyebrow toch">Sets in dit hoofdstuk</p><ul class="toc">${rows}</ul>${pageFoot(i)}`;
+      if(k<0||!h)return `<button class="wseal ghost" data-preview="${set.id}">${waxSeal(set.id,set.name,{ghost:true})}<span class="nm">${esc(set.name)}</span><span class="st">nog te ontdekken</span></button>`;
+      const done=isDone(set);
+      return `<button class="wseal" data-go="${k}">${waxSeal(set.id,set.name,done?{done:true}:{have:h,tot:f.length})}<span class="nm">${esc(set.name)}</span><span class="st">${done?'voltooid':'set openen'}</span></button>`;
+    });
+    const ov=st.overflow[p.land]||[];
+    if(ov.length){const k=firstPageOf(q=>q.t==='overige'&&q.land===p.land);seals.push(`<button class="wseal" data-go="${k}">${waxSeal('overige','Overige',{count:ov.length})}<span class="nm">Overige</span><span class="st">${ov.length} ${ov.length===1?'kaart':'kaarten'}</span></button>`)}
+    const n=seals.length,m=MAPS&&MAPS.lands[p.land];
+    let outline='';
+    if(m){const pins=cards.filter(c=>c.land===p.land).map(cardPin).filter(Boolean);
+      outline=`<button class="outline" data-map="land:${esc(p.land)}" aria-label="Kaart van ${esc(p.land)}"><svg viewBox="-4 -4 ${m.w+8} ${m.h+8}"><path d="${m.d}" class="olnd" stroke-width="${(m.w*.012).toFixed(2)}"/>${pins.map(ll=>{const [px,py]=proj(m,ll[0],ll[1]);return `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(m.w*.04).toFixed(1)}" class="opin" stroke-width="${(m.w*.012).toFixed(2)}"/>`}).join('')}</svg></button>`}
+    el.innerHTML=`<div class="chtop">${countryMedal(x.have,x.tot)}<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2>${info?`<span class="chip">${info.w}</span>`:''}</div></div>
+      ${info||outline?`<div class="intro">${outline}${info?`<div class="facts">${info.f.map((t,k)=>`<div class="fact"><span class="fdot">${['I','II','III'][k]}</span><span>${t}</span></div>`).join('')}</div>`:''}</div>`:''}
+      ${info?`<div class="sec"><p class="eyebrow">Iconen van ${esc(p.land)}</p><div class="icrow">${info.i.map(([a,b2,re])=>{const own=iconOwned(re);return `<div class="icn${own?' own':''}"><span class="coin">♛</span><b>${esc(a)}</b><small>${own?'Je hebt hem!':esc(b2)}</small></div>`}).join('')}</div></div>`:''}
+      <p class="eyebrow toch sec">${n===1?'Set in dit hoofdstuk':'Sets in dit hoofdstuk'}</p>
+      <div class="seals${n===1?' one':n>6?' three':''}">${seals.join('')}</div>${pageFoot(i)}`;
     return el;
   }
   if(p.t==='overige'){
@@ -2240,12 +2293,17 @@ function openLands(land,nest){
     const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
     return;
   }
-  const o=overlay(`<p class="status">Kies een land</p>
-    <div class="lands">${st.allLands.map(l=>{const x=landStats(l),n=SETS.filter(z=>z.part===1&&z.land===l&&st.visible[z.id]).length;
-      return `<button data-land="${esc(l)}" class="${x.cards?'':'dim'}${l===curLand?' on':''}"><b>${esc(l)}${n>1?` <small>· ${n} sets</small>`:''}</b><span>${!x.cards?'nog te ontdekken':x.tot?x.have+' / '+x.tot+' vakken':x.cards+' '+(x.cards===1?'kaart':'kaarten')}</span></button>`}).join('')}</div>
+  const disc=st.allLands.filter(l=>landStats(l).cards).length;
+  const o=overlay(`<div class="sealhead">${countryMedal(disc,st.allLands.length)}<div><p class="eyebrow">Je wijnreis</p><p class="status">Landen</p></div></div>
+    <div class="sealgrid">${st.allLands.map(l=>{const x=landStats(l);
+      return `<button class="wseal${x.cards?'':' ghost'}${l===curLand?' on':''}" data-landgo="${esc(l)}">${waxSeal(l,l==='Overige landen'?'Overige landen':l,x.cards?{count:x.cards}:{ghost:true})}<span class="nm">${esc(l)}</span><span class="st">${x.cards?x.cards+' '+(x.cards===1?'kaart':'kaarten'):'nog te ontdekken'}</span></button>`}).join('')}</div>
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+  o.classList.add('leather');
+  o.querySelectorAll('[data-landgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const l=b.dataset.landgo;
+    const k=firstPageOf(q=>q.t==='chapter'&&q.land===l),k2=k>=0?k:firstPageOf(q=>q.land===l);
+    if(k2>=0){closeOverlay();go(k2)}else openLandPreview(l)});
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
+  const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
 }
 function openLandPreview(land){
   const sets=visSets(land);
@@ -2268,14 +2326,16 @@ function openSetPreview(id){
   o.querySelector('.lands button').focus();
 }
 function openLists(nest){
-  const rows=pages.map((q,k)=>[q,k]).filter(([q])=>q.set&&q.set.part===2).map(([q,k])=>{
-    const f=filledOf(q.set),h=f.filter(Boolean).length;
-    return pickRow(k,esc(q.set.name)+(isDone(q.set)?' ✓':''),h+' / '+f.length+' vakken',k===cur,!h);
-  }).join('');
-  const o=overlay(`<p class="status">Uitdagingen</p><div class="lands">${rows}</div>
+  const L=SETS.filter(x=>x.part===2&&st.visible[x.id]),hidden=SETS.filter(x=>x.part===2&&!st.visible[x.id]).length;
+  const doneN=L.filter(isDone).length;
+  const o=overlay(`<div class="sealhead">${countryMedal(doneN,L.length)}<div><p class="eyebrow">Achterin het album</p><p class="status">Uitdagingen</p></div></div>
+    <div class="sealgrid">${L.map(set=>{const k=firstPageOf(q=>q.set===set),f=filledOf(set),h=f.filter(Boolean).length,done=isDone(set);
+      return `<button class="wseal${h?'':' ghost'}${k===cur?' on':''}" data-pg="${k}">${waxSeal(set.id,set.name.replace(' rond de wereld',''),h?(done?{done:true}:{have:h,tot:f.length}):{ghost:true})}<span class="nm">${esc(set.name.replace(' rond de wereld',''))}</span><span class="st">${done?'voltooid':h+' van '+f.length}</span></button>`}).join('')}</div>
+    ${hidden?`<p class="hint">${hidden} ${hidden===1?'uitdaging is':'uitdagingen zijn'} nog geheim. Die verschijnen vanzelf.</p>`:''}
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+  o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
+  const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
 }
 
 /* ---------- navigatie: kruimel, menu, springen ---------- */
