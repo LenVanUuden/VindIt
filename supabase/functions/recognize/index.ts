@@ -323,14 +323,14 @@ Deno.serve(async (req) => {
         if (lsErr) console.error("label_style", lsErr); else result.wine.label_style = labelStyle;
       }
     }
-    // Daarna: het etiket in de achtergrond zelf laten tekenen door het sterkere model (eenmalig per wijn)
+    // Daarna: het etiket in de achtergrond zelf laten tekenen (standaard Sonnet; Len vond Sonnet even goed als Opus, half zo duur)
     const curStyle = result?.wine?.label_style as Record<string, unknown> | null | undefined;
     // Alleen vanaf Rare: Commons tonen de reisposter, geen etiket
     const tierNow = (result?.card?.tier ?? result?.wine?.tier_override ?? result?.wine?.tier) as string | undefined;
     if (result?.wine?.id && tierNow && tierNow !== "common" && !(curStyle && (curStyle.v === 2 || curStyle.locked))) {
       const wid = result.wine.id;
       const desc = `Wijn: ${payload.naam}\nMaker: ${payload.maker || "onbekend"}\nJaargang: ${payload.jaar ?? "geen"}\nHerkomst: ${payload.app || ""} (${payload.regio}, ${payload.land || ""})\nStijl: ${payload.stijl || ""}\nDe foto toont de hele fles; teken het hoofdetiket.`;
-      const job = drawLabel("opus", image, mediaType, desc).then(async (st) => {
+      const job = drawLabel(Deno.env.get("LABEL_SCAN_MODEL") ?? "sonnet", image, mediaType, desc).then(async (st) => {
         if (st) { const { error: de } = await admin.rpc("set_label_style", { p_wine: wid, p_style: st, p_force: true }); if (de) console.error("draw save", de); }
       }).catch((e) => console.error("draw", e));
       // @ts-ignore EdgeRuntime bestaat in Supabase Edge Functions

@@ -1151,18 +1151,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-211515'</script>
-<script src="data.js?v=20261015-211515"></script>
-<script src="art.js?v=20261015-211515"></script>
-<script src="gids.js?v=20261015-211515"></script>
-<script src="maps.js?v=20261015-211515"></script>
-<script src="zegels.js?v=20261015-211515"></script>
-<script src="landen.js?v=20261015-211515"></script>
-<script src="etiket.js?v=20261015-211515"></script>
-<script src="fullart.js?v=20261015-211515"></script>
-<script src="stickers.js?v=20261015-211515"></script>
-<script src="vrienden.js?v=20261015-211515"></script>
-<script src="wereldbol.js?v=20261015-211515"></script>
+<script>window.VI_V='20261015-220845'</script>
+<script src="data.js?v=20261015-220845"></script>
+<script src="art.js?v=20261015-220845"></script>
+<script src="gids.js?v=20261015-220845"></script>
+<script src="maps.js?v=20261015-220845"></script>
+<script src="zegels.js?v=20261015-220845"></script>
+<script src="landen.js?v=20261015-220845"></script>
+<script src="etiket.js?v=20261015-220845"></script>
+<script src="fullart.js?v=20261015-220845"></script>
+<script src="stickers.js?v=20261015-220845"></script>
+<script src="vrienden.js?v=20261015-220845"></script>
+<script src="wereldbol.js?v=20261015-220845"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1326,8 +1326,8 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Opus (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 5 à 6 cent per wijn en duurt ongeveer een halve minuut per twee wijnen.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
-  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Opus. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 5 à 6 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
+  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn en duurt ongeveer een halve minuut per twee wijnen.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
+  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
@@ -2545,9 +2545,9 @@ async function callDraw(body){
   return r.data;
 }
 async function adminDraw(c){
-  overlay(`<p class="status">Etiket wordt getekend…</p><p class="hint">Claude Opus bekijkt je foto en tekent ${esc(c.naam)}. Dit duurt ongeveer een halve minuut.</p>`,{nest:true});
-  try{const d=await callDraw({mode:'draw',wine:c.wineId,model:'opus'});const st=d.styles&&d.styles.opus;
-    if(!st)throw new Error((d.errors&&d.errors.opus)||'geen tekening');setWineStyle(c,st);closeOverlay();openCard(c.id)}
+  overlay(`<p class="status">Etiket wordt getekend…</p><p class="hint">Claude Sonnet bekijkt je foto en tekent ${esc(c.naam)}. Dit duurt ongeveer een halve minuut.</p>`,{nest:true});
+  try{const d=await callDraw({mode:'draw',wine:c.wineId,model:'sonnet'});const st=d.styles&&d.styles.sonnet;
+    if(!st)throw new Error((d.errors&&d.errors.sonnet)||'geen tekening');setWineStyle(c,st);closeOverlay();openCard(c.id)}
   catch(e){closeOverlay();toast('Tekenen lukte niet ('+e.message+'). Is reassess opnieuw gedeployd?')}
 }
 async function adminCompare(c){

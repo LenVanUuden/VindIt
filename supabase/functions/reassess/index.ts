@@ -241,7 +241,7 @@ Deno.serve(async (req) => {
       try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
       const img = await newestPhoto(admin, w.id);
       const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}`;
-      const models: string[] = Array.isArray(body.models) ? body.models : [body.model ?? "opus"];
+      const models: string[] = Array.isArray(body.models) ? body.models : [body.model ?? "sonnet"];
       const styles: Record<string, unknown> = {};
       const errors: Record<string, string> = {};
       await Promise.all(models.slice(0, 2).map(async (m) => { styles[m] = await drawLabel(m, img, "image/jpeg", desc); if (!styles[m]) errors[m] = LAST_DRAW_ERR; }));
@@ -263,16 +263,11 @@ Deno.serve(async (req) => {
       const results: unknown[] = [];
       for (const w of wines ?? []) {
         // een bewaarde etiketfoto zoeken bij iemand die deze wijn heeft
-        let img: string | null = null;
-        const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", w.id).limit(5);
-        for (const o of owners ?? []) {
-          const { data: f } = await admin.storage.from("card-art").download(`${o.user_id}/${w.id}.label.jpg`);
-          if (f) { img = b64(await f.arrayBuffer()); break; }
-        }
+        const img = await newestPhoto(admin, w.id);
         const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}\nKlasse: ${w.tier || ""}`;
         const content: unknown[] = img ? [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img } }, { type: "text", text: desc }] : [{ type: "text", text: desc }];
         if (w.label_style && (w.label_style as Record<string, unknown>).locked) { results.push({ id: w.id, naam: w.naam, overgeslagen: "vast" }); continue; }
-        const st = await drawLabel(body.model ?? "opus", img, "image/jpeg", desc);
+        const st = await drawLabel(body.model ?? "sonnet", img, "image/jpeg", desc);
         if (!st) { results.push({ id: w.id, error: "leeg" }); continue; }
         const { error: e2 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: !!body.force });
         if (e2) { console.error(e2); results.push({ id: w.id, error: "db" }); continue; }
