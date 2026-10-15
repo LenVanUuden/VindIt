@@ -332,7 +332,22 @@ button{font:inherit;color:inherit}
 .kseals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0 2px;margin-top:2px}
 .kseals .wseal .wax{width:min(70px,100%)}.kseals .wseal .nm{font-size:10px;font-weight:600;margin-top:-6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .kseals .wseal:nth-child(n){transform:none}.kseals .wseal:nth-child(2n){transform:translateY(3px) rotate(2deg)}.kseals .wseal:nth-child(3n){transform:rotate(-3deg)}
-.kbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.kbtns .maplink{margin:0;justify-content:center;font-size:12.5px;padding:8px 6px}
+.kmeds{display:flex;justify-content:center;gap:34px;margin-top:10px}
+.kmed{background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;font:inherit;color:inherit}
+.kmed:active .kglobe,.kmed:active .kcoin{transform:scale(.94)}
+.kglobe,.kcoin{position:relative;width:76px;height:76px;border-radius:50%;overflow:hidden;transition:transform .12s;box-shadow:0 0 0 2px #C9A253,0 0 0 4px rgba(90,58,18,.6),0 4px 10px rgba(0,0,0,.55)}
+.kglobe{background:radial-gradient(circle at 35% 30%,#3E5A52,#1C2E2A 55%,#0D1714)}
+.kgmap{position:absolute;top:6%;left:0;height:88%;width:auto;display:flex;animation:kspin 28s linear infinite}
+.kgmap svg{height:100%;width:auto;aspect-ratio:2/1;flex:none;fill:#D9B565}
+@keyframes kspin{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.kglobe::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,240,200,.45),transparent 30%),radial-gradient(circle at 50% 50%,transparent 52%,rgba(0,0,0,.7) 100%)}
+.kcoin{background:radial-gradient(circle at 35% 30%,#FBE7B0,#C9A253 55%,#8F6B22)}
+.kcoin svg{width:100%;height:100%}
+.kcoin::after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed rgba(90,58,18,.5)}
+.kban{margin-top:-8px;position:relative;z-index:1;padding:4px 16px;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#F6E2A8;white-space:nowrap;
+  background:linear-gradient(180deg,#8E2433,#5E1420);clip-path:polygon(0 0,100% 0,94% 50%,100% 100%,0 100%,6% 50%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+@media (prefers-reduced-motion: reduce){.kgmap{animation:none}}
+[data-pages="creme"] .kban{color:#FBEFD2}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px;width:min(92vw,360px);--sw:104px}
 .tcell{display:flex;flex-direction:column;align-items:center;gap:4px}.tcell .mini{width:100%;height:auto;aspect-ratio:1/1.48}
 .tland{font-size:10.5px;color:var(--gold-soft);opacity:.8}
@@ -850,6 +865,9 @@ h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
 /* kruimel, info, kaartlink */
 .crumb{background:linear-gradient(180deg,var(--leather),var(--leather-dark));border:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 0 0 1px rgba(210,174,98,.55),0 2px 6px rgba(0,0,0,.35)}
 .crumb .ico{color:var(--gold)}
+.crumb{position:relative;border-radius:8px;color:#F2D88A;letter-spacing:.03em;text-shadow:0 1px 0 rgba(0,0,0,.6),0 -1px 0 rgba(255,230,170,.12);
+  background:linear-gradient(180deg,#6E1E2A,#4A1018);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 0 1px #C9A253,0 0 0 3px rgba(60,20,10,.7),0 3px 8px rgba(0,0,0,.45)}
+.crumb::after{content:"";position:absolute;inset:3px;border-radius:5px;border:1px dashed rgba(233,200,130,.55);pointer-events:none}
 .ibtn{border:0!important;color:#3B2410!important;-webkit-text-fill-color:#3B2410!important;background:radial-gradient(circle at 35% 28%,#FFF0C2,#E3BE6C 45%,#B88A3C 85%)!important;box-shadow:inset 0 0 0 1px rgba(90,58,18,.55),0 1px 3px rgba(0,0,0,.45)}
 .quota .ic{border:0;color:#3B2410;background:radial-gradient(circle at 35% 28%,#FFF0C2,#E3BE6C 45%,#B88A3C 85%)}
 .maplink{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(180deg,var(--leather),var(--leather-dark));border:0;box-shadow:0 0 0 1px rgba(210,174,98,.55),0 2px 6px rgba(0,0,0,.35)}
@@ -1110,18 +1128,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-155252'</script>
-<script src="data.js?v=20261015-155252"></script>
-<script src="art.js?v=20261015-155252"></script>
-<script src="gids.js?v=20261015-155252"></script>
-<script src="maps.js?v=20261015-155252"></script>
-<script src="zegels.js?v=20261015-155252"></script>
-<script src="landen.js?v=20261015-155252"></script>
-<script src="etiket.js?v=20261015-155252"></script>
-<script src="fullart.js?v=20261015-155252"></script>
-<script src="stickers.js?v=20261015-155252"></script>
-<script src="vrienden.js?v=20261015-155252"></script>
-<script src="wereldbol.js?v=20261015-155252"></script>
+<script>window.VI_V='20261015-170001'</script>
+<script src="data.js?v=20261015-170001"></script>
+<script src="art.js?v=20261015-170001"></script>
+<script src="gids.js?v=20261015-170001"></script>
+<script src="maps.js?v=20261015-170001"></script>
+<script src="zegels.js?v=20261015-170001"></script>
+<script src="landen.js?v=20261015-170001"></script>
+<script src="etiket.js?v=20261015-170001"></script>
+<script src="fullart.js?v=20261015-170001"></script>
+<script src="stickers.js?v=20261015-170001"></script>
+<script src="vrienden.js?v=20261015-170001"></script>
+<script src="wereldbol.js?v=20261015-170001"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1739,7 +1757,8 @@ function makePage0(i){
       <div class="kstamps">${TORDER.map(t=>{const n=cards.filter(c=>c.rar===t).length;return `<button class="kcell${n?'':' none'}" data-tier="${t}" aria-label="${n} ${TIERS[t].label}, bekijken"><span class="kstamp k-${t}"><span class="ks">${TIERS[t].sym}</span><b>${n}</b></span><span class="kl">${TIERS[t].label}</span></button>`}).join('')}</div>
       <p class="eyebrow toch">Landen</p>
       <div class="kseals">${seals}</div>
-      <div class="kbtns">${typeof MAPS!=='undefined'?`<button class="maplink" data-go="${firstPageOf(x=>x.t==='world')}">${I('globe')} Wereld · ${worldStats().have}/${worldStats().tot}</button>`:''}<button class="maplink" data-act="lists">${I('trophy')} Uitdagingen · ${doneL}/${lists.length}</button></div>
+      <div class="kmeds">${typeof MAPS!=='undefined'?(()=>{const m=MAPS.world,map=`<svg viewBox="0 0 ${m.w} ${m.h}" preserveAspectRatio="none"><path d="${Object.values(m.d).join('')}"/></svg>`;return `<button class="kmed" data-go="${firstPageOf(x=>x.t==='world')}" aria-label="Mijn wijnwereld"><span class="kglobe"><span class="kgmap">${map}${map}</span></span><span class="kban">Wereld · ${worldStats().have}/${worldStats().tot}</span></button>`})():''}
+        <button class="kmed" data-act="lists" aria-label="Uitdagingen"><span class="kcoin"><svg viewBox="0 0 80 80" aria-hidden="true">${[235,212,189,166,143].map(d=>{const a=d*Math.PI/180,x=40+Math.cos(a)*27,y=40-Math.sin(a)*27;return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3" ry="6.4" transform="rotate(${-d} ${x.toFixed(1)} ${y.toFixed(1)})" fill="#9A6E22"/><ellipse cx="${(80-x).toFixed(1)}" cy="${y.toFixed(1)}" rx="3" ry="6.4" transform="rotate(${d} ${(80-x).toFixed(1)} ${y.toFixed(1)})" fill="#9A6E22"/>`}).join('')}<g transform="translate(25 23) scale(1.25)" fill="none" stroke="#5A3A0C" stroke-width="1.6" stroke-linejoin="round">${ICONS.trophy}</g></svg></span><span class="kban">Uitdagingen · ${doneL}/${lists.length}</span></button></div>
       ${pageFoot(1)}`;
     return el;
   }
