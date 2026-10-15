@@ -118,6 +118,16 @@ button{font:inherit;color:inherit}
 .mini::before{inset:-2.5px;background:radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 100%/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/5px 7px repeat-y,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 100% 0/5px 7px repeat-y}
 .art svg,.art img{display:block;width:100%;height:auto}
 .art img{aspect-ratio:10/7}
+/* Rare+: het echte etiket op de streekposter */
+.lart{position:relative;aspect-ratio:10/7;overflow:hidden}
+.lart>svg{position:absolute;inset:0;width:100%;height:100%;filter:brightness(.78) saturate(.85)}
+.lbox{position:absolute;left:7%;right:7%;top:5%;height:78%;transform:rotate(-1.2deg)}
+.art .lbox img.lbl{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;filter:drop-shadow(0 0 .6px #fbf6ea) drop-shadow(0 0 1px #fbf6ea) drop-shadow(0 3px 5px rgba(0,0,0,.55))}
+.lfoil{position:absolute;inset:0;pointer-events:none;border-radius:1px}
+.t-rare .lfoil{background:linear-gradient(115deg,transparent calc(var(--mx)*100% - 30%),rgba(255,255,255,.65) calc(var(--mx)*100%),transparent calc(var(--mx)*100% + 30%)),linear-gradient(180deg,rgba(255,255,255,.18),transparent 40%,rgba(255,255,255,.08));mix-blend-mode:soft-light;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.t-superrare .lfoil{background:repeating-linear-gradient(115deg,#ff8db5 0%,#ffd76e 7%,#8dffc8 14%,#79b9ff 21%,#c995ff 28%,#ff8db5 35%);background-size:260% 260%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:color-dodge;opacity:.33;filter:brightness(.8) contrast(1.2)}
+.t-ultra .lfoil{background:linear-gradient(115deg,rgba(201,162,83,0) calc(var(--mx)*100% - 35%),rgba(255,226,150,.7) calc(var(--mx)*100%),rgba(201,162,83,0) calc(var(--mx)*100% + 35%)),linear-gradient(180deg,rgba(233,200,120,.35),rgba(150,110,40,.25));mix-blend-mode:overlay;box-shadow:inset 0 0 0 1.5px rgba(233,200,120,.8)}
+.mini .lbox{top:4%;height:80%}
 
 /* Mini card */
 .mini{--hole:var(--pocket);border:0;padding:4px 4px 5px;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-align:left;width:100%;height:100%;box-sizing:border-box;transition:transform .28s cubic-bezier(.2,.7,.2,1)}
@@ -1093,64 +1103,63 @@ function ultraFill(A,v){
   return `<div class="ufill" role="img" aria-label="Full-art illustratie ${esc(A.naam)}"><div class="ul" style="--k:-6px">${back}</div><div class="ul" style="--k:-14px">${mid}</div><div class="ul" style="--k:-26px">${front}</div></div>`;
 }
 
-/* ---------- Rare: flesfoto naar posterstijl ---------- */
-function lum(hex){const n=parseInt(hex.slice(1),16);return .2126*(n>>16&255)+.7152*(n>>8&255)+.0722*(n&255)}
-function rgb(hex){const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255]}
-function posterize(src,A){
-  const c=A.c,Wd=300,H=210;
-  const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
-  const scale=Math.max(Wd/sw,H/sh),cw=Wd/scale,ch=H/scale,cx=(sw-cw)/2,cy=(sh-ch)/2;
-  const small=document.createElement('canvas');small.width=90;small.height=63;
-  small.getContext('2d').drawImage(src,cx,cy,cw,ch,0,0,90,63);
-  const out=document.createElement('canvas');out.width=Wd;out.height=H;
-  const x=out.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(small,0,0,Wd,H);
-  const img=x.getImageData(0,0,Wd,H),d=img.data,L=new Float32Array(Wd*H),hist=new Uint32Array(256);
-  for(let i=0,p=0;i<d.length;i+=4,p++){const l=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];L[p]=l;hist[l|0]++}
-  const cuts=[.2,.42,.64,.85].map(q=>{let acc=0,t=q*Wd*H;for(let v=0;v<256;v++){acc+=hist[v];if(acc>=t)return v}return 255});
-  const pal=[c.dark,c.near,c.far,c.sun,c.sky].sort((a,b)=>lum(a)-lum(b)).map(rgb);
-  for(let p=0,i=0;p<L.length;p++,i+=4){const l=L[p];const k=l<=cuts[0]?0:l<=cuts[1]?1:l<=cuts[2]?2:l<=cuts[3]?3:4;const col=pal[k];d[i]=col[0];d[i+1]=col[1];d[i+2]=col[2];d[i+3]=255}
-  x.putImageData(img,0,0);
-  const bh=Math.round(H*19/140),label=A.naam.toUpperCase();
-  x.fillStyle=c.dark;x.fillRect(0,H-bh,Wd,bh);
-  x.fillStyle=c.sky;x.font=(label.length>14?12:16)+'px Limelight, Georgia, serif';x.textAlign='center';x.textBaseline='middle';
-  x.fillText(label.split('').join(String.fromCharCode(8202)),Wd/2,H-bh/2+1);
-  return out.toDataURL('image/jpeg',.86);
-}
-function demoPhoto(c){
-  const Wd=300,H=210,cv=document.createElement('canvas');cv.width=Wd;cv.height=H;const x=cv.getContext('2d');
-  let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#c2b49c');g.addColorStop(1,'#5a4b3e');x.fillStyle=g;x.fillRect(0,0,Wd,H);
-  g=x.createRadialGradient(60,40,4,60,40,170);g.addColorStop(0,'rgba(255,250,235,.75)');g.addColorStop(1,'rgba(255,250,235,0)');x.fillStyle=g;x.fillRect(0,0,Wd,H);
-  g=x.createLinearGradient(0,165,0,H);g.addColorStop(0,'#7a5639');g.addColorStop(1,'#3e2a1c');x.fillStyle=g;x.fillRect(0,165,Wd,H-165);
-  x.fillStyle='rgba(0,0,0,.35)';x.beginPath();x.ellipse(170,190,70,9,0,0,Math.PI*2);x.fill();
-  const white=/Wit|Rosé|Mousserend/.test(c.stijl||'');
-  g=x.createLinearGradient(108,0,192,0);
-  g.addColorStop(0,white?'#6f7d3f':'#22301f');g.addColorStop(.22,white?'#a6b468':'#3f5a40');g.addColorStop(.7,white?'#4b5626':'#121a12');g.addColorStop(1,white?'#77853f':'#26342a');
-  x.fillStyle=g;x.beginPath();x.moveTo(108,215);x.lineTo(108,62);x.quadraticCurveTo(108,30,135,18);x.lineTo(135,-5);x.lineTo(165,-5);x.lineTo(165,18);x.quadraticCurveTo(192,30,192,62);x.lineTo(192,215);x.closePath();x.fill();
-  x.fillStyle='rgba(255,255,255,.4)';x.fillRect(118,40,7,170);
-  x.fillStyle='#efe6d2';x.fillRect(114,86,72,80);
-  x.strokeStyle='#5b4a33';x.lineWidth=1.2;x.strokeRect(118,90,64,72);
-  x.beginPath();x.arc(150,104,8,0,Math.PI*2);x.stroke();
-  x.fillStyle='#2d2418';x.font='bold 10px Georgia, serif';x.textAlign='center';
-  const words=String(c.naam||'').split(' ');let l1='',l2='';
-  words.forEach(w=>{if((l1+' '+w).trim().length<=13&&!l2)l1=(l1+' '+w).trim();else l2=(l2+' '+w).trim()});
-  x.fillText(l1,150,128);if(l2)x.fillText(l2.slice(0,14),150,141);
-  x.fillRect(132,150,36,1.4);x.fillRect(138,155,24,1);
-  return cv;
-}
-const IMG={};
+const IMG={},LBL={};
 const isDemoWine=c=>!!POOL_BY_KEY[c.key];
-const artUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${session.user.id}/${c.wineId}.jpg`;
-function rareImg(c){
-  if(IMG[c.wineId])return IMG[c.wineId];
-  if(session&&!isDemoWine(c))return artUrl(c);
-  return IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));
+const labelUrl=c=>`${SB_URL}/storage/v1/object/public/card-art/${session.user.id}/${c.wineId}.label.jpg`;
+/* Etiket uit de foto knippen: met het kader van Claude (procenten), anders het midden van de zoeker */
+function cropLabel(src,box){
+  const sw=src.naturalWidth||src.width,sh=src.naturalHeight||src.height;
+  const ok=box&&[box.x,box.y,box.w,box.h].every(n=>typeof n==='number'&&isFinite(n))&&box.w>=12&&box.h>=12&&box.x>=-2&&box.y>=-2&&box.x+box.w<=102&&box.y+box.h<=102;
+  let x,y,w,h;
+  if(ok){const pw=box.w*.015,ph=box.h*.015;x=(box.x-pw)/100*sw;y=(box.y-ph)/100*sh;w=(box.w+2*pw)/100*sw;h=(box.h+2*ph)/100*sh}
+  else{x=sw*.09;y=sh*.07;w=sw*.82;h=sh*.86}
+  x=Math.max(0,x);y=Math.max(0,y);w=Math.min(sw-x,w);h=Math.min(sh-y,h);
+  const k=Math.min(1,720/Math.max(w,h)),W=Math.max(1,Math.round(w*k)),H=Math.max(1,Math.round(h*k));
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  g.imageSmoothingQuality='high';g.drawImage(src,x,y,w,h,0,0,W,H);
+  // automatisch niveau: donkerste 1% naar zwart, lichtste 1% naar wit (alleen als het beeld flets is)
+  const im=g.getImageData(0,0,W,H),d=im.data,hist=new Uint32Array(256),n=W*H;
+  for(let i=0;i<d.length;i+=4)hist[(.2126*d[i]+.7152*d[i+1]+.0722*d[i+2])|0]++;
+  let lo=0,hi=255,acc=0;for(;lo<255;lo++){acc+=hist[lo];if(acc>n*.01)break}acc=0;for(;hi>0;hi--){acc+=hist[hi];if(acc>n*.01)break}
+  if(hi-lo>40&&hi-lo<235){const f=255/(hi-lo);for(let i=0;i<d.length;i+=4){d[i]=(d[i]-lo)*f;d[i+1]=(d[i+1]-lo)*f;d[i+2]=(d[i+2]-lo)*f}g.putImageData(im,0,0)}
+  return cv.toDataURL('image/jpeg',.88);
 }
-function artFallback(img){img.onerror=null;const c=cards.find(x=>x.wineId===img.dataset.w);if(c){IMG[c.wineId]=posterize(demoPhoto(c),areaOf(c));img.src=IMG[c.wineId]}}
-async function uploadArt(c,img){
+/* Demo- en reserve-etiket, getekend */
+function demoLabel(c){
+  const A=areaOf(c),W=300,H=400,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  let g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,'#e9dfc8');g.addColorStop(.5,'#f8f2e4');g.addColorStop(1,'#e2d6bc');x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.strokeStyle=A.c.dark;x.lineWidth=2;x.strokeRect(14,14,W-28,H-28);x.lineWidth=.8;x.strokeRect(20,20,W-40,H-40);
+  x.textAlign='center';x.fillStyle=A.c.near;x.font='13px Georgia, serif';x.fillText((c.app||A.naam||'').toUpperCase().split('').join(String.fromCharCode(8202)),W/2,62);
+  x.strokeStyle=A.c.far;x.lineWidth=1.5;x.beginPath();x.arc(W/2,118,26,0,Math.PI*2);x.stroke();x.beginPath();x.moveTo(W/2-14,126);x.lineTo(W/2,104);x.lineTo(W/2+14,126);x.stroke();
+  x.fillStyle='#2b2118';const words=String(c.naam||'').split(' ');const lines=[];let cur='';
+  words.forEach(w=>{if((cur+' '+w).trim().length>14&&cur){lines.push(cur);cur=w}else cur=(cur+' '+w).trim()});if(cur)lines.push(cur);
+  const fs=lines.length>2?28:34;x.font=`bold ${fs}px Georgia, serif`;lines.slice(0,3).forEach((l,i)=>x.fillText(l,W/2,200+i*(fs+6)));
+  x.font='italic 17px Georgia, serif';x.fillStyle='#4a3b2a';x.fillText(String(c.maker||'').slice(0,30),W/2,300);
+  if(c.jaar){x.font='bold 22px Georgia, serif';x.fillStyle=A.c.near;x.fillText(String(c.jaar),W/2,340)}
+  return cv.toDataURL('image/jpeg',.9);
+}
+function labelSrc(c){
+  if(LBL[c.wineId])return LBL[c.wineId];
+  if(session)return labelUrl(c); // eigen foto van een echte scan gaat altijd voor, ook bij demowijnen
+  return LBL[c.wineId]=demoLabel(c);
+}
+/* Nog geen eigen foto (demowijn of kaart van vóór deze versie): een getekend etiket in dezelfde stijl, tot de eerste echte scan */
+function lblFallback(img){
+  img.onerror=null;const c=cards.find(x=>x.wineId===img.dataset.w);if(!c)return;
+  LBL[c.wineId]=demoLabel(c);img.src=LBL[c.wineId];
+}
+/* Folie precies over het etiket leggen (in procenten, werkt op elke kaartgrootte) */
+const LBOX=(10*.86)/(7*.78);
+function lblFit(img){
+  const f=img.nextElementSibling;if(!f||!img.naturalWidth)return;const r=img.naturalWidth/img.naturalHeight;
+  let w=100,h=100;if(r<LBOX)w=r/LBOX*100;else h=LBOX/r*100;
+  f.style.cssText=`left:${(100-w)/2}%;top:${(100-h)/2}%;width:${w}%;height:${h}%`;
+}
+async function uploadArt(c,img,box){
   try{
-    const url=posterize(img,areaOf(c));IMG[c.wineId]=url;
+    const url=cropLabel(img,box);LBL[c.wineId]=url;
     const blob=await (await fetch(url)).blob();
-    const {error}=await sb.storage.from('card-art').upload(`${session.user.id}/${c.wineId}.jpg`,blob,{upsert:true,contentType:'image/jpeg'});
+    const {error}=await sb.storage.from('card-art').upload(`${session.user.id}/${c.wineId}.label.jpg`,blob,{upsert:true,contentType:'image/jpeg',cacheControl:'60'});
     if(error)console.warn('upload',error);
   }catch(e){console.warn('upload',e)}
 }
@@ -1161,7 +1170,7 @@ const FA_LAYERS='<div class="shine fashine"></div><div class="sparkle"></div><di
 const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
 const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
 function artHTML(c){
-  if(c.rar==='rare'||c.rar==='superrare'||c.rar==='ultra') return `<img src="${rareImg(c)}" data-w="${c.wineId}" onerror="artFallback(this)" alt="${esc(c.naam)}, flesfoto in posterstijl">`;
+  if(c.rar==='rare'||c.rar==='superrare'||c.rar==='ultra') return `<div class="lart">${scene(areaOf(c),c.v)}<div class="lbox"><img class="lbl" src="${labelSrc(c)}" data-w="${c.wineId}" onload="lblFit(this)" onerror="lblFallback(this)" alt="Etiket van ${esc(c.naam)}"><i class="lfoil"></i></div></div>`;
   return scene(areaOf(c),c.v);
 }
 function bigCard(c){
@@ -1569,7 +1578,7 @@ window.addEventListener('popstate',()=>{
 function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(m.dataset.id),reduced?0:300)}
 const HINT={
   common:'Common: een alledaagse wijn, met de regio als reisposter.',
-  rare:'Rare: een stap boven het gewone. Jouw flesfoto in posterstijl, met zilveren rand.',
+  rare:'Rare: een stap boven het gewone. Het echte etiket uit jouw foto, met zilveren glans.',
   superrare:'Super Rare: een bijzondere wijn. Kantel de kaart en kijk hoe hij glanst.',
   ultra:'Ultra: een topwijn, in een gouden lijst.',
   icon:'Icon: een legendarische wijn.'
@@ -1723,19 +1732,19 @@ async function demoScan(){
   if(res.error){closeOverlay();toast('Scannen lukte niet. Controleer je verbinding en probeer het opnieuw.');console.error(res.error);return}
   handleScanResult(res.data,before,null);
 }
-function handleScanResult(d,before,photo){
+function handleScanResult(d,before,photo,box){
   if(d.status==='limit'){closeOverlay();loadAlbum().then(()=>toast(limitMsg()));return}
-  if(d.status==='duplicate'){const c=cards.find(x=>x.wineId===d.wine.id);lastPhoto=photo&&c?{img:photo,wineId:c.wineId}:null;showDup(c);return}
+  if(d.status==='duplicate'){const c=cards.find(x=>x.wineId===d.wine.id);if(photo&&c){uploadArt(c,photo,box);refresh()}showDup(c);return}
   ownedKeys.add(d.wine.wine_key);
   if(typeof d.scans_today==='number'&&serverToday!=null)serverToday=d.scans_today;
   const card=toCard(d.card,d.wine);
-  if(photo)uploadArt(card,photo);
+  if(photo)uploadArt(card,photo,box);
   cards.push(card);refresh();renderChrome();
   reveal(card,newsSince(before));
 }
 
 /* ---------- camera en herkenning ---------- */
-let lastPhoto=null;
+
 const SCAN_MSG={
   month_cap:'Het maandbudget voor etiketherkenning is op. Volgende maand kun je weer scannen.',
   day_cap:'Je hebt vandaag al heel vaak een foto laten herkennen. Morgen kan het weer.',
@@ -1820,7 +1829,7 @@ async function recognize(cv){
     else{data=r.data;status=data.status}
   }catch(e){status='error'}
   if(!o.isConnected)return;
-  if(status==='ok')return handleScanResult(data.result,before,cv);
+  if(status==='ok')return handleScanResult(data.result,before,cv,data.label_box);
   if(status==='not_recognized')return showNotRecognized(dataUrl,data&&data.wine);
   closeOverlay();toast(SCAN_MSG[status]||'Herkennen lukte niet. Controleer je verbinding en probeer het opnieuw.');
 }

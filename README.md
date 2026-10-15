@@ -25,10 +25,12 @@ De **wijn bepaalt de klasse**, voor iedereen gelijk. Bij de eerste scan schat Cl
 | Klasse | Symbool | Uiterlijk | Typisch |
 |---|---|---|---|
 | Common | ● | Regio als vintage reisposter | Tot ±€20, alledaags |
-| Rare | ◆ | Eigen flesfoto, zilveren rand | ±€20–60, of goedkoper met bijzondere herkomst |
-| Super Rare | ◆◆ | Regenboog-holo en glitter | ±€60–200 |
-| Ultra | ★ | Goud metallic | ±€200+ |
+| Rare | ◆ | Het etiket uit je foto op de streekposter, zilveren glans | ±€20–60, of goedkoper met bijzondere herkomst |
+| Super Rare | ◆◆ | Etiket met regenboogfolie | ±€60–200 |
+| Ultra | ★ | Etiket met goudfolie, goud metallic | ±€200+ |
 | Icon | ♛ | Onyx en goud | Wereldiconen (vaste lijst of iconisch en ±€300+) |
+
+Vanaf Rare knipt de app het etiket uit je foto (Claude geeft het kader, `label_box`; anders het midden van de zoeker). Demowijnen en kaarten van vóór deze versie tonen een getekend etiket tot de eerste echte scan van die wijn; scan je een wijn opnieuw, dan wordt de foto vervangen.
 
 **Full Art** is de geluksvariant: elke nieuwe kaart of nieuwe fles heeft 5% kans, in elke klasse. Bestaande wijnen worden opnieuw beoordeeld met de Edge Function `reassess` (alleen beheerder, knop in Instellingen).
 

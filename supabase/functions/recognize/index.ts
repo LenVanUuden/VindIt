@@ -42,6 +42,7 @@ Rules:
 - Iconic wines: if the wine is one of these, use EXACTLY this naam / maker:
   Cloudy Bay Sauvignon Blanc / Cloudy Bay · Tignanello / Marchesi Antinori · Dom Pérignon / Moët & Chandon · Krug Grande Cuvée / Krug · Sassicaia / Tenuta San Guido · Vega Sicilia Único / Vega Sicilia · Château d'Yquem / Château d'Yquem · Penfolds Grange / Penfolds · Opus One / Opus One · Château Margaux / Château Margaux · Pétrus / Pétrus · Romanée-Conti / Domaine de la Romanée-Conti.
 - Be consistent: the same wine photographed twice must give the same naam and maker.
+- label_box: where the main front label is in the photo, in PERCENT of the image (0–100): x and y = top-left corner, w and h = width and height. Cover the whole paper label (all its edges), not the glass or the capsule. If several labels are visible, take the main one with the wine name.
 
 Rarity signals (used to decide the card class; estimate honestly, prefer the lower option when unsure):
 - price_eur_low / price_eur_high: typical retail price range in a Dutch shop for this exact wine and vintage, in euros (75 cl). Use your knowledge of the producer, appellation and vintage. Supermarket brands are usually €5–10.
@@ -83,6 +84,11 @@ const TOOL = {
       vintage_quality: { type: "string", enum: ["top", "goed", "gemiddeld", "slecht", "onbekend"] },
       large_format: { type: "boolean" },
       iconic: { type: "boolean" },
+      label_box: {
+        type: "object",
+        properties: { x: { type: "number" }, y: { type: "number" }, w: { type: "number" }, h: { type: "number" } },
+        required: ["x", "y", "w", "h"],
+      },
     },
     required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color", "price_eur_low", "price_eur_high", "classification", "producer_fame", "production", "rarity_nl", "vintage_quality"],
   },
@@ -174,7 +180,8 @@ Deno.serve(async (req) => {
     };
     const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: payload });
     if (scanErr) throw scanErr;
-    return json({ status: "ok", recognized: payload, confidence: w.confidence, result });
+    const lb = w.label_box && ["x", "y", "w", "h"].every((k) => typeof w.label_box[k] === "number") ? w.label_box : null;
+    return json({ status: "ok", recognized: payload, confidence: w.confidence, result, label_box: lb });
   } catch (e) {
     console.error(e);
     return json({ status: "error", message: String((e as Error)?.message ?? e) }, 500);
