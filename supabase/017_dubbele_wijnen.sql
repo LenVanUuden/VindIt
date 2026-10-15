@@ -183,6 +183,7 @@ create table if not exists public.wine_merges (
 alter table public.wine_merges add column if not exists dropped_id uuid;
 alter table public.wine_merges add column if not exists photos_moved boolean not null default false;
 alter table public.wine_merges enable row level security;
+grant select, update on public.wine_merges to service_role;
 
 create or replace function public.merge_wine(p_keep uuid, p_drop uuid)
 returns void

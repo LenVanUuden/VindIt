@@ -190,15 +190,19 @@ async function movePhotos(admin: any) {
 // deno-lint-ignore no-explicit-any
 async function newestPhoto(admin: any, wid: string): Promise<string | null> {
   const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", wid).limit(20);
-  let best: { uid: string; t: string } | null = null;
-  for (const o of owners ?? []) {
-    const { data: f } = await admin.storage.from("card-art").list(o.user_id, { search: `${wid}.label.jpg` });
-    const hit = (f ?? []).find((x: { name: string }) => x.name === `${wid}.label.jpg`);
-    const t = hit?.updated_at ?? hit?.created_at;
-    if (hit && (!best || String(t) > best.t)) best = { uid: o.user_id, t: String(t ?? "") };
+  let best: { path: string; t: string } | null = null;
+  // Eerst uitgesneden etiketfoto's (.label.jpg); anders de oudere kaartfoto (.jpg)
+  for (const ext of [".label.jpg", ".jpg"]) {
+    for (const o of owners ?? []) {
+      const { data: f } = await admin.storage.from("card-art").list(o.user_id, { search: wid });
+      const hit = (f ?? []).find((x: { name: string }) => x.name === `${wid}${ext}`);
+      const t = String(hit?.updated_at ?? hit?.created_at ?? "");
+      if (hit && (!best || t > best.t)) best = { path: `${o.user_id}/${wid}${ext}`, t };
+    }
+    if (best) break;
   }
   if (!best) return null;
-  const { data: file } = await admin.storage.from("card-art").download(`${best.uid}/${wid}.label.jpg`);
+  const { data: file } = await admin.storage.from("card-art").download(best.path);
   return file ? b64(await file.arrayBuffer()) : null;
 }
 

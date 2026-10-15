@@ -116,3 +116,6 @@ update public.wine_merges set photos_moved = true where dropped_id is null;
 
 -- Controle: bij Rozier hoort nu een dropped_id te staan en photos_moved = false
 select kept_naam, dropped_naam, dropped_id, photos_moved from public.wine_merges order by merged_at desc;
+
+-- Edge Functions (service_role) moeten de samenvoegingen kunnen lezen en bijwerken
+grant select, update on public.wine_merges to service_role;
