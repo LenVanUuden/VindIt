@@ -150,6 +150,15 @@ button{font:inherit;color:inherit}
 .facts div{display:flex;justify-content:space-between;gap:10px}
 .facts dt{color:var(--ink-soft)}
 .facts dd{margin:0;text-align:right}
+/* Randmarge voor tekst op de kaart (de afbeelding blijft volle breedte) */
+.card .face>.toprow{padding:4px 8px 0}
+.card .toprow{gap:8px}.card .tloc{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .face>h3,.card .face>.maker,.card .face>.facts{margin-left:10px;margin-right:10px}
+.card .face>.facts{padding-bottom:6px}
+.uinfo h3,.uinfo .maker,.uinfo .facts{margin-left:6px;margin-right:6px}
+.fa .toprow{padding-left:16px!important;padding-right:16px!important}
+.mini .mname,.mini .mnr{padding:0 3px}
+.mband .mname,.mband .mnr{padding:0 4px}
 
 /* Effect layers */
 .shine,.sparkle,.glare{position:absolute;inset:0;pointer-events:none;z-index:4}
@@ -1175,7 +1184,7 @@ function artHTML(c){
 }
 function bigCard(c){
   const T=TIERS[c.rar];
-  const top=`<div class="toprow"><span>${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${T.label}${c.fa?' · Full Art':''}</span></div>`;
+  const top=`<div class="toprow"><span class="tloc">${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${c.fa?'Full Art':T.label}</span></div>`;
   const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
     <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif||'Onbekend')}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl||'—')}</dd></div><div><dt>${c.bottles>1?'Gedronken':'Gescand'}</dt><dd>${c.bottles>1?c.bottles+'× · sinds '+esc(c.datum):esc(c.datum)}</dd></div></dl>`;
   if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${ultraFill(areaOf(c),c.v)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
