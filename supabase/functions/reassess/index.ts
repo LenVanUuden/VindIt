@@ -222,8 +222,8 @@ Deno.serve(async (req) => {
       const LB = 2;
       const cols = "id,naam,maker,jaar,regio,land,appellation,stijl,tier,label_style";
       const q = body.force
-        ? admin.from("wines").select(cols).order("created_at").order("id").range(body.offset ?? 0, (body.offset ?? 0) + LB - 1)
-        : admin.from("wines").select(cols).is("label_style", null).order("created_at").order("id").limit(LB);
+        ? admin.from("wines").select(cols).not("tier", "is", null).neq("tier", "common").order("created_at").order("id").range(body.offset ?? 0, (body.offset ?? 0) + LB - 1)
+        : admin.from("wines").select(cols).is("label_style", null).not("tier", "is", null).neq("tier", "common").order("created_at").order("id").limit(LB);
       const { data: wines, error } = await q;
       if (error) throw error;
       const results: unknown[] = [];
@@ -246,7 +246,7 @@ Deno.serve(async (req) => {
       }
       let remaining = 0;
       if (!body.force) {
-        const { count } = await admin.from("wines").select("id", { count: "exact", head: true }).is("label_style", null);
+        const { count } = await admin.from("wines").select("id", { count: "exact", head: true }).is("label_style", null).not("tier", "is", null).neq("tier", "common");
         remaining = count ?? 0;
       } else remaining = (wines?.length ?? 0) < LB ? 0 : 1;
       return json({ status: "ok", done: results.length, remaining, results });

@@ -315,7 +315,9 @@ Deno.serve(async (req) => {
     }
     // Daarna: het etiket in de achtergrond zelf laten tekenen door het sterkere model (eenmalig per wijn)
     const curStyle = result?.wine?.label_style as Record<string, unknown> | null | undefined;
-    if (result?.wine?.id && !(curStyle && (curStyle.v === 2 || curStyle.locked))) {
+    // Alleen vanaf Rare: Commons tonen de reisposter, geen etiket
+    const tierNow = (result?.card?.tier ?? result?.wine?.tier_override ?? result?.wine?.tier) as string | undefined;
+    if (result?.wine?.id && tierNow && tierNow !== "common" && !(curStyle && (curStyle.v === 2 || curStyle.locked))) {
       const wid = result.wine.id;
       const desc = `Wijn: ${payload.naam}\nMaker: ${payload.maker || "onbekend"}\nJaargang: ${payload.jaar ?? "geen"}\nHerkomst: ${payload.app || ""} (${payload.regio}, ${payload.land || ""})\nStijl: ${payload.stijl || ""}\nDe foto toont de hele fles; teken het hoofdetiket.`;
       const job = drawLabel("opus", image, mediaType, desc).then(async (st) => {
