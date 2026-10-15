@@ -315,6 +315,27 @@ button{font:inherit;color:inherit}
 .toc{list-style:none;margin:0;padding:0;display:grid}
 .adm .btn{font-size:11.5px;padding:5px 9px}
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(94vw,520px)}.cmpcol{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}.cmpcol small{opacity:.7;margin-top:-4px}.cmplbl{width:100%}.cmplbl>svg{width:100%;height:auto;border-radius:3px;box-shadow:0 4px 10px rgba(0,0,0,.5)}.cmpcol ul{text-align:left;font-size:11px;margin:0;padding-left:16px;opacity:.85}
+.primeur{text-align:center;margin:-6px 14px 2px;animation:prin .7s ease}
+.primeur .prk{font:400 12px Limelight,serif;letter-spacing:.22em;color:#F2D88A}
+.primeur h2{margin:2px 0 0;font:400 19px/1.15 Limelight,serif;background:linear-gradient(180deg,#FBE7B0,#C9A253 55%,#E9C77A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.primeur p{margin:4px 0 0;font-size:12.5px;line-height:1.35;color:#F1E6D6}
+.primeur .prstat{font-size:12px;color:#E9D3A0;opacity:.9}.primeur.klaar .prstat{font:400 14px Limelight,serif;color:#F2D88A;opacity:1}
+.prdots i{display:inline-block;width:5px;height:5px;margin:0 2px;border-radius:50%;background:#E9D3A0;animation:prdot 1.2s infinite}.prdots i:nth-child(2){animation-delay:.2s}.prdots i:nth-child(3){animation-delay:.4s}
+@keyframes prdot{0%,100%{opacity:.2}50%{opacity:1}}@keyframes prin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.etkbox.sketching{filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}
+.sketching .skpaper{position:absolute;inset:0;background:#F4EFE4;border:1px dashed rgba(60,40,20,.35)}
+.sketching .sk{position:absolute;inset:0;filter:grayscale(1) contrast(1.6) brightness(1.15);opacity:.55;clip-path:inset(0 0 100% 0);animation:skdraw 22s linear forwards}
+.sketching .sk>svg{width:100%;height:100%;display:block}
+@keyframes skdraw{to{clip-path:inset(0 0 0 0)}}
+.sketching .skpenw{position:absolute;width:30%;z-index:3;left:5%;top:0;animation:skpen 22s linear forwards,skwig 2.4s 22s ease-in-out infinite alternate}
+.sketching .skpenw svg{display:block;width:100%;height:auto;transform:translate(-10%,-85%) rotate(-6deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+@keyframes skpen{0%{left:8%;top:6%}10%{left:62%;top:11%}20%{left:8%;top:22%}30%{left:64%;top:32%}40%{left:10%;top:43%}50%{left:62%;top:53%}60%{left:8%;top:64%}70%{left:62%;top:74%}80%{left:10%;top:84%}90%{left:58%;top:92%}100%{left:36%;top:96%}}
+@keyframes skwig{0%{left:30%;top:94%}100%{left:44%;top:90%}}
+.mini .sketching .skpenw{display:none}
+@property --ir{syntax:'<percentage>';inherits:false;initial-value:110%}
+.etkbox.inkin>svg{-webkit-mask:radial-gradient(circle at 50% 50%,#000 var(--ir),transparent calc(var(--ir) + 14%));mask:radial-gradient(circle at 50% 50%,#000 var(--ir),transparent calc(var(--ir) + 14%));animation:inkin 1.6s ease}
+@keyframes inkin{from{--ir:0%}to{--ir:110%}}
+@media (prefers-reduced-motion: reduce){.sketching .sk{animation:none;clip-path:none}.sketching .skpen{animation:none}}
 .etip{letter-spacing:.04em;text-transform:none;opacity:.65;font-size:10.5px}
 .kstamps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:4px 0 2px}
 .kstamp{position:relative;aspect-ratio:.8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border:0;cursor:pointer;color:#3A2A1C;font:inherit;padding:4px 2px;
@@ -1130,18 +1151,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-204148'</script>
-<script src="data.js?v=20261015-204148"></script>
-<script src="art.js?v=20261015-204148"></script>
-<script src="gids.js?v=20261015-204148"></script>
-<script src="maps.js?v=20261015-204148"></script>
-<script src="zegels.js?v=20261015-204148"></script>
-<script src="landen.js?v=20261015-204148"></script>
-<script src="etiket.js?v=20261015-204148"></script>
-<script src="fullart.js?v=20261015-204148"></script>
-<script src="stickers.js?v=20261015-204148"></script>
-<script src="vrienden.js?v=20261015-204148"></script>
-<script src="wereldbol.js?v=20261015-204148"></script>
+<script>window.VI_V='20261015-210740'</script>
+<script src="data.js?v=20261015-210740"></script>
+<script src="art.js?v=20261015-210740"></script>
+<script src="gids.js?v=20261015-210740"></script>
+<script src="maps.js?v=20261015-210740"></script>
+<script src="zegels.js?v=20261015-210740"></script>
+<script src="landen.js?v=20261015-210740"></script>
+<script src="etiket.js?v=20261015-210740"></script>
+<script src="fullart.js?v=20261015-210740"></script>
+<script src="stickers.js?v=20261015-210740"></script>
+<script src="vrienden.js?v=20261015-210740"></script>
+<script src="wereldbol.js?v=20261015-210740"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1158,6 +1179,7 @@ const TIERS={
 const TORDER=['common','rare','superrare','ultra','icon'];
 const DIFF={1:'Supermarkt',2:'Wijnwinkel',3:'Specialist'};
 
+startPendPoll&&setTimeout(()=>startPendPoll(),3000);
 let session=null,cards=[],ownedKeys=new Set(),st=null,pages=[],cur=0,busy=false,lastNewId=null,loading=true;
 let authStep='email',pendingEmail='',verifying=false;
 
@@ -1554,8 +1576,11 @@ function drawnLabel(c){
   const st=c.style&&typeof c.style==='object'?c.style:defaultStyle(c);
   return makeLabelSVG({...st,lines:{...(st.lines||{}),name:(st.lines&&st.lines.name)||c.naam}},c);
 }
+/* Primeur: het etiket wordt nog getekend → potloodschets met een pen */
+const SKPEN='<svg class="skpen" viewBox="0 0 44 44" aria-hidden="true"><path d="M4 40l4-12L32 4l8 8L16 36z" fill="#C9A253" stroke="#5A3A0C" stroke-width="1.2"/><path d="M4 40l4-12 8 8z" fill="#2B2118"/><path d="M28 8l8 8" stroke="#5A3A0C"/></svg>';
 function artHTML(c){
-  if(LABEL_TIERS.includes(c.rar))return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox">${drawnLabel(c)}<i class="lfoil"></i></div></div>`;
+  if(LABEL_TIERS.includes(c.rar)&&PEND[c.wineId])return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox sketching" data-w="${c.wineId}"><div class="skpaper"></div><div class="sk">${drawnLabel(c)}</div><div class="skpenw">${SKPEN}</div></div></div>`;
+  if(LABEL_TIERS.includes(c.rar))return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox${INKED.has(c.wineId)?' inkin':''}" data-w="${c.wineId}">${drawnLabel(c)}<i class="lfoil"></i></div></div>`;
   return scene(areaOf(c),c.v);
 }
 function bigCard(c){
@@ -2165,6 +2190,8 @@ function handleScanResult(d,before,photo,box,jaar){
   if(typeof d.scans_today==='number'&&serverToday!=null)serverToday=d.scans_today;
   const card=toCard(d.card,d.wine);setVintage(card,jaar);
   if(photo)uploadArt(card,photo,box);
+  /* Primeur: de eerste scan van deze wijn in heel Vined It */
+  if(photo&&d.status==='new'&&card.first){card.primeur=true;if(LABEL_TIERS.includes(card.rar)&&!(d.wine.label_style&&d.wine.label_style.v===2))addPending(card)}
   cards.push(card);refresh();renderChrome();
   reveal(card,newsSince(before));
 }
@@ -2388,7 +2415,8 @@ function walkout(o,c,done){
 }
 function fxPre(){const fx=document.createElement('div');fx.className='fx fx-pre';fx.innerHTML='<div class="fxrays"></div>';document.body.appendChild(fx);setTimeout(()=>fx.remove(),2600)}
 function reveal(c,news,title){
-  const o=overlay(`<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+  const pm=c.primeur?`<div class="primeur" hidden><div class="prk">✦ PRIMEUR ✦</div><h2>Deze wijn heeft nog niemand gescand!</h2><p>Jij ontdekte hem als eerste.${PEND[c.wineId]?' Onze tekenaar zet zijn etiket nu speciaal voor jou op papier.':''}</p>${PEND[c.wineId]?'<p class="prstat"><span class="prdots"><i></i><i></i><i></i></span> Etiket wordt getekend · ±30 sec</p>':''}</div>`:'';
+  const o=overlay(`${pm}<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">In een sleeve steken</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   let busy=false;
   const open=()=>{if(busy||flip.classList.contains('open'))return;busy=true;
@@ -2399,6 +2427,7 @@ function reveal(c,news,title){
       buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar])}
       setTimeout(()=>{tilt(card);if(c.rar!=='common'||c.fa){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+(c.fa?' · Full Art!':'!')}
         o.querySelector('.status').classList.add('pop');
+        const prm=o.querySelector('.primeur');if(prm){prm.hidden=false;o.querySelector('.status').hidden=true;buzz([20,40,20,40,60])}
         const si=stackInfo(c);o.querySelector('#h').textContent=(whyLine(c)?whyLine(c)+' ':HINT[c.rar])+(isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   const walk=!reduced&&(c.rar!=='common'||c.fa)&&typeof MAPS!=='undefined';
   let begun=false;
@@ -2480,6 +2509,31 @@ function openLists(nest){
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
+}
+
+/* ---------- Primeur: nieuwe wijn, etiket wordt live getekend ---------- */
+const PEND=(()=>{try{const o=JSON.parse(localStorage.getItem('vi_pend')||'{}'),now=Date.now();for(const k in o)if(now-o[k]>120000)delete o[k];return o}catch(e){return {}}})();
+const INKED=new Set();let pendTimer=null;
+const savePend=()=>{try{localStorage.setItem('vi_pend',JSON.stringify(PEND))}catch(e){}};
+function addPending(c){PEND[c.wineId]=Date.now();savePend();startPendPoll()}
+function startPendPoll(){if(pendTimer||!Object.keys(PEND).length)return;pendTimer=setInterval(pollPend,5000)}
+function inkWine(id,st){
+  delete PEND[id];savePend();INKED.add(id);setTimeout(()=>INKED.delete(id),5000);
+  cards.filter(x=>x.wineId===id).forEach(x=>{if(st)x.style=st});
+  const c=cards.find(x=>x.wineId===id);
+  document.querySelectorAll(`.etkbox.sketching[data-w="${id}"]`).forEach(b=>{b.classList.remove('sketching');b.classList.add('inkin');b.innerHTML=(c?drawnLabel(c):'')+'<i class="lfoil"></i>'});
+  const pr=document.querySelector('.primeur');if(pr){pr.querySelector('.prstat').innerHTML=st?'✦ Jouw etiket is klaar ✦':'Je etiket wordt later bijgewerkt.';pr.classList.add('klaar')}
+  if(st)buzz([30,60,30]);
+  setTimeout(()=>{refresh()},1800);
+}
+async function pollPend(){
+  const ids=Object.keys(PEND);if(!ids.length||!session){clearInterval(pendTimer);pendTimer=null;return}
+  const now=Date.now();
+  for(const id of ids)if(now-PEND[id]>90000)inkWine(id,null);
+  const live=Object.keys(PEND);if(!live.length)return;
+  const {data,error}=await sb.from('wines').select('id,label_style').in('id',live);
+  if(error){console.warn('pend',error);return}
+  for(const w of data||[])if(w.label_style&&w.label_style.v===2)inkWine(w.id,w.label_style);
 }
 
 /* Beheer: één etiket opnieuw laten tekenen, modellen vergelijken, vastzetten */

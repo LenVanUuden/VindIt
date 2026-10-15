@@ -28,6 +28,7 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 23 | **Nieuwe Full Arts**: Rare = papieren etiket op zilverglitter (kantelt), Super Rare = fles voor het etiket op goudglitter (wiegt, met schaduw), Ultra = nachtelijke streek met gedetailleerd landmark, noorderlicht, open fles met bewegende kurk; scheurtjes uniek per wijn | Len | Hoog: elke klasse een eigen soort kaart | Groot | Live |
 | 24 | **Legendes altijd Full Art met een eigen tekening** per wijn (fles, etiket, plek, glitter); geen 5%-kans meer voor Legendes | Len | Hoog: de topklasse echt uniek | Groot | Idee (later) |
 | 25 | **Etiketten zelf laten tekenen** door Claude Opus: herkenbare elementen benoemen en als eigen lijntekening plaatsen (vrije opbouw, `els`); beheerder kan per kaart opnieuw tekenen, Sonnet vs Opus vergelijken en vastzetten | Len | Hoog: elke kaart herkenbaar als díe wijn | Middel | Live (test) |
+| 26 | **Primeur**: eerste scan van een wijn in Vined It → "Deze wijn heeft nog niemand gescand!"; vanaf Rare tekent een pen een schets tot het echte etiket klaar is en de inkt erin trekt | Len | Hoog: wow-moment, verbergt de wachttijd | Klein | Live |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)
