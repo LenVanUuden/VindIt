@@ -55,19 +55,19 @@ Rarity signals (used to decide the card class; estimate honestly, prefer the low
 - iconic: true only for truly iconic, world-famous wines (e.g. Pétrus, Lafite, DRC, Screaming Eagle).
 Do NOT count medals, stickers or competition awards.
 
-Label design (label_style): describe the FRONT label so the app can draw a simplified, generic illustration of it in its own style. Describe what you see, do not copy logos exactly.
+Label design (label_style): describe the FRONT label so the app can draw a simplified illustration of it in its own style. Goal: someone holding the real bottle must immediately recognise the drawn label. So copy the overall look faithfully: the paper colour, the order of the elements from top to bottom (layout), which lines are in colour, capitals or not, the kind of picture and the frame around it, the border. Do not copy logos exactly.
 - paper / ink / accent: hex colors of the label paper, the main text and the most striking accent color (e.g. a red seal).
 - metal: "gold", "silver" or "none" if the label has metallic foil.
 - font: letter style of the wine name: "condensed" (tall narrow), "classic" (old-style serif), "didone" (high-contrast elegant serif), "script" (handwriting), "gothic" (blackletter), "modern" (clean sans-serif), "display" (decorative art-deco).
 - upper: true if the name is in capitals.
 - layout: where the name sits: "top", "center" or "bottom".
-- emblem: the main picture: type "crest" (coat of arms, shield, crown), "castle" (château, building), "sun" (striped or round sun/circle), "abstract" (only for a non-figurative colourful shape; a drawing, engraving or photo of a building is always "castle"), "bull" (animal), "grapes", "leaf", "stars" or "none"; color as hex, or "metal"; size "normal" or "large".
+- emblem: the main picture. type: "chateau" (classic château façade, the usual Bordeaux engraving), "castle" (fortress or tower castle), "church" (church, abbey, monastery), "farmhouse" (country house, farm, mas, cascina, finca), "winery" (modern building), "crest" (coat of arms, shield, crown), "sun" (striped or round sun/circle), "abstract" (only a non-figurative colourful shape), "bull" (bull, cow or other animal), "horse", "bird", "flower", "tree", "grapes", "leaf", "stars" or "none". Pick the type that matches what is really drawn: a bird is "bird", a flower is "flower". A drawing, engraving or photo of a building is always one of the five building types, never "abstract". color as hex (an engraving in grey ink: use that grey), or "metal"; size "normal" or "large"; frame: the shape around the picture on the real label: "oval", "circle", "square", "arch" or "none" (only if there really is a visible frame or medallion).
 - mark: an optional second, smaller graphic element (same types), with color; omit if none.
 - border: "none", "thin", "double", "frame" (thick) or "band" (colored band at the bottom); border_color as hex or "metal".
 - name_color: hex or "metal" if the name is printed in foil, else omit.
 - sub_color: hex if the appellation line is printed in a striking colour (e.g. red capitals), else omit.
 - layout "top" means: name at the top, picture below it, appellation below the picture.
-- lines: name = wine name as printed most prominently; top = small line above (e.g. "Grand Vin de Bordeaux"); sub = appellation or cuvée line; bottom = producer or small line at the bottom. Keep each line short (max ~30 characters).`;
+- lines: name = wine name as printed most prominently; top = small line above (e.g. "Grand Vin de Bordeaux"); sub = appellation or cuvée line; bottom = producer or small line at the bottom. Copy every text EXACTLY as printed on the label (same words, same language, same spelling and accents; do not translate or rephrase). Keep each line short (max ~30 characters); if a line is longer, take the most prominent part word for word.`;
 
 const TOOL = {
   name: "wijnetiket",
@@ -106,8 +106,8 @@ const TOOL = {
           font: { type: "string", enum: ["condensed", "classic", "didone", "script", "gothic", "modern", "display"] },
           upper: { type: "boolean" },
           layout: { type: "string", enum: ["top", "center", "bottom"] },
-          emblem: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] } } },
-          mark: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
+          emblem: { type: "object", properties: { type: { type: "string", enum: ["chateau", "castle", "church", "farmhouse", "winery", "crest", "sun", "abstract", "bull", "horse", "bird", "flower", "tree", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] }, frame: { type: "string", enum: ["none", "oval", "circle", "square", "arch"] } } },
+          mark: { type: "object", properties: { type: { type: "string", enum: ["chateau", "castle", "church", "farmhouse", "winery", "crest", "sun", "abstract", "bull", "horse", "bird", "flower", "tree", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
           border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] },
           border_color: { type: "string" },
           name_color: { type: "string" },
@@ -136,7 +136,7 @@ function cleanStyle(s: Record<string, unknown>) {
   return {
     paper: col(s.paper), ink: col(s.ink), accent: col(s.accent), metal: str(s.metal, 8),
     font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
-    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
+    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8), frame: str(e.frame, 8) },
     mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
     border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color), sub_color: col(s.sub_color),
     lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },

@@ -34,6 +34,59 @@ const ETK_EMB={
     <path d="M20 52l8-12 8 12M64 52l8-12 8 12M42 30l8-12 8 12" fill="${c}" fill-opacity=".25"/>
     <path d="M28 60v6M38 60v6M62 60v6M72 60v6M47 64h6v14h-6z"/><path d="M46 46h8"/>
     <path d="M10 82c20-3 60-3 80 0" stroke-width="1"/></g>`,
+  /* klassiek château: brede gevel met fronton, mansardedak, rijen ramen */
+  chateau:(c,ink)=>`<g fill="none" stroke="${c}" stroke-width="1.4" stroke-linejoin="round">
+    <path d="M16 76h68M18 76V54h64v22"/><path d="M14 54h72l-6-8H20z" fill="${c}" fill-opacity=".22"/>
+    <path d="M38 54V46l12-9 12 9v8" fill="${c}" fill-opacity=".12"/><circle cx="50" cy="46" r="2"/>
+    <path d="M18 54v-6h6v6M76 54v-6h6v6"/>
+    ${[22,30,38,58,66,74].map(x=>`<path d="M${x} 58h4v6h-4zM${x} 68h4v5h-4z" stroke-width=".9"/>`).join('')}
+    <path d="M46 76V66a4 4 0 0 1 8 0v10" /><path d="M42 60h16" stroke-width=".8"/>
+    <path d="M40 76h20l2 3H38z" stroke-width=".9"/>
+    <path d="M10 82c20-3 60-3 80 0" stroke-width="1"/></g>`,
+  /* kerk of klooster: schip met klokkentoren en kruis */
+  church:(c,ink)=>`<g fill="none" stroke="${c}" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M14 78h72"/><path d="M20 78V54h34v24"/><path d="M17 55l20-14 20 14" fill="${c}" fill-opacity=".22"/>
+    <path d="M56 78V40h16v38"/><path d="M54 41l10-16 10 16" fill="${c}" fill-opacity=".22"/><path d="M64 25v-9M60 19h8"/>
+    <path d="M61 52a3 3 0 0 1 6 0v6h-6z" stroke-width="1"/><circle cx="37" cy="58" r="4" stroke-width="1"/>
+    <path d="M26 78V68a3 3 0 0 1 6 0v10M42 78V68a3 3 0 0 1 6 0v10" stroke-width="1"/><path d="M60 78v-8a4 4 0 0 1 8 0v8"/>
+    <path d="M10 82c20-3 60-3 80 0" stroke-width="1"/></g>`,
+  /* landhuis of boerderij: laag huis met pannendak, duiventoren, cipressen */
+  farmhouse:(c,ink)=>`<g fill="none" stroke="${c}" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M10 78h80"/><path d="M24 78V58h40v20"/><path d="M20 59l24-10 24 10" fill="${c}" fill-opacity=".22"/>
+    <path d="M64 78V46h14v32"/><path d="M62 47l9-7 9 7" fill="${c}" fill-opacity=".22"/><path d="M68 52h4v5h-4z" stroke-width="1"/>
+    <path d="M30 63h5v5h-5zM40 63h5v5h-5zM52 63h5v5h-5z" stroke-width="1"/><path d="M33 78v-6a4 4 0 0 1 8 0v6M45 78v-6a4 4 0 0 1 8 0v6" stroke-width="1"/>
+    <path d="M14 78c-3-8-2-20 1-28 3 8 4 20 1 28zM86 78c-3-8-2-18 1-25 3 7 4 17 1 25z" fill="${c}" fill-opacity=".3"/>
+    <path d="M6 82c24-3 64-3 88 0" stroke-width="1"/></g>`,
+  /* moderne wijnkelder: strakke blokken, glasband, wijnrijen */
+  winery:(c,ink)=>`<g fill="none" stroke="${c}" stroke-width="1.5" stroke-linejoin="miter">
+    <path d="M12 70h76"/><path d="M18 70V52h38v18"/><path d="M14 52h46" stroke-width="2.6"/>
+    <path d="M56 70V42h26v28"/><path d="M52 42h34" stroke-width="2.6"/>
+    <path d="M22 58h30v6H22z" fill="${c}" fill-opacity=".25" stroke-width="1"/><path d="M60 48h18v16H60z" fill="${c}" fill-opacity=".25" stroke-width="1"/>
+    <path d="M69 48v16M60 56h18" stroke-width=".8"/>
+    ${[0,1,2,3,4].map(i=>`<path d="M${50-i*2} 74 L${14-i*6} 88M${50+i*2} 74 L${86+i*6} 88" stroke-width=".9"/>`).join('')}</g>`,
+  /* vogel: zwaluw in vlucht, van opzij */
+  bird:(c,ink)=>`<g fill="${c}" stroke="${c}" stroke-linejoin="round">
+    <path d="M14 66L28 58C38 52 52 49 66 50C71 46 77 45 82 49L91 50L83 53C77 60 64 63 52 61L36 63L30 72L27 64Z" fill-opacity=".9" stroke-width="1"/>
+    <path d="M42 53C48 38 60 26 82 18C72 30 64 42 60 51Z" fill-opacity=".75" stroke-width="1"/>
+    <path d="M46 61C52 66 58 70 66 72C58 66 54 63 52 61Z" fill-opacity=".6" stroke-width=".8"/>
+    <circle cx="79" cy="49.5" r="1.3" fill="#fff" stroke="none"/>
+    <path d="M18 82c20-4 44-5 64-2" fill="none" stroke-width="1.2" stroke-linecap="round"/></g>`,
+  /* bloem: bloem met steel en blad */
+  flower:(c,ink)=>`<g stroke="${c}" stroke-width="1.2" stroke-linejoin="round">
+    ${[0,72,144,216,288].map(a=>`<ellipse cx="50" cy="30" rx="7" ry="12" transform="rotate(${a} 50 44)" fill="${c}" fill-opacity=".55"/>`).join('')}
+    <circle cx="50" cy="44" r="6" fill="${c}"/><path d="M50 52c0 10 1 20 0 32" fill="none" stroke-width="1.8"/>
+    <path d="M50 68c-8-6-16-6-20-2 6 4 13 5 20 2zM51 76c7-5 14-5 18-1-6 4-12 4-18 1z" fill="${c}" fill-opacity=".45"/></g>`,
+  /* boom: eik of olijfboom */
+  tree:(c,ink)=>`<g stroke="${c}" stroke-width="1.3" stroke-linejoin="round">
+    <path d="M47 84V60l-8-8M53 84V58l9-9M50 66l-6-4" fill="none" stroke-width="2.4"/>
+    <path d="M50 18c10 0 16 6 17 12 8 1 13 8 11 15 4 5 2 13-6 15-3 6-12 8-18 4-6 4-15 2-18-4-8-2-10-10-6-15-2-7 3-14 11-15 1-6 7-12 9-12z" fill="${c}" fill-opacity=".35"/>
+    <path d="M18 85c20-3 44-3 64 0" fill="none"/></g>`,
+  /* paard: hoofd en hals in profiel */
+  horse:(c,ink)=>`<g fill="${c}" stroke="${c}" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M60 24L63 13L68 23C77 28 82 40 82 54L82 84H46C48 73 52 65 51 58C45 61 35 63 28 61C21 59 19 52 22 47C29 39 40 30 52 26Z" fill-opacity=".85" stroke-width="1"/>
+    <path d="M64 26c6 6 10 16 11 30M60 30c4 6 7 14 8 24M56 33c3 5 5 11 6 18" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1"/>
+    <circle cx="45" cy="36" r="1.8" fill="#fff" stroke="none"/><path d="M26 52c2 1 4 1 6 0" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
+    <path d="M16 86c22-3 50-3 72 0" fill="none" stroke-width="1"/></g>`,
   sun:(c)=>`<g><defs><clipPath id="etks${ETK_N}"><circle cx="50" cy="50" r="30"/></clipPath></defs>
     <g clip-path="url(#etks${ETK_N})" stroke="${c}" stroke-width="2.6">${Array.from({length:16},(_,i)=>`<path d="M14 ${21+i*3.8}h72"/>`).join('')}</g></g>`,
   /* abstract: rustige vormen in tinten van de etiketkleur (geen regenboog) */
@@ -63,20 +116,24 @@ function makeLabelSVG(st,c){
   // verticale opbouw
   let yTop=58,yName,yEmb,embS=emb==='none'?0:(st.emblem.size==='large'?1.25:1);
   const nameH=lines.length*fs*1.02;
-  if(layout==='top'){yName=74+fs*.8;yEmb=yName+nameH-fs*.2+28+50*embS*.7}
+  if(layout==='top'){yName=74+fs*.8;yEmb=yName+nameH-fs*.2+8+50*embS*.7}
   else if(layout==='bottom'){yEmb=90+50*embS*.7;yName=yEmb+50*embS*.75+fs*.9}
   else{yEmb=emb==='none'?0:96+50*embS*.6;yName=(emb==='none'?160:yEmb+50*embS*.82+fs*.95)}
   const txt=(s,y,size,fill,fam,wt,ls,extra='')=>`<text x="150" y="${y.toFixed(1)}" text-anchor="middle" font-family="${fam}" font-weight="${wt}" font-size="${size.toFixed(1)}" letter-spacing="${ls}" fill="${fill}" ${extra}>${esc(s)}</text>`;
   const fit=s=>s.length*fs*(st.font==='condensed'?.5:.62)>236?`textLength="236" lengthAdjust="spacingAndGlyphs"`:'';
   const nameSvg=lines.map((s,i)=>txt(s,yName+i*fs*1.02,fs,nameFill,F.f,F.w,(F.ls*fs).toFixed(1),fit(s)+(st.font==='condensed'?' transform="scale(1 1.18)" transform-origin="150 '+(yName+i*fs*1.02).toFixed(0)+'"':''))).join('');
   // bij 'top' staan jaar en herkomst onder het embleem, zoals op de meeste Bordeaux-etiketten
-  let y=(layout==='top'&&emb!=='none')?yEmb+44*embS-10:yName+nameH-fs*.55;
+  let y=(layout==='top'&&emb!=='none')?yEmb+44*embS-2:yName+nameH-fs*.55;
   const yearSvg=(c&&c.jaar||L.year)?txt(String(L.year||c.jaar),(layout==='top'?y+20:y+24),17,st.year_color||ink,ETK_SMALL,600,2):'';
   if(yearSvg)y+=layout==='top'?20:24;
   const subSvg=L.sub?(st.sub_color?txt(String(L.sub).toUpperCase(),y+24,12.5,st.sub_color,F.f,F.w,1):txt(L.sub,y+24,13,ink,ETK_SMALL,600,1,'font-style="italic"')):'';
   const topSvg=L.top?txt(String(L.top).toUpperCase(),48,9.5,ink,ETK_SMALL,600,3):'';
   const botSvg=L.bottom?txt(String(L.bottom).toUpperCase(),362,st.bottom_big?15:9.5,st.bottom_big?ink:ink,st.bottom_big?F.f:ETK_SMALL,st.bottom_big?F.w:600,st.bottom_big?3:2.4):'';
-  const embSvg=emb==='none'?'':`<g transform="translate(${150-50*embS*1.2} ${yEmb-50*embS*1.2}) scale(${1.2*embS})">${ETK_EMB[emb](embCol,ink)}</g>`;
+  const fr=st.emblem&&st.emblem.frame,frC=embCol,frSvg=!fr||fr==='none'?'':fr==='oval'?`<ellipse cx="50" cy="56" rx="45" ry="31" fill="none" stroke="${frC}" stroke-width="1.2"/><ellipse cx="50" cy="56" rx="42" ry="28.5" fill="none" stroke="${frC}" stroke-width=".6"/>`
+    :fr==='circle'?`<circle cx="50" cy="54" r="38" fill="none" stroke="${frC}" stroke-width="1.2"/><circle cx="50" cy="54" r="35" fill="none" stroke="${frC}" stroke-width=".6"/>`
+    :fr==='square'?`<rect x="8" y="20" width="84" height="70" fill="none" stroke="${frC}" stroke-width="1.2"/><rect x="11" y="23" width="78" height="64" fill="none" stroke="${frC}" stroke-width=".6"/>`
+    :fr==='arch'?`<path d="M10 88V44a40 30 0 0 1 80 0v44z" fill="none" stroke="${frC}" stroke-width="1.2"/>`:'';
+  const embSvg=emb==='none'?'':`<g transform="translate(${150-50*embS*1.2} ${yEmb-50*embS*1.2}) scale(${1.2*embS})">${frSvg}${ETK_EMB[emb](embCol,ink)}</g>`;
   // extra merkteken (bv. een gestreepte zon onderaan)
   const mk=st.mark&&ETK_EMB[st.mark.type]?`<g transform="translate(${150-34} ${(st.mark.y||300)-34}) scale(.68)">${ETK_EMB[st.mark.type](st.mark.color||acc,ink)}</g>`:'';
   const bd=st.border||'none',bc=st.border_color==='metal'&&metal?`url(#${id}m)`:(st.border_color||ink);

@@ -1128,18 +1128,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-193613'</script>
-<script src="data.js?v=20261015-193613"></script>
-<script src="art.js?v=20261015-193613"></script>
-<script src="gids.js?v=20261015-193613"></script>
-<script src="maps.js?v=20261015-193613"></script>
-<script src="zegels.js?v=20261015-193613"></script>
-<script src="landen.js?v=20261015-193613"></script>
-<script src="etiket.js?v=20261015-193613"></script>
-<script src="fullart.js?v=20261015-193613"></script>
-<script src="stickers.js?v=20261015-193613"></script>
-<script src="vrienden.js?v=20261015-193613"></script>
-<script src="wereldbol.js?v=20261015-193613"></script>
+<script>window.VI_V='20261015-195425'</script>
+<script src="data.js?v=20261015-195425"></script>
+<script src="art.js?v=20261015-195425"></script>
+<script src="gids.js?v=20261015-195425"></script>
+<script src="maps.js?v=20261015-195425"></script>
+<script src="zegels.js?v=20261015-195425"></script>
+<script src="landen.js?v=20261015-195425"></script>
+<script src="etiket.js?v=20261015-195425"></script>
+<script src="fullart.js?v=20261015-195425"></script>
+<script src="stickers.js?v=20261015-195425"></script>
+<script src="vrienden.js?v=20261015-195425"></script>
+<script src="wereldbol.js?v=20261015-195425"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1294,7 +1294,7 @@ function openSettings(){
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
       ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
-      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button>`:''}
+      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="relabelall">${I('pen')} Alle etiketten opnieuw tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -1302,6 +1302,7 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
+  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Ook wijnen die al een ontwerp hebben, gaan opnieuw langs Claude (met de foto als die er is). Handmatig ingestelde ontwerpen worden overschreven. Dit kost ongeveer een cent per wijn en duurt even.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
   const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp gaan langs Claude. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost een paar cent en duurt even.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
@@ -1543,7 +1544,7 @@ const isIcoon=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return !!ic&&!i
 const LABEL_TIERS=['rare','superrare','ultra','icon'];
 function defaultStyle(c){
   const A=areaOf(c),cc=A.c,mot=(A.motifs||[])[0];
-  const emb=mot==='chateau'?'castle':/church|village/.test(mot||'')?'castle':c.style==='mousserend'?'stars':'grapes';
+  const emb=mot==='chateau'?'chateau':/church/.test(mot||'')?'church':mot==='farmhouse'?'farmhouse':mot==='village'?'chateau':c.style==='mousserend'?'stars':'grapes';
   return {paper:'#F3E9D2',ink:'#2B2118',accent:cc.near,metal:c.rar==='ultra'||c.rar==='icon'?'gold':'none',font:'classic',upper:false,layout:'center',
     emblem:{type:emb,color:cc.near},border:'double',border_color:c.rar==='ultra'||c.rar==='icon'?'metal':cc.dark,lines:{name:c.naam,sub:c.app&&c.app!==c.maker?c.app:'',bottom:c.maker}};
 }

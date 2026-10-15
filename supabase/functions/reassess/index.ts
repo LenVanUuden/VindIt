@@ -54,9 +54,9 @@ const LABEL_SYSTEM = `You describe wine labels for a Dutch wine-collecting app t
 - paper / ink / accent: hex colors. metal: "gold", "silver" or "none".
 - font: "condensed" (tall narrow), "classic" (old-style serif), "didone" (elegant high-contrast serif), "script", "gothic" (blackletter), "modern" (sans-serif), "display" (art-deco).
 - upper: name in capitals? layout: name at "top", "center" or "bottom".
-- emblem: type "crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars" or "none" (a drawing or photo of a building is always "castle"; "abstract" only for non-figurative shapes); color hex or "metal"; size "normal"/"large". mark: optional second small element.
+- emblem: type "chateau" (classic château façade), "castle" (fortress/tower), "church", "farmhouse", "winery" (modern), "crest", "sun", "abstract" (only non-figurative), "bull" (other animals), "horse", "bird", "flower", "tree", "grapes", "leaf", "stars" or "none" (a building is always one of the five building types); color hex or "metal"; size "normal"/"large"; frame "oval"/"circle"/"square"/"arch"/"none" (the visible frame around the picture on the real label). Goal: the drawn label must be recognisable next to the real one (paper colour, order of elements, coloured lines, picture and frame). mark: optional second small element.
 - border: "none", "thin", "double", "frame", "band"; border_color hex or "metal". name_color: hex or "metal" for foil names. sub_color: hex if the appellation line is in a striking colour.
-- lines: name (as printed), top, sub, bottom; max ~30 characters each.`;
+- lines: name (as printed), top, sub, bottom; max ~30 characters each. Copy every text EXACTLY as printed (same words, language, spelling, accents; never translate or rephrase).`;
 const STYLE_SCHEMA = {
   type: "object",
   properties: {
@@ -64,8 +64,8 @@ const STYLE_SCHEMA = {
     metal: { type: "string", enum: ["gold", "silver", "none"] },
     font: { type: "string", enum: ["condensed", "classic", "didone", "script", "gothic", "modern", "display"] },
     upper: { type: "boolean" }, layout: { type: "string", enum: ["top", "center", "bottom"] },
-    emblem: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] } } },
-    mark: { type: "object", properties: { type: { type: "string", enum: ["crest", "castle", "sun", "abstract", "bull", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
+    emblem: { type: "object", properties: { type: { type: "string", enum: ["chateau", "castle", "church", "farmhouse", "winery", "crest", "sun", "abstract", "bull", "horse", "bird", "flower", "tree", "grapes", "leaf", "stars", "none"] }, color: { type: "string" }, size: { type: "string", enum: ["normal", "large"] }, frame: { type: "string", enum: ["none", "oval", "circle", "square", "arch"] } } },
+    mark: { type: "object", properties: { type: { type: "string", enum: ["chateau", "castle", "church", "farmhouse", "winery", "crest", "sun", "abstract", "bull", "horse", "bird", "flower", "tree", "grapes", "leaf", "stars", "none"] }, color: { type: "string" } } },
     border: { type: "string", enum: ["none", "thin", "double", "frame", "band"] }, border_color: { type: "string" }, name_color: { type: "string" }, sub_color: { type: "string" },
     lines: { type: "object", properties: { name: { type: "string" }, top: { type: "string" }, sub: { type: "string" }, bottom: { type: "string" } } },
   },
@@ -80,7 +80,7 @@ function cleanStyle(s: Record<string, unknown>) {
   return {
     paper: col(s.paper), ink: col(s.ink), accent: col(s.accent), metal: str(s.metal, 8),
     font: str(s.font, 12), upper: s.upper !== false, layout: str(s.layout, 8),
-    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8) },
+    emblem: { type: str(e.type, 12) ?? "none", color: col(e.color), size: str(e.size, 8), frame: str(e.frame, 8) },
     mark: m.type && m.type !== "none" ? { type: str(m.type, 12), color: col(m.color) } : undefined,
     border: str(s.border, 8), border_color: col(s.border_color), name_color: col(s.name_color), sub_color: col(s.sub_color),
     lines: { name: str(l.name), top: str(l.top), sub: str(l.sub), bottom: str(l.bottom) },
