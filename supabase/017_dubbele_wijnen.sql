@@ -220,10 +220,12 @@ begin
   end loop;
   update public.retries set wine_id = k.id where wine_id = d.id;
 
-  -- Etiket: het nieuw getekende (v2) wint, een vastgezet etiket blijft altijd
+  -- Etiket: het getekende etiket van de jongste wijn (de nieuwste tekening) wint;
+  -- een vastgezet etiket blijft altijd staan
   if not coalesce((k.label_style->>'locked')::boolean, false)
-     and coalesce(k.label_style->>'v', '') <> '2'
-     and (d.label_style is not null and (d.label_style->>'v' = '2' or k.label_style is null)) then
+     and d.label_style is not null
+     and (d.label_style->>'v' = '2' or k.label_style is null
+          or coalesce((d.label_style->>'locked')::boolean, false)) then
     k.label_style := d.label_style;
   end if;
   -- Naam: de vollere naam ("Château Rozier" boven "Rozier")
