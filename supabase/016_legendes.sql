@@ -7,6 +7,7 @@
 -- Dom Pérignon, Krug, Sassicaia en Opus One zijn geen Legende meer: hun klasse
 -- komt voortaan uit de formule, en de app geeft ze het stempel "Icoon".
 -- Een dure wijn met "iconic" wordt niet meer vanzelf de topklasse.
+-- De uitleg ("Waarom Rare?") noemt de prijs voortaan in woorden, geen bedrag.
 -- =====================================================================
 
 -- 1. Formule: de topklasse alleen via de vaste lijst
@@ -60,7 +61,9 @@ begin
   if p_is_icon then tier := 'icon'; end if;
 
   -- Uitleg in gewone taal (max. 4 onderdelen)
-  if p is not null then why := why || ('±€' || (case when p < 100 then round(p) else round(p / 10) * 10 end)::text); end if;
+  -- Prijs als woord, niet als bedrag: vrienden kijken mee in je album
+  if p is not null then why := why || (case when p < 12 then 'betaalbaar' when p < 25 then 'toegankelijk geprijsd'
+       when p < 60 then 'middenklasse' when p < 200 then 'hogere prijsklasse' else 'topprijsklasse' end)::text; end if;
   if p_s->>'producer_fame' = 'wereldberoemd' then why := why || 'wereldberoemd huis'::text;
   elsif p_s->>'producer_fame' = 'gerenommeerd' then why := why || 'gerenommeerde maker'::text; end if;
   if p_s->>'classification' = 'top' then why := why || 'topclassificatie'::text;

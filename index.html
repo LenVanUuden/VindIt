@@ -1023,17 +1023,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-140010'</script>
-<script src="data.js?v=20261015-140010"></script>
-<script src="art.js?v=20261015-140010"></script>
-<script src="gids.js?v=20261015-140010"></script>
-<script src="maps.js?v=20261015-140010"></script>
-<script src="zegels.js?v=20261015-140010"></script>
-<script src="landen.js?v=20261015-140010"></script>
-<script src="etiket.js?v=20261015-140010"></script>
-<script src="stickers.js?v=20261015-140010"></script>
-<script src="vrienden.js?v=20261015-140010"></script>
-<script src="wereldbol.js?v=20261015-140010"></script>
+<script>window.VI_V='20261015-140131'</script>
+<script src="data.js?v=20261015-140131"></script>
+<script src="art.js?v=20261015-140131"></script>
+<script src="gids.js?v=20261015-140131"></script>
+<script src="maps.js?v=20261015-140131"></script>
+<script src="zegels.js?v=20261015-140131"></script>
+<script src="landen.js?v=20261015-140131"></script>
+<script src="etiket.js?v=20261015-140131"></script>
+<script src="stickers.js?v=20261015-140131"></script>
+<script src="vrienden.js?v=20261015-140131"></script>
+<script src="wereldbol.js?v=20261015-140131"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1740,12 +1740,14 @@ function makeLeaf(i){
 /* ---------- data ---------- */
 /* Testfase: setgegevens van demowijnen komen uit data.js, zodat nieuwe sets ook voor al gescande kaarten werken. */
 const POOL_BY_KEY=Object.fromEntries(POOL.map(p=>[wkey(p),p]));
+/* Oude uitleg met bedrag (±€35) → woord, want vrienden kijken mee */
+const priceWords=r=>r.replace(/±€\s?(\d+)/,(m,n)=>{n=+n;return n<12?'betaalbaar':n<25?'toegankelijk geprijsd':n<60?'middenklasse':n<200?'hogere prijsklasse':'topprijsklasse'});
 function toCard(row,w){
   const pw=POOL_BY_KEY[w.wine_key];
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
   return {id:row.id,wineId:w.id,key:w.wine_key,naam:w.naam,maker:w.maker,jaar:(row.jaar!=null?row.jaar:w.jaar),druif:w.druif,stijl:w.stijl,
     regio:w.regio==='marlborough'?'nieuw-zeeland':w.regio,land:w.land,app:w.appellation||w.maker,grape:w.grape,style:w.style||'stil',color:w.color,tags:w.tags||[],
-    rar:row.tier,style:w.label_style||null,fa:!!row.full_art,bottles:row.bottles||1,why:w.tier_reason||'',memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
+    rar:row.tier,style:w.label_style||null,fa:!!row.full_art,bottles:row.bottles||1,why:priceWords(w.tier_reason||''),memo:row.memo||'',memoAt:row.memo_at||null,fav:row.fav_rank||null,topAt:row.top_at||null,v:w.variant||0,datum:fmtDate(row.created_at),created:row.created_at,first:!!session&&w.first_scanned_by===ownerId()};
 }
 async function loadAlbum(){
   await loadSettings();
@@ -1902,7 +1904,7 @@ function spinCard(o,c){
 }
 const whyLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);
   if(ic&&ic.legend&&c.rar==='icon')return `Waarom Legende? ${ic.why}`;
-  return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why}.`:'';};
+  return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why[0].toUpperCase()+c.why.slice(1)}.`:'';};
 const iconLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return ic&&!ic.legend?`<p class="hint icline">✦ Waarom icoon? ${esc(ic.why)}</p>`:''};
 function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
