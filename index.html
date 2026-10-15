@@ -931,7 +931,17 @@ async function runReassess(force){
   toast('Klassen worden opnieuw beoordeeld…');
   while(rounds<200){rounds++;
     const r=await sb.functions.invoke('reassess',{body:force?{force:true,offset}:{}});
-    if(r.error){toast('Opnieuw beoordelen lukte niet (is de functie reassess geplaatst?).');console.error(r.error);return}
+    if(r.error){console.error(r.error);let st=0,msg='';
+      try{const res=r.error.context;st=res&&res.status||0;const j=await res.clone().json();msg=j.status==='error'?(j.message||''):(j.status||'')}catch(e){}
+      const why=st===404?'de functie "reassess" is niet gevonden. Controleer of hij precies zo heet en gedeployed is.'
+        :st===401?(msg==='not_authenticated'?'je bent niet ingelogd volgens de functie. Log opnieuw in.':'Supabase weigert de aanroep. Zet "Verify JWT" uit bij reassess.')
+        :st===403?'dit account staat niet als beheerder ingesteld.'
+        :st>=500?('fout in de functie: '+(msg||'onbekend')+(/set_wine_signals|signals|column/i.test(msg)?' (is migratie 010 gedraaid?)':''))
+        :('geen verbinding met de functie'+(st?' (code '+st+')':'')+'.');
+      toast('Opnieuw beoordelen lukte niet: '+why,9000);
+      if(done)await loadAlbum();return}
+    const bad=(r.data.results||[]).filter(x=>x.error);
+    if(bad.length&&bad.length===(r.data.results||[]).length){toast('Opnieuw beoordelen lukte niet: '+(bad[0].error==='db'?'de database kent de nieuwe functie nog niet. Draai eerst migratie 010.':'Claude gaf geen antwoord ('+bad[0].error+').'),9000);return}
     done+=r.data.done||0;offset+=r.data.done||0;
     toast(`Beoordeeld: ${done} wijnen${r.data.remaining?' · bezig…':''}`);
     if(!r.data.remaining||!r.data.done)break;
@@ -1655,7 +1665,7 @@ function openFavPicker(id){
   const out=o.querySelector('#out');if(out)out.onclick=()=>apply(null);
   (o.querySelector('.lands .on')||o.querySelector('.lands button')).focus();
 }
-function toast(msg){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.classList.add('out'),3300);setTimeout(()=>t.remove(),3600)}
+function toast(msg,ms=3600){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.classList.add('out'),ms-300);setTimeout(()=>t.remove(),ms)}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function timeLeft(){
   const p=new Intl.DateTimeFormat('nl-NL',{timeZone:'Europe/Amsterdam',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
