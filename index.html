@@ -403,6 +403,12 @@ button{font:inherit;color:inherit}
 .stamp{position:absolute;right:12px;top:40px;z-index:3;width:60px;height:60px;border:1.5px solid rgba(150,34,46,.8);outline:1px solid rgba(150,34,46,.5);outline-offset:2px;border-radius:50%;color:rgba(150,34,46,.9);
   font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-14deg);background:rgba(255,250,240,.25);pointer-events:none}
 .t-icon .stamp{color:#F3D9A0;border-color:rgba(243,217,160,.8);outline-color:rgba(243,217,160,.5);background:rgba(0,0,0,.2)}
+.icstamp{position:absolute;left:12px;top:40px;z-index:3;width:54px;height:54px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font:600 8px/1.2 var(--display,Georgia);letter-spacing:.12em;text-transform:uppercase;color:#4A3210;transform:rotate(10deg);pointer-events:none;
+  background:radial-gradient(circle at 35% 30%,#F6E2A8,#C9A253 60%,#94702A);box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 0 0 2.5px rgba(90,58,18,.4),inset 0 0 0 4px rgba(255,240,200,.5)}
+.icstamp b{font-size:15px;line-height:1;letter-spacing:0}
+.fa .icstamp{top:96px}
+.micon{position:absolute;left:3px;top:20px;z-index:6;width:14px;height:14px;border-radius:50%;font-size:9px;line-height:14px;text-align:center;color:#4A3210;background:radial-gradient(circle at 35% 30%,#F6E2A8,#C9A253);box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.icline{color:#E9CC86}
 .mstamp{position:absolute;right:3px;top:3px;z-index:6;width:14px;height:14px;border-radius:50%;border:1px solid rgba(150,34,46,.85);background:rgba(255,250,240,.85)}
 
 /* Benoemde vakken */
@@ -560,6 +566,8 @@ button{font:inherit;color:inherit}
 .leaf>.page{min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;touch-action:pan-y}
 .leaf>.page::-webkit-scrollbar{display:none}
 .grid{grid-template-columns:repeat(3,minmax(0,var(--sw,1fr)));justify-content:center}
+.grid.g4{grid-template-columns:repeat(4,minmax(0,var(--sw4,1fr)));gap:8px 6px}
+.grid.g4 .slabel{font-size:10.5px}.grid.g4 .empty.empty{font-size:7px;letter-spacing:.04em}
 .fgrid{grid-template-columns:repeat(3,minmax(0,var(--fsw,1fr)))}
 .favtop{grid-template-columns:var(--f1,34%) 1fr}
 .dock{margin-top:0}
@@ -967,6 +975,11 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .icrow{display:flex;gap:6px;justify-content:center;margin-top:6px}
 .icn{flex:1;max-width:110px;display:flex;flex-direction:column;align-items:center;font-size:10.5px;line-height:1.25;color:#E9D3A0}
 .icn b{font-weight:600}.icn small{opacity:.7;font-size:10px}
+.icn.leg .coin{font-size:17px}
+.icleg{font-size:10.5px;opacity:.8;margin:2px 0 0}
+.iclist{width:min(96vw,440px);display:flex;flex-direction:column;gap:12px;margin:6px 0}
+.iclist .sec{margin:0}.iclist .eyebrow{margin:0}
+.legbtn{margin:6px auto 0;display:flex}
 .icn .coin{width:42px;height:42px;margin-bottom:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:15px Limelight,Georgia,serif;color:#4A3210;
   background:radial-gradient(circle at 35% 30%,#F3DC96,#C9A253 55%,#8F6B22);box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35);filter:saturate(.3) brightness(.65);opacity:.75}
 .icn.own .coin{filter:none;opacity:1;box-shadow:0 0 16px rgba(240,210,130,.75),0 2px 5px rgba(0,0,0,.5),inset 0 0 0 3px rgba(90,58,18,.35);animation:coinglow 2.6s ease-in-out infinite alternate}
@@ -1010,17 +1023,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-130758'</script>
-<script src="data.js?v=20261015-130758"></script>
-<script src="art.js?v=20261015-130758"></script>
-<script src="gids.js?v=20261015-130758"></script>
-<script src="maps.js?v=20261015-130758"></script>
-<script src="zegels.js?v=20261015-130758"></script>
-<script src="landen.js?v=20261015-130758"></script>
-<script src="etiket.js?v=20261015-130758"></script>
-<script src="stickers.js?v=20261015-130758"></script>
-<script src="vrienden.js?v=20261015-130758"></script>
-<script src="wereldbol.js?v=20261015-130758"></script>
+<script>window.VI_V='20261015-140010'</script>
+<script src="data.js?v=20261015-140010"></script>
+<script src="art.js?v=20261015-140010"></script>
+<script src="gids.js?v=20261015-140010"></script>
+<script src="maps.js?v=20261015-140010"></script>
+<script src="zegels.js?v=20261015-140010"></script>
+<script src="landen.js?v=20261015-140010"></script>
+<script src="etiket.js?v=20261015-140010"></script>
+<script src="stickers.js?v=20261015-140010"></script>
+<script src="vrienden.js?v=20261015-140010"></script>
+<script src="wereldbol.js?v=20261015-140010"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1032,7 +1045,7 @@ const TIERS={
   rare:{label:'Rare',sym:'◆',odds:'een stap hoger'},
   superrare:{label:'Super Rare',sym:'◆◆',odds:'bijzonder'},
   ultra:{label:'Ultra',sym:'★',odds:'topwijn'},
-  icon:{label:'Icon',sym:'♛',odds:'legendarisch'}
+  icon:{label:'Legende',sym:'♛',odds:'legendarisch'}
 };
 const TORDER=['common','rare','superrare','ultra','icon'];
 const DIFF={1:'Supermarkt',2:'Wijnwinkel',3:'Specialist'};
@@ -1298,7 +1311,10 @@ function buildPages(){
       for(const set of sets)P.push({t:'set',set,land});
       if(!vis.length||st.overflow[land]?.length)P.push({t:'overige',land,noSets:!vis.length});
     }
-    for(const set of SETS)if(set.part===2&&st.visible[set.id])P.push({t:'set',set});
+    for(const set of SETS)if(set.part===2&&st.visible[set.id]){
+      if(set.slots.length>12)for(let k=0;k<set.slots.length;k+=12)P.push({t:'set',set,from:k,to:Math.min(k+12,set.slots.length)});   // Legendes: 2 bladen
+      else P.push({t:'set',set});
+    }
     P.push({t:'back'});
   }
   pages=P;
@@ -1413,7 +1429,8 @@ async function uploadArt(c,img,box){
 const layers=t=>t==='common'?'':t==='rare'?'<div class="shine"></div><div class="glare"></div>':'<div class="shine"></div><div class="sparkle"></div><div class="glare"></div>';
 const FA_LAYERS='<div class="shine fashine"></div><div class="sparkle"></div><div class="glare"></div><div class="fatw"></div><div class="fasweep"></div><span class="fastamp">FULL<br>ART</span>';
 const symHTML=t=>`<i class="sym s-${t}" aria-label="${TIERS[t].label}">${TIERS[t].sym}</i>`;
-const stampHTML=c=>c.first?'<span class="stamp">Eerste<br>ont&shy;dekker</span>':'';
+const stampHTML=c=>(isIcoon(c)?'<span class="icstamp"><b>✦</b>Icoon</span>':'');
+const isIcoon=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return !!ic&&!ic.legend};
 /* Getekend etiket (ontwerp van Claude, of een passend standaardontwerp) */
 const LABEL_TIERS=['rare','superrare','ultra','icon'];
 function defaultStyle(c){
@@ -1441,7 +1458,7 @@ function bigCard(c){
 function mini(c){
   const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
-  const ms=(c.first?'<span class="mstamp" aria-hidden="true"></span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
+  const ms=(isIcoon(c)?'<span class="micon" aria-hidden="true">✦</span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
   if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${ultraFill(areaOf(c),c.v)}${faLabel(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
@@ -1522,6 +1539,8 @@ function wireLogin(el){
 
 /* ---------- pagina's ---------- */
 function pageFoot(i){return `<div class="pfoot"><span>Vined It</span><span>Blad ${i}</span></div>`}
+function icCoins(info){return info.i.map(([a,b2,re,why,leg])=>{const own=iconOwned(re);return `<div class="icn${own?' own':''}${leg?' leg':''}"><span class="coin" title="${leg?'Legende':'Icoon'}">${leg?'♛':'✦'}</span><b>${esc(a)}</b><small>${own?'Je hebt hem!':esc(b2)}</small></div>`}).join('')}
+function iconCount(){let h=0,t=0;for(const k in LANDINFO)for(const x of LANDINFO[k].i){if(x[4])continue;t++;if(iconOwned(x[2]))h++}return [h,t]}
 function progress(have,n){return `<div class="progress"><span>${have} van ${n}</span><div class="bar"><span style="width:${have/n*100}%"></span></div></div>`}
 function firstPageOf(pred){return pages.findIndex(pred)}
 /* ---------- kaarten ---------- */
@@ -1672,7 +1691,7 @@ function makePage0(i){
       outline=`<button class="outline" data-map="land:${esc(p.land)}" aria-label="Kaart van ${esc(p.land)}"><svg viewBox="-4 -4 ${m.w+8} ${m.h+8}"><path d="${m.d}" class="olnd" stroke-width="${(m.w*.012).toFixed(2)}"/>${pins.map(ll=>{const [px,py]=proj(m,ll[0],ll[1]);return `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(m.w*.04).toFixed(1)}" class="opin" stroke-width="${(m.w*.012).toFixed(2)}"/>`}).join('')}</svg></button>`}
     el.innerHTML=`<div class="chtop">${countryMedal(x.have,x.tot)}<div><p class="eyebrow">Hoofdstuk ${chapN}</p><h2 class="foil">${esc(p.land)}</h2>${info?`<span class="chip">${info.w}</span>`:''}</div></div>
       ${info||outline?`<div class="intro">${outline}${info?`<div class="facts">${info.f.map((t,k)=>`<div class="fact"><span class="fdot">${['I','II','III'][k]}</span><span>${t}</span></div>`).join('')}</div>`:''}</div>`:''}
-      ${info?`<div class="sec"><p class="eyebrow">Iconen van ${esc(p.land)}</p><div class="icrow">${info.i.map(([a,b2,re])=>{const own=iconOwned(re);return `<div class="icn${own?' own':''}"><span class="coin">♛</span><b>${esc(a)}</b><small>${own?'Je hebt hem!':esc(b2)}</small></div>`}).join('')}</div></div>`:''}
+      ${info?`<div class="sec"><p class="eyebrow">Iconen van ${esc(p.land)}</p><div class="icrow">${icCoins(info)}</div></div>`:''}
       <p class="eyebrow toch sec">${n===1?'Set in dit hoofdstuk':'Sets in dit hoofdstuk'}</p>
       <div class="seals${n===1?' one':n>6?' three':''}">${seals.join('')}</div>${pageFoot(i)}`;
     return el;
@@ -1690,9 +1709,11 @@ function makePage0(i){
   if(done)el.classList.add('done');
   const chap=s.part===1?st.allLands.indexOf(s.land)+1:0;
   const eyebrow=s.part===1?`Hoofdstuk ${chap} · ${esc(s.land)}`:'Uitdaging';
-  el.innerHTML=`<div><p class="eyebrow">${eyebrow}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)} ${infoBtn(s.part===1?'set':'lijst')}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
-    ${s.intro?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
-    <div class="grid">${s.slots.map((sl,k)=>slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k,stackOf(s,k).length)).join('')}</div>${pageFoot(i)}`;
+  const fr=p.from||0,to=p.to||s.slots.length,part=p.to?` · blad ${fr/12+1} van ${Math.ceil(s.slots.length/12)}`:'',g4=s.slots.length>9,last=to>=s.slots.length;
+  const icb=s.id==='icons'&&last&&typeof LANDINFO!=='undefined'?(()=>{const [h,t]=iconCount();return `<button class="btn small legbtn" data-act="iconen">✦ Iconen van de wereld · ${h} van ${t}</button>`})():'';
+  el.innerHTML=`<div><p class="eyebrow">${eyebrow}${part}${s.secret?' · geheime set':''}</p><h2 class="foil">${esc(s.name)} ${infoBtn(s.part===1?'set':'lijst')}</h2>${done?'<span class="donestamp">Voltooid</span>':''}</div>
+    ${s.intro&&!fr?`<p class="note">${esc(s.intro)}</p>`:''}${progress(have,s.slots.length)}
+    <div class="grid${g4?' g4':''}">${s.slots.map((sl,k)=>k<fr||k>=to?'':slotHTML(f[k],sl.l,f[k]?0:sl.d,s.id+'|'+k,stackOf(s,k).length)).join('')}</div>${icb}${pageFoot(i)}`;
   return el;
 }
 function fitAlbum(){
@@ -1702,6 +1723,8 @@ function fitAlbum(){
   const rows=H-28-104-30;                       // binnenruimte min kop en voet
   const sw=Math.max(64,Math.min(colW,(rows/3-36)/1.48));
   document.documentElement.style.setProperty('--sw',sw.toFixed(1)+'px');
+  const sw4=Math.max(56,Math.min((W-32-24)/4,(rows/3-40)/1.48));   // grote sets: 4 kolommen
+  document.documentElement.style.setProperty('--sw4',sw4.toFixed(1)+'px');
   // Top 10: #1 + 3 rijen
   const rowsF=H-28-30, f1=Math.min(W*.34,(rowsF*.3)/1.48), fsw=Math.max(54,Math.min(colW*.86,((rowsF-f1*1.48-20)/3-34)/1.48));
   document.documentElement.style.setProperty('--fsw',fsw.toFixed(1)+'px');
@@ -1786,6 +1809,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="feedback"]')){openFeedback();return}
   if(e.target.closest('[data-act="lands"]')){openLands();return}
   if(e.target.closest('[data-act="lists"]')){openLists();return}
+  if(e.target.closest('[data-act="iconen"]')){openIconen();return}
   const pj=e.target.closest('[data-pg]');if(pj){closeOverlay();go(+pj.dataset.pg);return}
   const lp=e.target.closest('[data-land]');if(lp){openLands(lp.dataset.land);return}
   const mm=e.target.closest('[data-map]');if(mm){openMap(mm.dataset.map);return}
@@ -1854,7 +1878,7 @@ const HINT={
   rare:'Rare: een stap boven het gewone. Het echte etiket uit jouw foto, met zilveren glans.',
   superrare:'Super Rare: een bijzondere wijn. Kantel de kaart en kijk hoe hij glanst.',
   ultra:'Ultra: een topwijn, in een gouden lijst.',
-  icon:'Icon: een legendarische wijn.'
+  icon:'Legende: een van de twintig legendarische wijnen van de wereld.'
 };
 function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id))).map(s=>s.name)}
 function memoBack(c){
@@ -1876,12 +1900,15 @@ function spinCard(o,c){
   sp.addEventListener('pointerup',end);sp.addEventListener('pointercancel',end);
   o.querySelector('#turn').onclick=()=>{base+=180;setA(base)};
 }
-const whyLine=c=>c.why?`Waarom ${TIERS[c.rar].label}? ${c.why}.`:'';
+const whyLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);
+  if(ic&&ic.legend&&c.rar==='icon')return `Waarom Legende? ${ic.why}`;
+  return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why}.`:'';};
+const iconLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return ic&&!ic.legend?`<p class="hint icline">✦ Waarom icoon? ${esc(ic.why)}</p>`:''};
 function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
-    ${c.why||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}<p class="hint">Veeg of tik op de kaart om hem om te draaien.${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
+    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.${c.first?' Jij was de eerste in Vined It die deze wijn scande.':''}</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
     <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
@@ -2255,7 +2282,7 @@ function reveal(c,news,title){
       buzz({common:[30],rare:[40,40,40],superrare:[60,40,60,40,90],ultra:[90,50,90,50,160],icon:[90,50,90,50,160]}[c.rar])}
       setTimeout(()=>{tilt(card);if(c.rar!=='common'||c.fa){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+(c.fa?' · Full Art!':'!')}
         o.querySelector('.status').classList.add('pop');
-        const si=stackInfo(c);o.querySelector('#h').textContent=(c.why?whyLine(c)+' ':HINT[c.rar])+(c.fa?' En het is een Full Art: puur geluk!':'')+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
+        const si=stackInfo(c);o.querySelector('#h').textContent=(whyLine(c)?whyLine(c)+' ':HINT[c.rar])+(isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(c.first?' En je bent de eerste in Vined It die deze wijn scant.':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   const walk=!reduced&&(c.rar!=='common'||c.fa)&&typeof MAPS!=='undefined';
   let begun=false;
   const begin=()=>{if(begun)return;begun=true;if(walk)walkout(o,c,open);else open()};
@@ -2338,6 +2365,18 @@ function openLists(nest){
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
 }
 
+/* Iconen van de wereld: per land de drie iconen (♛ = Legende) */
+function openIconen(nest){
+  const [h,t]=iconCount();
+  const o=overlay(`<div class="sealhead">${countryMedal(h,t)}<div><p class="eyebrow">Achterin het album</p><p class="status">Iconen van de wereld</p></div></div>
+    <p class="hint">Wijnen die hun land op de kaart zetten, ook betaalbare. Met een icoon krijgt je kaart het stempel <b>✦ Icoon</b>. ♛ is een Legende.</p>
+    <div class="iclist">${Object.keys(LANDINFO).map(land=>{const info=LANDINFO[land],n=info.i.filter(x=>iconOwned(x[2])).length;
+      return `<div class="sec"><p class="eyebrow">${esc(land)}${n?` · ${n} van ${info.i.length}`:''}</p><div class="icrow">${icCoins(info)}</div></div>`}).join('')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+  o.classList.add('leather');
+  o.querySelector('#close').onclick=()=>closeOverlay();
+}
+
 /* ---------- navigatie: kruimel, menu, springen ---------- */
 function crumbOf(p){
   if(p.t==='cover')return 'Omslag';if(p.t==='back')return 'Achterkant';if(p.t==='inhoud')return I('book')+' Kelderboek';if(p.t==='fav')return I('star')+' Top 10';if(p.t==='world')return I('globe')+' Mijn wijnwereld';
@@ -2401,7 +2440,7 @@ function openInfoTip(k){
 }
 /* ---------- uitleg en uitloggen ---------- */
 function openInfo(open,nest){
-  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Gouden lijst.',icon:'Legendarische wijnen, zoals Pétrus of Opus One.'};
+  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Gouden lijst.',icon:'De twintig Legendes van de wereld, zoals Pétrus en Screaming Eagle. Prijs telt niet.'};
   const tiers=`<div class="tierlist">${TORDER.map(t=>`<div><span class="tsym">${TIERS[t].sym}</span><span><b>${TIERS[t].label}</b><br><small>${desc[t]}</small></span><span class="todd">${TIERS[t].odds}</span></div>`).join('')}</div>`;
   const sec=(id,ic,title,body)=>`<details class="howto" id="h-${id}"${open===id?' open':''}><summary>${MED(ic)}<span>${title}</span></summary><div class="hbody">${body}</div></details>`;
   const o=overlay(`<p class="status">Hoe werkt Vined It?</p>
@@ -2420,7 +2459,7 @@ function openInfo(open,nest){
 }
 const TOUR=[
   ['camera','Scan je wijn','Drink je een wijn? Tik op Scan een wijn en fotografeer het etiket. De app herkent de wijn voor je.'],
-  ['cards','Krijg een kaart','Elke wijn wordt een kaart, van Common tot Icon. Hoe bijzonderder de wijn, hoe zeldzamer de kaart. En met geluk krijg je een Full Art!'],
+  ['cards','Krijg een kaart','Elke wijn wordt een kaart, van Common tot Legende. Hoe bijzonderder de wijn, hoe zeldzamer de kaart. En met geluk krijg je een Full Art!'],
   ['book','Vul je album','Je kaart gaat vanzelf naar het juiste vak in je album. Veeg om te bladeren, tik op een kaart om hem te bekijken.'],
   ['globe','Ontdek de wereld','Je album groeit mee met elk nieuw land en elke nieuwe streek. Tik op een leeg vak voor tips. Veel plezier en proost!']
 ];

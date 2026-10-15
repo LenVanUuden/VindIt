@@ -39,8 +39,8 @@ Rules:
 - style: stil | mousserend | zoet | versterkt.
 - color: rood | wit | rosé (sparkling white = wit).
 - tags: only these lowercase values when they apply: joven, crianza, reserva, gran reserva, rioja alta, rioja alavesa, rioja oriental, crémant, brut, blanc de blancs, blanc de noirs, brut nature, millésime, prestige, récoltant, vin jaune, grand cru, vendanges tardives, pét-nat. ("crémant" for any Crémant; "récoltant" if the label shows RM / récoltant-manipulant; "prestige" for a house's top cuvée; "brut nature" also for Extra Brut / zero dosage.)
-- Iconic wines: if the wine is one of these, use EXACTLY this naam / maker:
-  Cloudy Bay Sauvignon Blanc / Cloudy Bay · Tignanello / Marchesi Antinori · Dom Pérignon / Moët & Chandon · Krug Grande Cuvée / Krug · Sassicaia / Tenuta San Guido · Vega Sicilia Único / Vega Sicilia · Château d'Yquem / Château d'Yquem · Penfolds Grange / Penfolds · Opus One / Opus One · Château Margaux / Château Margaux · Pétrus / Pétrus · Romanée-Conti / Domaine de la Romanée-Conti.
+- Legendary and famous wines: if the wine is one of these, use EXACTLY this naam / maker (only for that exact wine, not for second wines such as Carruades de Lafite, Pavillon Rouge or Le Petit Mouton):
+  Romanée-Conti / Domaine de la Romanée-Conti · Musigny / Domaine Leroy · Pétrus / Pétrus · Le Pin / Le Pin · Château Lafite Rothschild / Château Lafite Rothschild · Château Mouton Rothschild / Château Mouton Rothschild · Château Margaux / Château Margaux · Château Cheval Blanc / Château Cheval Blanc · Château d'Yquem / Château d'Yquem · Salon Le Mesnil / Salon · Château Rayas / Château Rayas · Masseto / Masseto · Brunello di Montalcino Riserva / Biondi-Santi · Barolo Monfortino Riserva / Giacomo Conterno · Vega Sicilia Único / Vega Sicilia · Pingus / Dominio de Pingus · Scharzhofberger Riesling Trockenbeerenauslese / Egon Müller · Screaming Eagle Cabernet Sauvignon / Screaming Eagle · Penfolds Grange / Penfolds · Quinta do Noval Nacional / Quinta do Noval · Cloudy Bay Sauvignon Blanc / Cloudy Bay · Tignanello / Marchesi Antinori · Dom Pérignon / Moët & Chandon · Krug Grande Cuvée / Krug · Sassicaia / Tenuta San Guido · Opus One / Opus One.
 - Be consistent: the same wine photographed twice must give the same naam and maker.
 - label_box: where the main front label is in the photo, in PERCENT of the image (0–100): x and y = top-left corner, w and h = width and height. Cover the whole paper label (all its edges), not the glass or the capsule. If several labels are visible, take the main one with the wine name.
 
@@ -52,7 +52,7 @@ Rarity signals (used to decide the card class; estimate honestly, prefer the low
 - rarity_nl: how hard to find in the Netherlands: "algemeen" (common in shops), "ongewoon" (specialist shops, unusual region or grape), "zeldzaam" (rarely seen in NL: e.g. Georgia, Lebanon, Jura vin jaune, rare grapes).
 - vintage_quality: quality of this vintage for this region: "top", "goed", "gemiddeld", "slecht", or "onbekend" if non-vintage or you don't know the region's vintages.
 - large_format: true only if the label shows a magnum or larger (1,5 L+).
-- iconic: true only for truly iconic, world-famous wines (e.g. Pétrus, Opus One, DRC, Sassicaia, Krug).
+- iconic: true only for truly iconic, world-famous wines (e.g. Pétrus, Lafite, DRC, Screaming Eagle).
 Do NOT count medals, stickers or competition awards.
 
 Label design (label_style): describe the FRONT label so the app can draw a simplified, generic illustration of it in its own style. Describe what you see, do not copy logos exactly.

@@ -87,7 +87,7 @@ const stkStore=()=>STK_VIEW||STK;
 function pageKey(p){
   if(!p)return '';
   switch(p.t){
-    case 'set':return 'set:'+p.set.id;
+    case 'set':return 'set:'+p.set.id+(p.from?':'+p.from:'');
     case 'chapter':return 'ch:'+p.land;
     case 'overige':return 'ov:'+p.land;
     default:return p.t;
