@@ -875,7 +875,16 @@ h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
 .stkedit .dock{visibility:hidden}
 .stktray{position:fixed;left:0;right:0;bottom:0;z-index:55;max-height:44dvh;display:flex;flex-direction:column;background:var(--leather-dark,#2a0c12);background-image:var(--leathergrain);border-top:1.5px solid rgba(201,162,83,.7);border-radius:16px 16px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.5);padding:10px 14px calc(max(env(safe-area-inset-bottom,0px),var(--navfix,0px)) + 10px);transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);color:var(--cream)}
 .stktray.in{transform:none}
-.stkhead{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}.stkhead b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--gold-soft)}.stkhead span{font-size:11.5px;opacity:.75}
+.stkhead{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:0 0 6px;padding:0;background:none;border:0;color:inherit;text-align:left;cursor:pointer;width:100%;position:relative}
+.stkhead b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--gold-soft)}.stksub{font-size:11.5px;opacity:.75}
+.stkgrip{align-self:center;width:42px;height:4px;border-radius:2px;background:rgba(233,211,160,.45);margin:-2px 0 6px}
+.stkmore{display:none;align-items:center;gap:6px;font-size:13px;color:var(--gold-soft)}.stkmore .ico{width:18px;height:18px}
+.stktray.folded{max-height:none}
+.stktray.folded .stkgrid,.stktray.folded .stksub,.stktray.folded .stkhead b{display:none}
+.stktray.folded .stkmore{display:inline-flex}
+.stktray.folded{flex-direction:row;align-items:center;gap:10px;padding-top:8px}
+.stktray.folded .stkhead{width:auto;flex:1;margin:0}.stktray.folded .stkgrip{display:none}
+.stktray.folded .stkacts{padding-top:0}
 .stkgrid{overflow-y:auto;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;padding-bottom:6px}
 .stkg{width:100%;margin:6px 0 0;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);opacity:.85}
 .stkpick{position:relative;width:62px;height:62px;border-radius:12px;border:1px solid rgba(201,162,83,.55);background:#F3E6CC;background-image:var(--grain);padding:6px;cursor:pointer;box-shadow:inset 0 1px 3px rgba(0,0,0,.25)}

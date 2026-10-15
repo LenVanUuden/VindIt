@@ -122,16 +122,22 @@ function openStickers(){
   document.body.classList.add('stkedit');
   const earned=stkEarned(),groups=[...new Set(earned.map(e=>e.group))];
   const tray=document.createElement('div');tray.className='stktray';tray.setAttribute('role','dialog');tray.setAttribute('aria-label','Stickers plakken');
-  tray.innerHTML=`<div class="stkhead"><b>Stickers plakken</b><span>Tik om te plakken · sleep om te verplaatsen · hoekje om te draaien</span></div>
+  tray.innerHTML=`<button class="stkhead" id="stktog" aria-expanded="true"><span class="stkgrip" aria-hidden="true"></span><b>Stickers plakken</b><span class="stksub">Tik om te plakken · sleep om te verplaatsen · hoekje om te draaien</span><span class="stkmore">${I('sticker')} Meer stickers</span></button>
     <div class="stkgrid">${groups.map(g=>`<p class="stkg">${g}</p>${earned.filter(e=>e.group===g).map(e=>{const inf=stkInfo(e.id);return inf?`<button class="stkpick${inf.holo?' holo':''}" data-s="${esc(e.id)}" aria-label="${esc(inf.n)}"><svg viewBox="0 0 100 100">${inf.ink?inf.svg:`<g filter="url(#stkDie)">${inf.svg}</g>`}</svg>${inf.holo?'<i class="stkholo"></i>':''}</button>`:''}).join('')}`).join('')}
       <p class="stkg">Nog te verdienen</p>${stkLocked().map(l=>`<div class="stklock"><b>${l.t}</b><span>${l.d}</span></div>`).join('')}</div>
     <div class="stkacts"><button class="btn" id="stkcancel">Annuleren</button><button class="btn primary" id="stkdone">Klaar</button></div>`;
   document.body.appendChild(tray);
   requestAnimationFrame(()=>tray.classList.add('in'));
-  tray.querySelectorAll('.stkpick').forEach(b=>b.onclick=()=>stkAdd(b.dataset.s));
+  tray.querySelectorAll('.stkpick').forEach(b=>b.onclick=()=>{stkAdd(b.dataset.s);stkTray(false)});
+  tray.querySelector('#stktog').onclick=()=>stkTray(tray.classList.contains('folded'));
   tray.querySelector('#stkdone').onclick=()=>stkClose(true);
   tray.querySelector('#stkcancel').onclick=()=>stkClose(false);
   stkRender();
+}
+/* Lade in- en uitklappen, zodat de hele bladzijde vrij is om te plakken */
+function stkTray(open){
+  const t=document.querySelector('.stktray');if(!t)return;
+  t.classList.toggle('folded',!open);t.querySelector('#stktog').setAttribute('aria-expanded',String(!!open));
 }
 function stkLayerEl(){return stack.querySelector('.leaf .stklayer')}
 function stkRender(){
@@ -163,6 +169,7 @@ function stkWire(s,i){
     if(e.target.closest('.stkx')){e.stopPropagation();STK[stkEdit.pk].splice(i,1);stkEdit.sel=-1;stkRender();return}
     e.preventDefault();e.stopPropagation();
     if(stkEdit.sel!==i)stkSelect(i);
+    stkTray(false);
     const R=rectOf(),rot=e.target.closest('.stkrot');
     const cx=R.left+it.x/100*R.width,cy=R.top+it.y/100*R.height;
     const a0=Math.atan2(e.clientY-cy,e.clientX-cx),d0=Math.hypot(e.clientX-cx,e.clientY-cy)||1,r0=it.r||0,k0=it.k||1;
