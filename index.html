@@ -1161,6 +1161,10 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .jchap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 14px}
 .jchap button{border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2);color:var(--cream);border-radius:999px;padding:7px 13px;font:500 13px 'Libre Franklin',sans-serif;cursor:pointer}
 .jchap button.on{background:linear-gradient(180deg,#F5DC9C,#C9A253);color:#2A1206;border-color:transparent;font-weight:600}
+.topback{display:flex;align-items:center;gap:4px;min-width:0;flex:0 0 auto;max-width:44%;margin-left:6px;margin-right:auto;padding:6px 11px 6px 7px;border-radius:999px;border:1px solid rgba(233,211,160,.5);background:rgba(28,12,10,.6);color:#F2D88A;font:600 12.5px 'Libre Franklin',sans-serif;cursor:pointer;animation:bpin2 .3s ease-out}
+.topback .ico{width:15px;height:15px;flex:none}.topback span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@keyframes bpin2{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.pageno .stkbtn{margin-right:0}
 </style>
 </head>
 <body>
@@ -1182,19 +1186,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-111421'</script>
-<script src="data.js?v=20261016-111421"></script>
-<script src="art.js?v=20261016-111421"></script>
-<script src="gids.js?v=20261016-111421"></script>
-<script src="maps.js?v=20261016-111421"></script>
-<script src="zegels.js?v=20261016-111421"></script>
-<script src="landen.js?v=20261016-111421"></script>
-<script src="etiket.js?v=20261016-111421"></script>
-<script src="legendes.js?v=20261016-111421"></script>
-<script src="fullart.js?v=20261016-111421"></script>
-<script src="stickers.js?v=20261016-111421"></script>
-<script src="vrienden.js?v=20261016-111421"></script>
-<script src="wereldbol.js?v=20261016-111421"></script>
+<script>window.VI_V='20261016-112122'</script>
+<script src="data.js?v=20261016-112122"></script>
+<script src="art.js?v=20261016-112122"></script>
+<script src="gids.js?v=20261016-112122"></script>
+<script src="maps.js?v=20261016-112122"></script>
+<script src="zegels.js?v=20261016-112122"></script>
+<script src="landen.js?v=20261016-112122"></script>
+<script src="etiket.js?v=20261016-112122"></script>
+<script src="legendes.js?v=20261016-112122"></script>
+<script src="fullart.js?v=20261016-112122"></script>
+<script src="stickers.js?v=20261016-112122"></script>
+<script src="vrienden.js?v=20261016-112122"></script>
+<script src="wereldbol.js?v=20261016-112122"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1943,12 +1947,10 @@ function renderChrome(){
   $('#scansub').textContent=!session?'':spent?'over '+timeLeft():LIMIT>5?`nog ${LIMIT-used} · tester`:`nog ${LIMIT-used} vandaag`;
   $('#dots').innerHTML=LIMIT<=5?Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}${popDot&&k===used-1?' pop':''}"></i>`).join(''):`<span class="qnum">${used} / ${LIMIT} · tester</span>`;
   $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
-  {let bp=$('#backpill');const k=navHist[navHist.length-1];
-   if(session&&st&&!viewing&&k!=null&&k!==cur&&pages[k]){if(!bp){bp=document.createElement('button');bp.id='backpill';bp.className='backpill';bp.type='button';bp.onclick=()=>goBack();document.body.appendChild(bp)}
-     bp.innerHTML=`${I('arrowl')}<span>Terug naar <b>${esc(plain(crumbOf(pages[k])))}</b></span>`;bp.hidden=false}
-   else if(bp)bp.hidden=true}
+  {const bp=$('#backpill');if(bp)bp.remove()}
   if(!session||!st){$('#tabs').innerHTML='';return}
-  $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button><span class="pageno">${!viewing&&pages[cur]?`<button class="stkbtn" data-act="stickers" aria-label="Stickers plakken op deze bladzijde">${I('sticker')}</button>`:''}Blad ${cur+1} / ${pages.length}</span>`;
+  $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button>${(()=>{const k=navHist[navHist.length-1];if(viewing||k==null||k===cur||!pages[k])return '';const t=plain(crumbOf(pages[k])),last=t.split('›').pop().trim();
+    return `<button class="topback" data-act="goback" aria-label="Terug naar ${esc(t)}">${I('arrowl')}<span>${esc(last)}</span></button>`})()}<span class="pageno">${!viewing&&pages[cur]?`<button class="stkbtn" data-act="stickers" aria-label="Stickers plakken op deze bladzijde">${I('sticker')}</button>`:''}</span>`;
 }
 function countUp(pg){
   const els=pg.querySelectorAll('[data-n]');if(!els.length)return;
@@ -1990,6 +1992,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-act="info"]')){openInfo();return}
   if(e.target.closest('[data-act="menu"]')){openMenu();return}
   if(e.target.closest('[data-act="jump"]')){openJump();return}
+  if(e.target.closest('[data-act="goback"]')){goBack();return}
   if(e.target.closest('[data-act="tour"]')){openTour();return}
   if(e.target.closest('[data-act="stickers"]')){openStickers();return}
   const ib=e.target.closest('[data-info]');if(ib){openInfoTip(ib.dataset.info);return}
