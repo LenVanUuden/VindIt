@@ -1,6 +1,6 @@
 /* =====================================================================
    Vined It – Legendes en Iconen
-   LEGENDS: de 20 legendarische wijnen (topklasse "Legende"). Prijs telt niet:
+   LEGENDS: de 21 legendarische wijnen (topklasse "Legende"). Prijs telt niet:
    het gaat om faam en geschiedenis. De sleutel is 'maker|naam' in kleine letters.
    LANDINFO: voorblad per land. Per land oude of nieuwe wereld, drie weetjes en
    drie iconen: [naam, streek, herkenning op "maker naam", waarom icoon].
@@ -10,6 +10,7 @@
 const LEGENDS=[
   {n:'Romanée-Conti',m:'Domaine de la Romanée-Conti',land:'Frankrijk',sub:'Bourgogne',re:/roman[ée]e-conti/i,why:'Eén wijngaard van 1,8 hectare in Vosne-Romanée: de meest begeerde Pinot Noir ter wereld.'},
   {n:'Musigny',m:'Domaine Leroy',land:'Frankrijk',sub:'Bourgogne',re:/leroy.*musigny|musigny.*leroy/i,why:'Lalou Bize-Leroy maakt biodynamisch piepkleine oplages. Vaak de duurste wijn ter wereld.'},
+  {n:'Musigny Vieilles Vignes',m:'Comte Georges de Vogüé',land:'Frankrijk',sub:'Bourgogne',re:/vog[üu][ée].*musigny|musigny.*vog[üu][ée]/i,why:'Dit huis bezit bijna tweederde van de Grand Cru Musigny. De Vieilles Vignes komt alleen van de oudste stokken.'},
   {n:'Pétrus',m:'Pétrus',land:'Frankrijk',sub:'Pomerol',re:/p[ée]trus/i,why:'Bijna puur Merlot van een plateau met blauwe klei: de beroemdste Pomerol.'},
   {n:'Le Pin',m:'Le Pin',land:'Frankrijk',sub:'Pomerol',re:/(^|\s)le pin(\s|$)/i,why:'Begon in 1979 op een hectare grond. De oervader van de piepkleine "garagewijn".'},
   {n:'Château Lafite Rothschild',m:'Château Lafite Rothschild',land:'Frankrijk',sub:'Pauillac',re:/ch[âa]teau lafite/i,why:'Eerste op de lijst van Premiers Grands Crus van 1855.'},

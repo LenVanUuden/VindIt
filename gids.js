@@ -479,7 +479,8 @@ const GIDS={
 },
 'icons':{
   'Romanée-Conti':['De meest begeerde wijn ter wereld, van een wijngaard van 1,8 hectare in Bourgogne. Een droomkaart.','€15.000+','Op het etiket: "Romanée-Conti" en "Domaine de la Romanée-Conti". Soms per glas op grote proeverijen.'],
-  'Musigny':['Grand Cru van Domaine Leroy: biodynamisch en in piepkleine oplages.','€20.000+','Zoek "Domaine Leroy" en "Musigny Grand Cru".'],
+  'Musigny Vogüé':['Cuvée Vieilles Vignes van Comte Georges de Vogüé, de grootste eigenaar van de Grand Cru Musigny.','€1.500+','Zoek "Comte Georges de Vogüé" en "Musigny".'],
+  'Musigny Leroy':['Grand Cru van Domaine Leroy: biodynamisch en in piepkleine oplages.','€20.000+','Zoek "Domaine Leroy" en "Musigny Grand Cru".'],
   'Pétrus':['De beroemdste Merlot ter wereld, uit Pomerol.','€3.500+'],
   'Le Pin':['Piepkleine Pomerol, de oervader van de garagewijn.','€3.500+'],
   'Château Lafite Rothschild':['De eerste van de vijf "Premiers Grands Crus" van Bordeaux, uit Pauillac.','€600–900','Let op: "Carruades de Lafite" is de tweede wijn. Mooi, maar geen Legende.'],

@@ -1151,18 +1151,18 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261015-220845'</script>
-<script src="data.js?v=20261015-220845"></script>
-<script src="art.js?v=20261015-220845"></script>
-<script src="gids.js?v=20261015-220845"></script>
-<script src="maps.js?v=20261015-220845"></script>
-<script src="zegels.js?v=20261015-220845"></script>
-<script src="landen.js?v=20261015-220845"></script>
-<script src="etiket.js?v=20261015-220845"></script>
-<script src="fullart.js?v=20261015-220845"></script>
-<script src="stickers.js?v=20261015-220845"></script>
-<script src="vrienden.js?v=20261015-220845"></script>
-<script src="wereldbol.js?v=20261015-220845"></script>
+<script>window.VI_V='20261016-085852'</script>
+<script src="data.js?v=20261016-085852"></script>
+<script src="art.js?v=20261016-085852"></script>
+<script src="gids.js?v=20261016-085852"></script>
+<script src="maps.js?v=20261016-085852"></script>
+<script src="zegels.js?v=20261016-085852"></script>
+<script src="landen.js?v=20261016-085852"></script>
+<script src="etiket.js?v=20261016-085852"></script>
+<script src="fullart.js?v=20261016-085852"></script>
+<script src="stickers.js?v=20261016-085852"></script>
+<script src="vrienden.js?v=20261016-085852"></script>
+<script src="wereldbol.js?v=20261016-085852"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2018,7 +2018,7 @@ const HINT={
   rare:'Rare: een stap boven het gewone. Het echte etiket uit jouw foto, met zilveren glans.',
   superrare:'Super Rare: een bijzondere wijn, in een gouden lijst. Kantel de kaart en kijk hoe hij glanst.',
   ultra:'Ultra: een topwijn, saffierblauw met een prismalijst.',
-  icon:'Legende: een van de twintig legendarische wijnen van de wereld.'
+  icon:'Legende: een van de eenentwintig legendarische wijnen van de wereld.'
 };
 function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id))).map(s=>s.name)}
 function memoBack(c){
@@ -2590,7 +2590,7 @@ function openTier(t){
   const T=TIERS[t],plural={common:'Commons',rare:'Rares',superrare:'Super Rares',ultra:'Ultra\'s',icon:'Legendes'}[t];
   const o=overlay(`<div class="sealhead"><div class="kstamp big k-${t}"><span class="ks">${T.sym}</span><b>${L.length}</b></div><div><p class="eyebrow">Kelderboek</p><p class="status">Mijn ${plural}</p></div></div>
     <p class="hint">${esc(HINT[t])}</p>
-    ${L.length?`<div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${esc(c.land||'')}</span></div>`).join('')}</div>`:`<p class="hint">Nog geen ${plural}. ${t==='icon'?'Achterin het album staan de twintig Legendes.':'Scan een wijn en wie weet!'}</p>`}
+    ${L.length?`<div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${esc(c.land||'')}</span></div>`).join('')}</div>`:`<p class="hint">Nog geen ${plural}. ${t==='icon'?'Achterin het album staan de eenentwintig Legendes.':'Scan een wijn en wie weet!'}</p>`}
     <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
@@ -2675,7 +2675,7 @@ function openInfoTip(k){
 }
 /* ---------- uitleg en uitloggen ---------- */
 function openInfo(open,nest){
-  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau. Gouden lijst.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Saffierblauw.',icon:'De twintig Legendes van de wereld, zoals Pétrus en Screaming Eagle. Prijs telt niet.'};
+  const desc={common:'Alledaagse wijn, zoals een supermarktmerk. De regio als reisposter.',rare:'Een stap hoger: ±€20–60, of goedkoper maar zeldzaam in Nederland.',superrare:'Bijzonder: ±€60–200, vaak een gerenommeerde maker of Cru-niveau. Gouden lijst.',ultra:'Topwijn: ±€200 of meer, grote naam of topclassificatie. Saffierblauw.',icon:'De eenentwintig Legendes van de wereld, zoals Pétrus en Screaming Eagle. Prijs telt niet.'};
   const tiers=`<div class="tierlist">${TORDER.map(t=>`<div><span class="tsym">${TIERS[t].sym}</span><span><b>${TIERS[t].label}</b><br><small>${desc[t]}</small></span><span class="todd">${TIERS[t].odds}</span></div>`).join('')}</div>`;
   const sec=(id,ic,title,body)=>`<details class="howto" id="h-${id}"${open===id?' open':''}><summary>${MED(ic)}<span>${title}</span></summary><div class="hbody">${body}</div></details>`;
   const o=overlay(`<p class="status">Hoe werkt Vined It?</p>

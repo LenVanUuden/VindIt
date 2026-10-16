@@ -471,9 +471,10 @@ const SETS = [
     S('Cap Classique',2,{style:'mousserend',land:'Zuid-Afrika'}),
     S('Engelse bubbels',3,{style:'mousserend',land:'Verenigd Koninkrijk'}),
     S('Pét-nat',3,{tag:'pét-nat'})]},
-  {id:'icons',name:'Legendes',part:2,always:true,intro:'De twintig legendarische wijnen van de wereld. Vaak per glas te proeven bij een wijnbar of proeverij.',slots:[
+  {id:'icons',name:'Legendes',part:2,always:true,intro:'De eenentwintig legendarische wijnen van de wereld. Vaak per glas te proeven bij een wijnbar of proeverij.',slots:[
     S('Romanée-Conti',3,{key:'domaine de la romanée-conti|romanée-conti'}),
-    S('Musigny',3,{key:'domaine leroy|musigny'}),
+    S('Musigny Leroy',3,{key:'domaine leroy|musigny'}),
+    S('Musigny Vogüé',3,{key:'comte georges de vogüé|musigny'}),
     S('Pétrus',3,{key:'pétrus|pétrus'}),
     S('Le Pin',3,{key:'le pin|le pin'}),
     S('Château Lafite Rothschild',3,{key:'château lafite rothschild|château lafite rothschild'}),
@@ -617,7 +618,7 @@ const POOL = [
   D('canelones','Uruguay','Tannat Reserva','Bodega Río Claro',2020,'Tannat','Tannat','Canelones','Rood, stevig','stil','rood'),
   D('belgie','België','Chardonnay Hageland','Wijndomein Kluisberg',2022,'Chardonnay','Chardonnay','Hageland','Wit, fris','stil','wit'),
   D('niagara','Canada','Vidal Icewine','Frost Ridge',2019,'Vidal','Vidal','Niagara Peninsula','Wit, zoet','zoet','wit'),
-  /* bekende iconen (geen Legende) en de twintig Legendes */
+  /* bekende iconen (geen Legende) en de eenentwintig Legendes */
   D('nieuw-zeeland','Nieuw-Zeeland','Cloudy Bay Sauvignon Blanc','Cloudy Bay',2023,'Sauvignon Blanc','Sauvignon Blanc','Marlborough','Wit, uitbundig','stil','wit',[]),
   D('toscane','Italië','Tignanello','Marchesi Antinori',2020,'Sangiovese, Cabernet Sauvignon','Sangiovese','Toscana IGT','Rood, vol','stil','rood',[]),
   D('champagne','Frankrijk','Dom Pérignon','Moët & Chandon',2013,'Chardonnay, Pinot Noir','','Champagne','Mousserend, verfijnd','mousserend','wit',['millésime','prestige']),
@@ -625,6 +626,7 @@ const POOL = [
   D('toscane','Italië','Sassicaia','Tenuta San Guido',2019,'Cabernet Sauvignon, Cabernet Franc','Cabernet Sauvignon','Bolgheri Sassicaia','Rood, elegant','stil','rood',[]),
   D('ribera','Spanje','Vega Sicilia Único','Vega Sicilia',2012,'Tempranillo, Cabernet Sauvignon','Tempranillo','Ribera del Duero','Rood, complex','stil','rood',[],true),
   D('bourgogne','Frankrijk','Musigny','Domaine Leroy',2015,'Pinot Noir','Pinot Noir','Musigny Grand Cru','Rood, verfijnd','stil','rood',[],true),
+  D('bourgogne','Frankrijk','Musigny','Comte Georges de Vogüé',2015,'Pinot Noir','Pinot Noir','Musigny Grand Cru','Rood, verfijnd','stil','rood',[],true),
   D('bordeaux','Frankrijk','Le Pin','Le Pin',2016,'Merlot','Merlot','Pomerol','Rood, fluweelzacht','stil','rood',[],true),
   D('bordeaux','Frankrijk','Château Lafite Rothschild','Château Lafite Rothschild',2016,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Pauillac','Rood, verfijnd','stil','rood',[],true),
   D('bordeaux','Frankrijk','Château Mouton Rothschild','Château Mouton Rothschild',2016,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Pauillac','Rood, vol','stil','rood',[],true),
