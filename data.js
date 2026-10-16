@@ -473,7 +473,7 @@ const SETS = [
     S('Pét-nat',3,{tag:'pét-nat'})]},
   {id:'icons',name:'Legendes',part:2,always:true,intro:'De eenentwintig legendarische wijnen van de wereld. Vaak per glas te proeven bij een wijnbar of proeverij.',slots:[
     S('Romanée-Conti',3,{key:'domaine de la romanée-conti|romanée-conti'}),
-    S('Musigny Leroy',3,{key:'domaine leroy|musigny'}),
+    S('Échezeaux',3,{key:'domaine de la romanée-conti|échezeaux'}),
     S('Musigny Vogüé',3,{key:'comte georges de vogüé|musigny'}),
     S('Pétrus',3,{key:'pétrus|pétrus'}),
     S('Le Pin',3,{key:'le pin|le pin'}),
@@ -625,7 +625,7 @@ const POOL = [
   D('champagne','Frankrijk','Krug Grande Cuvée','Krug',null,'Pinot Noir, Chardonnay, Meunier','','Champagne','Mousserend, rijk','mousserend','wit',['prestige']),
   D('toscane','Italië','Sassicaia','Tenuta San Guido',2019,'Cabernet Sauvignon, Cabernet Franc','Cabernet Sauvignon','Bolgheri Sassicaia','Rood, elegant','stil','rood',[]),
   D('ribera','Spanje','Vega Sicilia Único','Vega Sicilia',2012,'Tempranillo, Cabernet Sauvignon','Tempranillo','Ribera del Duero','Rood, complex','stil','rood',[],true),
-  D('bourgogne','Frankrijk','Musigny','Domaine Leroy',2015,'Pinot Noir','Pinot Noir','Musigny Grand Cru','Rood, verfijnd','stil','rood',[],true),
+  D('bourgogne','Frankrijk','Échezeaux','Domaine de la Romanée-Conti',2004,'Pinot Noir','Pinot Noir','Échezeaux Grand Cru','Rood, verfijnd','stil','rood',[],true),
   D('bourgogne','Frankrijk','Musigny','Comte Georges de Vogüé',2015,'Pinot Noir','Pinot Noir','Musigny Grand Cru','Rood, verfijnd','stil','rood',[],true),
   D('bordeaux','Frankrijk','Le Pin','Le Pin',2016,'Merlot','Merlot','Pomerol','Rood, fluweelzacht','stil','rood',[],true),
   D('bordeaux','Frankrijk','Château Lafite Rothschild','Château Lafite Rothschild',2016,'Cabernet Sauvignon, Merlot','Cabernet Sauvignon','Pauillac','Rood, verfijnd','stil','rood',[],true),
