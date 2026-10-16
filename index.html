@@ -689,7 +689,7 @@ button{font:inherit;color:inherit}
 .mfoot{margin-top:auto;padding-top:18px;display:flex;flex-wrap:wrap;gap:4px 14px;border-top:1px dotted rgba(233,211,160,.25)}
 .mfoot button{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;padding:6px 0;cursor:pointer;opacity:.85}
 .mfoot .ico{width:14px;height:14px}
-.jtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:min(88vw,340px)}
+.jtiles{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;width:min(92vw,360px)}
 .jtile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:12px;border:1px solid rgba(233,211,160,.32);background:rgba(255,255,255,.03);color:var(--cream);font-size:13px;cursor:pointer}
 .jtile span{font-size:22px;color:var(--gold)}
 .jtile.on{border-color:var(--gold);background:rgba(210,174,98,.12)}
@@ -1165,6 +1165,11 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .topback .ico{width:15px;height:15px;flex:none}.topback span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @keyframes bpin2{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 .pageno .stkbtn{margin-right:0}
+.quota{display:none!important}
+.countsfor{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:2px 0 6px}
+.countsfor span{width:100%;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
+.countsfor button,.countsfor b{border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2);color:var(--cream);border-radius:999px;padding:5px 11px;font:500 12.5px 'Libre Franklin',sans-serif;cursor:pointer}
+.countsfor b{cursor:default;opacity:.8}
 </style>
 </head>
 <body>
@@ -1186,19 +1191,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-114443'</script>
-<script src="data.js?v=20261016-114443"></script>
-<script src="art.js?v=20261016-114443"></script>
-<script src="gids.js?v=20261016-114443"></script>
-<script src="maps.js?v=20261016-114443"></script>
-<script src="zegels.js?v=20261016-114443"></script>
-<script src="landen.js?v=20261016-114443"></script>
-<script src="etiket.js?v=20261016-114443"></script>
-<script src="legendes.js?v=20261016-114443"></script>
-<script src="fullart.js?v=20261016-114443"></script>
-<script src="stickers.js?v=20261016-114443"></script>
-<script src="vrienden.js?v=20261016-114443"></script>
-<script src="wereldbol.js?v=20261016-114443"></script>
+<script>window.VI_V='20261016-134629'</script>
+<script src="data.js?v=20261016-134629"></script>
+<script src="art.js?v=20261016-134629"></script>
+<script src="gids.js?v=20261016-134629"></script>
+<script src="maps.js?v=20261016-134629"></script>
+<script src="zegels.js?v=20261016-134629"></script>
+<script src="landen.js?v=20261016-134629"></script>
+<script src="etiket.js?v=20261016-134629"></script>
+<script src="legendes.js?v=20261016-134629"></script>
+<script src="fullart.js?v=20261016-134629"></script>
+<script src="stickers.js?v=20261016-134629"></script>
+<script src="vrienden.js?v=20261016-134629"></script>
+<script src="wereldbol.js?v=20261016-134629"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1634,7 +1639,7 @@ function mini(c){
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
 function slotHTML(c,label,d,gid,n){
-  const empty=gid?`<button class="empty d${d||0} gidbtn" data-gid="${esc(gid)}" aria-label="Waar vind ik ${esc(label)}?">${d?DIFF[d]:''}<span class="gq" aria-hidden="true">?</span></button>`:`<div class="empty d${d||0}">${d?DIFF[d]:''}</div>`;
+  const empty=gid?`<button class="empty d${d||0} gidbtn" data-gid="${esc(gid)}" aria-label="Waar vind ik ${esc(label)}?"></button>`:`<div class="empty d${d||0}"></div>`;
   const stk=c&&n>1;
   return `<div class="slot${stk?' stacked':''}"${stk?` data-stack="${esc(gid)}"`:''}><div class="sleeve">${c?mini(c):empty}${stk?`<span class="scount">×${n}</span>`:''}</div><span class="slabel">${esc(label)}</span></div>`;
 }
@@ -2074,7 +2079,7 @@ const HINT={
   ultra:'Ultra: een topwijn, saffierblauw met een prismalijst.',
   icon:'Legende: een van de eenentwintig legendarische wijnen van de wereld.'
 };
-function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id))).map(s=>s.name)}
+function setsOf(c){return SETS.filter(s=>st.visible[s.id]&&(st.stacks[s.id]||[]).some(x=>x.some(y=>y.id===c.id)))}
 function memoBack(c){
   const d=c.memoAt?fmtDate(c.memoAt):'';
   return `<div class="memoback"><div class="mbin">
@@ -2102,8 +2107,8 @@ function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
-    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
-    <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
+    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}${(()=>{let seen='1';try{seen=localStorage.getItem('vi.cardhint');localStorage.setItem('vi.cardhint','1')}catch(e){}return seen?'':'<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>'})()}${sets.length&&!viewing?`<div class="countsfor"><span>Telt mee voor</span>${sets.map(s=>{const k=firstPageOf(q=>q.set===s);return k>=0?`<button data-pg="${k}">${esc(s.name)}</button>`:`<b>${esc(s.name)}</b>`}).join('')}</div>`:sets.length?`<p class="hint">Telt mee voor: ${sets.map(s=>esc(s.name)).join(', ')}</p>`:''}
+    <div class="actions"><button class="btn xclose" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     ${isAdmin()&&!viewing?`<div class="actions adm"><button class="btn small" id="adraw">${I('pen')} Etiket opnieuw tekenen</button><button class="btn small" id="acmp">${I('sparkle')} Sonnet vs Opus</button><button class="btn small" id="alock">${c.style&&c.style.locked?'🔓 Losmaken':'🔒 Vastzetten'}</button></div>`:''}
     <div class="actions"><button class="btn primary xclose" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
@@ -2471,7 +2476,7 @@ function walkout(o,c,done){
 function fxPre(){const fx=document.createElement('div');fx.className='fx fx-pre';fx.innerHTML='<div class="fxrays"></div>';document.body.appendChild(fx);setTimeout(()=>fx.remove(),2600)}
 function reveal(c,news,title){
   const pm=c.primeur?`<div class="primeur" hidden><div class="prk">✦ PRIMEUR ✦</div><h2>Deze wijn heeft nog niemand gescand!</h2><p>Jij ontdekte hem als eerste.${PEND[c.wineId]?' Onze tekenaar zet zijn etiket nu speciaal voor jou op papier.':''}</p>${PEND[c.wineId]?'<p class="prstat"><span class="prdots"><i></i><i></i><i></i></span> Etiket wordt getekend · ±30 sec</p>':''}</div>`:'';
-  const o=overlay(`${pm}<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">In een sleeve steken</button></div>`);
+  const o=overlay(`${pm}<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">Bekijk in je album</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   let busy=false;
   const open=()=>{if(busy||flip.classList.contains('open'))return;busy=true;
@@ -2711,9 +2716,7 @@ function openMenu(){
   const o=overlay(`<nav class="drawer-panel" aria-label="Menu">
       <div class="dhead"><p class="brand">Vined It</p><button class="dclose" type="button" aria-label="Menu sluiten">${I('close')}</button></div>${session?`<p class="mwho">${esc(coverName?coverName():'')}</p>
       <div class="mstats"><div><b>${cards.length}</b><span>kaarten</span></div><div><b>${nL}</b><span>${nL===1?'land':'landen'}</span></div><div><b>${cards.filter(c=>c.rar==='icon').length}</b><span>legendes</span></div></div>`:''}
-      ${session?`<p class="mgroup">Album</p>
-      <div class="mtiles">${tile('book','Kelderboek','data-mgo="1"')}${tile('star','Top 10',`data-mgo="${pg('fav')}"`)}${pg('world')>0?tile('globe','Wereld',`data-mgo="${pg('world')}"`):''}
-      ${tile('grapes','Landen','data-mact="lands"')}${tile('trophy','Uitdagingen','data-mact="lists"',`${lists.filter(isDone).length}/${lists.length}`)}${legK>=0?tile('crown','Legendes',`data-mgo="${legK}"`):''}</div>
+      ${session?`<div class="mwides">${wide('book','Inhoud van je album','data-mact="jump"')}</div>
       <p class="mgroup">Voor jou</p>
       <div class="mwides">${viewing?wide('arrowl','Mijn album','data-mact="mine"'):wide('sticker','Stickers','data-mact="stickers"')}${wide('heart','Wijnvrienden','data-mact="friends"')}</div>`:''}
       ${session&&isAdmin()&&!viewing?`<p class="mgroup">Beheer</p><div class="mwides">${wide('gear','Beheerdersinstellingen','data-mact="admin"')}</div>`:''}
@@ -2726,7 +2729,7 @@ function openMenu(){
   o.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();closeOverlay();go(+b.dataset.mgo)});
   o.querySelectorAll('[data-mact]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const a=b.dataset.mact;
     if(a==='lands'){closeOverlay();openLands()}else if(a==='lists'){closeOverlay();openLists()}else if(a==='info'){closeOverlay();openInfo()}
-    else if(a==='tour'){closeOverlay();openTour()}else if(a==='admin'){closeOverlay();setTimeout(openAdmin,260)}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
+    else if(a==='tour'){closeOverlay();openTour()}else if(a==='admin'){closeOverlay();setTimeout(openAdmin,260)}else if(a==='jump'){closeOverlay();setTimeout(openJump,260)}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
     else if(a==='logout')askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout)});
   const f=o.querySelector('.mtile,.mwide');if(f)f.focus();
 }
@@ -2738,7 +2741,7 @@ function openJump(){
   const here=`<div class="jhere"><span>Je bent hier</span><b>${crumbOf(P)}</b><small>Blad ${cur+1} van ${pages.length}</small></div>`;
   const chapHTML=chap.length>1?`<p class="mgroup">${esc(land)}</p><div class="jchap">${chap.map(({q,k})=>`<button data-pg="${k}" class="${k===cur?'on':''}">${q.t==='chapter'?'Overzicht':q.set?esc(q.set.name):q.t==='overige'?'Overige':esc(plain(crumbOf(q)))}</button>`).join('')}</div>`:'';
   const o=overlay(`<p class="status">Ga naar</p>${here}${chapHTML}<p class="mgroup">Album</p>
-    <div class="jtiles">${tile('book','Kelderboek',1)}${tile('star','Top 10',pg('fav'))}${tile('globe','Wereld',pg('world'))}</div>
+    <div class="jtiles">${tile('book','Kelderboek',1)}${tile('star','Top 10',pg('fav'))}${tile('globe','Wereld',pg('world'))}${tile('crown','Legendes',firstPageOf(x=>x.set&&x.set.id==='icons'))}</div>
     <div class="lands jrows"><button data-jact="lands">${MED('grapes')}<b>Landen</b><span>${st.lands.filter(l=>l!=='Overige landen').length} ontdekt</span></button><button data-jact="lists">${MED('trophy')}<b>Uitdagingen</b><span>${SETS.filter(s=>s.part===2&&st.visible[s.id]).length} zichtbaar</span></button></div>`);
   o.querySelector('[data-jact="lands"]').onclick=()=>openLands(null,true);
   o.querySelector('[data-jact="lists"]').onclick=()=>openLists(true);
