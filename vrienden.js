@@ -31,7 +31,7 @@ async function openFriends(nest){
       <p class="hint small">Je krijgt een persoonlijke link om via WhatsApp te sturen. Wie hem opent, wordt je wijnvriend.</p>
       <div class="flink" id="flink" hidden><code></code><button class="linkbtn" id="fnew">Nieuwe link maken (de oude werkt dan niet meer)</button></div>
     </div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+    <button id="close" hidden></button>`,{nest:!!nest});
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelector('#finv').onclick=()=>shareInvite(o,false);
   o.querySelector('#fnew').onclick=()=>askConfirm('Nieuwe link maken?','Wie de oude link nog niet heeft geopend, kan die dan niet meer gebruiken. Bestaande wijnvrienden blijven gewoon.','Nieuwe link',()=>{popOverlay();shareInvite(o,true)});

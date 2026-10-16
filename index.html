@@ -111,11 +111,8 @@ button{font:inherit;color:inherit}
    linear-gradient(180deg,rgba(255,255,255,.25) 0 1px,rgba(255,255,255,0) 1px)}
 .empty{height:100%;border:1px dashed rgba(233,211,160,.18);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;color:rgba(233,211,160,.32);letter-spacing:.06em;font-variant-numeric:tabular-nums}
 
-/* Perforation */
+/* Kaartbasis */
 .card,.mini{position:relative;background:var(--card)}
-.card::before,.mini::before{content:"";position:absolute;pointer-events:none;z-index:5}
-.card::before{inset:-4px;background:radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 100%/12px 8px repeat-x,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 0 0/8px 12px repeat-y,radial-gradient(circle,var(--hole) 3.2px,transparent 3.8px) 100% 0/8px 12px repeat-y}
-.mini::before{inset:-2.5px;background:radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 100%/7px 5px repeat-x,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 0 0/5px 7px repeat-y,radial-gradient(circle,var(--hole) 1.9px,transparent 2.4px) 100% 0/5px 7px repeat-y}
 .art>svg,.art>img,.art>.lart>.etkbox>svg{display:block;width:100%;height:auto}
 .art img{aspect-ratio:10/7}
 /* Rare+: het echte etiket op de streekposter */
@@ -460,10 +457,6 @@ button{font:inherit;color:inherit}
 .linkbtn{background:none;border:0;color:var(--gold-soft);opacity:.7;font-size:12px;text-decoration:underline;cursor:pointer}
 .loading{font-size:12.5px;color:var(--gold-soft);opacity:.8;text-align:center;margin:0}
 
-/* Stempel Eerste Ontdekker */
-.stamp{position:absolute;right:12px;top:40px;z-index:3;width:60px;height:60px;border:1.5px solid rgba(150,34,46,.8);outline:1px solid rgba(150,34,46,.5);outline-offset:2px;border-radius:50%;color:rgba(150,34,46,.9);
-  font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(-14deg);background:rgba(255,250,240,.25);pointer-events:none}
-.t-icon .stamp{color:#F3D9A0;border-color:rgba(243,217,160,.8);outline-color:rgba(243,217,160,.5);background:rgba(0,0,0,.2)}
 .icstamp{position:absolute;left:12px;top:40px;z-index:3;width:54px;height:54px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font:600 8px/1.2 var(--display,Georgia);letter-spacing:.12em;text-transform:uppercase;color:#4A3210;transform:rotate(10deg);pointer-events:none;
   background:radial-gradient(circle at 35% 30%,#F6E2A8,#C9A253 60%,#94702A);box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 0 0 2.5px rgba(90,58,18,.4),inset 0 0 0 4px rgba(255,240,200,.5)}
 .icstamp b{font-size:15px;line-height:1;letter-spacing:0}
@@ -1171,7 +1164,6 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .countsfor button,.countsfor b{border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2);color:var(--cream);border-radius:999px;padding:5px 11px;font:500 12.5px 'Libre Franklin',sans-serif;cursor:pointer}
 .countsfor b{cursor:default;opacity:.8}
 /* Kaarten: strak met afgeronde hoeken en "goud op snee" in de klassekleur (geen postzegelrand meer) */
-.card::before,.mini::before{display:none!important}
 .card:not(.leg){border-radius:14px}.card:not(.leg) .face{border-radius:8px}
 .mini:not(.leg){border-radius:6px}.mini:not(.leg) .face{border-radius:3px}
 .card,.mini{--snee:linear-gradient(135deg,#E2D6B8,#B9A880 50%,#D8CBA8)}
@@ -1185,6 +1177,8 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .memoback{border-radius:14px;overflow:hidden}.mbin{border-radius:8px}
 .kstamp{-webkit-mask:none!important;mask:none!important;border:0!important;border-radius:7px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .kstamp::before{border-radius:4px}
+.scani{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:1px solid rgba(60,30,8,.55);color:rgba(60,30,8,.75);font:italic 700 11px/16px Georgia,serif;text-align:center}
+.scan{position:relative}
 </style>
 </head>
 <body>
@@ -1198,7 +1192,7 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
   <div class="album"><main class="stack" id="stack" aria-live="polite"></main></div>
   <div class="dock">
     <button class="nav" id="prev" aria-label="Vorige blad">&#8249;</button>
-    <button class="scan" id="scan"><span class="scan-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg></span><span class="scan-t"><b id="scanlab">Scan een wijn</b><small id="scansub"></small></span></button>
+    <button class="scan" id="scan"><span class="scan-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg></span><span class="scan-t"><b id="scanlab">Scan een wijn</b><small id="scansub"></small></span><span class="scani" data-info="scans" role="button" aria-label="Uitleg scans vandaag">i</span></button>
     <button class="nav" id="next" aria-label="Volgende blad">&#8250;</button>
   </div>
   <input type="file" id="cam" accept="image/*" capture="environment" hidden>
@@ -1206,19 +1200,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-141435'</script>
-<script src="data.js?v=20261016-141435"></script>
-<script src="art.js?v=20261016-141435"></script>
-<script src="gids.js?v=20261016-141435"></script>
-<script src="maps.js?v=20261016-141435"></script>
-<script src="zegels.js?v=20261016-141435"></script>
-<script src="landen.js?v=20261016-141435"></script>
-<script src="etiket.js?v=20261016-141435"></script>
-<script src="legendes.js?v=20261016-141435"></script>
-<script src="fullart.js?v=20261016-141435"></script>
-<script src="stickers.js?v=20261016-141435"></script>
-<script src="vrienden.js?v=20261016-141435"></script>
-<script src="wereldbol.js?v=20261016-141435"></script>
+<script>window.VI_V='20261016-143241'</script>
+<script src="data.js?v=20261016-143241"></script>
+<script src="art.js?v=20261016-143241"></script>
+<script src="gids.js?v=20261016-143241"></script>
+<script src="maps.js?v=20261016-143241"></script>
+<script src="zegels.js?v=20261016-143241"></script>
+<script src="landen.js?v=20261016-143241"></script>
+<script src="etiket.js?v=20261016-143241"></script>
+<script src="legendes.js?v=20261016-143241"></script>
+<script src="fullart.js?v=20261016-143241"></script>
+<script src="stickers.js?v=20261016-143241"></script>
+<script src="vrienden.js?v=20261016-143241"></script>
+<script src="wereldbol.js?v=20261016-143241"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1318,7 +1312,7 @@ function openFeedback(){
       <div class="fbkinds" role="radiogroup" aria-label="Soort feedback">${Object.entries(KINDS).map(([k,l],i)=>`<label><input type="radio" name="kind" value="${k}"${i===0?' checked':''}><span>${l}</span></label>`).join('')}</div>
       <label for="fbm">Je bericht<textarea id="fbm" maxlength="2000" placeholder="Bijvoorbeeld: bij deze wijn kwam de kaart in de verkeerde set…"></textarea></label>
       <p class="fbcount" id="fbc">0 / 2000</p>
-      <div class="actions"><button type="button" class="btn" id="close">Annuleren</button><button type="submit" class="btn primary" id="fbs">Versturen</button></div>
+      <div class="actions"><button type="submit" class="btn primary" id="fbs">Versturen</button></div><button type="button" id="close" hidden></button>
     </form>`);
   const ta=o.querySelector('#fbm'),cnt=o.querySelector('#fbc'),btn=o.querySelector('#fbs');
   ta.oninput=()=>cnt.textContent=`${ta.value.length} / 2000`;
@@ -1662,7 +1656,7 @@ const CREST=`<svg class="crest" viewBox="0 0 60 64" aria-hidden="true"><g fill="
 
 /* ---------- omslag met inloggen ---------- */
 function coverHTML(){
-  const frame=(sub)=>`<div class="frame"${session?'':' style="padding:22px 18px"'}><p class="eyebrow">Wijnzegelalbum</p>${CREST}<h2 class="foil">Vined It</h2><p class="eyebrow">${sub}</p></div>`;
+  const frame=(sub)=>`<div class="frame"${session?'':' style="padding:22px 18px"'}><p class="eyebrow">Wijnkaartenalbum</p>${CREST}<h2 class="foil">Vined It</h2><p class="eyebrow">${sub}</p></div>`;
   if(loading) return frame('Album wordt geladen')+'<p class="loading">Even geduld…</p>';
   if(session) return frame('Collectie van '+esc(coverName()))+'<button class="open" data-go="1">Album openen</button>';
   if(authStep==='email') return frame('Log in om je album te openen')+`<form class="login" id="login" novalidate>
@@ -1824,7 +1818,7 @@ function makePage(i){
 function makePage0(i){
   const p=pages[i],el=document.createElement('section');el.className='page';
   if(p.t==='cover'){el.classList.add('cover');el.innerHTML=coverHTML();wireLogin(el);return el}
-  if(p.t==='back'){el.classList.add('cover','backcover');el.innerHTML=`<div class="bcin"><p class="eyebrow">Wijnzegelalbum</p><p class="bcbrand foil">Vined It</p><p class="eyebrow">${cards.length} ${cards.length===1?'wijn':'wijnen'} · ${st.lands.length} ${st.lands.length===1?'land':'landen'}</p></div>${!viewing&&!(STK.back||[]).length?`<p class="bchint">De achterkant is van jou. Plak hier je stickers.</p>`:''}`;return el}
+  if(p.t==='back'){el.classList.add('cover','backcover');el.innerHTML=`<div class="bcin"><p class="eyebrow">Wijnkaartenalbum</p><p class="bcbrand foil">Vined It</p><p class="eyebrow">${cards.length} ${cards.length===1?'wijn':'wijnen'} · ${st.lands.length} ${st.lands.length===1?'land':'landen'}</p></div>${!viewing&&!(STK.back||[]).length?`<p class="bchint">De achterkant is van jou. Plak hier je stickers.</p>`:''}`;return el}
   if(p.t==='inhoud'){
     const lists=SETS.filter(s=>s.part===2&&st.visible[s.id]);
     const hiddenLists=SETS.filter(s=>s.part===2&&!st.visible[s.id]).length;
@@ -2234,7 +2228,7 @@ function pickWine(){
   const src=icons.length&&(Math.random()<.05||!normal.length)?icons:normal;
   return src[Math.floor(Math.random()*src.length)];
 }
-$('#scan').onclick=()=>{
+$('#scan').onclick=e=>{if(e&&e.target&&e.target.closest('.scani')){e.stopPropagation();openInfoTip('scans');return}
   if(!session){toast('Log eerst in om te scannen.');return}
   if(document.querySelector('.overlay:not(.leaving)'))return;
   if(scansToday()>=LIMIT){toast(limitMsg());return}
@@ -2295,7 +2289,7 @@ function openCamera(){
     <p class="hint" id="schint">Houd de fles recht, met naam en producent scherp in het kader.</p>
     <div class="sc-bar"><div class="sc-l"><button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button></div>
       <button class="shutter" id="shut" type="button" aria-label="Foto maken" disabled><span></span></button>
-      <button class="sc-side" id="scx" type="button">${ICO.close}Sluiten</button></div>`);
+      <span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span><button id="scx" type="button" hidden></button></div>`);
   o.classList.add('leather','scanner');
   o.querySelector('#scx').onclick=()=>closeOverlay();
   o.querySelector('#scgal').onclick=()=>{const g=$('#gal');g.value='';g.click()};
@@ -2491,7 +2485,7 @@ function walkout(o,c,done){
 function fxPre(){const fx=document.createElement('div');fx.className='fx fx-pre';fx.innerHTML='<div class="fxrays"></div>';document.body.appendChild(fx);setTimeout(()=>fx.remove(),2600)}
 function reveal(c,news,title){
   const pm=c.primeur?`<div class="primeur" hidden><div class="prk">✦ PRIMEUR ✦</div><h2>Deze wijn heeft nog niemand gescand!</h2><p>Jij ontdekte hem als eerste.${PEND[c.wineId]?' Onze tekenaar zet zijn etiket nu speciaal voor jou op papier.':''}</p>${PEND[c.wineId]?'<p class="prstat"><span class="prdots"><i></i><i></i><i></i></span> Etiket wordt getekend · ±30 sec</p>':''}</div>`:'';
-  const o=overlay(`${pm}<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnzegel</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">Bekijk in je album</button></div>`);
+  const o=overlay(`${pm}<p class="status">${title?esc(title):'Nieuwe kaart'}</p><div class="flipper g-${c.rar}" id="flip" tabindex="0" role="button" aria-label="Kaart openen" style="--g:${GLOW[c.rar]}"><div class="back"><span>Wijnkaart</span><b>Vined It</b><div class="seal">${esc((c.land||'').slice(0,3).toUpperCase())}</div></div>${bigCard(c)}</div><div class="wo" id="wo" hidden></div><p class="hint" id="h">Tik op de kaart om hem te openen.</p><div class="actions" id="acts" hidden><button class="btn" id="wmemo">${I('pen')} Herinnering schrijven</button><button class="btn primary" id="place">Bekijk in je album</button></div>`);
   const flip=o.querySelector('#flip'),card=flip.querySelector('.card');
   let busy=false;
   const open=()=>{if(busy||flip.classList.contains('open'))return;busy=true;
@@ -2794,7 +2788,10 @@ function openInfo(open,nest){
     ${sec('klassen','sparkle','Kaarten en klassen',`<p><b>De wijn zelf bepaalt de klasse.</b> Bij het lezen van het etiket schat de app in: de prijsklasse, de classificatie (bijvoorbeeld Cru of Grand Cru), hoe bekend de maker is, hoe groot de oplage is en hoe zeldzaam de wijn in Nederland is. Een topjaar, een oude fles of een magnum kan hem net een stap hoger tillen.</p>${tiers}<p>Iedereen krijgt voor dezelfde wijn dezelfde klasse. Op de kaart zie je <b>waarom</b>.</p><p><b>Full Art</b> is puur geluk: elke kaart heeft ±5% kans om als Full Art te verschijnen, met de afbeelding over de hele kaart en een holo-glans.</p>`)}
     ${sec('album','book','Je album',`<p>Het <b>Kelderboek</b> is je inhoudsopgave. Daarna volgen je <b>Top 10</b>, je <b>wijnwereld</b> en de hoofdstukken per land.</p><p>Je album <b>groeit mee</b>: een land of streek krijgt pas een bladzijde bij je eerste wijn daarvan. Elke kaart gaat vanzelf naar het juiste vak, en telt ook mee voor de <b>uitdagingen</b> achterin.</p><p>Tik op een <b>leeg vak</b> voor tips: wat het is, wat het kost en waar je hem vindt. <b>Veeg</b> of gebruik de pijltjes om te bladeren; tik bovenaan op de naam van de bladzijde om snel te springen.</p>`)}
     ${sec('herproeven','stack','Stapels en nieuwe flessen',`<p>Scan je een <b>andere</b> wijn voor een vak dat al gevuld is, dan komt hij op de <b>stapel</b> (×2, ×3…). De zeldzaamste ligt bovenop; tik op de stapel om zelf te kiezen.</p><p>Scan je <b>dezelfde</b> wijn nog eens (een nieuwe fles), dan telt hij als <b>nieuwe fles</b>: je kaart krijgt ×2, ×3… gedronken, en je maakt opnieuw kans op een <b>Full Art</b>. Dat kost een scan en kan één keer per dag per wijn.</p>`)}
-    ${sec('top','star','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Veeg over de kaart om hem om te draaien.</p>`)}
+    ${sec('top','star','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Tik of veeg over de kaart om hem om te draaien.</p>`)}
+    ${sec('bladeren','swipe','Bladeren en terug',`<p>Veeg om te bladeren. Tik bovenin op de <b>naam van het blad</b> voor <b>Ga naar</b>: daar zie je waar je bent, alle bladen van dat land en de vaste plekken zoals je Kelderboek, Top 10, Wereld en Legendes.</p><p>Spring je ergens heen, dan staat bovenin een knopje terug naar waar je was. In elk scherm brengt <b>‹ Terug</b> linksboven je één stap terug.</p>`)}
+    ${sec('legendes','crown','Iconen en Legendes',`<p>Een <b>Icoon</b> (✦) is een beroemde wijn van een land, zoals Dom Pérignon voor Frankrijk. Een <b>Legende</b> (♛) is een van de 21 grootste wijnen ter wereld, en krijgt een eigen kaart in leer.</p>`)}
+    ${sec('samen','heart','Stickers en wijnvrienden',`<p>Met het stickericoon rechtsboven plak je <b>stickers</b> op elke bladzijde, je omslag en je achterkant. Nieuwe stickers verdien je met ontdekken: nieuwe landen, voltooide sets en Full Arts.</p><p>Via het menu nodig je <b>wijnvrienden</b> uit. Zij kunnen je album bekijken; je herinneringen blijven privé.</p>`)}
     ${sec('kaarten','map','Kaarten',`<p>Rechtsboven op een bladzijde staat een kaartje van het land met speldjes. Tik erop voor een grote kaart met namen. Op <b>Mijn wijnwereld</b> zie je in één oogopslag welke landen je al ontdekte.</p>`)}
     </div>
     <div class="actions"><button class="btn" data-act="tour">${I('play')} Rondleiding</button><button class="btn primary xclose" id="close">Terug naar album</button></div>
