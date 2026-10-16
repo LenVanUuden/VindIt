@@ -26,6 +26,7 @@ const SYSTEM = `You read photos of wine bottle labels for a Dutch wine-collectin
 Rules:
 - is_wine_label: false if the photo does not clearly show a wine label (beer, spirits, a menu, no label, unreadable). Then fill the other fields as best you can or with empty strings.
 - confidence: 0..1, how sure you are the producer and wine name are read correctly.
+- real_bottle: true only if the photo shows a real, physical bottle or label held in front of the camera (glass, curvature, light reflections, a real-world background). false if it is a photo of a SCREEN (pixels, moiré stripes, screen glare, phone or monitor bezels, app or website interface, browser bars), a SCREENSHOT or webshop image (perfectly flat, studio-white background, watermarks such as wine-searcher), a printout, magazine, menu or catalogue page. When unsure, true.
 - naam: the wine/cuvée name WITHOUT vintage and without the producer. If the label has no separate cuvée name, use the appellation or grape as printed (e.g. "Chablis", "Sauvignon Blanc"). Keep original spelling and accents.
   If the main wine simply carries the estate name (typical for a Bordeaux château or a domaine's grand vin), naam = the full estate name exactly as printed, including "Château"/"Domaine" (e.g. naam "Château Rozier", maker "Château Rozier"), never a shortened "Rozier".
 - maker: the producer/estate exactly as printed (e.g. "Domaine Laroche", "Château Lynch-Bages", "Bodegas Muga"). For négociant/supermarket brands use the brand.
@@ -77,6 +78,7 @@ const TOOL = {
     type: "object",
     properties: {
       is_wine_label: { type: "boolean" },
+      real_bottle: { type: "boolean" },
       confidence: { type: "number" },
       naam: { type: "string" },
       maker: { type: "string" },
@@ -123,7 +125,7 @@ const TOOL = {
         required: ["x", "y", "w", "h"],
       },
     },
-    required: ["is_wine_label", "confidence", "naam", "maker", "app", "regio", "land", "style", "color", "price_eur_low", "price_eur_high", "classification", "producer_fame", "production", "rarity_nl", "vintage_quality"],
+    required: ["is_wine_label", "real_bottle", "confidence", "naam", "maker", "app", "regio", "land", "style", "color", "price_eur_low", "price_eur_high", "classification", "producer_fame", "production", "rarity_nl", "vintage_quality"],
   },
 };
 
@@ -283,6 +285,11 @@ Deno.serve(async (req) => {
     }
     const out = await r.json();
     const w = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
+    // Geen kaart voor een foto van een scherm, screenshot of drukwerk (beheerder mag testen)
+    const isAdmin = (user.email ?? "").toLowerCase() === "l.v.uuden3@gmail.com";
+    if (w && w.is_wine_label && w.real_bottle === false && !isAdmin) {
+      return json({ status: "not_real", wine: { naam: w.naam ?? "" } });
+    }
     if (!w || !w.is_wine_label || (w.confidence ?? 0) < 0.5 || !w.naam) {
       return json({ status: "not_recognized", wine: w ?? null });
     }

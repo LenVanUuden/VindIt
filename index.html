@@ -1200,19 +1200,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-143241'</script>
-<script src="data.js?v=20261016-143241"></script>
-<script src="art.js?v=20261016-143241"></script>
-<script src="gids.js?v=20261016-143241"></script>
-<script src="maps.js?v=20261016-143241"></script>
-<script src="zegels.js?v=20261016-143241"></script>
-<script src="landen.js?v=20261016-143241"></script>
-<script src="etiket.js?v=20261016-143241"></script>
-<script src="legendes.js?v=20261016-143241"></script>
-<script src="fullart.js?v=20261016-143241"></script>
-<script src="stickers.js?v=20261016-143241"></script>
-<script src="vrienden.js?v=20261016-143241"></script>
-<script src="wereldbol.js?v=20261016-143241"></script>
+<script>window.VI_V='20261016-143829'</script>
+<script src="data.js?v=20261016-143829"></script>
+<script src="art.js?v=20261016-143829"></script>
+<script src="gids.js?v=20261016-143829"></script>
+<script src="maps.js?v=20261016-143829"></script>
+<script src="zegels.js?v=20261016-143829"></script>
+<script src="landen.js?v=20261016-143829"></script>
+<script src="etiket.js?v=20261016-143829"></script>
+<script src="legendes.js?v=20261016-143829"></script>
+<script src="fullart.js?v=20261016-143829"></script>
+<script src="stickers.js?v=20261016-143829"></script>
+<script src="vrienden.js?v=20261016-143829"></script>
+<script src="wereldbol.js?v=20261016-143829"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2287,12 +2287,12 @@ function openCamera(){
       <div class="sc-left" aria-label="${Math.max(0,LIMIT-used)} scans over vandaag">${LIMIT<=10?Array.from({length:LIMIT},(_,i)=>`<i class="${i<used?'used':''}"></i>`).join(''):`<span class="note">${Math.max(0,LIMIT-used)} scans over</span>`}</div></div>
     <div class="viewfinder" id="vf"><video id="vid" playsinline muted autoplay></video><div class="corners"></div><span class="vtag">Etiket in het kader</span><div class="flash"></div></div>
     <p class="hint" id="schint">Houd de fles recht, met naam en producent scherp in het kader.</p>
-    <div class="sc-bar"><div class="sc-l"><button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button></div>
+    <div class="sc-bar"><div class="sc-l">${isAdmin()?`<button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button>`:`<span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span>`}</div>
       <button class="shutter" id="shut" type="button" aria-label="Foto maken" disabled><span></span></button>
       <span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span><button id="scx" type="button" hidden></button></div>`);
   o.classList.add('leather','scanner');
   o.querySelector('#scx').onclick=()=>closeOverlay();
-  o.querySelector('#scgal').onclick=()=>{const g=$('#gal');g.value='';g.click()};
+  const sg=o.querySelector('#scgal');if(sg)sg.onclick=()=>{const g=$('#gal');g.value='';g.click()};
   const vid=o.querySelector('#vid'),shut=o.querySelector('#shut'),vf=o.querySelector('#vf');
   const fail=(msg)=>{stopCam();vid.remove();o.querySelector('.vtag').remove();
     vf.insertAdjacentHTML('beforeend',`<div class="vmsg"><div class="seal">VI</div><p style="margin:0">${msg}</p><button class="btn primary" id="native" type="button">Gewone camera openen</button></div>`);
@@ -2338,7 +2338,7 @@ async function fileToCanvas(f){
   return cv;
 }
 $('#cam').onchange=async()=>{const cv=await fileToCanvas($('#cam').files&&$('#cam').files[0]);if(cv)recognize(cv)};
-$('#gal').onchange=async()=>{const cv=await fileToCanvas($('#gal').files&&$('#gal').files[0]);if(cv)recognize(cv)};
+$('#gal').onchange=async()=>{if(!isAdmin())return;const cv=await fileToCanvas($('#gal').files&&$('#gal').files[0]);if(cv)recognize(cv)};
 async function recognize(cv){
   const dataUrl=cv.toDataURL('image/jpeg',.82),b64=dataUrl.split(',')[1];
   const before=snapshot();
@@ -2353,9 +2353,14 @@ async function recognize(cv){
   if(!o.isConnected)return;
   if(status==='ok')return handleScanResult(data.result,before,cv,data.label_box,data.recognized&&data.recognized.jaar);
   if(status==='not_recognized')return showNotRecognized(dataUrl,data&&data.wine);
+  if(status==='not_real')return showNotRecognized(dataUrl,null,true);
   closeOverlay();toast(SCAN_MSG[status]||'Herkennen lukte niet. Controleer je verbinding en probeer het opnieuw.');
 }
-function showNotRecognized(dataUrl,w){
+function showNotRecognized(dataUrl,w,notReal){
+  if(notReal){const o=overlay(`<p class="status">Alleen echte flessen</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
+    <p class="hint">Dit lijkt een foto van een scherm, een website of drukwerk. Een kaart verdien je alleen met een fles die je echt voor je hebt.</p>
+    <p class="hint">Deze poging telt niet mee voor je scans. Staat er wel een echte fles voor je? Probeer het dan opnieuw met wat meer licht.</p>
+    <div class="actions"><button class="btn primary" id="again">Opnieuw</button></div>`);o.classList.add('leather');const a=o.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};return}
   const o=overlay(`<p class="status">Geen etiket herkend</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
     <p class="hint">${w&&w.naam?`We lazen iets als "${esc(w.naam)}", maar we weten het niet zeker. `:''}Fotografeer het etiket recht van voren, scherp en goed belicht, met de naam en de producent leesbaar.</p>
     <p class="hint">Deze poging telt niet mee voor je scans.</p>
