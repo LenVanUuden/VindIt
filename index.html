@@ -1177,6 +1177,8 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .t-superrare{--snee:linear-gradient(135deg,#FBE7B0,#B8902F 40%,#F3D58A 60%,#8F6B22)}
 .t-ultra{--snee:linear-gradient(135deg,#DDEBFF,#3E5FA8 40%,#BFD6FF 60%,#22386E)}
 .card:not(.leg)::after,.mini:not(.leg)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:var(--snee);transform:translate(2px,3px);filter:brightness(.82)}
+/* De snee mag bij het omdraaien (3D) niet door de achterkant heen schijnen */
+.card:not(.leg)::after{backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .mini:not(.leg)::after{transform:translate(1.2px,1.8px)}
 .card:not(.leg){box-shadow:0 0 0 1px rgba(0,0,0,.25),0 22px 40px rgba(0,0,0,.5)!important}
 .mini:not(.leg){box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
@@ -1230,19 +1232,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-153641'</script>
-<script src="data.js?v=20261016-153641"></script>
-<script src="art.js?v=20261016-153641"></script>
-<script src="gids.js?v=20261016-153641"></script>
-<script src="maps.js?v=20261016-153641"></script>
-<script src="zegels.js?v=20261016-153641"></script>
-<script src="landen.js?v=20261016-153641"></script>
-<script src="etiket.js?v=20261016-153641"></script>
-<script src="legendes.js?v=20261016-153641"></script>
-<script src="fullart.js?v=20261016-153641"></script>
-<script src="stickers.js?v=20261016-153641"></script>
-<script src="vrienden.js?v=20261016-153641"></script>
-<script src="wereldbol.js?v=20261016-153641"></script>
+<script>window.VI_V='20261016-163446'</script>
+<script src="data.js?v=20261016-163446"></script>
+<script src="art.js?v=20261016-163446"></script>
+<script src="gids.js?v=20261016-163446"></script>
+<script src="maps.js?v=20261016-163446"></script>
+<script src="zegels.js?v=20261016-163446"></script>
+<script src="landen.js?v=20261016-163446"></script>
+<script src="etiket.js?v=20261016-163446"></script>
+<script src="legendes.js?v=20261016-163446"></script>
+<script src="fullart.js?v=20261016-163446"></script>
+<script src="stickers.js?v=20261016-163446"></script>
+<script src="vrienden.js?v=20261016-163446"></script>
+<script src="wereldbol.js?v=20261016-163446"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
