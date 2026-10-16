@@ -1150,6 +1150,17 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .admlist .admbtn{width:100%;box-sizing:border-box}
 .admbtn{display:flex;align-items:center;gap:10px;text-align:left;width:100%;justify-content:flex-start}
 .admbtn span{display:flex;flex-direction:column}.admbtn small{font-size:11px;opacity:.7;font-weight:400}
+.xclose{display:none!important}
+.actions:has(> .xclose:only-child){display:none}
+.backpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 96px);z-index:40;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 40px);padding:9px 16px 9px 12px;border-radius:999px;border:1px solid rgba(233,211,160,.55);background:rgba(28,12,10,.92);color:var(--cream);font:500 13.5px 'Libre Franklin',sans-serif;box-shadow:0 8px 22px rgba(0,0,0,.5);cursor:pointer;animation:bpin .35s cubic-bezier(.2,.7,.2,1)}
+.backpill[hidden]{display:none}.backpill .ico{width:17px;height:17px;flex:none}.backpill span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.backpill b{color:#F2D88A;font-weight:600}
+@keyframes bpin{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+body:has(.overlay:not([hidden])) .backpill{display:none}
+.jhere{display:flex;flex-direction:column;align-items:center;gap:2px;margin:2px auto 14px;padding:10px 16px;border:1px dashed rgba(233,211,160,.45);border-radius:12px;max-width:320px}
+.jhere span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.7}.jhere b{font:400 17px Limelight,serif;color:#F2D88A;text-align:center}.jhere small{font-size:12px;opacity:.75}
+.jchap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 14px}
+.jchap button{border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2);color:var(--cream);border-radius:999px;padding:7px 13px;font:500 13px 'Libre Franklin',sans-serif;cursor:pointer}
+.jchap button.on{background:linear-gradient(180deg,#F5DC9C,#C9A253);color:#2A1206;border-color:transparent;font-weight:600}
 </style>
 </head>
 <body>
@@ -1171,19 +1182,19 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-102803'</script>
-<script src="data.js?v=20261016-102803"></script>
-<script src="art.js?v=20261016-102803"></script>
-<script src="gids.js?v=20261016-102803"></script>
-<script src="maps.js?v=20261016-102803"></script>
-<script src="zegels.js?v=20261016-102803"></script>
-<script src="landen.js?v=20261016-102803"></script>
-<script src="etiket.js?v=20261016-102803"></script>
-<script src="legendes.js?v=20261016-102803"></script>
-<script src="fullart.js?v=20261016-102803"></script>
-<script src="stickers.js?v=20261016-102803"></script>
-<script src="vrienden.js?v=20261016-102803"></script>
-<script src="wereldbol.js?v=20261016-102803"></script>
+<script>window.VI_V='20261016-111421'</script>
+<script src="data.js?v=20261016-111421"></script>
+<script src="art.js?v=20261016-111421"></script>
+<script src="gids.js?v=20261016-111421"></script>
+<script src="maps.js?v=20261016-111421"></script>
+<script src="zegels.js?v=20261016-111421"></script>
+<script src="landen.js?v=20261016-111421"></script>
+<script src="etiket.js?v=20261016-111421"></script>
+<script src="legendes.js?v=20261016-111421"></script>
+<script src="fullart.js?v=20261016-111421"></script>
+<script src="stickers.js?v=20261016-111421"></script>
+<script src="vrienden.js?v=20261016-111421"></script>
+<script src="wereldbol.js?v=20261016-111421"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1269,7 +1280,7 @@ function openGids(gid){
       ${tip?`<h4>Zo herken je hem</h4><p class="gt">${esc(tip)}</p>`:''}
       <p class="gnote">Prijzen zijn een indicatie voor een gangbare fles.</p>
     </div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button>${canScan?'<button class="btn primary" id="gscan">Gevonden? Scan hem</button>':''}</div>`,{nest:true});
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button>${canScan?'<button class="btn primary" id="gscan">Gevonden? Scan hem</button>':''}</div>`,{nest:true});
   o.classList.add('leather');
   const c=o.querySelector('#close');c.onclick=()=>closeOverlay();c.focus();
   const gs=o.querySelector('#gscan');if(gs)gs.onclick=()=>{closeOverlay();$('#scan').click()};
@@ -1761,7 +1772,7 @@ function openMap(spec){
     pins=list.map(c=>({label:c.naam,sub:c.land,on:true,card:c.id}))}
   const legend=pins.map((p,n)=>`<button class="${p.on?'':'dim'}" data-leg="${n}"><b>${kind==='list'?'●':n+1} ${esc(p.label)}</b><span>${esc(p.sub||'')}</span></button>`).join('');
   const o=overlay(`<p class="eyebrow">Kaart</p><p class="status">${esc(title)}</p><div class="bigmap${kind==='list'?' world':''}">${svg}</div>
-    ${pins.length?`<div class="lands legend">${legend}</div>`:''}<div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    ${pins.length?`<div class="lands legend">${legend}</div>`:''}<div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.classList.add('leather');
   const act=n=>{const p=pins[n];if(!p)return;
     if(p.card){openCard(p.card,false,true);return}
@@ -1932,6 +1943,10 @@ function renderChrome(){
   $('#scansub').textContent=!session?'':spent?'over '+timeLeft():LIMIT>5?`nog ${LIMIT-used} · tester`:`nog ${LIMIT-used} vandaag`;
   $('#dots').innerHTML=LIMIT<=5?Array.from({length:LIMIT},(_,k)=>`<i class="${k<used?'used':''}${popDot&&k===used-1?' pop':''}"></i>`).join(''):`<span class="qnum">${used} / ${LIMIT} · tester</span>`;
   $('#prev').disabled=cur===0;$('#next').disabled=cur>=pages.length-1;
+  {let bp=$('#backpill');const k=navHist[navHist.length-1];
+   if(session&&st&&!viewing&&k!=null&&k!==cur&&pages[k]){if(!bp){bp=document.createElement('button');bp.id='backpill';bp.className='backpill';bp.type='button';bp.onclick=()=>goBack();document.body.appendChild(bp)}
+     bp.innerHTML=`${I('arrowl')}<span>Terug naar <b>${esc(plain(crumbOf(pages[k])))}</b></span>`;bp.hidden=false}
+   else if(bp)bp.hidden=true}
   if(!session||!st){$('#tabs').innerHTML='';return}
   $('#tabs').innerHTML=`<button class="crumb" data-act="jump" aria-haspopup="dialog"><span class="crt">${crumbOf(pages[cur]||{})}</span><span class="caret" aria-hidden="true">▾</span></button><span class="pageno">${!viewing&&pages[cur]?`<button class="stkbtn" data-act="stickers" aria-label="Stickers plakken op deze bladzijde">${I('sticker')}</button>`:''}Blad ${cur+1} / ${pages.length}</span>`;
 }
@@ -1943,9 +1958,23 @@ function countUp(pg){
   requestAnimationFrame(step);
 }
 let lastUsed=null;
-function go(n,force){
+/* Bladgeschiedenis: na een sprong (menu, Kelderboek, "telt mee voor") kun je terug naar waar je was */
+let navHist=[];
+function goBack(fromPop){
+  while(navHist.length&&(navHist[navHist.length-1]>=pages.length||navHist[navHist.length-1]===cur))navHist.pop();
+  if(!navHist.length){renderChrome();return false}
+  const n=navHist.pop();go(n,true,true);
+  if(!fromPop){ignorePop=true;try{history.back()}catch(e){ignorePop=false}}
+  return true;
+}
+const plain=h=>{const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('svg').forEach(x=>x.remove());return d.textContent.replace(/\s+/g,' ').trim()};
+function go(n,force,noHist){
   if(n<0||n>=pages.length||busy||stkEdit)return;
   if(n===cur&&!force)return;
+  if(!noHist&&n!==cur&&Math.abs(n-cur)>1&&stack.querySelector('.leaf')){
+    if(navHist[navHist.length-1]!==cur)navHist.push(cur);if(navHist.length>15)navHist.shift();
+    setTimeout(()=>{try{history.pushState({vi:'pg'},'')}catch(e){}},180);
+  }
   const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur,moved=n!==cur||!old;
   if(moved&&!reduced){const pg=nu.querySelector('.page');pg.classList.add('enter');if(old)pg.classList.add('late');countUp(pg)}
   cur=n;renderChrome();
@@ -1981,7 +2010,7 @@ document.addEventListener('click',e=>{
   if(session&&e.target.closest('.page.cover')&&!e.target.closest('form')){go(1);return}
   const gb=e.target.closest('.gidbtn');if(gb){openGids(gb.dataset.gid);return}
   const sk=e.target.closest('[data-stack]');if(sk&&e.target.closest('.mini')){openStack(sk.dataset.stack);return}
-  const m=e.target.closest('.mini');if(m)pullOut(m);
+  const m=e.target.closest('.mini');if(m){if(m.closest('.overlay')){if(!m.onclick&&m.dataset.id)openCard(m.dataset.id,false,true);return}pullOut(m)}
 });
 $('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
 // Bladeren: muis via pointer-events, vinger via touch-events (die blijven werken als de bladzijde zelf kan scrollen)
@@ -2009,9 +2038,8 @@ function overlay(html,opt={}){
   const nest=!!opt.nest&&!!document.querySelector('.overlay:not([hidden])');
   if(nest)document.querySelectorAll('.overlay').forEach(x=>x.hidden=true);else removeOverlays();
   const o=document.createElement('div');o.className='overlay'+(nest?' push':'');o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
-  o.innerHTML=`<div class="ovbar">${nest?`<button class="ovback" type="button">${I('arrowl')} Terug</button>`:'<span></span>'}<button class="ovx" type="button" aria-label="Sluiten">${I('close')}</button></div>`+html;
-  o.querySelector('.ovx').onclick=()=>closeOverlay();
-  const bk=o.querySelector('.ovback');if(bk)bk.onclick=()=>popOverlay();
+  o.innerHTML=`<div class="ovbar"><button class="ovback" type="button">${I('arrowl')} Terug</button><span></span></div>`+html;
+  o.querySelector('.ovback').onclick=()=>nest?popOverlay():closeOverlay();
   document.body.appendChild(o);
   if(!histOpen){try{history.pushState({vi:1},'');histOpen=true}catch(e){}}
   return o;
@@ -2022,7 +2050,7 @@ function syncHist(){setTimeout(()=>{if(!document.querySelector('.overlay:not(.le
 function closeOverlay(keepPulled){stopCam();document.querySelectorAll('.overlay:not(.leaving)').forEach(o=>{if(o.hidden)o.remove();else leave(o,'out')});if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'));syncHist()}
 function popOverlay(){const all=[...document.querySelectorAll('.overlay:not(.leaving)')];if(all.length<=1){closeOverlay();return}
   stopCam();leave(all[all.length-1],'popout');const prev=all[all.length-2];prev.hidden=false;prev.classList.remove('push');
-  if(!reduced){prev.classList.add('reshow');setTimeout(()=>prev.classList.remove('reshow'),400)}const f=prev.querySelector('.ovx');if(f)f.focus()}
+  if(!reduced){prev.classList.add('reshow');setTimeout(()=>prev.classList.remove('reshow'),400)}const f=prev.querySelector('.ovback');if(f)f.focus()}
 window.addEventListener('popstate',()=>{
   if(ignorePop){ignorePop=false;return}
   histOpen=false;
@@ -2030,7 +2058,7 @@ window.addEventListener('popstate',()=>{
     const all=document.querySelectorAll('.overlay:not(.leaving)');
     if(all.length>1){popOverlay();try{history.pushState({vi:1},'');histOpen=true}catch(e){}}
     else{removeOverlays();document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'))}
-  }
+  }else if(navHist.length)goBack(true);
 });
 function pullOut(m){if(m.classList.contains('pull'))return;m.classList.add('pull');setTimeout(()=>openCard(m.dataset.id),reduced?0:300)}
 const HINT={
@@ -2071,7 +2099,7 @@ function openCard(id,showBack,nest){
     ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>${sets.length?`<p class="hint">Telt mee voor: ${sets.map(esc).join(', ')}</p>`:''}
     <div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     ${isAdmin()&&!viewing?`<div class="actions adm"><button class="btn small" id="adraw">${I('pen')} Etiket opnieuw tekenen</button><button class="btn small" id="acmp">${I('sparkle')} Sonnet vs Opus</button><button class="btn small" id="alock">${c.style&&c.style.locked?'🔓 Losmaken':'🔒 Vastzetten'}</button></div>`:''}
-    <div class="actions"><button class="btn primary" id="close">Terug in de sleeve</button></div>`,{nest});
+    <div class="actions"><button class="btn primary xclose" id="close">Terug in de sleeve</button></div>`,{nest});
   tilt(o.querySelector('.card'));spinCard(o,c);
   if(c.fa)setTimeout(()=>faRays(o,o.querySelector('.spin')),30);
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
@@ -2087,7 +2115,7 @@ function openStack(gid){
     <div class="fan">${S.map((c,n)=>`<div class="fanitem${n===0?' top':''}"><div class="sleeve">${mini(c)}</div>
       <span class="fanlab">${TIERS[c.rar].sym} ${esc(TIERS[c.rar].label)}</span>
       ${n===0?'<span class="fanon">Ligt bovenop</span>':`<button class="btn small" data-top="${c.id}">Bovenop leggen</button>`}</div>`).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:true});
   o.querySelectorAll('.fan .mini').forEach(m=>m.addEventListener('click',ev=>{ev.stopPropagation();openCard(m.dataset.id,false,true)}));
   o.querySelectorAll('[data-top]').forEach(b=>b.onclick=async()=>{
     o.querySelectorAll('button').forEach(x=>x.disabled=true);
@@ -2127,7 +2155,7 @@ function openFavPicker(id){
     return `<button data-rank="${r}" class="${occ&&occ.id===c.id?'on':''}"><b>#${r}${r===1?' · bovenaan':''}</b><span>${occ?esc(occ.naam):'vrij'}</span></button>`}).join('');
   const o=overlay(`<p class="status">Top 10</p><p class="hint">Kies een plek voor ${esc(c.naam)}. Staat daar al een kaart, dan schuift die (en de rest) een plek op.</p>
     <div class="lands">${rows}</div>
-    <div class="actions"><button class="btn" id="back">‹ Terug</button>${c.fav?'<button class="btn" id="out">Uit top 10</button>':''}</div>`,{nest:true});
+    <div class="actions"><button class="btn xclose" id="back">‹ Terug</button>${c.fav?'<button class="btn" id="out">Uit top 10</button>':''}</div>`,{nest:true});
   const apply=async rank=>{
     o.querySelectorAll('button').forEach(b=>b.disabled=true);
     const {data,error}=await sb.rpc('set_favorite',{p_card:c.id,p_rank:rank});
@@ -2311,7 +2339,7 @@ function showNotRecognized(dataUrl,w){
   const o=overlay(`<p class="status">Geen etiket herkend</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
     <p class="hint">${w&&w.naam?`We lazen iets als "${esc(w.naam)}", maar we weten het niet zeker. `:''}Fotografeer het etiket recht van voren, scherp en goed belicht, met de naam en de producent leesbaar.</p>
     <p class="hint">Deze poging telt niet mee voor je scans.</p>
-    <div class="actions"><button class="btn" id="close">Sluiten</button><button class="btn primary" id="again">Opnieuw</button></div>`);
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button><button class="btn primary" id="again">Opnieuw</button></div>`);
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const a=o.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};
@@ -2482,7 +2510,7 @@ function openLands(land,nest){
         const f=filledOf(set),h=f.filter(Boolean).length;return pickRow(pk[1],esc(set.name)+(isDone(set)?' ✓':''),h+' / '+f.length+' vakken',pk[1]===cur,false)}).join('')+
       (ov?(()=>{const n=(st.overflow[land]||[]).length;return pickRow(ov[1],'Overige',n+' '+(n===1?'kaart':'kaarten'),ov[1]===cur,!n)})():'');
     const o=overlay(`<p class="status">${esc(land)}</p><div class="lands">${rows}</div>
-      <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
+      <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:true});
     o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
     const on=o.querySelector('.lands .on')||o.querySelector('.lands button');if(on)on.focus();
     return;
@@ -2491,7 +2519,7 @@ function openLands(land,nest){
   const o=overlay(`<div class="sealhead">${countryMedal(disc,st.allLands.length)}<div><p class="eyebrow">Je wijnreis</p><p class="status">Landen</p></div></div>
     <div class="sealgrid">${st.allLands.map(l=>{const x=landStats(l);
       return `<button class="wseal${x.cards?'':' ghost'}${l===curLand?' on':''}" data-landgo="${esc(l)}">${waxSeal(l,l==='Overige landen'?'Overige landen':l,x.cards?{count:x.cards}:{ghost:true})}<span class="nm">${esc(l)}</span><span class="st">${x.cards?x.cards+' '+(x.cards===1?'kaart':'kaarten'):'nog te ontdekken'}</span></button>`}).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.classList.add('leather');
   o.querySelectorAll('[data-landgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const l=b.dataset.landgo;
     const k=firstPageOf(q=>q.t==='chapter'&&q.land===l),k2=k>=0?k:firstPageOf(q=>q.land===l);
@@ -2504,7 +2532,7 @@ function openLandPreview(land){
   const o=overlay(`<p class="eyebrow">Nog te ontdekken</p><p class="status">${esc(land)}</p>
     <p class="hint">Scan je eerste wijn uit ${esc(land)} en dit hoofdstuk komt in je album.${sets.length?' Tik op een set om te zien wat erin hoort.':' Elke wijn uit dit land krijgt een plek en telt mee voor de uitdagingen.'}</p>
     ${sets.length?`<div class="lands">${sets.map(set=>`<button data-preview="${set.id}"><b>${esc(set.name)}</b><span>${set.slots.length} vakken</span></button>`).join('')}</div>`:''}
-    <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn" id="close">Sluiten</button></div>`,{nest:true});
+    <div class="actions"><button class="btn" id="back">‹ Alle landen</button><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:true});
   o.querySelector('#back').onclick=()=>openLands();o.querySelector('#close').onclick=()=>closeOverlay();
   const f=o.querySelector('.lands button')||o.querySelector('#close');f.focus();
 }
@@ -2513,7 +2541,7 @@ function openSetPreview(id){
   const o=overlay(`<p class="eyebrow">${set.part===1?esc(set.land)+' · ':''}nog te ontdekken</p><p class="status">${esc(set.name)}</p>
     <p class="hint">Deze bladzijde komt in je album zodra je er je eerste wijn voor scant. Tik op een vak voor tips.</p>
     <div class="lands">${set.slots.map((sl,k)=>`<button data-gid="${set.id}|${k}" class="gidbtn-row"><b>${esc(sl.l)}</b><span>${DIFF[sl.d]||''}</span></button>`).join('')}</div>
-    <div class="actions">${set.part===1?`<button class="btn" id="back">‹ ${esc(set.land)}</button>`:''}<button class="btn" id="close">Sluiten</button></div>`,{nest:true});
+    <div class="actions">${set.part===1?`<button class="btn" id="back">‹ ${esc(set.land)}</button>`:''}<button class="btn xclose" id="close">Sluiten</button></div>`,{nest:true});
   const b=o.querySelector('#back');if(b)b.onclick=()=>openLands(set.land);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelectorAll('[data-gid]').forEach(x=>x.onclick=ev=>{ev.stopPropagation();openGids(x.dataset.gid)});
@@ -2526,7 +2554,7 @@ function openLists(nest){
     <div class="sealgrid">${L.map(set=>{const k=firstPageOf(q=>q.set===set),f=filledOf(set),h=f.filter(Boolean).length,done=isDone(set);
       return `<button class="wseal${h?'':' ghost'}${k===cur?' on':''}" data-pg="${k}">${waxSeal(set.id,set.name.replace(' rond de wereld',''),h?(done?{done:true}:{have:h,tot:f.length}):{ghost:true})}<span class="nm">${esc(set.name.replace(' rond de wereld',''))}</span><span class="st">${done?'voltooid':h+' van '+f.length}</span></button>`}).join('')}</div>
     ${hidden?`<p class="hint">${hidden} ${hidden===1?'uitdaging is':'uitdagingen zijn'} nog geheim. Die verschijnen vanzelf.</p>`:''}
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   const on=o.querySelector('.sealgrid .on')||o.querySelector('#close');if(on)on.focus();
@@ -2597,10 +2625,10 @@ function openFaDemo(){
     .concat([['Oostenrijk','abbey'],['Nederland','windmill'],['Zuid-Afrika','gable'],['Verenigde Staten','barn']].map(([l])=>ex('ultra',{regio:'x-'+l,land:l,app:l})));
   const o=overlay(`<p class="status">Full Art-voorbeelden</p><p class="hint">Alleen om te bekijken: dit zijn tijdelijke kopieën van je kaart "${esc(base.naam)}". Er wordt niets opgeslagen. Sluit dit venster en ze zijn weg.</p>
     <div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${TIERS[c.rar].label}${c.rar==='ultra'?' · '+esc(c.app||c.land):''}</span></div>`).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.classList.add('leather');o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelectorAll('.mini').forEach(m=>m.onclick=()=>{const c=L.find(x=>x.id===m.dataset.id);
-    const p=overlay(`<div class="spin">${bigCard(c)}</div><div class="actions"><button class="btn primary" id="back">Terug</button></div>`,{nest:true});
+    const p=overlay(`<div class="spin">${bigCard(c)}</div><div class="actions"><button class="btn primary xclose" id="back">Terug</button></div>`,{nest:true});
     tilt(p.querySelector('.card'));p.querySelector('#back').onclick=()=>popOverlay();});
 }
 
@@ -2615,7 +2643,7 @@ function openAdmin(){
     <div class="admlist">${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
     <p class="mgroup">Voorbeelden</p>
     <div class="admlist">${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelector('#relabelall').onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
   o.querySelector('#relabel').onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
@@ -2630,7 +2658,7 @@ function openLegDemo(){
   const L=legAll();
   const o=overlay(`<p class="status">Legende-kaarten</p><p class="hint">Alle ${L.length} Legendes zoals ze in je album komen. Kantel je telefoon of sleep over een kaart voor de glans. Mouton krijgt per jaargang een eigen kunstwerk.</p>
     <div class="leggrid">${L.map(x=>`<div class="legcell"><div class="card t-icon leg idle"><div class="face">${x.svg}</div></div></div>`).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelectorAll('.legcell .card').forEach(el=>{const m=e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
     el.style.setProperty('--ry',((x-.5)*16)+'deg');el.style.setProperty('--rx',((.5-y)*16)+'deg');el.style.setProperty('--mx',x);el.style.setProperty('--my',y)};
@@ -2644,7 +2672,7 @@ function openTier(t){
   const o=overlay(`<div class="sealhead"><div class="kstamp big k-${t}"><span class="ks">${T.sym}</span><b>${L.length}</b></div><div><p class="eyebrow">Kelderboek</p><p class="status">Mijn ${plural}</p></div></div>
     <p class="hint">${esc(HINT[t])}</p>
     ${L.length?`<div class="tgrid">${L.map(c=>`<div class="tcell">${mini(c)}<span class="tland">${esc(c.land||'')}</span></div>`).join('')}</div>`:`<p class="hint">Nog geen ${plural}. ${t==='icon'?'Achterin het album staan de eenentwintig Legendes.':'Scan een wijn en wie weet!'}</p>`}
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelectorAll('.mini').forEach(m=>m.onclick=()=>openCard(m.dataset.id,false,true));
@@ -2657,7 +2685,7 @@ function openIconen(nest){
     <p class="hint">Wijnen die hun land op de kaart zetten, ook betaalbare. Met een icoon krijgt je kaart het stempel <b>✦ Icoon</b>. ♛ is een Legende.</p>
     <div class="iclist">${Object.keys(LANDINFO).map(land=>{const info=LANDINFO[land],n=info.i.filter(x=>iconOwned(x[2])).length;
       return `<div class="sec"><p class="eyebrow">${esc(land)}${n?` · ${n} van ${info.i.length}`:''}</p><div class="icrow">${icCoins(info)}</div></div>`}).join('')}</div>
-    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`,{nest:!!nest});
+    <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`,{nest:!!nest});
   o.classList.add('leather');
   o.querySelector('#close').onclick=()=>closeOverlay();
 }
@@ -2699,12 +2727,16 @@ function openMenu(){
 function openJump(){
   const pg=t=>firstPageOf(x=>x.t===t);
   const tile=(ic,l,k)=>k>=0?`<button class="jtile${k===cur?' on':''}" data-pg="${k}">${MED(ic)}<span>${l}</span></button>`:'';
-  const o=overlay(`<p class="status">Ga naar</p>
+  const P=pages[cur]||{},land=P.land||(P.set&&P.set.part===1?P.set.land:null);
+  const chap=land?pages.map((q,k)=>({q,k})).filter(({q})=>(q.land||(q.set&&q.set.part===1&&q.set.land))===land):[];
+  const here=`<div class="jhere"><span>Je bent hier</span><b>${crumbOf(P)}</b><small>Blad ${cur+1} van ${pages.length}</small></div>`;
+  const chapHTML=chap.length>1?`<p class="mgroup">${esc(land)}</p><div class="jchap">${chap.map(({q,k})=>`<button data-pg="${k}" class="${k===cur?'on':''}">${q.t==='chapter'?'Overzicht':q.set?esc(q.set.name):q.t==='overige'?'Overige':esc(plain(crumbOf(q)))}</button>`).join('')}</div>`:'';
+  const o=overlay(`<p class="status">Ga naar</p>${here}${chapHTML}<p class="mgroup">Album</p>
     <div class="jtiles">${tile('book','Kelderboek',1)}${tile('star','Top 10',pg('fav'))}${tile('globe','Wereld',pg('world'))}</div>
     <div class="lands jrows"><button data-jact="lands">${MED('grapes')}<b>Landen</b><span>${st.lands.filter(l=>l!=='Overige landen').length} ontdekt</span></button><button data-jact="lists">${MED('trophy')}<b>Uitdagingen</b><span>${SETS.filter(s=>s.part===2&&st.visible[s.id]).length} zichtbaar</span></button></div>`);
   o.querySelector('[data-jact="lands"]').onclick=()=>openLands(null,true);
   o.querySelector('[data-jact="lists"]').onclick=()=>openLists(true);
-  (o.querySelector('.jtile')||o.querySelector('.ovx')).focus();
+  (o.querySelector('.jtile')||o.querySelector('.ovback')).focus();
 }
 function askConfirm(title,text,yes,fn){
   const o=overlay(`<div class="confirm"><p class="status">${esc(title)}</p><p class="hint">${esc(text)}</p>
@@ -2741,7 +2773,7 @@ function openInfo(open,nest){
     ${sec('top','star','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Veeg over de kaart om hem om te draaien.</p>`)}
     ${sec('kaarten','map','Kaarten',`<p>Rechtsboven op een bladzijde staat een kaartje van het land met speldjes. Tik erop voor een grote kaart met namen. Op <b>Mijn wijnwereld</b> zie je in één oogopslag welke landen je al ontdekte.</p>`)}
     </div>
-    <div class="actions"><button class="btn" data-act="tour">${I('play')} Rondleiding</button><button class="btn primary" id="close">Terug naar album</button></div>
+    <div class="actions"><button class="btn" data-act="tour">${I('play')} Rondleiding</button><button class="btn primary xclose" id="close">Terug naar album</button></div>
     ${session?`<p class="hint small">Ingelogd als ${esc(session.user.email)}</p>`:''}`,{nest:!!nest});
   o.querySelector('#close').onclick=()=>closeOverlay();
   const op=open&&o.querySelector('#h-'+open);if(op)setTimeout(()=>op.scrollIntoView({block:'center'}),60);
