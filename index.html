@@ -1179,6 +1179,7 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .kstamp::before{border-radius:4px}
 .scani{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:1px solid rgba(60,30,8,.55);color:rgba(60,30,8,.75);font:italic 700 11px/16px Georgia,serif;text-align:center}
 .scan{position:relative}
+.backstep{width:64px;height:64px;margin:6px auto 4px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,211,160,.5);color:#F2D88A}.backstep .ico{width:30px;height:30px}
 </style>
 </head>
 <body>
@@ -1200,19 +1201,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-143829'</script>
-<script src="data.js?v=20261016-143829"></script>
-<script src="art.js?v=20261016-143829"></script>
-<script src="gids.js?v=20261016-143829"></script>
-<script src="maps.js?v=20261016-143829"></script>
-<script src="zegels.js?v=20261016-143829"></script>
-<script src="landen.js?v=20261016-143829"></script>
-<script src="etiket.js?v=20261016-143829"></script>
-<script src="legendes.js?v=20261016-143829"></script>
-<script src="fullart.js?v=20261016-143829"></script>
-<script src="stickers.js?v=20261016-143829"></script>
-<script src="vrienden.js?v=20261016-143829"></script>
-<script src="wereldbol.js?v=20261016-143829"></script>
+<script>window.VI_V='20261016-144809'</script>
+<script src="data.js?v=20261016-144809"></script>
+<script src="art.js?v=20261016-144809"></script>
+<script src="gids.js?v=20261016-144809"></script>
+<script src="maps.js?v=20261016-144809"></script>
+<script src="zegels.js?v=20261016-144809"></script>
+<script src="landen.js?v=20261016-144809"></script>
+<script src="etiket.js?v=20261016-144809"></script>
+<script src="legendes.js?v=20261016-144809"></script>
+<script src="fullart.js?v=20261016-144809"></script>
+<script src="stickers.js?v=20261016-144809"></script>
+<script src="vrienden.js?v=20261016-144809"></script>
+<script src="wereldbol.js?v=20261016-144809"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2283,10 +2284,10 @@ const ICO={
 };
 function openCamera(){
   const used=scansToday();
-  const o=overlay(`<div class="sc-top"><p class="eyebrow">Vined It · scanner</p><p class="status">Richt op het etiket</p>
+  const o=overlay(`<div class="sc-top"><p class="eyebrow">Vined It · scanner</p><p class="status">${BACKCHECK&&BACKCHECK.armed&&Date.now()-BACKCHECK.t<15*60*1000?'Richt op de achterkant':'Richt op het etiket'}</p>
       <div class="sc-left" aria-label="${Math.max(0,LIMIT-used)} scans over vandaag">${LIMIT<=10?Array.from({length:LIMIT},(_,i)=>`<i class="${i<used?'used':''}"></i>`).join(''):`<span class="note">${Math.max(0,LIMIT-used)} scans over</span>`}</div></div>
     <div class="viewfinder" id="vf"><video id="vid" playsinline muted autoplay></video><div class="corners"></div><span class="vtag">Etiket in het kader</span><div class="flash"></div></div>
-    <p class="hint" id="schint">Houd de fles recht, met naam en producent scherp in het kader.</p>
+    <p class="hint" id="schint">${BACKCHECK&&BACKCHECK.armed?'Draai de fles om: het achteretiket, de zijkant of de capsule in het kader.':'Houd de fles recht, met naam en producent scherp in het kader.'}</p>
     <div class="sc-bar"><div class="sc-l">${isAdmin()?`<button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button>`:`<span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span>`}</div>
       <button class="shutter" id="shut" type="button" aria-label="Foto maken" disabled><span></span></button>
       <span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span><button id="scx" type="button" hidden></button></div>`);
@@ -2339,8 +2340,23 @@ async function fileToCanvas(f){
 }
 $('#cam').onchange=async()=>{const cv=await fileToCanvas($('#cam').files&&$('#cam').files[0]);if(cv)recognize(cv)};
 $('#gal').onchange=async()=>{if(!isAdmin())return;const cv=await fileToCanvas($('#gal').files&&$('#gal').files[0]);if(cv)recognize(cv)};
+/* Legende: tweestapscontrole met een foto van de achterkant */
+let BACKCHECK=null;
+function showBackStep(d){
+  const p=d.recognized||{};
+  const o=overlay(`<p class="eyebrow">♛ Een Legende</p><p class="status">${esc(p.naam||'')}</p>
+    <div class="backstep">${I('turn')}</div>
+    <p class="hint">Dit is een van de 21 grootste wijnen ter wereld. Om zeker te weten dat je deze fles echt voor je hebt, nog één foto: <b>de achterkant van dezelfde fles</b>.</p>
+    <p class="hint small">Het achteretiket, de zijkant of de capsule. Maker${p.jaar?' en jaargang ('+esc(String(p.jaar))+')':''} moeten bij de voorkant passen. Je hebt hier 15 minuten voor; dit telt niet als extra scan.</p>
+    <div class="actions"><button class="btn primary" id="bk">${I('camera')} Achterkant fotograferen</button></div>`);
+  o.classList.add('leather');
+  o.querySelector('#bk').onclick=()=>{BACKCHECK.armed=true;closeOverlay();setTimeout(openCamera,200)};
+}
 async function recognize(cv){
   const dataUrl=cv.toDataURL('image/jpeg',.82),b64=dataUrl.split(',')[1];
+  if(BACKCHECK&&Date.now()-BACKCHECK.t>15*60*1000)BACKCHECK=null;
+  if(BACKCHECK&&BACKCHECK.armed)return recognizeBack(cv,dataUrl,b64);
+  BACKCHECK=null;
   const before=snapshot();
   const o=overlay(`<div class="scanframe snapframe"><img class="snap" src="${dataUrl}" alt="Je foto van het etiket"></div><p class="status">Etiket wordt gelezen…</p><p class="hint">Even geduld, we herkennen de wijn.</p>`);
   o.classList.add('leather');
@@ -2354,7 +2370,25 @@ async function recognize(cv){
   if(status==='ok')return handleScanResult(data.result,before,cv,data.label_box,data.recognized&&data.recognized.jaar);
   if(status==='not_recognized')return showNotRecognized(dataUrl,data&&data.wine);
   if(status==='not_real')return showNotRecognized(dataUrl,null,true);
+  if(status==='need_back'){BACKCHECK={check:data.check,cv,before,box:null,jaar:data.recognized&&data.recognized.jaar,naam:data.recognized&&data.recognized.naam,t:Date.now()};closeOverlay();return setTimeout(()=>showBackStep(data),220)}
   closeOverlay();toast(SCAN_MSG[status]||'Herkennen lukte niet. Controleer je verbinding en probeer het opnieuw.');
+}
+async function recognizeBack(cv,dataUrl,b64){
+  const B=BACKCHECK;
+  const o=overlay(`<div class="scanframe snapframe"><img class="snap" src="${dataUrl}" alt="Je foto van de achterkant"></div><p class="status">Achterkant wordt gecontroleerd…</p><p class="hint">We vergelijken hem met de voorkant van ${esc(B.naam||'je fles')}.</p>`);
+  o.classList.add('leather');
+  let data=null,status='';
+  try{const r=await sb.functions.invoke('recognize',{body:{image:b64,mediaType:'image/jpeg',mode:'back',check:B.check}});
+    if(r.error){try{status=(await r.error.context.json()).status||''}catch(e){status='error'}}else{data=r.data;status=data.status}}catch(e){status='error'}
+  if(!o.isConnected)return;
+  if(status==='ok'){BACKCHECK=null;return handleScanResult(data.result,B.before,B.cv,data.label_box,B.jaar)}
+  if(status==='back_expired'){BACKCHECK=null;closeOverlay();toast('Die controle is verlopen. Scan de voorkant opnieuw.');return}
+  if(status==='back_failed'){
+    const f=overlay(`<p class="status">Dat klopt nog niet</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>
+      <p class="hint">${esc((data&&data.reason)||'Deze achterkant past niet bij de voorkant.')}</p><p class="hint small">Probeer het nog eens met de achterkant van dezelfde fles, scherp en goed belicht.</p>
+      <div class="actions"><button class="btn" id="other">Andere wijn scannen</button><button class="btn primary" id="again">Opnieuw</button></div>`);f.classList.add('leather');f.querySelector('#other').onclick=()=>{BACKCHECK=null;closeOverlay();openCamera()};
+    const a=f.querySelector('#again');a.focus();a.onclick=()=>{closeOverlay();openCamera()};return}
+  closeOverlay();toast(SCAN_MSG[status]||'Controleren lukte niet. Probeer het opnieuw.');
 }
 function showNotRecognized(dataUrl,w,notReal){
   if(notReal){const o=overlay(`<p class="status">Alleen echte flessen</p><div class="scanframe snapframe" style="width:min(50vw,180px)"><img class="snap" src="${dataUrl}" alt=""></div>

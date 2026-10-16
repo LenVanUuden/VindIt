@@ -224,6 +224,27 @@ async function drawLabel(model: string, img: string | null, mediaType: string, d
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
+// ---------- Legende: tweede foto (achterkant van dezelfde fles) ----------
+const BACK_SYSTEM = `You verify a second photo for a Dutch wine-collecting app. The user claims a legendary wine and must show the BACK (or side) of the same physical bottle. You get the details read from the front label and a new photo. Answer via the "achterkant" tool.
+- real_bottle: true only if this is a real, physical bottle in front of the camera (glass, curvature, light, real background). false for a screen, screenshot, webshop image, printout or magazine. When unsure, true.
+- is_back_side: true if the photo shows the back label, side, neck, capsule or back of the bottle. false if it shows the same front label again.
+- same_wine: true if what you see fits the claimed producer and wine (producer name, address, château, importer sticker for that wine, matching capsule or seal). false if it clearly belongs to a different wine. If the back shows little text but nothing contradicts, true.
+- vintage_seen: the vintage year if visible on this photo, else "".
+- reason: one short sentence in Dutch explaining a rejection (empty when everything is fine).`;
+const BACK_TOOL = { name: "achterkant", description: "Controle van de achterkant", input_schema: { type: "object", properties: {
+  real_bottle: { type: "boolean" }, is_back_side: { type: "boolean" }, same_wine: { type: "boolean" }, vintage_seen: { type: "string" }, reason: { type: "string" } },
+  required: ["real_bottle", "is_back_side", "same_wine", "vintage_seen", "reason"] } };
+async function checkBack(image: string, mediaType: string, p: Record<string, unknown>) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
+    headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    body: JSON.stringify({ model: MODEL, max_tokens: 400, system: BACK_SYSTEM, tools: [BACK_TOOL], tool_choice: { type: "tool", name: "achterkant" },
+      messages: [{ role: "user", content: [{ type: "image", source: { type: "base64", media_type: mediaType, data: image } },
+        { type: "text", text: `Voorkant gelezen: wijn "${p.naam}", maker "${p.maker}", jaargang ${p.jaar ?? "onbekend"}, ${p.app || ""} ${p.land || ""}. Is dit de achterkant van dezelfde fles?` }] }] }) });
+  if (!r.ok) { console.error("back", r.status, await r.text()); return null; }
+  const out = await r.json();
+  return out.content?.find((c: { type: string }) => c.type === "tool_use")?.input ?? null;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
@@ -247,6 +268,28 @@ Deno.serve(async (req) => {
     });
     if (claimErr) throw claimErr;
     if (claim !== "ok") return json({ status: claim });
+    const isAdminUser = (user.email ?? "").toLowerCase() === "l.v.uuden3@gmail.com";
+
+    // Tweede stap bij een Legende: de achterkant
+    if (body.mode === "back") {
+      const { data: chk } = await admin.from("legend_checks").select("*").eq("id", String(body.check ?? "")).eq("user_id", user.id).maybeSingle();
+      if (!chk || chk.used || Date.now() - new Date(chk.created_at).getTime() > 15 * 60 * 1000) return json({ status: "back_expired" });
+      const p = chk.payload as Record<string, unknown>;
+      const v = await checkBack(image, mediaType, p);
+      if (!v) return json({ status: "ai_error" }, 502);
+      const vs = String(v.vintage_seen ?? "").match(/(18|19|20)\d\d/)?.[0];
+      const yearOk = !vs || !p.jaar || Number(vs) === Number(p.jaar);
+      const ok = (v.real_bottle !== false || isAdminUser) && v.is_back_side && v.same_wine && yearOk;
+      if (!ok) {
+        const reason = !yearOk ? `Op de achterkant staat ${vs}, op de voorkant ${p.jaar}. Dat moet dezelfde fles zijn.`
+          : v.real_bottle === false ? "Dit lijkt een foto van een scherm of drukwerk." : !v.is_back_side ? "Dit lijkt weer de voorkant. Draai de fles om." : (v.reason || "Deze achterkant past niet bij de wijn van de voorkant.");
+        return json({ status: "back_failed", reason });
+      }
+      await admin.from("legend_checks").update({ used: true }).eq("id", chk.id);
+      const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: p });
+      if (scanErr) throw scanErr;
+      return json({ status: "ok", recognized: p, confidence: 1, result, label_box: chk.label_box, verified: true });
+    }
 
     // temperature 0: dezelfde foto geeft zo vaker dezelfde schatting (en dus dezelfde klasse).
     // Weigert het model dat, dan nog één keer zonder.
@@ -286,8 +329,7 @@ Deno.serve(async (req) => {
     const out = await r.json();
     const w = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
     // Geen kaart voor een foto van een scherm, screenshot of drukwerk (beheerder mag testen)
-    const isAdmin = (user.email ?? "").toLowerCase() === "l.v.uuden3@gmail.com";
-    if (w && w.is_wine_label && w.real_bottle === false && !isAdmin) {
+    if (w && w.is_wine_label && w.real_bottle === false && !isAdminUser) {
       return json({ status: "not_real", wine: { naam: w.naam ?? "" } });
     }
     if (!w || !w.is_wine_label || (w.confidence ?? 0) < 0.5 || !w.naam) {
@@ -319,6 +361,23 @@ Deno.serve(async (req) => {
         iconic: !!w.iconic,
       },
     };
+    // Legende die je nog niet hebt? Eerst een foto van de achterkant (twee-stapscontrole)
+    {
+      let lw: { id: string; is_icon: boolean } | null = null;
+      const key = `${payload.maker.toLowerCase()}|${payload.naam.toLowerCase()}`;
+      const { data: ex } = await admin.from("wines").select("id,is_icon").eq("wine_key", key).maybeSingle();
+      lw = ex ?? null;
+      if (!lw) { const { data: sm } = await admin.rpc("find_same_wine", { p_wine: payload }); if (sm && sm.id) lw = { id: sm.id, is_icon: !!sm.is_icon }; }
+      if (lw?.is_icon) {
+        const { data: own } = await admin.from("cards").select("id").eq("user_id", user.id).eq("wine_id", lw.id).maybeSingle();
+        if (!own) {
+          const lbx = w.label_box && ["x", "y", "w", "h"].every((k) => typeof w.label_box[k] === "number") ? w.label_box : null;
+          const { data: chk, error: ce } = await admin.from("legend_checks").insert({ user_id: user.id, payload, label_box: lbx }).select("id").single();
+          if (ce) throw ce;
+          return json({ status: "need_back", check: chk.id, recognized: payload });
+        }
+      }
+    }
     const { data: result, error: scanErr } = await userClient.rpc("scan_wine", { p_wine: payload });
     if (scanErr) throw scanErr;
     // Etiketontwerp bewaren bij de wijn (alleen als die er nog geen heeft)
