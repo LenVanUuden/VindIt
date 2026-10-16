@@ -1170,6 +1170,18 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .countsfor span{width:100%;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
 .countsfor button,.countsfor b{border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2);color:var(--cream);border-radius:999px;padding:5px 11px;font:500 12.5px 'Libre Franklin',sans-serif;cursor:pointer}
 .countsfor b{cursor:default;opacity:.8}
+/* Kaarten: strak met afgeronde hoeken en "goud op snee" in de klassekleur (geen postzegelrand meer) */
+.card::before,.mini::before{display:none!important}
+.card:not(.leg){border-radius:14px}.card:not(.leg) .face{border-radius:8px}
+.mini:not(.leg){border-radius:6px}.mini:not(.leg) .face{border-radius:3px}
+.card,.mini{--snee:linear-gradient(135deg,#E2D6B8,#B9A880 50%,#D8CBA8)}
+.t-rare{--snee:linear-gradient(135deg,#F4F6F8,#9AA3AA 40%,#E6EAED 60%,#7E868D)}
+.t-superrare{--snee:linear-gradient(135deg,#FBE7B0,#B8902F 40%,#F3D58A 60%,#8F6B22)}
+.t-ultra{--snee:linear-gradient(135deg,#DDEBFF,#3E5FA8 40%,#BFD6FF 60%,#22386E)}
+.card:not(.leg)::after,.mini:not(.leg)::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:var(--snee);transform:translate(3px,4.5px);filter:brightness(.82)}
+.mini:not(.leg)::after{transform:translate(2px,3px)}
+.card:not(.leg){box-shadow:0 0 0 1px rgba(0,0,0,.25),0 22px 40px rgba(0,0,0,.5)!important}
+.mini:not(.leg){box-shadow:0 0 0 .5px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -1191,19 +1203,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-134629'</script>
-<script src="data.js?v=20261016-134629"></script>
-<script src="art.js?v=20261016-134629"></script>
-<script src="gids.js?v=20261016-134629"></script>
-<script src="maps.js?v=20261016-134629"></script>
-<script src="zegels.js?v=20261016-134629"></script>
-<script src="landen.js?v=20261016-134629"></script>
-<script src="etiket.js?v=20261016-134629"></script>
-<script src="legendes.js?v=20261016-134629"></script>
-<script src="fullart.js?v=20261016-134629"></script>
-<script src="stickers.js?v=20261016-134629"></script>
-<script src="vrienden.js?v=20261016-134629"></script>
-<script src="wereldbol.js?v=20261016-134629"></script>
+<script>window.VI_V='20261016-140003'</script>
+<script src="data.js?v=20261016-140003"></script>
+<script src="art.js?v=20261016-140003"></script>
+<script src="gids.js?v=20261016-140003"></script>
+<script src="maps.js?v=20261016-140003"></script>
+<script src="zegels.js?v=20261016-140003"></script>
+<script src="landen.js?v=20261016-140003"></script>
+<script src="etiket.js?v=20261016-140003"></script>
+<script src="legendes.js?v=20261016-140003"></script>
+<script src="fullart.js?v=20261016-140003"></script>
+<script src="stickers.js?v=20261016-140003"></script>
+<script src="vrienden.js?v=20261016-140003"></script>
+<script src="wereldbol.js?v=20261016-140003"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
