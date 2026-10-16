@@ -227,8 +227,8 @@ const json = (b: unknown, s = 200) =>
 // ---------- Legende: tweede foto (achterkant van dezelfde fles) ----------
 const BACK_SYSTEM = `You verify a second photo for a Dutch wine-collecting app. The user claims a legendary wine and must show the BACK (or side) of the same physical bottle. You get the details read from the front label and a new photo. Answer via the "achterkant" tool.
 - real_bottle: true only if this is a real, physical bottle in front of the camera (glass, curvature, light, real background). false for a screen, screenshot, webshop image, printout or magazine. When unsure, true.
-- is_back_side: true if the photo shows the back label, side, neck, capsule or back of the bottle. false if it shows the same front label again.
-- same_wine: true if what you see fits the claimed producer and wine (producer name, address, château, importer sticker for that wine, matching capsule or seal). false if it clearly belongs to a different wine. If the back shows little text but nothing contradicts, true.
+- is_back_side: true if the photo shows another side of the bottle than the front label: the back label, the side, the neck label, the capsule or cork top, or simply the bare back of the bottle. Many older or prestigious bottles have NO back label at all: a photo of the bare glass back, the capsule or the neck is then fine. false only if it shows the same front label again (straight on).
+- same_wine: true if what you see fits the claimed producer and wine (producer name, address, château, importer sticker for that wine, matching capsule or seal, the front label visible through the glass). false only if it clearly belongs to a different wine. If the photo shows little or no text (bare glass, plain capsule) but nothing contradicts, true.
 - vintage_seen: the vintage year if visible on this photo, else "".
 - reason: one short sentence in Dutch explaining a rejection (empty when everything is fine).`;
 const BACK_TOOL = { name: "achterkant", description: "Controle van de achterkant", input_schema: { type: "object", properties: {
@@ -361,20 +361,26 @@ Deno.serve(async (req) => {
         iconic: !!w.iconic,
       },
     };
-    // Legende die je nog niet hebt? Eerst een foto van de achterkant (twee-stapscontrole)
+    // Legende of Ultra die je nog niet hebt? Eerst een foto van de achterkant (twee-stapscontrole)
     {
-      let lw: { id: string; is_icon: boolean } | null = null;
+      type W = { id: string; is_icon: boolean; tier: string | null; tier_override: string | null; signals: unknown };
+      let lw: W | null = null;
       const key = `${payload.maker.toLowerCase()}|${payload.naam.toLowerCase()}`;
-      const { data: ex } = await admin.from("wines").select("id,is_icon").eq("wine_key", key).maybeSingle();
-      lw = ex ?? null;
-      if (!lw) { const { data: sm } = await admin.rpc("find_same_wine", { p_wine: payload }); if (sm && sm.id) lw = { id: sm.id, is_icon: !!sm.is_icon }; }
-      if (lw?.is_icon) {
-        const { data: own } = await admin.from("cards").select("id").eq("user_id", user.id).eq("wine_id", lw.id).maybeSingle();
+      const { data: ex } = await admin.from("wines").select("id,is_icon,tier,tier_override,signals").eq("wine_key", key).maybeSingle();
+      lw = (ex as W) ?? null;
+      if (!lw) { const { data: sm } = await admin.rpc("find_same_wine", { p_wine: payload }); if (sm && sm.id) lw = sm as W; }
+      // Klasse zoals scan_wine hem zou geven
+      let tierNext: string | null = null;
+      if (lw?.is_icon) tierNext = "icon";
+      else if (lw && (lw.tier_override || (lw.signals && lw.tier))) tierNext = lw.tier_override || lw.tier;
+      else { const { data: t } = await admin.rpc("wine_tier", { p_s: payload.signals, p_jaar: payload.jaar, p_color: payload.color || null, p_is_icon: false }); tierNext = (t as { tier?: string })?.tier ?? null; }
+      if (tierNext === "icon" || tierNext === "ultra") {
+        const own = lw ? (await admin.from("cards").select("id").eq("user_id", user.id).eq("wine_id", lw.id).maybeSingle()).data : null;
         if (!own) {
           const lbx = w.label_box && ["x", "y", "w", "h"].every((k) => typeof w.label_box[k] === "number") ? w.label_box : null;
           const { data: chk, error: ce } = await admin.from("legend_checks").insert({ user_id: user.id, payload, label_box: lbx }).select("id").single();
           if (ce) throw ce;
-          return json({ status: "need_back", check: chk.id, recognized: payload });
+          return json({ status: "need_back", check: chk.id, recognized: payload, tier: tierNext });
         }
       }
     }

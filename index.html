@@ -1201,19 +1201,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-145714'</script>
-<script src="data.js?v=20261016-145714"></script>
-<script src="art.js?v=20261016-145714"></script>
-<script src="gids.js?v=20261016-145714"></script>
-<script src="maps.js?v=20261016-145714"></script>
-<script src="zegels.js?v=20261016-145714"></script>
-<script src="landen.js?v=20261016-145714"></script>
-<script src="etiket.js?v=20261016-145714"></script>
-<script src="legendes.js?v=20261016-145714"></script>
-<script src="fullart.js?v=20261016-145714"></script>
-<script src="stickers.js?v=20261016-145714"></script>
-<script src="vrienden.js?v=20261016-145714"></script>
-<script src="wereldbol.js?v=20261016-145714"></script>
+<script>window.VI_V='20261016-150159'</script>
+<script src="data.js?v=20261016-150159"></script>
+<script src="art.js?v=20261016-150159"></script>
+<script src="gids.js?v=20261016-150159"></script>
+<script src="maps.js?v=20261016-150159"></script>
+<script src="zegels.js?v=20261016-150159"></script>
+<script src="landen.js?v=20261016-150159"></script>
+<script src="etiket.js?v=20261016-150159"></script>
+<script src="legendes.js?v=20261016-150159"></script>
+<script src="fullart.js?v=20261016-150159"></script>
+<script src="stickers.js?v=20261016-150159"></script>
+<script src="vrienden.js?v=20261016-150159"></script>
+<script src="wereldbol.js?v=20261016-150159"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2287,7 +2287,7 @@ function openCamera(){
   const o=overlay(`<div class="sc-top"><p class="eyebrow">Vined It · scanner</p><p class="status">${BACKCHECK&&BACKCHECK.armed&&Date.now()-BACKCHECK.t<5*60*1000?'Richt op de achterkant':'Richt op het etiket'}</p>
       <div class="sc-left" aria-label="${Math.max(0,LIMIT-used)} scans over vandaag">${LIMIT<=10?Array.from({length:LIMIT},(_,i)=>`<i class="${i<used?'used':''}"></i>`).join(''):`<span class="note">${Math.max(0,LIMIT-used)} scans over</span>`}</div></div>
     <div class="viewfinder" id="vf"><video id="vid" playsinline muted autoplay></video><div class="corners"></div><span class="vtag">Etiket in het kader</span><div class="flash"></div></div>
-    <p class="hint" id="schint">${BACKCHECK&&BACKCHECK.armed?'Draai de fles om: het achteretiket, de zijkant of de capsule in het kader.':'Houd de fles recht, met naam en producent scherp in het kader.'}</p>
+    <p class="hint" id="schint">${BACKCHECK&&BACKCHECK.armed?'Draai de fles om: het achteretiket, de capsule, of gewoon de achterkant van de fles.':'Houd de fles recht, met naam en producent scherp in het kader.'}</p>
     <div class="sc-bar"><div class="sc-l">${isAdmin()?`<button class="sc-side" id="scgal" type="button">${ICO.gal}Galerij</button>`:`<span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span>`}</div>
       <button class="shutter" id="shut" type="button" aria-label="Foto maken" disabled><span></span></button>
       <span class="sc-side" aria-hidden="true" style="visibility:hidden">${ICO.gal}Galerij</span><button id="scx" type="button" hidden></button></div>`);
@@ -2343,11 +2343,11 @@ $('#gal').onchange=async()=>{if(!isAdmin())return;const cv=await fileToCanvas($(
 /* Legende: tweestapscontrole met een foto van de achterkant */
 let BACKCHECK=null;
 function showBackStep(d){
-  const p=d.recognized||{};
-  const o=overlay(`<p class="eyebrow">♛ Een Legende</p><p class="status">${esc(p.naam||'')}</p>
+  const p=d.recognized||{},ultra=d.tier==='ultra';
+  const o=overlay(`<p class="eyebrow">${ultra?'★ Een Ultra':'♛ Een Legende'}</p><p class="status">${esc(p.naam||'')}</p>
     <div class="backstep">${I('turn')}</div>
-    <p class="hint">Dit is een van de 21 grootste wijnen ter wereld. Om zeker te weten dat je deze fles echt voor je hebt, nog één foto: <b>de achterkant van dezelfde fles</b>.</p>
-    <p class="hint small">Het achteretiket, de zijkant of de capsule. Maker${p.jaar?' en jaargang ('+esc(String(p.jaar))+')':''} moeten bij de voorkant passen. Dit telt niet als extra scan.</p>
+    <p class="hint">${ultra?'Een topwijn, en een van de zeldzaamste kaarten.':'Dit is een van de 21 grootste wijnen ter wereld.'} Om zeker te weten dat je deze fles echt voor je hebt, nog één foto: <b>de achterkant van dezelfde fles</b>.</p>
+    <p class="hint small">Het achteretiket, de zijkant of de capsule. Geen achteretiket? Fotografeer dan gewoon de achterkant van de fles of de capsule. Maker${p.jaar?' en jaargang ('+esc(String(p.jaar))+')':''} moeten bij de voorkant passen. Dit telt niet als extra scan.</p>
     <div class="actions"><button class="btn primary" id="bk">${I('camera')} Achterkant fotograferen</button></div>`);
   o.classList.add('leather');
   o.querySelector('#bk').onclick=()=>{BACKCHECK.armed=true;closeOverlay();setTimeout(openCamera,200)};
