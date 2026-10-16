@@ -167,8 +167,14 @@ function stkTray(open){
   t.classList.toggle('folded',!open);t.querySelector('#stktog').setAttribute('aria-expanded',String(!!open));
 }
 function stkLayerEl(){return stack.querySelector('.leaf .stklayer')}
+/* Laag = volledige hoogte van de bladzijde (ook het deel onder de scroll), anders kun je daar niet plakken */
+function stkFit(page){
+  const l=page&&page.querySelector(':scope>.stklayer');if(!l||!page.isConnected)return;
+  l.style.height='';const h=page.scrollHeight;if(h>page.clientHeight+2)l.style.height=h+'px';
+}
 function stkRender(){
   const el=stkLayerEl();if(!el||!stkEdit)return;
+  stkFit(el.parentNode);
   const list=STK[stkEdit.pk]||[];
   el.innerHTML=list.map(stkHTML).join('');
   el.querySelectorAll('.stk').forEach(s=>{
@@ -186,7 +192,9 @@ function stkSelect(i){
 function stkAdd(id){
   const list=STK[stkEdit.pk];
   if(list.length>=40){toast('Maximaal 40 stickers per bladzijde.');return}
-  list.push({s:id,x:50+(Math.random()*16-8),y:42+(Math.random()*16-8),r:Math.round(Math.random()*16-8),k:1});
+  // nieuwe sticker midden in wat je nu ziet, ook als je naar beneden gescrold bent
+  const pg=stkLayerEl()&&stkLayerEl().parentNode,midY=pg&&pg.scrollHeight?(pg.scrollTop+pg.clientHeight*.45)/pg.scrollHeight*100:42;
+  list.push({s:id,x:50+(Math.random()*16-8),y:Math.max(4,Math.min(96,midY+(Math.random()*10-5))),r:Math.round(Math.random()*16-8),k:1});
   stkEdit.sel=list.length-1;stkRender();buzz([10]);
 }
 function stkWire(s,i){

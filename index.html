@@ -968,7 +968,7 @@ h2 .ibtn{margin-left:4px;transform:translateY(-3px)}
 .fa .stamp{color:#F3D9A0;border-color:rgba(243,217,160,.8);outline-color:rgba(243,217,160,.5);background:rgba(0,0,0,.2)}
 .whyline{color:var(--gold-soft);font-style:italic}
 /* ===== Stickers ===== */
-.stklayer{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden;border-radius:inherit}
+.stklayer{position:absolute;inset:0 0 auto 0;height:100%;pointer-events:none;z-index:6;overflow:hidden;border-radius:inherit}
 .stk{position:absolute;aspect-ratio:1;pointer-events:none;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.45));transform-origin:50% 50%}
 .stk svg{display:block;width:100%;height:100%;overflow:visible}
 .stk.ink{filter:none;mix-blend-mode:multiply}
@@ -1232,19 +1232,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-164440'</script>
-<script src="data.js?v=20261016-164440"></script>
-<script src="art.js?v=20261016-164440"></script>
-<script src="gids.js?v=20261016-164440"></script>
-<script src="maps.js?v=20261016-164440"></script>
-<script src="zegels.js?v=20261016-164440"></script>
-<script src="landen.js?v=20261016-164440"></script>
-<script src="etiket.js?v=20261016-164440"></script>
-<script src="legendes.js?v=20261016-164440"></script>
-<script src="fullart.js?v=20261016-164440"></script>
-<script src="stickers.js?v=20261016-164440"></script>
-<script src="vrienden.js?v=20261016-164440"></script>
-<script src="wereldbol.js?v=20261016-164440"></script>
+<script>window.VI_V='20261016-181338'</script>
+<script src="data.js?v=20261016-181338"></script>
+<script src="art.js?v=20261016-181338"></script>
+<script src="gids.js?v=20261016-181338"></script>
+<script src="maps.js?v=20261016-181338"></script>
+<script src="zegels.js?v=20261016-181338"></script>
+<script src="landen.js?v=20261016-181338"></script>
+<script src="etiket.js?v=20261016-181338"></script>
+<script src="legendes.js?v=20261016-181338"></script>
+<script src="fullart.js?v=20261016-181338"></script>
+<script src="stickers.js?v=20261016-181338"></script>
+<script src="vrienden.js?v=20261016-181338"></script>
+<script src="wereldbol.js?v=20261016-181338"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1845,6 +1845,7 @@ function makePage(i){
   const el=makePage0(i),mm=miniMapFor(pages[i]);
   if(mm&&pages[i].t!=='chapter'){el.classList.add('hasmap');el.insertAdjacentHTML('afterbegin',mm)}
   if(session&&!loading)el.insertAdjacentHTML('beforeend',stkLayer(i));
+  if(session&&!loading){requestAnimationFrame(()=>stkFit(el));setTimeout(()=>stkFit(el),700)}
   return el;
 }
 function makePage0(i){
