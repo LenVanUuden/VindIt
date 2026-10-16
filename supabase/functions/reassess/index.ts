@@ -149,6 +149,7 @@ async function drawLabel(model: string, img: string | null, mediaType: string, d
   });
   if (!r.ok) { const t = await r.text(); console.error("draw", r.status, t); LAST_DRAW_ERR = `api ${r.status}: ${t.slice(0, 160)}`; return null; }
   const out = await r.json();
+  await logAI("tekenen", DRAW_MODELS[model] ?? DRAW_MODELS.opus, out.usage);
   // Nieuwere modellen ondersteunen geen verplichte tool-keuze: neem de tool-aanroep, of anders JSON uit de tekst
   let st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
   if (!st) {
@@ -204,6 +205,14 @@ async function newestPhoto(admin: any, wid: string): Promise<string | null> {
   if (!best) return null;
   const { data: file } = await admin.storage.from("card-art").download(best.path);
   return file ? b64(await file.arrayBuffer()) : null;
+}
+
+// AI-gebruik vastleggen voor het beheerderscentrum (kosten per maand); fouten hier mogen nooit iets breken
+async function logAI(kind: string, model: string, u: { input_tokens?: number; output_tokens?: number } | undefined) {
+  try {
+    const a = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    await a.from("ai_usage").insert({ kind, model, input_tokens: u?.input_tokens ?? 0, output_tokens: u?.output_tokens ?? 0 });
+  } catch (_) { /* negeren */ }
 }
 
 const json = (b: unknown, s = 200) =>
@@ -297,6 +306,7 @@ Deno.serve(async (req) => {
       });
       if (!r.ok) { console.error("anthropic", r.status, await r.text()); results.push({ id: w.id, error: "ai" }); continue; }
       const out = await r.json();
+      await logAI("klasse", MODEL, out.usage);
       const s = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
       if (!s) { results.push({ id: w.id, error: "leeg" }); continue; }
       const signals = { ...s, large_format: !!s.large_format, iconic: !!s.iconic, vintage_quality: s.vintage_quality ?? "onbekend" };

@@ -208,6 +208,7 @@ async function drawLabel(model: string, img: string | null, mediaType: string, d
   });
   if (!r.ok) { const t = await r.text(); console.error("draw", r.status, t); LAST_DRAW_ERR = `api ${r.status}: ${t.slice(0, 160)}`; return null; }
   const out = await r.json();
+  await logAI("tekenen", DRAW_MODELS[model] ?? DRAW_MODELS.opus, out.usage);
   // Nieuwere modellen ondersteunen geen verplichte tool-keuze: neem de tool-aanroep, of anders JSON uit de tekst
   let st = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
   if (!st) {
@@ -219,6 +220,14 @@ async function drawLabel(model: string, img: string | null, mediaType: string, d
   const clean = cleanDraw(st);
   if (!clean) LAST_DRAW_ERR = `leeg (stop: ${out.stop_reason}, elementen: ${Array.isArray(st.els) ? st.els.length : typeof st.els})`;
   return clean;
+}
+
+// AI-gebruik vastleggen voor het beheerderscentrum (kosten per maand); fouten hier mogen nooit iets breken
+async function logAI(kind: string, model: string, u: { input_tokens?: number; output_tokens?: number } | undefined) {
+  try {
+    const a = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    await a.from("ai_usage").insert({ kind, model, input_tokens: u?.input_tokens ?? 0, output_tokens: u?.output_tokens ?? 0 });
+  } catch (_) { /* negeren */ }
 }
 
 const json = (b: unknown, s = 200) =>
@@ -242,6 +251,7 @@ async function checkBack(image: string, mediaType: string, p: Record<string, unk
         { type: "text", text: `Voorkant gelezen: wijn "${p.naam}", maker "${p.maker}", jaargang ${p.jaar ?? "onbekend"}, ${p.app || ""} ${p.land || ""}. Is dit de achterkant van dezelfde fles?` }] }] }) });
   if (!r.ok) { console.error("back", r.status, await r.text()); return null; }
   const out = await r.json();
+  await logAI("achterkant", MODEL, out.usage);
   return out.content?.find((c: { type: string }) => c.type === "tool_use")?.input ?? null;
 }
 
@@ -327,6 +337,7 @@ Deno.serve(async (req) => {
       return json({ status: "ai_error" }, 502);
     }
     const out = await r.json();
+    await logAI("herkenning", MODEL, out.usage);
     const w = out.content?.find((c: { type: string }) => c.type === "tool_use")?.input;
     // Geen kaart voor een foto van een scherm, screenshot of drukwerk (beheerder mag testen)
     if (w && w.is_wine_label && w.real_bottle === false && !isAdminUser) {
