@@ -1201,19 +1201,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-150159'</script>
-<script src="data.js?v=20261016-150159"></script>
-<script src="art.js?v=20261016-150159"></script>
-<script src="gids.js?v=20261016-150159"></script>
-<script src="maps.js?v=20261016-150159"></script>
-<script src="zegels.js?v=20261016-150159"></script>
-<script src="landen.js?v=20261016-150159"></script>
-<script src="etiket.js?v=20261016-150159"></script>
-<script src="legendes.js?v=20261016-150159"></script>
-<script src="fullart.js?v=20261016-150159"></script>
-<script src="stickers.js?v=20261016-150159"></script>
-<script src="vrienden.js?v=20261016-150159"></script>
-<script src="wereldbol.js?v=20261016-150159"></script>
+<script>window.VI_V='20261016-150708'</script>
+<script src="data.js?v=20261016-150708"></script>
+<script src="art.js?v=20261016-150708"></script>
+<script src="gids.js?v=20261016-150708"></script>
+<script src="maps.js?v=20261016-150708"></script>
+<script src="zegels.js?v=20261016-150708"></script>
+<script src="landen.js?v=20261016-150708"></script>
+<script src="etiket.js?v=20261016-150708"></script>
+<script src="legendes.js?v=20261016-150708"></script>
+<script src="fullart.js?v=20261016-150708"></script>
+<script src="stickers.js?v=20261016-150708"></script>
+<script src="vrienden.js?v=20261016-150708"></script>
+<script src="wereldbol.js?v=20261016-150708"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2701,7 +2701,7 @@ function openAdmin(){
     <p class="mgroup">Klassen</p>
     <div class="admlist">${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
     <p class="mgroup">Voorbeelden</p>
-    <div class="admlist">${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
+    <div class="admlist">${b('revdemo','camera','Testreveal: nieuw gescande fles','Primeur, potloodschets en een vers getekend etiket')}${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
     <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelector('#relabelall').onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
@@ -2709,6 +2709,29 @@ function openAdmin(){
   o.querySelector('#reassess').onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   o.querySelector('#fademo').onclick=()=>openFaDemo();
   o.querySelector('#legdemo').onclick=()=>openLegDemo();
+  o.querySelector('#revdemo').onclick=()=>openRevealPick();
+}
+/* Beheer: testreveal. Kies een wijn; je ziet de onthulling als Primeur met de potloodschets,
+   terwijl Sonnet het etiket echt opnieuw tekent vanaf de bewaarde foto (niets wordt opgeslagen). */
+function openRevealPick(){
+  const L=cards.filter(c=>LABEL_TIERS.includes(c.rar)&&!c.fa);
+  if(!L.length){toast('Je hebt nog geen kaart vanaf Rare.');return}
+  const o=overlay(`<p class="status">Testreveal</p><p class="hint">Kies een wijn. Je ziet de onthulling zoals bij een nieuwe wijn, en Sonnet tekent het etiket opnieuw vanaf de bewaarde foto (±3 cent). Er wordt niets opgeslagen.</p>
+    <div class="tgrid">${L.map(c=>`<div class="tcell" data-rv="${c.id}">${mini(c)}<span class="tland">${esc(TIERS[c.rar].label)}</span></div>`).join('')}</div>`,{nest:true});
+  o.querySelectorAll('[data-rv]').forEach(el=>el.addEventListener('click',ev=>{ev.stopPropagation();ev.preventDefault();revealDemo(el.dataset.rv)},true));
+}
+function revealDemo(id){
+  const orig=cards.find(x=>x.id===id);if(!orig)return;
+  const wid='demo-'+orig.wineId+'-'+Date.now();
+  const c={...orig,id:'demo-'+Date.now(),wineId:wid,primeur:true};
+  PEND[wid]=Date.now();
+  closeOverlay();setTimeout(()=>reveal(c,[],'Testreveal'),250);
+  const t0=Date.now();
+  const ink=st=>{const wait=Math.max(0,6000-(Date.now()-t0));setTimeout(()=>{delete PEND[wid];INKED.add(wid);setTimeout(()=>INKED.delete(wid),5000);
+    document.querySelectorAll(`.etkbox.sketching[data-w="${wid}"]`).forEach(b=>{b.classList.remove('sketching');b.classList.add('inkin');b.innerHTML=drawnLabel({...c,style:st||orig.style})+'<i class="lfoil"></i>'});
+    const pr=document.querySelector('.primeur');if(pr){const ps=pr.querySelector('.prstat');if(ps)ps.innerHTML=st?'✦ Jouw etiket is klaar ✦':'Tekenen lukte niet; je ziet het bestaande etiket.';pr.classList.add('klaar')}
+    if(st)buzz([30,60,30])},wait)};
+  callDraw({mode:'draw',wine:orig.wineId,model:'sonnet',dry:true}).then(d=>ink(d&&d.styles&&d.styles.sonnet)).catch(()=>ink(null));
 }
 
 /* Beheer: alle leren Legende-kaarten bekijken, groot en met glans (niets wordt opgeslagen) */
