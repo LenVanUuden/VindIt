@@ -19,6 +19,31 @@ const STK_ART={
   blad:{n:'Geperst wijnblad',svg:`<path d="M50 86V52" stroke="#7A5226" stroke-width="3"/><path d="M50 52c-4-8-14-8-20-14 6-1 9-5 8-11-6 2-12 0-16-6 8-2 14-1 18 3 0-8 4-14 10-18 6 4 10 10 10 18 4-4 10-5 18-3-4 6-10 8-16 6-1 6 2 10 8 11-6 6-16 6-20 14z" fill="#C8742E"/><path d="M50 52V16M50 40l-14-12M50 40l14-12M50 30l-10-10M50 30l10-10" stroke="#8A4A1A" stroke-width="1.6" fill="none"/>`},
 };
 
+/* Alleen voor de maker van de app (beheerder): drie knipoog-stickers. Wijnvrienden zien ze wel op je album. */
+const STK_MAKER={
+  zegel:{n:'De maker (lakzegel)',svg:`<path d="M50 8c9 0 11 7 19 9s13 8 13 17-4 11-3 19-2 14-10 18-9 10-19 10-12-7-20-10-11-10-11-19 4-12 3-19 7-13 13-16S41 8 50 8z" fill="url(#stkWax)"/>
+   <circle cx="50" cy="50" r="24" fill="none" stroke="#5E0E18" stroke-width="1.4" opacity=".7"/><circle cx="50" cy="50" r="35.5" fill="none" stroke="#F0B9A0" stroke-opacity=".25"/>
+   <text font-size="6.4" font-family="Libre Franklin,sans-serif" font-weight="700" letter-spacing="1.6" fill="#F6D2C4" fill-opacity=".8"><textPath href="#stkRing">BEDENKER · BOUWER · EIGENAAR · </textPath></text>
+   <text x="50" y="58" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-weight="900" font-style="italic" font-size="24" fill="url(#stkGold)" stroke="#5E0E18" stroke-width=".5">VI</text>
+   <path d="M8 66l84 0-6 8 6 8H8l6-8z" fill="#1F2A44"/><path d="M14 66v16M86 66v16" stroke="#C9A253" stroke-width=".8"/>
+   <text x="50" y="77.5" text-anchor="middle" font-family="Limelight,Georgia,serif" font-size="9.5" letter-spacing="1.2" fill="url(#stkGold)">DE MAKER</text>`},
+  etiket:{n:'Château Len (etiket)',svg:`<ellipse cx="50" cy="50" rx="47" ry="36" fill="#F3E7CC"/><ellipse cx="50" cy="50" rx="44" ry="33" fill="none" stroke="url(#stkGold)" stroke-width="2"/><ellipse cx="50" cy="50" rx="41" ry="30" fill="none" stroke="#7A1A16" stroke-width=".6"/>
+   <text x="50" y="30" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="5" letter-spacing="1.1" fill="#7A1A16">CUVÉE DU CRÉATEUR</text>
+   <text x="50" y="47" text-anchor="middle" font-family="Dancing Script,cursive" font-weight="700" font-size="14" fill="#3A1B0B">Château Len</text>
+   <path d="M28 53h44" stroke="url(#stkGold)" stroke-width=".8"/>
+   <text x="50" y="61" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="5.2" letter-spacing=".8" fill="#3A1B0B">GRAND CRU FONDATEUR</text>
+   <text x="50" y="68.5" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-weight="600" font-size="4.8" fill="#3A1B0B">Mis en album par le créateur</text>
+   <text x="50" y="76" text-anchor="middle" font-family="Libre Franklin,sans-serif" font-weight="700" font-size="4.4" letter-spacing="1" fill="#7A1A16">ALBUM Nº 001</text>`},
+  postzegel:{n:'Uitvinder (postzegel)',svg:`<rect x="10" y="6" width="80" height="88" fill="#F3E7CC" mask="url(#stkPerf)"/>
+   <rect x="16" y="12" width="68" height="64" fill="#1F4A36"/><rect x="18" y="14" width="64" height="60" fill="none" stroke="url(#stkGold)" stroke-width=".8"/>
+   <g transform="translate(50 44)" fill="url(#stkGold)"><circle cx="-6" cy="-2" r="4"/><circle cx="2" cy="-2" r="4"/><circle cx="-2" cy="5" r="4"/><circle cx="6" cy="5" r="4"/><circle cx="2" cy="12" r="4"/><path d="M0 -6c2-6 7-8 11-6-3 1-6 3-7 6z"/></g>
+   <path d="M30 70L72 22" stroke="#F3E7CC" stroke-width="2.2" stroke-linecap="round"/><path d="M72 22c4-6 9-8 10-7 1 2-2 7-8 10z" fill="#F3E7CC"/><path d="M30 70l-3 4 5-2z" fill="#3A1B0B"/>
+   <text x="22" y="24" font-family="Playfair Display,Georgia,serif" font-weight="700" font-size="7" fill="url(#stkGold)">Nº 001</text>
+   <text x="78" y="72" text-anchor="end" font-family="Playfair Display,Georgia,serif" font-weight="900" font-size="9" fill="url(#stkGold)">∞</text>
+   <text x="50" y="84" text-anchor="middle" font-family="Libre Franklin,sans-serif" font-weight="700" font-size="6.2" letter-spacing="1" fill="#1F4A36">UITVINDER</text>
+   <text x="50" y="90.5" text-anchor="middle" font-family="Libre Franklin,sans-serif" font-weight="600" font-size="4.6" letter-spacing=".8" fill="#1F4A36">VAN DIT ALBUM</text>`}
+};
+
 /* Stempel van een land (inkt, paspoortstijl) */
 function stkVisa(land,i,year){
   const ink=STK_INKS[i%STK_INKS.length],shape=i%3,name=String(land).toUpperCase(),fs=name.length>12?9:name.length>8?11:13;
@@ -49,6 +74,7 @@ function stkMedal(n){
 function stkEarned(){
   const L=[];
   for(const k of Object.keys(STK_ART))L.push({id:'b:'+k,group:'Basis'});
+  if(typeof isAdmin==='function'&&isAdmin()&&!STK_VIEW)for(const k of Object.keys(STK_MAKER))L.push({id:'o:'+k,group:'Van de maker'});
   if(!cards.length)return L;
   const lands=[...new Set(cards.map(c=>c.land).filter(Boolean))];
   lands.forEach(l=>L.push({id:'v:'+l,group:'Visumstempels'}));
@@ -66,6 +92,7 @@ const stkLocked=()=>[
 
 function stkInfo(id){
   const [kind,key]=[id.slice(0,1),id.slice(2)];
+  if(kind==='o'){const a=STK_MAKER[key];return a?{n:a.n,svg:a.svg}:null}
   if(kind==='b'){const a=STK_ART[key];return a?{n:a.n,svg:a.svg,ink:!!a.ink,wide:!!a.wide}:null}
   if(kind==='v'){const ls=[...new Set(cards.map(c=>c.land))];const i=Math.max(0,LANDS.indexOf(key)>=0?LANDS.indexOf(key):ls.indexOf(key)+3);
     const first=cards.filter(c=>c.land===key).map(c=>c.created).sort()[0];return {n:'Stempel '+key,svg:stkVisa(key,i,first?new Date(first).getFullYear():''),ink:true}}
@@ -206,5 +233,9 @@ document.addEventListener('click',e=>{if(stkEdit&&!e.target.closest('.stktray')&
 /* Gedeeld filter: witte snijrand rond stickers */
 document.body.insertAdjacentHTML('afterbegin',`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <filter id="stkDie" x="-15%" y="-15%" width="130%" height="130%"><feMorphology in="SourceAlpha" operator="dilate" radius="3.2" result="d"/><feFlood flood-color="#FFFBF2"/><feComposite in2="d" operator="in" result="w"/><feMerge><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="stkGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBE7B0"/><stop offset=".5" stop-color="#C9A253"/><stop offset=".62" stop-color="#8F6B22"/><stop offset="1" stop-color="#E9C77A"/></linearGradient>
+  <radialGradient id="stkWax" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#C8343F"/><stop offset=".6" stop-color="#9E1B2B"/><stop offset="1" stop-color="#5E0E18"/></radialGradient>
+  <path id="stkRing" d="M50 50 m-30 0 a30 30 0 1 1 60 0 a30 30 0 1 1 -60 0"/>
+  <mask id="stkPerf" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><rect width="100" height="100" fill="#fff"/><g fill="#000"><circle cx="10" cy="6" r="2"/><circle cx="10" cy="94" r="2"/><circle cx="15" cy="6" r="2"/><circle cx="15" cy="94" r="2"/><circle cx="20" cy="6" r="2"/><circle cx="20" cy="94" r="2"/><circle cx="25" cy="6" r="2"/><circle cx="25" cy="94" r="2"/><circle cx="30" cy="6" r="2"/><circle cx="30" cy="94" r="2"/><circle cx="35" cy="6" r="2"/><circle cx="35" cy="94" r="2"/><circle cx="40" cy="6" r="2"/><circle cx="40" cy="94" r="2"/><circle cx="45" cy="6" r="2"/><circle cx="45" cy="94" r="2"/><circle cx="50" cy="6" r="2"/><circle cx="50" cy="94" r="2"/><circle cx="55" cy="6" r="2"/><circle cx="55" cy="94" r="2"/><circle cx="60" cy="6" r="2"/><circle cx="60" cy="94" r="2"/><circle cx="65" cy="6" r="2"/><circle cx="65" cy="94" r="2"/><circle cx="70" cy="6" r="2"/><circle cx="70" cy="94" r="2"/><circle cx="75" cy="6" r="2"/><circle cx="75" cy="94" r="2"/><circle cx="80" cy="6" r="2"/><circle cx="80" cy="94" r="2"/><circle cx="85" cy="6" r="2"/><circle cx="85" cy="94" r="2"/><circle cx="90" cy="6" r="2"/><circle cx="90" cy="94" r="2"/><circle cx="10" cy="6.0" r="2"/><circle cx="90" cy="6.0" r="2"/><circle cx="10" cy="11.2" r="2"/><circle cx="90" cy="11.2" r="2"/><circle cx="10" cy="16.4" r="2"/><circle cx="90" cy="16.4" r="2"/><circle cx="10" cy="21.6" r="2"/><circle cx="90" cy="21.6" r="2"/><circle cx="10" cy="26.8" r="2"/><circle cx="90" cy="26.8" r="2"/><circle cx="10" cy="32.0" r="2"/><circle cx="90" cy="32.0" r="2"/><circle cx="10" cy="37.2" r="2"/><circle cx="90" cy="37.2" r="2"/><circle cx="10" cy="42.4" r="2"/><circle cx="90" cy="42.4" r="2"/><circle cx="10" cy="47.6" r="2"/><circle cx="90" cy="47.6" r="2"/><circle cx="10" cy="52.8" r="2"/><circle cx="90" cy="52.8" r="2"/><circle cx="10" cy="58.0" r="2"/><circle cx="90" cy="58.0" r="2"/><circle cx="10" cy="63.2" r="2"/><circle cx="90" cy="63.2" r="2"/><circle cx="10" cy="68.4" r="2"/><circle cx="90" cy="68.4" r="2"/><circle cx="10" cy="73.6" r="2"/><circle cx="90" cy="73.6" r="2"/><circle cx="10" cy="78.8" r="2"/><circle cx="90" cy="78.8" r="2"/><circle cx="10" cy="84.0" r="2"/><circle cx="90" cy="84.0" r="2"/><circle cx="10" cy="89.2" r="2"/><circle cx="90" cy="89.2" r="2"/><circle cx="10" cy="94.4" r="2"/><circle cx="90" cy="94.4" r="2"/></g></mask>
   <linearGradient id="stkCork" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset=".35" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
 </defs></svg>`);
