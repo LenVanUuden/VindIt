@@ -1146,6 +1146,10 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .mini .legp,.mini .legsheen{animation:none}
 .leggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(78vw,280px),1fr));gap:22px;justify-items:center;margin:8px 0 14px}
 .legcell .card{width:min(78vw,280px)}
+.admlist{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:min(100%,320px);margin:0 auto 6px}
+.admlist .admbtn{width:100%;box-sizing:border-box}
+.admbtn{display:flex;align-items:center;gap:10px;text-align:left;width:100%;justify-content:flex-start}
+.admbtn span{display:flex;flex-direction:column}.admbtn small{font-size:11px;opacity:.7;font-weight:400}
 </style>
 </head>
 <body>
@@ -1167,19 +1171,19 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-093405'</script>
-<script src="data.js?v=20261016-093405"></script>
-<script src="art.js?v=20261016-093405"></script>
-<script src="gids.js?v=20261016-093405"></script>
-<script src="maps.js?v=20261016-093405"></script>
-<script src="zegels.js?v=20261016-093405"></script>
-<script src="landen.js?v=20261016-093405"></script>
-<script src="etiket.js?v=20261016-093405"></script>
-<script src="legendes.js?v=20261016-093405"></script>
-<script src="fullart.js?v=20261016-093405"></script>
-<script src="stickers.js?v=20261016-093405"></script>
-<script src="vrienden.js?v=20261016-093405"></script>
-<script src="wereldbol.js?v=20261016-093405"></script>
+<script>window.VI_V='20261016-093808'</script>
+<script src="data.js?v=20261016-093808"></script>
+<script src="art.js?v=20261016-093808"></script>
+<script src="gids.js?v=20261016-093808"></script>
+<script src="maps.js?v=20261016-093808"></script>
+<script src="zegels.js?v=20261016-093808"></script>
+<script src="landen.js?v=20261016-093808"></script>
+<script src="etiket.js?v=20261016-093808"></script>
+<script src="legendes.js?v=20261016-093808"></script>
+<script src="fullart.js?v=20261016-093808"></script>
+<script src="stickers.js?v=20261016-093808"></script>
+<script src="vrienden.js?v=20261016-093808"></script>
+<script src="wereldbol.js?v=20261016-093808"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1335,7 +1339,6 @@ function openSettings(){
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
       ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
-      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="relabelall">${I('pen')} Alle etiketten opnieuw tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button><button class="btn" type="button" id="legdemo">${I('crown')} Legende-kaarten bekijken</button>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -1343,11 +1346,6 @@ function openSettings(){
   const showErr=m=>{err.textContent=m;err.hidden=!m};
   sn.oninput=()=>{showErr('');o.querySelector('#sprev').textContent='Collectie van '+(sn.value.trim()||firstName())};
   o.querySelector('#close').onclick=()=>closeOverlay();
-  const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn en duurt ongeveer een halve minuut per twee wijnen.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
-  const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
-  const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
-  const ld=o.querySelector('#legdemo');if(ld)ld.onclick=()=>openLegDemo();
-  const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
     e.preventDefault();
     const name=sn.value.trim().replace(/\s+/g,' ');
@@ -2606,6 +2604,26 @@ function openFaDemo(){
     tilt(p.querySelector('.card'));p.querySelector('#back').onclick=()=>popOverlay();});
 }
 
+/* Beheerdersinstellingen: alles wat alleen de beheerder mag, op één plek (via het menu) */
+function openAdmin(){
+  if(!isAdmin())return;
+  const b=(id,ic,l,sub)=>`<button class="btn admbtn" type="button" id="${id}">${I(ic)}<span>${l}${sub?`<small>${sub}</small>`:''}</span></button>`;
+  const o=overlay(`<p class="status">Beheerdersinstellingen</p><p class="hint">Alleen zichtbaar voor jou.</p>
+    <p class="mgroup">Etiketten</p>
+    <div class="admlist">${b('relabel','pen','Etiketten tekenen','Wijnen vanaf Rare zonder getekend etiket')}${b('relabelall','pen','Alle etiketten opnieuw tekenen','Vastgezette etiketten blijven staan')}</div>
+    <p class="mgroup">Klassen</p>
+    <div class="admlist">${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
+    <p class="mgroup">Voorbeelden</p>
+    <div class="admlist">${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelector('#relabelall').onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
+  o.querySelector('#relabel').onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
+  o.querySelector('#reassess').onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
+  o.querySelector('#fademo').onclick=()=>openFaDemo();
+  o.querySelector('#legdemo').onclick=()=>openLegDemo();
+}
+
 /* Beheer: alle leren Legende-kaarten bekijken, groot en met glans (niets wordt opgeslagen) */
 function openLegDemo(){
   if(typeof legAll!=='function'){toast('Legende-kaarten zijn nog niet geladen.');return}
@@ -2664,6 +2682,7 @@ function openMenu(){
       ${tile('grapes','Landen','data-mact="lands"')}${tile('trophy','Uitdagingen','data-mact="lists"',`${lists.filter(isDone).length}/${lists.length}`)}${legK>=0?tile('crown','Legendes',`data-mgo="${legK}"`):''}</div>
       <p class="mgroup">Voor jou</p>
       <div class="mwides">${viewing?wide('arrowl','Mijn album','data-mact="mine"'):wide('sticker','Stickers','data-mact="stickers"')}${wide('heart','Wijnvrienden','data-mact="friends"')}</div>`:''}
+      ${session&&isAdmin()&&!viewing?`<p class="mgroup">Beheer</p><div class="mwides">${wide('gear','Beheerdersinstellingen','data-mact="admin"')}</div>`:''}
       <p class="mgroup">Hulp</p>
       <div class="mwides">${wide('question','Hoe werkt het?','data-mact="info"')}${wide('play','Rondleiding','data-mact="tour"')}</div>
       ${session?`<div class="mfoot"><button data-mact="settings">${I('gear')} Instellingen</button><button data-mact="feedback">${I('chat')} Feedback</button><button data-mact="logout">${I('logout')} Uitloggen</button></div>`:''}
@@ -2673,7 +2692,7 @@ function openMenu(){
   o.querySelectorAll('[data-mgo]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();closeOverlay();go(+b.dataset.mgo)});
   o.querySelectorAll('[data-mact]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const a=b.dataset.mact;
     if(a==='lands'){closeOverlay();openLands()}else if(a==='lists'){closeOverlay();openLists()}else if(a==='info'){closeOverlay();openInfo()}
-    else if(a==='tour'){closeOverlay();openTour()}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
+    else if(a==='tour'){closeOverlay();openTour()}else if(a==='admin'){closeOverlay();setTimeout(openAdmin,260)}else if(a==='friends'){closeOverlay();setTimeout(()=>openFriends(),260)}else if(a==='stickers'){closeOverlay();setTimeout(openStickers,280)}else if(a==='mine'){exitFriend()}else if(a==='settings'){closeOverlay();openSettings()}else if(a==='feedback'){closeOverlay();openFeedback()}
     else if(a==='logout')askConfirm('Uitloggen?','Je kaarten blijven bewaard. Je kunt later gewoon weer inloggen.','Uitloggen',logout)});
   const f=o.querySelector('.mtile,.mwide');if(f)f.focus();
 }
