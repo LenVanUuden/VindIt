@@ -273,7 +273,7 @@ Deno.serve(async (req) => {
     // Tweede stap bij een Legende: de achterkant
     if (body.mode === "back") {
       const { data: chk } = await admin.from("legend_checks").select("*").eq("id", String(body.check ?? "")).eq("user_id", user.id).maybeSingle();
-      if (!chk || chk.used || Date.now() - new Date(chk.created_at).getTime() > 15 * 60 * 1000) return json({ status: "back_expired" });
+      if (!chk || chk.used || Date.now() - new Date(chk.created_at).getTime() > 5 * 60 * 1000) return json({ status: "back_expired" });
       const p = chk.payload as Record<string, unknown>;
       const v = await checkBack(image, mediaType, p);
       if (!v) return json({ status: "ai_error" }, 502);
