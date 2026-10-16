@@ -12,7 +12,7 @@
 <title>Vined It</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600&family=Dancing+Script:wght@500;600&family=Oswald:wght@500;600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Playfair+Display:wght@700&family=UnifrakturMaguntia&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Libre+Franklin:wght@400;500;600;700&family=Dancing+Script:wght@500;600;700&family=Oswald:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=UnifrakturMaguntia&display=swap">
 <style>
 /* Layout: een dik, in leer gebonden insteekalbum op een houten tafel. Kartonnen bladen met 9 doorzichtige sleeves; vijf kaartklassen die je in één oogopslag uit elkaar houdt. Bewust één donkere wereld. */
 :root{
@@ -1130,6 +1130,22 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 .mini.t-ultra:not(.fa){background:radial-gradient(120% 70% at 30% 0%,#25457A,#0D1B36 75%);box-shadow:inset 0 0 0 1.5px #C6E6FF,inset 0 0 0 3px rgba(181,200,255,.45),0 0 12px rgba(120,170,255,.55)}
 .mini.t-ultra .mname{color:#E6F3FF}.mini.t-ultra .mnr{color:#9EC4F0}
 .t-ultra:not(.fa) .shine{background:repeating-linear-gradient(115deg,rgba(255,255,255,0) 0%,rgba(190,225,255,.35) 6%,rgba(255,255,255,0) 12%);background-size:300% 300%;background-position:calc(var(--mx)*100%) calc(var(--my)*100%);mix-blend-mode:screen}
+/* Leren Legende-kaarten (legendes.js) */
+.card.leg{padding:0;background:none!important;border-radius:14px;box-shadow:0 0 26px rgba(200,110,70,.45),0 14px 30px rgba(0,0,0,.6)!important}
+.card.leg .face{padding:0;outline:none;background:none;display:block;border-radius:14px;overflow:hidden}
+.legsvg{display:block;width:100%;height:auto}
+.mini.leg{background:none}.mini.leg .face{background:none;outline:none;overflow:visible;display:flex;align-items:center;justify-content:center}
+.mini.leg .legsvg{height:100%;width:auto;max-width:100%;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.mini .legband{display:none}
+.legp{animation:legsway 6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 0}
+@keyframes legsway{0%{transform:rotate(-.7deg)}100%{transform:rotate(.7deg)}}
+.legsheen{animation:legsheen 7s ease-in-out infinite}
+@keyframes legsheen{0%,15%{transform:translateX(-120px)}60%,100%{transform:translateX(420px)}}
+.legglint{animation:legtw 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes legtw{0%{opacity:.15;transform:scale(.5)}100%{opacity:1;transform:scale(1.1)}}
+.mini .legp,.mini .legsheen{animation:none}
+.leggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(78vw,280px),1fr));gap:22px;justify-items:center;margin:8px 0 14px}
+.legcell .card{width:min(78vw,280px)}
 </style>
 </head>
 <body>
@@ -1151,18 +1167,19 @@ body.viewing #memo,body.viewing #fav,body.viewing [data-top],body.viewing .gidbt
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-091243'</script>
-<script src="data.js?v=20261016-091243"></script>
-<script src="art.js?v=20261016-091243"></script>
-<script src="gids.js?v=20261016-091243"></script>
-<script src="maps.js?v=20261016-091243"></script>
-<script src="zegels.js?v=20261016-091243"></script>
-<script src="landen.js?v=20261016-091243"></script>
-<script src="etiket.js?v=20261016-091243"></script>
-<script src="fullart.js?v=20261016-091243"></script>
-<script src="stickers.js?v=20261016-091243"></script>
-<script src="vrienden.js?v=20261016-091243"></script>
-<script src="wereldbol.js?v=20261016-091243"></script>
+<script>window.VI_V='20261016-093405'</script>
+<script src="data.js?v=20261016-093405"></script>
+<script src="art.js?v=20261016-093405"></script>
+<script src="gids.js?v=20261016-093405"></script>
+<script src="maps.js?v=20261016-093405"></script>
+<script src="zegels.js?v=20261016-093405"></script>
+<script src="landen.js?v=20261016-093405"></script>
+<script src="etiket.js?v=20261016-093405"></script>
+<script src="legendes.js?v=20261016-093405"></script>
+<script src="fullart.js?v=20261016-093405"></script>
+<script src="stickers.js?v=20261016-093405"></script>
+<script src="vrienden.js?v=20261016-093405"></script>
+<script src="wereldbol.js?v=20261016-093405"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1318,7 +1335,7 @@ function openSettings(){
         ${Object.entries(PAGESTYLE).map(([k,l])=>`<label class="sw pg-${k}"><input type="radio" name="pages" value="${k}"${settings.pages===k?' checked':''}><span class="swpage" aria-hidden="true"></span><span>${l}</span></label>`).join('')}
       </div></fieldset>
       ${LIMIT>3?`<label class="chk"><input type="checkbox" id="sdemo"${settings.demo?' checked':''}> Testmodus: demowijnen in plaats van de camera</label>`:''}
-      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="relabelall">${I('pen')} Alle etiketten opnieuw tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button>`:''}
+      ${isAdmin()?`<button class="btn" type="button" id="reassess">${I('sparkle')} Klassen opnieuw beoordelen</button><button class="btn" type="button" id="relabel">${I('pen')} Etiketten tekenen</button><button class="btn" type="button" id="relabelall">${I('pen')} Alle etiketten opnieuw tekenen</button><button class="btn" type="button" id="fademo">${I('sparkle')} Full Art-voorbeelden</button><button class="btn" type="button" id="legdemo">${I('crown')} Legende-kaarten bekijken</button>`:''}
       <p class="err" id="serr" hidden></p>
       <div class="actions"><button class="btn" type="button" id="close">Annuleren</button><button class="btn primary" type="submit">Opslaan</button></div>
     </form>`);
@@ -1329,6 +1346,7 @@ function openSettings(){
   const rla=o.querySelector('#relabelall');if(rla)rla.onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn en duurt ongeveer een halve minuut per twee wijnen.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
   const rl=o.querySelector('#relabel');if(rl)rl.onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   const fd=o.querySelector('#fademo');if(fd)fd.onclick=()=>openFaDemo();
+  const ld=o.querySelector('#legdemo');if(ld)ld.onclick=()=>openLegDemo();
   const ra=o.querySelector('#reassess');if(ra)ra.onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -1588,6 +1606,8 @@ function bigCard(c){
   const top=`<div class="toprow"><span class="tloc">${esc(c.app||'')} · ${esc(c.land)}</span><span class="pill">${T.sym} ${c.fa?'Full Art':T.label}</span></div>`;
   const info=`<h3>${esc(c.naam)}</h3><p class="maker">${esc(c.maker)}${c.jaar?' · '+c.jaar:''}</p>
     <dl class="facts"><div><dt>Druif</dt><dd>${esc(c.druif||'Onbekend')}</dd></div><div><dt>Stijl</dt><dd>${esc(c.stijl||'—')}</dd></div><div><dt>${c.bottles>1?'Gedronken':'Gescand'}</dt><dd>${c.bottles>1?c.bottles+'× · sinds '+esc(c.datum):esc(c.datum)}</dd></div></dl>`;
+  const lg=typeof legSVG==='function'&&legSVG(c);
+  if(lg) return `<div class="card t-icon leg idle"><div class="face">${lg}${stampHTML(c)}</div></div>`;
   if(c.fa) return `<div class="card t-${c.rar} fa idle"><div class="face">${faScene(c)}${top}${stampHTML(c)}<div class="uinfo">${info}</div>${FA_LAYERS}</div></div>`;
   return `<div class="card t-${c.rar} idle"><div class="face">${top}${stampHTML(c)}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
 }
@@ -1595,6 +1615,8 @@ function mini(c){
   const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
   const ms=(isIcoon(c)?'<span class="micon" aria-hidden="true">✦</span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
+  const lg=typeof legSVG==='function'&&legSVG(c,{mini:true});
+  if(lg) return `<button class="${cls} leg" data-id="${c.id}" aria-label="${lab}"><div class="face">${lg}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
   if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${faScene(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
   return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
@@ -2582,6 +2604,19 @@ function openFaDemo(){
   o.querySelectorAll('.mini').forEach(m=>m.onclick=()=>{const c=L.find(x=>x.id===m.dataset.id);
     const p=overlay(`<div class="spin">${bigCard(c)}</div><div class="actions"><button class="btn primary" id="back">Terug</button></div>`,{nest:true});
     tilt(p.querySelector('.card'));p.querySelector('#back').onclick=()=>popOverlay();});
+}
+
+/* Beheer: alle leren Legende-kaarten bekijken, groot en met glans (niets wordt opgeslagen) */
+function openLegDemo(){
+  if(typeof legAll!=='function'){toast('Legende-kaarten zijn nog niet geladen.');return}
+  const L=legAll();
+  const o=overlay(`<p class="status">Legende-kaarten</p><p class="hint">Alle ${L.length} Legendes zoals ze in je album komen. Kantel je telefoon of sleep over een kaart voor de glans. Mouton krijgt per jaargang een eigen kunstwerk.</p>
+    <div class="leggrid">${L.map(x=>`<div class="legcell"><div class="card t-icon leg idle"><div class="face">${x.svg}</div></div></div>`).join('')}</div>
+    <div class="actions"><button class="btn" id="close">Sluiten</button></div>`);
+  o.querySelector('#close').onclick=()=>closeOverlay();
+  o.querySelectorAll('.legcell .card').forEach(el=>{const m=e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    el.style.setProperty('--ry',((x-.5)*16)+'deg');el.style.setProperty('--rx',((.5-y)*16)+'deg');el.style.setProperty('--mx',x);el.style.setProperty('--my',y)};
+    el.addEventListener('pointermove',m);el.addEventListener('pointerleave',()=>{el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')})});
 }
 
 /* Klasse-blad: al je kaarten van één klasse, per land */
