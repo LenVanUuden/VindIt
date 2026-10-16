@@ -1185,9 +1185,6 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .memoback{border-radius:14px;overflow:hidden}.mbin{border-radius:8px}
 .kstamp{-webkit-mask:none!important;mask:none!important;border:0!important;border-radius:7px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .kstamp::before{border-radius:4px}
-.ewear{position:absolute;inset:0}.ewear>svg{width:100%;height:100%;display:block}
-.ewgr{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 85%,rgba(150,110,50,.16),transparent 40%),radial-gradient(ellipse at 85% 12%,rgba(150,110,50,.12),transparent 35%);box-shadow:inset 0 0 12px rgba(110,80,30,.3)}
-.ewsv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1209,19 +1206,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-141002'</script>
-<script src="data.js?v=20261016-141002"></script>
-<script src="art.js?v=20261016-141002"></script>
-<script src="gids.js?v=20261016-141002"></script>
-<script src="maps.js?v=20261016-141002"></script>
-<script src="zegels.js?v=20261016-141002"></script>
-<script src="landen.js?v=20261016-141002"></script>
-<script src="etiket.js?v=20261016-141002"></script>
-<script src="legendes.js?v=20261016-141002"></script>
-<script src="fullart.js?v=20261016-141002"></script>
-<script src="stickers.js?v=20261016-141002"></script>
-<script src="vrienden.js?v=20261016-141002"></script>
-<script src="wereldbol.js?v=20261016-141002"></script>
+<script>window.VI_V='20261016-141435'</script>
+<script src="data.js?v=20261016-141435"></script>
+<script src="art.js?v=20261016-141435"></script>
+<script src="gids.js?v=20261016-141435"></script>
+<script src="maps.js?v=20261016-141435"></script>
+<script src="zegels.js?v=20261016-141435"></script>
+<script src="landen.js?v=20261016-141435"></script>
+<script src="etiket.js?v=20261016-141435"></script>
+<script src="legendes.js?v=20261016-141435"></script>
+<script src="fullart.js?v=20261016-141435"></script>
+<script src="stickers.js?v=20261016-141435"></script>
+<script src="vrienden.js?v=20261016-141435"></script>
+<script src="wereldbol.js?v=20261016-141435"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1632,39 +1629,9 @@ function drawnLabel(c){
 }
 /* Primeur: het etiket wordt nog getekend → potloodschets met een pen */
 const SKPEN='<svg class="skpen" viewBox="0 0 44 44" aria-hidden="true"><path d="M4 40l4-12L32 4l8 8L16 36z" fill="#C9A253" stroke="#5A3A0C" stroke-width="1.2"/><path d="M4 40l4-12 8 8z" fill="#2B2118"/><path d="M28 8l8 8" stroke="#5A3A0C"/></svg>';
-/* Een gedragen etiket: scheurtjes, vezels, een kreukel en een omgevouwen hoekje (per wijn anders, altijd gelijk) */
-function wornLabel(c){
-  const lbl=drawnLabel(c);
-  if(typeof faRnd!=='function')return lbl;
-  const r=faRnd(`${c.maker||''}|${c.naam||''}|slijtage`);
-  /* scheurtjes langs de randen: 2 à 3 happen, duidelijk zichtbaar */
-  const sides=[[[0,0],[100,0]],[[100,0],[100,100]],[[100,100],[0,100]],[[0,100],[0,0]]];
-  const dog=r()>.15?Math.floor(r()*4):-1,k=13+r()*6,ky=k*.75;
-  const nicks=[];const nn=2+(r()>.5?1:0);for(let i=0;i<nn;i++)nicks.push({side:Math.floor(r()*4),pos:18+r()*64,d:2.4+r()*3.2,w:4+r()*6});
-  const P=[],F=[];
-  for(let sI=0;sI<4;sI++){const [A,B]=sides[sI];
-    /* hoek van het ezelsoor: hoekpunt vervangen door de vouwlijn */
-    if(dog===sI){const q=[[[k,0],[0,ky]],[[100,ky],[100-k,0]],[[100-k,100],[100,100-ky]],[[0,100-ky],[k,100]]][sI];P.push(q[1],q[0])}else P.push(A);
-    const nx=sI===1?-1:sI===3?1:0,ny=sI===0?1:sI===2?-1:0,dx=B[0]-A[0],dy=B[1]-A[1];
-    for(const nk of nicks.filter(n=>n.side===sI).sort((a,b)=>a.pos-b.pos)){const ln=[];
-      for(let i=0;i<=6;i++){const t=nk.pos/100+(i/6-.5)*nk.w/100,dep=(i===0||i===6)?0:nk.d*Math.sin(Math.PI*i/6)*(.55+r()*.7);ln.push([A[0]+dx*t+nx*dep,A[1]+dy*t+ny*dep])}
-      P.push(...ln);F.push(ln)}
-  }
-  const poly='polygon('+P.map(([x,y])=>`${x.toFixed(1)}% ${y.toFixed(1)}%`).join(',')+')';
-  const flap=dog<0?null:[[[0,ky],[k,0],[k,ky]],[[100-k,0],[100,ky],[100-k,ky]],[[100,100-ky],[100-k,100],[100-k,100-ky]],[[k,100],[0,100-ky],[k,100-ky]]][dog];
-  const pts=a=>a.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ');
-  const sh=flap?flap.map(([x,y])=>[x+(dog===1||dog===2?-1.6:1.6),y+(dog>=2?-1.2:1.2)]):null;
-  const crease=r()>.35?{x:15+r()*70,y:12+r()*70,a:r()*6.28,l:10+r()*14}:null;
-  return `<div class="ewear" style="clip-path:${poly}">${lbl}<div class="ewgr"></div></div>
-   <svg class="ewsv" viewBox="0 0 100 100" preserveAspectRatio="none">
-    ${F.map(p=>`<polyline points="${pts(p)}" fill="none" stroke="#FFF8EA" stroke-width="1.3" stroke-opacity=".95" stroke-linejoin="round"/>`).join('')}
-    ${crease?`<path d="M${crease.x.toFixed(1)} ${crease.y.toFixed(1)}l${(Math.cos(crease.a)*crease.l).toFixed(1)} ${(Math.sin(crease.a)*crease.l).toFixed(1)}" stroke="#5A3A12" stroke-opacity=".28" stroke-width=".7"/><path d="M${(crease.x+.5).toFixed(1)} ${(crease.y+.5).toFixed(1)}l${(Math.cos(crease.a)*crease.l).toFixed(1)} ${(Math.sin(crease.a)*crease.l).toFixed(1)}" stroke="#fff" stroke-opacity=".6" stroke-width=".6"/>`:''}
-    ${flap?`<polygon points="${pts(sh)}" fill="#2A1A0A" opacity=".35"/><polygon points="${pts(flap)}" fill="#E9DCC0" stroke="rgba(90,60,25,.45)" stroke-width=".5"/><polygon points="${pts(flap)}" fill="url(#ewg)" opacity=".5"/>`:''}
-    <defs><linearGradient id="ewg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#8C6A35"/></linearGradient></defs></svg>`;
-}
 function artHTML(c){
   if(LABEL_TIERS.includes(c.rar)&&PEND[c.wineId])return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox sketching" data-w="${c.wineId}"><div class="skpaper"></div><div class="sk">${drawnLabel(c)}</div><div class="skpenw">${SKPEN}</div></div></div>`;
-  if(LABEL_TIERS.includes(c.rar))return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox${INKED.has(c.wineId)?' inkin':''}" data-w="${c.wineId}">${wornLabel(c)}<i class="lfoil"></i></div></div>`;
+  if(LABEL_TIERS.includes(c.rar))return `<div class="lart">${scene(areaOf(c),c.v)}<div class="etkbox${INKED.has(c.wineId)?' inkin':''}" data-w="${c.wineId}">${drawnLabel(c)}<i class="lfoil"></i></div></div>`;
   return scene(areaOf(c),c.v);
 }
 function bigCard(c){
@@ -2629,7 +2596,7 @@ function inkWine(id,st){
   delete PEND[id];savePend();INKED.add(id);setTimeout(()=>INKED.delete(id),5000);
   cards.filter(x=>x.wineId===id).forEach(x=>{if(st)x.style=st});
   const c=cards.find(x=>x.wineId===id);
-  document.querySelectorAll(`.etkbox.sketching[data-w="${id}"]`).forEach(b=>{b.classList.remove('sketching');b.classList.add('inkin');b.innerHTML=(c?wornLabel(c):'')+'<i class="lfoil"></i>'});
+  document.querySelectorAll(`.etkbox.sketching[data-w="${id}"]`).forEach(b=>{b.classList.remove('sketching');b.classList.add('inkin');b.innerHTML=(c?drawnLabel(c):'')+'<i class="lfoil"></i>'});
   const pr=document.querySelector('.primeur');if(pr){pr.querySelector('.prstat').innerHTML=st?'✦ Jouw etiket is klaar ✦':'Je etiket wordt later bijgewerkt.';pr.classList.add('klaar')}
   if(st)buzz([30,60,30]);
   setTimeout(()=>{refresh()},1800);
