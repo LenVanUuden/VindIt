@@ -56,7 +56,8 @@ function runGlobe(wrap){
   let W=0,H=0,R=0,dpr=1;
   const proj=d3.geoOrthographic().clipAngle(90).precision(.35);
   const path=d3.geoPath(proj,ctx),grat=d3.geoGraticule10();
-  const size=()=>{const b=cv.getBoundingClientRect();dpr=Math.min(2.5,window.devicePixelRatio||1);W=b.width;H=b.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);R=Math.min(W,H)/2-6};
+  /* Layoutmaat, niet getBoundingClientRect: tijdens het omslaan is de bladzijde in 3D gedraaid en meet je een vertekende breedte (bol werd een ovaal) */
+  const size=()=>{dpr=Math.min(2.5,window.devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;if(!W||!H)return;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);R=Math.min(W,H)/2-6};
   size();
   let dirty=true,vel=0,idle=!GSTATE.spun;const P=new Map();
   const draw=()=>{
