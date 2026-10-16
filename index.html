@@ -1186,19 +1186,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-112122'</script>
-<script src="data.js?v=20261016-112122"></script>
-<script src="art.js?v=20261016-112122"></script>
-<script src="gids.js?v=20261016-112122"></script>
-<script src="maps.js?v=20261016-112122"></script>
-<script src="zegels.js?v=20261016-112122"></script>
-<script src="landen.js?v=20261016-112122"></script>
-<script src="etiket.js?v=20261016-112122"></script>
-<script src="legendes.js?v=20261016-112122"></script>
-<script src="fullart.js?v=20261016-112122"></script>
-<script src="stickers.js?v=20261016-112122"></script>
-<script src="vrienden.js?v=20261016-112122"></script>
-<script src="wereldbol.js?v=20261016-112122"></script>
+<script>window.VI_V='20261016-114443'</script>
+<script src="data.js?v=20261016-114443"></script>
+<script src="art.js?v=20261016-114443"></script>
+<script src="gids.js?v=20261016-114443"></script>
+<script src="maps.js?v=20261016-114443"></script>
+<script src="zegels.js?v=20261016-114443"></script>
+<script src="landen.js?v=20261016-114443"></script>
+<script src="etiket.js?v=20261016-114443"></script>
+<script src="legendes.js?v=20261016-114443"></script>
+<script src="fullart.js?v=20261016-114443"></script>
+<script src="stickers.js?v=20261016-114443"></script>
+<script src="vrienden.js?v=20261016-114443"></script>
+<script src="wereldbol.js?v=20261016-114443"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1961,11 +1961,13 @@ function countUp(pg){
 }
 let lastUsed=null;
 /* Bladgeschiedenis: na een sprong (menu, Kelderboek, "telt mee voor") kun je terug naar waar je was */
-let navHist=[];
+let navHist=[],jumpSec=null;
+/* Onderdeel van een blad: een set (alle bladen ervan) of een hoofdstuk/vaste pagina */
+const secOf=p=>!p?'':p.set?'s:'+p.set.id:p.t+':'+(p.land||'');
 function goBack(fromPop){
   while(navHist.length&&(navHist[navHist.length-1]>=pages.length||navHist[navHist.length-1]===cur))navHist.pop();
   if(!navHist.length){renderChrome();return false}
-  const n=navHist.pop();go(n,true,true);
+  const n=navHist.pop();go(n,true,true);jumpSec=secOf(pages[n]);
   if(!fromPop){ignorePop=true;try{history.back()}catch(e){ignorePop=false}}
   return true;
 }
@@ -1975,8 +1977,9 @@ function go(n,force,noHist){
   if(n===cur&&!force)return;
   if(!noHist&&n!==cur&&Math.abs(n-cur)>1&&stack.querySelector('.leaf')){
     if(navHist[navHist.length-1]!==cur)navHist.push(cur);if(navHist.length>15)navHist.shift();
-    setTimeout(()=>{try{history.pushState({vi:'pg'},'')}catch(e){}},180);
-  }
+    jumpSec=secOf(pages[n]);
+    const pushPg=(t=0)=>{if((ignorePop||histOpen)&&t<20){setTimeout(()=>pushPg(t+1),100);return}try{history.pushState({vi:'pg'},'')}catch(e){}};setTimeout(pushPg,120);
+  }else if(!noHist&&navHist.length&&secOf(pages[n])!==jumpSec){navHist=[];jumpSec=null}   // onderdeel verlaten: terug-knopje weg
   const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur,moved=n!==cur||!old;
   if(moved&&!reduced){const pg=nu.querySelector('.page');pg.classList.add('enter');if(old)pg.classList.add('late');countUp(pg)}
   cur=n;renderChrome();
