@@ -5,13 +5,13 @@
 // =====================================================================
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-export const VERIFY_MODEL = Deno.env.get("VERIFY_MODEL") ?? "claude-haiku-5-5";
+export const VERIFY_MODEL = Deno.env.get("VERIFY_MODEL") ?? "claude-sonnet-5-5";
 const SEARCH_TOOL_TYPE = Deno.env.get("WEB_SEARCH_TOOL") ?? "web_search_20250305";
 
 const VERIFY_SYSTEM = `You verify rarity data for ONE specific wine for a Dutch wine-collecting app. Use web search, at most 3 searches, for example:
  1. "<producer> <wine> <vintage> price" (wine-searcher, vivino, critics)
  2. "<producer> <wine> kopen" to find Dutch webshops (.nl domains)
-Keep your text between searches very short. Then call the "klasse_check" tool exactly once. Never invent numbers: use null when you could not find something.
+Keep your text between searches very short. Then call the "klasse_check" tool exactly once. Never invent ratings, scores or shops: use null / empty when you could not find them. The price is the exception: always give one; if you found nothing concrete, give your best realistic estimate for this vintage and set price_basis to "schatting".
 
 Fields:
 - price_eur_low / price_eur_high: typical price in euros for a 75 cl bottle of THIS vintage. For current vintages: Dutch or EU retail. For older vintages (> 10 years) use what this vintage actually sells for now (shops, auctions, wine-searcher average). An old bottle of a simple wine is NOT worth more because it is old; most wine does not improve with age.
@@ -34,7 +34,7 @@ const VERIFY_TOOL = {
   input_schema: {
     type: "object",
     properties: {
-      price_eur_low: { type: ["number", "null"] }, price_eur_high: { type: ["number", "null"] },
+      price_eur_low: { type: "number" }, price_eur_high: { type: "number" },
       price_basis: { type: "string", enum: ["winkel", "veiling", "schatting"] },
       nl_shop_urls: { type: "array", items: { type: "string" } },
       vivino_rating: { type: ["number", "null"] }, vivino_count: { type: ["integer", "null"] },
