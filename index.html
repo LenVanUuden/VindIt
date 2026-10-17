@@ -1251,19 +1251,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-152454'</script>
-<script src="data.js?v=20261017-152454"></script>
-<script src="art.js?v=20261017-152454"></script>
-<script src="gids.js?v=20261017-152454"></script>
-<script src="maps.js?v=20261017-152454"></script>
-<script src="zegels.js?v=20261017-152454"></script>
-<script src="landen.js?v=20261017-152454"></script>
-<script src="etiket.js?v=20261017-152454"></script>
-<script src="legendes.js?v=20261017-152454"></script>
-<script src="fullart.js?v=20261017-152454"></script>
-<script src="stickers.js?v=20261017-152454"></script>
-<script src="vrienden.js?v=20261017-152454"></script>
-<script src="wereldbol.js?v=20261017-152454"></script>
+<script>window.VI_V='20261017-153402'</script>
+<script src="data.js?v=20261017-153402"></script>
+<script src="art.js?v=20261017-153402"></script>
+<script src="gids.js?v=20261017-153402"></script>
+<script src="maps.js?v=20261017-153402"></script>
+<script src="zegels.js?v=20261017-153402"></script>
+<script src="landen.js?v=20261017-153402"></script>
+<script src="etiket.js?v=20261017-153402"></script>
+<script src="legendes.js?v=20261017-153402"></script>
+<script src="fullart.js?v=20261017-153402"></script>
+<script src="stickers.js?v=20261017-153402"></script>
+<script src="vrienden.js?v=20261017-153402"></script>
+<script src="wereldbol.js?v=20261017-153402"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1986,14 +1986,20 @@ const POOL_BY_KEY=Object.fromEntries(POOL.map(p=>[wkey(p),p]));
 /* Oude uitleg met bedrag (±€35) → woord, want vrienden kijken mee */
 /* Uitleg van de klasse zonder oordeel: geen prijswoorden (vrienden kijken mee), maar het soort moment waar de fles bij hoort.
    Ook oudere teksten uit de database worden hier omgezet. */
-const WHY_WORDS=[[/±€\s?(\d+)/,(m,n)=>{n=+n;return n<12?'makkelijk te vinden':n<25?'een goede ontdekking':n<60?'lastig op te sporen':n<200?'een echte vondst':'een zeldzame vondst'}],
-  [/\b(topprijsklasse|een fles voor het leven)\b/g,'een zeldzame vondst'],[/\b(hogere prijsklasse|voor grote gelegenheden)\b/g,'een echte vondst'],
-  [/\b(middenklasse|voor een bijzonder moment)\b/g,'lastig op te sporen'],[/\b(toegankelijk geprijsd|voor een goed diner)\b/g,'een goede ontdekking'],
-  [/\b(betaalbaar|voor elke dag)\b/g,'makkelijk te vinden'],
-  [/bekend merk, ruim verkrijgbaar|bekende naam, overal te vinden/g,'bekende naam'],[/\b(zwak jaar|lastig wijnjaar)\b/g,'moeilijk wijnjaar'],
+/* Uitleg van de klasse: eerst wat de fles bijzonder maakt, de prijs neutraal als €-tekens achteraan (geen bedrag, geen oordeel).
+   Oudere teksten uit de database (prijswoorden, ±€-bedragen) worden hier omgezet. */
+const PRICE_EUR=[[/^(betaalbaar|voor elke dag|makkelijk te vinden)$/,1],[/^(toegankelijk geprijsd|voor een goed diner|een goede ontdekking)$/,2],
+  [/^(middenklasse|voor een bijzonder moment|lastig op te sporen)$/,3],[/^(hogere prijsklasse|voor grote gelegenheden|een echte vondst)$/,4],
+  [/^(topprijsklasse|een fles voor het leven|een zeldzame vondst)$/,5]];
+const WHY_WORDS=[[/bekend merk, ruim verkrijgbaar|bekende naam, overal te vinden/g,'bekende naam'],[/\b(zwak jaar|lastig wijnjaar)\b/g,'moeilijk wijnjaar'],
   [/zeldzaam in Nederland/g,'amper in Nederlandse winkels'],[/ongewoon in Nederland/g,'weinig in Nederlandse winkels'],
   [/cru\/reserva-niveau/g,'een reserva of cru'],[/\btopclassificatie\b/g,'hoogste classificatie'],[/\bgrootformaat\b/g,'magnum of groter']];
-const priceWords=r=>WHY_WORDS.reduce((t,[re,to])=>t.replace(re,to),String(r||''));
+const priceWords=r=>{
+  let eur=0;const parts=WHY_WORDS.reduce((t,[re,to])=>t.replace(re,to),String(r||'')).split(' · ').map(x=>x.trim()).filter(Boolean).filter(x=>{
+    const m=x.match(/^±€\s?(\d+)$/);if(m){const n=+m[1];eur=n<12?1:n<25?2:n<60?3:n<200?4:5;return false}
+    for(const [re,k] of PRICE_EUR)if(re.test(x)){eur=k;return false}
+    return /^€+$/.test(x)?(eur=x.length,false):true});
+  if(eur)parts.push('€'.repeat(eur));return parts.join(' · ')};
 function toCard(row,w){
   const pw=POOL_BY_KEY[w.wine_key];
   if(pw)w={...w,regio:pw.regio,land:pw.land,appellation:pw.app,grape:pw.grape,style:pw.style,color:pw.color,tags:pw.tags};
@@ -2183,7 +2189,7 @@ function spinCard(o,c){
 }
 const whyLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);
   if(ic&&ic.legend&&c.rar==='icon')return `Waarom Legende? ${ic.why}`;
-  return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why[0].toUpperCase()+c.why.slice(1)}.`:'';};
+  return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why[0].toUpperCase()+c.why.slice(1)}${/€$/.test(c.why)?'':'.'}`:'';};
 const iconLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return ic&&!ic.legend?`<p class="hint icline">✦ Waarom icoon? ${esc(ic.why)}</p>`:''};
 function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
