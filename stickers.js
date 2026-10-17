@@ -82,6 +82,7 @@ function stkEarned(){
   if(st)for(const set of SETS)if(st.visible[set.id]&&st.complete[set.id])L.push({id:'e:'+set.id,group:'Voltooide sets'});
   const fa=[...new Set(cards.filter(c=>c.fa).map(c=>c.regio||c.land))];
   fa.forEach(r=>L.push({id:'h:'+r,group:'Holo (Full Art)'}));
+  if(typeof packStickers==='function'&&!STK_VIEW)L.push(...packStickers());
   return L;
 }
 const stkLocked=()=>[
@@ -98,6 +99,7 @@ function stkInfo(id){
     const first=cards.filter(c=>c.land===key).map(c=>c.created).sort()[0];return {n:'Stempel '+key,svg:stkVisa(key,i,first?new Date(first).getFullYear():''),ink:true}}
   if(kind==='m')return {n:key+' wijnen',svg:stkMedal(key)};
   if(kind==='e'){const set=SETS.find(s=>s.id===key);if(!set)return null;const A=set.area&&typeof AREAS!=='undefined'?AREAS[set.area]:null;return {n:set.name,svg:stkEmblem(set.name,A&&A.c)}}
+  if(kind==='p'){const a=typeof PACK_ART!=='undefined'&&PACK_ART[key];return a?{n:a.n,svg:a.svg,holo:!!a.holo,wide:!!a.wide}:null}
   if(kind==='h'){const A=typeof AREAS!=='undefined'?AREAS[key]:null;const nm=A?A.naam:key;return {n:'Holo '+nm,svg:stkEmblem(nm,A?A.c:null),holo:true}}
   return null;
 }
@@ -151,6 +153,7 @@ function openStickers(){
   const tray=document.createElement('div');tray.className='stktray';tray.setAttribute('role','dialog');tray.setAttribute('aria-label','Stickers plakken');
   tray.innerHTML=`<button class="stkhead" id="stktog" aria-expanded="true"><span class="stkgrip" aria-hidden="true"></span><b>Stickers plakken</b><span class="stksub">Tik om te plakken · sleep om te verplaatsen · hoekje om te draaien</span><span class="stkmore">${I('sticker')} Meer stickers</span></button>
     <div class="stkgrid">${groups.map(g=>`<p class="stkg">${g}</p>${earned.filter(e=>e.group===g).map(e=>{const inf=stkInfo(e.id);return inf?`<button class="stkpick${inf.holo?' holo':''}" data-s="${esc(e.id)}" aria-label="${esc(inf.n)}"><svg viewBox="0 0 100 100">${inf.ink?inf.svg:`<g filter="url(#stkDie)">${inf.svg}</g>`}</svg>${inf.holo?'<i class="stkholo"></i>':''}</button>`:''}).join('')}`).join('')}
+      ${typeof packsProgress==='function'&&packsProgress().length?`<p class="stkg">Kistjes verdienen</p>${packsProgress().map(x=>`<div class="stklock kprog${x.ready?' ready':''}"><b>${esc(x.p.naam)}</b><span>${x.ready?'Verdiend! Hij wordt zo bezorgd.':esc(x.p.om[0].toUpperCase()+x.p.om.slice(1))+' · '+x.n+'/'+x.g}</span><i class="kbarp" style="--p:${(x.n/x.g).toFixed(3)}"></i></div>`).join('')}`:''}
       <p class="stkg">Nog te verdienen</p>${stkLocked().map(l=>`<div class="stklock"><b>${l.t}</b><span>${l.d}</span></div>`).join('')}</div>
     <div class="stkacts"><button class="btn" id="stkcancel">Annuleren</button><button class="btn primary" id="stkdone">Klaar</button></div>`;
   document.body.appendChild(tray);

@@ -1218,6 +1218,51 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .eur i.on{opacity:1;color:#E9C46A;text-shadow:0 0 6px rgba(233,196,106,.55);animation:eurOn .5s ease-out backwards;animation-delay:calc(var(--k)*140ms + .2s)}
 @keyframes eurOn{from{opacity:.3;color:inherit;text-shadow:none}55%{opacity:1;color:#FFE7A0;text-shadow:0 0 12px rgba(255,220,140,.95)}to{opacity:1;color:#E9C46A;text-shadow:0 0 6px rgba(233,196,106,.55)}}
 @media (prefers-reduced-motion: reduce){.eur i.on{animation:none}}
+/* ---------- Stickerkistje ---------- */
+.kistov{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 24px);background:radial-gradient(ellipse at 50% 55%,#5C201A,#0C0507 72%);color:var(--cream);text-align:center;opacity:0;transition:opacity .3s;overflow:hidden}
+.kistov.in{opacity:1}.kistov.out{opacity:0}
+.kist-eyebrow{margin:0;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#C9A253}
+.kist-title{margin:2px 0 0;font-family:var(--display);font-weight:400;font-size:26px;color:#F3DDA8;line-height:1.15}
+.kist-sub{margin:4px 0 0;font-size:13px;opacity:.8}
+.kist-stage{position:relative;width:min(78vw,310px);aspect-ratio:200/170;margin-top:96px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.kcrate{width:100%;height:100%;overflow:visible;animation:kdrop .9s cubic-bezier(.3,1.4,.5,1) .25s backwards}
+@keyframes kdrop{0%{transform:translateY(-110vh) rotate(-8deg)}70%{transform:translateY(0) rotate(2deg)}85%{transform:translateY(-12px) rotate(-1deg)}100%{transform:none}}
+.kcrate .kbar{opacity:0;transform-origin:150px 30px;transform:translate(30px,-30px) rotate(20deg);transition:.35s}
+.kcrate.pry .kbar{opacity:1;animation:kpry .45s ease-in-out}
+@keyframes kpry{0%{transform:translate(0,0) rotate(0)}40%{transform:translate(-4px,6px) rotate(-14deg)}100%{transform:translate(0,0) rotate(0)}}
+.kcrate.pry .klid{animation:klift .45s ease-in-out}
+@keyframes klift{0%,100%{transform:none}45%{transform:translateY(-7px) rotate(-2.5deg)}}
+.kcrate .klid{transform-origin:20px 54px;transform-box:view-box}
+.kcrate .knails .pop{animation:knail .6s ease-out forwards}
+@keyframes knail{to{transform:translate(var(--nx,8px),-40px) rotate(200deg);opacity:0}}
+.kcrate.open .kbar{opacity:0;transition:.2s}
+.kcrate.open{transform:translateY(28px) scale(.86);transition:transform .6s cubic-bezier(.2,.8,.2,1) .2s}
+.kcrate.open .klid{animation:kfly 1s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes kfly{0%{transform:none}30%{transform:translate(10px,-60px) rotate(-14deg)}100%{transform:translate(160px,-260px) rotate(-70deg);opacity:0}}
+.kcrate.open .kbody{animation:kshake .4s ease-out}
+@keyframes kshake{0%,100%{transform:none}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+.kist-puff{position:absolute;left:50%;top:36%;width:0;height:0;pointer-events:none}
+.kist-puff i{position:absolute;left:-30px;top:-30px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,220,.95),rgba(240,220,180,.55) 55%,rgba(240,220,180,0) 72%);opacity:0;transform:scale(.2)}
+.kist-puff b{position:absolute;left:0;top:0;width:3px;height:16px;border-radius:2px;background:#E8C27A;opacity:0}
+.kist-puff.go i{animation:kpuff 1s ease-out forwards;animation-delay:var(--dl)}
+.kist-puff.go b{animation:kstraw 1.1s ease-out forwards;animation-delay:var(--dl)}
+@keyframes kpuff{0%{opacity:0;transform:translate(0,0) scale(.2)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(calc(var(--s)*2.6))}}
+@keyframes kstraw{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),calc(var(--dy) + 120px)) rotate(var(--r))}}
+.kist-stk{position:absolute;left:50%;top:40%;width:0;height:0}
+.kst{position:absolute;left:0;top:0;margin:0;width:min(25vw,98px);transform:translate(-50%,-50%) scale(.1);opacity:0;display:flex;flex-direction:column;align-items:center;gap:4px}
+.kst-in{width:100%;aspect-ratio:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}.kst-in svg{width:100%;height:100%;overflow:visible}
+.kst figcaption{font-size:11.5px;color:#F3DDA8;white-space:nowrap;opacity:0;transition:opacity .3s .9s}.kst figcaption i{font-style:normal;color:#BFE4F2}
+.kist-stk.go .kst{animation:kburst .9s cubic-bezier(.2,1.3,.4,1) forwards;animation-delay:calc(var(--i)*.14s)}
+.kist-stk.go .kst figcaption{opacity:1}
+@keyframes kburst{0%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(0)}40%{opacity:1;transform:translate(calc(-50% + var(--x)*.6),calc(-50% - 46vw*.35)) scale(1.15) rotate(calc(var(--rot)*3))}100%{opacity:1;transform:translate(calc(-50% + var(--x)*.94),calc(-50% - 118px)) scale(1) rotate(var(--rot))}}
+.kst.holo .kst-in{animation:kholo 2.4s linear infinite 1.2s}
+@keyframes kholo{0%,100%{filter:drop-shadow(0 6px 10px rgba(0,0,0,.5)) hue-rotate(0)}50%{filter:drop-shadow(0 0 14px rgba(190,228,242,.9)) hue-rotate(40deg) brightness(1.15)}}
+.kist-hint{margin:16px 0 0;font-size:14px;color:#E9D3A0;min-height:20px}.kist-hint.nudge{animation:knudge 1.4s ease-in-out infinite}
+@keyframes knudge{0%,100%{opacity:.6}50%{opacity:1}}
+.kist-acts{display:flex;gap:10px;margin-top:6px}
+.kprog{position:relative;padding-bottom:8px}.kprog.ready b{color:#E9C46A}
+.kbarp{position:absolute;left:10px;right:10px;bottom:4px;height:3px;border-radius:2px;background:rgba(233,211,160,.18);overflow:hidden}.kbarp::after{content:"";position:absolute;inset:0;width:calc(var(--p)*100%);background:#C9A253;border-radius:2px}
+@media (prefers-reduced-motion: reduce){.kcrate,.kist-stk.go .kst,.kcrate.open .klid{animation-duration:.01s}}
 .awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
@@ -1255,19 +1300,20 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-153721'</script>
-<script src="data.js?v=20261017-153721"></script>
-<script src="art.js?v=20261017-153721"></script>
-<script src="gids.js?v=20261017-153721"></script>
-<script src="maps.js?v=20261017-153721"></script>
-<script src="zegels.js?v=20261017-153721"></script>
-<script src="landen.js?v=20261017-153721"></script>
-<script src="etiket.js?v=20261017-153721"></script>
-<script src="legendes.js?v=20261017-153721"></script>
-<script src="fullart.js?v=20261017-153721"></script>
-<script src="stickers.js?v=20261017-153721"></script>
-<script src="vrienden.js?v=20261017-153721"></script>
-<script src="wereldbol.js?v=20261017-153721"></script>
+<script>window.VI_V='20261017-180208'</script>
+<script src="data.js?v=20261017-180208"></script>
+<script src="art.js?v=20261017-180208"></script>
+<script src="gids.js?v=20261017-180208"></script>
+<script src="maps.js?v=20261017-180208"></script>
+<script src="zegels.js?v=20261017-180208"></script>
+<script src="landen.js?v=20261017-180208"></script>
+<script src="etiket.js?v=20261017-180208"></script>
+<script src="legendes.js?v=20261017-180208"></script>
+<script src="fullart.js?v=20261017-180208"></script>
+<script src="stickers.js?v=20261017-180208"></script>
+<script src="kistjes.js?v=20261017-180208"></script>
+<script src="vrienden.js?v=20261017-180208"></script>
+<script src="wereldbol.js?v=20261017-180208"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2023,8 +2069,8 @@ async function loadAlbum(){
   retriedToday=new Set();
   try{const rt=await sb.from('retries').select('wine_id,created_at').order('created_at',{ascending:false}).limit(200);const td=amsDay(new Date());(rt.data||[]).forEach(r=>{if(amsDay(new Date(r.created_at))===td)retriedToday.add(r.wine_id)})}catch(e){}
   try{const t=await sb.rpc('scans_today');serverToday=(!t.error&&typeof t.data==='number')?t.data:null}catch(e){serverToday=null}
-  await loadStickers();
-  refresh();renderChrome();
+  await loadStickers();if(typeof loadPacks==='function')await loadPacks();
+  refresh();renderChrome();if(typeof checkPacks==='function')setTimeout(checkPacks,1800);
 }
 
 /* ---------- bladeren ---------- */
@@ -2150,7 +2196,7 @@ function overlay(html,opt={}){
 function removeOverlays(){stopCam();document.querySelectorAll('.overlay').forEach(o=>o.remove())}
 function leave(o,cls){if(reduced){o.remove();return}o.classList.add('leaving',cls);setTimeout(()=>o.remove(),240)}
 function syncHist(){setTimeout(()=>{if(!document.querySelector('.overlay:not(.leaving)')&&histOpen){histOpen=false;ignorePop=true;try{history.back()}catch(e){ignorePop=false}}},80)}
-function closeOverlay(keepPulled){stopCam();document.querySelectorAll('.overlay:not(.leaving)').forEach(o=>{if(o.hidden)o.remove();else leave(o,'out')});if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'));syncHist()}
+function closeOverlay(keepPulled){stopCam();document.querySelectorAll('.overlay:not(.leaving)').forEach(o=>{if(o.hidden)o.remove();else leave(o,'out')});if(!keepPulled)document.querySelectorAll('.mini.pull').forEach(m=>m.classList.remove('pull'));syncHist();if(typeof checkPacks==='function')setTimeout(checkPacks,900)}
 function popOverlay(){const all=[...document.querySelectorAll('.overlay:not(.leaving)')];if(all.length<=1){closeOverlay();return}
   stopCam();leave(all[all.length-1],'popout');const prev=all[all.length-2];prev.hidden=false;prev.classList.remove('push');
   if(!reduced){prev.classList.add('reshow');setTimeout(()=>prev.classList.remove('reshow'),400)}const f=prev.querySelector('.ovback');if(f)f.focus()}
@@ -2788,13 +2834,14 @@ function openAdmin(){
     <p class="mgroup">Klassen</p>
     <div class="admlist">${b('areview','sparkle','Klassen herzien','Voorstellen na opzoeken op internet')}${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
     <p class="mgroup">Voorbeelden</p>
-    <div class="admlist">${b('revdemo','camera','Testreveal: nieuw gescande fles','Primeur, potloodschets en een vers getekend etiket')}${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
+    <div class="admlist">${b('revdemo','camera','Testreveal: nieuw gescande fles','Primeur, potloodschets en een vers getekend etiket')}${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}${b('kistdemo','sticker','Testkistje openen','Bezorging en opengekrikt kistje (niets wordt opgeslagen)')}</div>
     <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
   o.querySelector('#close').onclick=()=>closeOverlay();
   o.querySelector('#relabelall').onclick=()=>askConfirm('Alle etiketten opnieuw tekenen?','Alle wijnen vanaf Rare worden opnieuw getekend door Claude Sonnet (met de foto als die er is). Commons (reisposter) en vastgezette etiketten worden overgeslagen. Dit kost ongeveer 2 à 3 cent per wijn.','Opnieuw tekenen',()=>{closeOverlay();runReassess(true,'label')});
   o.querySelector('#relabel').onclick=()=>askConfirm('Etiketten tekenen?','Wijnen zonder etiketontwerp worden getekend door Claude Sonnet. Waar een foto van het etiket is, kijkt Claude naar die foto. Dit kost ongeveer 2 à 3 cent per wijn.','Tekenen',()=>{closeOverlay();runReassess(false,'label')});
   o.querySelector('#reassess').onclick=()=>askConfirm('Klassen opnieuw beoordelen?','Wijnen die nog geen beoordeling hebben, gaan langs Claude. Klassen van kaarten kunnen omhoog of omlaag gaan. Dit kost een paar cent en duurt even.','Beoordelen',()=>{closeOverlay();runReassess(false)});
   o.querySelector('#fademo').onclick=()=>openFaDemo();
+  o.querySelector('#kistdemo').onclick=()=>{closeOverlay();setTimeout(()=>demoPack(PACKS[Math.floor(Math.random()*PACKS.length)].id),350)};
   o.querySelector('#legdemo').onclick=()=>openLegDemo();
   o.querySelector('#revdemo').onclick=()=>openRevealPick();
   o.querySelector('#astats').onclick=()=>openAdminStats();
@@ -3118,7 +3165,7 @@ function openInfo(open,nest){
     ${sec('top','star','Top 10 en herinneringen',`<p>Open een kaart en tik op <b>★ Top 10</b> om hem een plek tussen je favorieten te geven.</p><p>Met <b>✎ Herinnering schrijven</b> zet je een korte tekst in handschrift op de achterkant, met de datum erbij. Tik of veeg over de kaart om hem om te draaien.</p>`)}
     ${sec('bladeren','swipe','Bladeren en terug',`<p>Veeg om te bladeren. Tik bovenin op de <b>naam van het blad</b> voor <b>Ga naar</b>: daar zie je waar je bent, alle bladen van dat land en de vaste plekken zoals je Kelderboek, Top 10, Wereld en Legendes.</p><p>Spring je ergens heen, dan staat bovenin een knopje terug naar waar je was. In elk scherm brengt <b>‹ Terug</b> linksboven je één stap terug.</p>`)}
     ${sec('legendes','crown','Iconen en Legendes',`<p>Een <b>Icoon</b> (✦) is een beroemde wijn van een land, zoals Dom Pérignon voor Frankrijk. Een <b>Legende</b> (♛) is een van de 21 grootste wijnen ter wereld, en krijgt een eigen kaart in leer.</p>`)}
-    ${sec('samen','heart','Stickers en wijnvrienden',`<p>Met het stickericoon rechtsboven plak je <b>stickers</b> op elke bladzijde, je omslag en je achterkant. Nieuwe stickers verdien je met ontdekken: nieuwe landen, voltooide sets en Full Arts.</p><p>Via het menu nodig je <b>wijnvrienden</b> uit. Zij kunnen je album bekijken; je herinneringen blijven privé.</p>`)}
+    ${sec('samen','heart','Stickers en wijnvrienden',`<p>Met het stickericoon rechtsboven plak je <b>stickers</b> op elke bladzijde, je omslag en je achterkant. Nieuwe stickers verdien je met ontdekken: nieuwe landen, voltooide sets en Full Arts.</p><p>Daarnaast verdien je <b>stickerkistjes</b>: een wijnkistje met drie stickers in een eigen thema. Je krijgt er een voor je eerste wijnvriend, voor 5 en 10 wijnvrienden, voor wijnen uit 3 en 6 landen, voor rood, wit, rosé én bubbels, voor je eerste Super Rare, voor 5 herinneringen, een volle Top 10, je eerste complete set en een wijn uit de oogsttijd. Zodra je er een verdient, wordt hij bezorgd: tik een paar keer om hem open te krikken. In de stickerlade zie je hoe ver je bent met de volgende.</p><p>Via het menu nodig je <b>wijnvrienden</b> uit. Zij kunnen je album bekijken; je herinneringen blijven privé.</p>`)}
     ${sec('kaarten','map','Kaarten',`<p>Rechtsboven op een bladzijde staat een kaartje van het land met speldjes. Tik erop voor een grote kaart met namen. Op <b>Mijn wijnwereld</b> zie je in één oogopslag welke landen je al ontdekte.</p>`)}
     </div>
     <div class="actions"><button class="btn" data-act="tour">${I('play')} Rondleiding</button><button class="btn primary xclose" id="close">Terug naar album</button></div>
