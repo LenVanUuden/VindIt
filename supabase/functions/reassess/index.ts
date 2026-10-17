@@ -190,8 +190,13 @@ async function movePhotos(admin: any) {
 
 // De nieuwste etiketfoto van deze wijn, van wie hem ook heeft
 // deno-lint-ignore no-explicit-any
+// Scans van vóór 15 okt bewaarden alleen de bewerkte kaartfoto (.jpg, kleuren vereenvoudigd), niet het origineel
+const POSTER_NOTE = "\nLet op: de foto is een bewerkte versie met vereenvoudigde, vervormde kleuren (posterisatie). Gebruik hem voor opbouw, vormen en tekst, niet voor de exacte kleuren; kies kleuren die bij dit soort etiket passen.";
+const isPoster = (p: string | null) => !!p && !p.endsWith(".label.jpg");
+let LAST_PHOTO_PATH: string | null = null;
 async function newestPhoto(admin: any, wid: string): Promise<string | null> {
   const path = await newestPhotoPath(admin, wid);
+  LAST_PHOTO_PATH = path;
   if (!path) return null;
   const { data: file } = await admin.storage.from("card-art").download(path);
   return file ? b64(await file.arrayBuffer()) : null;
@@ -243,7 +248,7 @@ Deno.serve(async (req) => {
       const path = await newestPhotoPath(admin, body.wine);
       if (!path) return json({ status: "ok", url: null });
       const { data: su } = await admin.storage.from("card-art").createSignedUrl(path, 600);
-      return json({ status: "ok", url: su?.signedUrl ?? null });
+      return json({ status: "ok", url: su?.signedUrl ?? null, kind: isPoster(path) ? "art" : "label" });
     }
 
     // Eén wijn: opnieuw tekenen, vergelijken (dry), opslaan of vastzetten
@@ -266,10 +271,11 @@ Deno.serve(async (req) => {
       try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
       const img = await newestPhoto(admin, w.id);
       const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}`;
+      const descP = desc + (img && isPoster(LAST_PHOTO_PATH) ? POSTER_NOTE : "");
       const models: string[] = Array.isArray(body.models) ? body.models : [body.model ?? "sonnet"];
       const styles: Record<string, unknown> = {};
       const errors: Record<string, string> = {};
-      await Promise.all(models.slice(0, 2).map(async (m) => { styles[m] = await drawLabel(m, img, "image/jpeg", desc); if (!styles[m]) errors[m] = LAST_DRAW_ERR; }));
+      await Promise.all(models.slice(0, 2).map(async (m) => { styles[m] = await drawLabel(m, img, "image/jpeg", descP); if (!styles[m]) errors[m] = LAST_DRAW_ERR; }));
       if (!body.dry) {
         const st = styles[models[0]];
         if (st) await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
@@ -289,7 +295,7 @@ Deno.serve(async (req) => {
       for (const w of wines ?? []) {
         // een bewaarde etiketfoto zoeken bij iemand die deze wijn heeft
         const img = await newestPhoto(admin, w.id);
-        const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}\nKlasse: ${w.tier || ""}`;
+        const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}\nKlasse: ${w.tier || ""}` + (img && isPoster(LAST_PHOTO_PATH) ? POSTER_NOTE : "");
         const content: unknown[] = img ? [{ type: "image", source: { type: "base64", media_type: "image/jpeg", data: img } }, { type: "text", text: desc }] : [{ type: "text", text: desc }];
         if (w.label_style && (w.label_style as Record<string, unknown>).locked) { results.push({ id: w.id, naam: w.naam, overgeslagen: "vast" }); continue; }
         const st = await drawLabel(body.model ?? "sonnet", img, "image/jpeg", desc);
