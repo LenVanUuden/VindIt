@@ -30,6 +30,9 @@ Ideeën uit tests en eigen inval. Per idee: waar het vandaan komt, wat het oplev
 | 25 | **Etiketten zelf laten tekenen** door Claude Opus: herkenbare elementen benoemen en als eigen lijntekening plaatsen (vrije opbouw, `els`); beheerder kan per kaart opnieuw tekenen, Sonnet vs Opus vergelijken en vastzetten | Len | Hoog: elke kaart herkenbaar als díe wijn | Middel | Live (test) |
 | 26 | **Primeur**: eerste scan van een wijn in Vined It → "Deze wijn heeft nog niemand gescand!"; vanaf Rare tekent een pen een schets tot het echte etiket klaar is en de inkt erin trekt | Len | Hoog: wow-moment, verbergt de wachttijd | Klein | Live |
 | 12 | **Kaartje van de streek rechtsboven** op elke bladzijde, groot te openen met genummerde speldjes | Tester | Middel: oriëntatie en leerwaarde | Middel | Live |
+| 27 | **Galerij-gaatje dichten**: bij "Gewone camera openen" (als de ingebouwde scanner niet werkt) alleen foto's accepteren die in de laatste 2 minuten zijn gemaakt (`lastModified` van het bestand); oudere foto → "Maak een nieuwe foto van de fles". Nu kan een tester op sommige Android-browsers via dat keuzemenu toch een oude foto kiezen | Len | Middel: eerlijk spel, sluit valsspelen met oude foto's uit | Heel klein | Idee |
+| 28 | **Verlanglijst vanuit een vriendenalbum**: op kaarten die je vriend wel heeft en jij niet "Nog niet in jouw album" + "Op mijn verlanglijst"; later haakje voor "waar koop ik hem" (affiliate) | Claude | Middel-hoog: van kijken naar proberen, verdienmodel | Middel | Idee |
+| 29 | **Klasse op drie pijlers** in plaats van prijs als anker: zeldzaamheid 40% (NL-winkels, oplage, Vivino), aanzien 30% (maker, critici, classificatie), waarde 30% (prijs). Eerst doorrekenen op de bekende wijnen (gratis) | Claude | Hoog als prijs te zwaar blijft wegen (bijv. Bollinger) | Middel | Idee (Len koos voorlopig: prijs blijft anker) |
 
 ## 1. Herinnering schrijven (eerder: Flessenpost)
 
