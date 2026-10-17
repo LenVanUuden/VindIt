@@ -1199,6 +1199,11 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .awthumb{flex:none;width:34px;aspect-ratio:3/4;border-radius:2px;overflow:hidden;background:rgba(233,211,160,.08);display:grid;place-items:center;font-size:12px;opacity:.9}.awthumb>svg{width:100%;height:100%;display:block}.awthumb.none{border:1px dashed rgba(233,211,160,.3);color:#E9D3A0}
 .awtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.awtier,.awst{font-size:10.5px;padding:1px 7px;border-radius:999px;border:1px solid rgba(233,211,160,.35);color:#E9D3A0;line-height:1.5}.awst.on{background:rgba(201,162,83,.25);border-color:#C9A253}.awst.dim{opacity:.55}.awst.warn{border-color:#C8644F;color:#F0B4A4}
 .awlabel{flex:none;aspect-ratio:3/4;width:min(52vw,190px);margin:8px auto 2px;box-shadow:0 8px 20px rgba(0,0,0,.45);border-radius:3px;overflow:hidden}.awlabel>svg{display:block;width:100%;height:100%}
+.awpair{display:flex;gap:12px;justify-content:center;align-items:flex-start;margin:8px auto 2px;width:min(92vw,400px)}.awpair figure{margin:0;flex:1;max-width:190px;display:flex;flex-direction:column;align-items:center;gap:4px}.awpair figcaption{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+.awpair .awlabel{width:100%;margin:0}
+.awph{width:100%;aspect-ratio:3/4;border-radius:3px;overflow:hidden;background:rgba(0,0,0,.25);border:1px dashed rgba(233,211,160,.3);display:grid;place-items:center;font-size:11px;opacity:.9;cursor:zoom-in}.awph img{width:100%;height:100%;object-fit:contain;display:block}.awph:has(img){border:0;box-shadow:0 8px 20px rgba(0,0,0,.45)}
+.awbig{max-width:92vw;max-height:78vh;border-radius:6px;display:block;margin:10px auto}
+.cmp.three{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px}.cmp.three .cmpcol{min-width:0}.cmpfoto img{width:100%;aspect-ratio:3/4;object-fit:contain;background:rgba(0,0,0,.25);display:block;border-radius:3px}
 .awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
@@ -1236,19 +1241,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-082112'</script>
-<script src="data.js?v=20261017-082112"></script>
-<script src="art.js?v=20261017-082112"></script>
-<script src="gids.js?v=20261017-082112"></script>
-<script src="maps.js?v=20261017-082112"></script>
-<script src="zegels.js?v=20261017-082112"></script>
-<script src="landen.js?v=20261017-082112"></script>
-<script src="etiket.js?v=20261017-082112"></script>
-<script src="legendes.js?v=20261017-082112"></script>
-<script src="fullart.js?v=20261017-082112"></script>
-<script src="stickers.js?v=20261017-082112"></script>
-<script src="vrienden.js?v=20261017-082112"></script>
-<script src="wereldbol.js?v=20261017-082112"></script>
+<script>window.VI_V='20261017-085223'</script>
+<script src="data.js?v=20261017-085223"></script>
+<script src="art.js?v=20261017-085223"></script>
+<script src="gids.js?v=20261017-085223"></script>
+<script src="maps.js?v=20261017-085223"></script>
+<script src="zegels.js?v=20261017-085223"></script>
+<script src="landen.js?v=20261017-085223"></script>
+<script src="etiket.js?v=20261017-085223"></script>
+<script src="legendes.js?v=20261017-085223"></script>
+<script src="fullart.js?v=20261017-085223"></script>
+<script src="stickers.js?v=20261017-085223"></script>
+<script src="vrienden.js?v=20261017-085223"></script>
+<script src="wereldbol.js?v=20261017-085223"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2819,7 +2824,8 @@ function openAdminWine(w){
   const o=overlay(`<p class="eyebrow">${esc(w.maker||'')}</p><p class="status">${esc(w.naam)}${w.jaar?' · '+w.jaar:''}</p>
     <p class="hint"><span class="atier t-${t}">${TIERS[t].sym} ${TIERS[t].label}</span>${w.tier_override?' (handmatig)':''} · ${w.kaarten} ${w.kaarten==1?'kaart':'kaarten'}</p>
     ${w.tier_reason?`<p class="hint small">Waarom: ${esc(w.tier_reason)}</p>`:''}
-    ${w.label_style?`<div class="awlabel">${makeLabelSVG(w.label_style,awCard(w))}</div><p class="hint small">${w.locked?'🔒 Vastgezet: wordt niet overschreven door "alle etiketten opnieuw tekenen".':'Niet vastgezet.'}</p>`:''}
+    <div class="awpair">${w.label_style?`<figure><div class="awlabel">${makeLabelSVG(w.label_style,awCard(w))}</div><figcaption>Getekend</figcaption></figure>`:''}<figure class="awfoto"><div class="awph"><span>Foto laden…</span></div><figcaption>Foto</figcaption></figure></div>
+    ${w.label_style?`<p class="hint small">${w.locked?'🔒 Vastgezet: wordt niet overschreven door "alle etiketten opnieuw tekenen".':'Niet vastgezet.'}</p>`:''}
     ${t==='common'&&!w.label_style?'':`<p class="mgroup">${w.label_style?'Opnieuw tekenen':'Etiket tekenen'}</p><div class="awdraw">${DRAWM.map(([m,l,pr])=>`<button class="btn small" data-draw="${m}">${l}<small>${pr}</small></button>`).join('')}</div><p class="hint small">Vanaf de nieuwste foto. Je ziet eerst het resultaat naast het huidige etiket en kiest dan.</p>`}
     <dl class="facts awfacts">${row('Prijs (schatting)',price)}${row('Classificatie',SIGN.classification[s.classification]||s.classification)}${row('Maker',SIGN.producer_fame[s.producer_fame]||s.producer_fame)}${row('Oplage',s.production)}${row('In Nederland',s.rarity_nl)}${row('Jaargang',s.vintage_quality)}${row('Etiket',w.label_v==='2'?(w.locked?'getekend, vastgezet':'getekend'):'nog niet getekend')}</dl>
     ${w.is_icon?'<p class="hint small">Een Legende: de klasse ligt vast.</p>':`<p class="mgroup">Klasse aanpassen</p><div class="awtiers">${['common','rare','superrare','ultra'].map(k=>`<button class="btn small${(w.tier_override||'')===k?' primary':''}" data-settier="${k}">${TIERS[k].sym} ${TIERS[k].label}</button>`).join('')}<button class="btn small${w.tier_override?'':' primary'}" data-settier="">Berekend${w.tier&&w.tier_override?' ('+TIERS[w.tier].label+')':''}</button></div>`}
@@ -2832,10 +2838,19 @@ function openAdminWine(w){
     if(error){toast('Opslaan lukte niet.');o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=false);return}
     w.tier_override=v;toast(`Klasse: ${TIERS[data.tier].label}. Alle ${w.kaarten} kaarten gaan mee.`);await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)});
   o.querySelectorAll('[data-draw]').forEach(b=>b.onclick=()=>adminRedraw(w,b.dataset.draw));
+  adminPhoto(w).then(u=>{const ph=o.querySelector('.awph');if(!ph)return;
+    if(!u){ph.innerHTML='<span>Geen foto bewaard</span>';return}
+    ph.innerHTML=`<img src="${u}" alt="Foto van het etiket">`;ph.onclick=()=>overlay(`<img class="awbig" src="${u}" alt="Foto van het etiket">`,{nest:true})});
   const lk=o.querySelector('#awlock');if(lk)lk.onclick=async()=>{lk.disabled=true;try{await callDraw({mode:'lock',wine:w.id,locked:!w.locked});w.locked=!w.locked;await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)}catch(e){lk.disabled=false;toast('Lukte niet.')}};
   o.querySelector('#awmerge').onclick=()=>openAdminWines('',{id:w.id,done:other=>askConfirm('Samenvoegen?',`"${other.naam}" (${other.kaarten}×) gaat op in "${w.naam}". Kaarten en een getekend etiket gaan mee. Dit kan niet ongedaan worden.`,'Samenvoegen',async()=>{
     const {error}=await sb.rpc('admin_merge',{p_keep:w.id,p_drop:other.id});if(error){toast('Samenvoegen lukte niet.');return}
     toast('Samengevoegd.');await loadAlbum();go(cur,true);closeOverlay()})});
+}
+/* Nieuwste etiketfoto (tijdelijke link); per wijn even onthouden */
+async function adminPhoto(w){
+  if(w._foto!==undefined)return w._foto;
+  try{const d=await callDraw({mode:'photo',wine:w.id});w._foto=d&&d.url||null}catch(e){w._foto=null}
+  return w._foto;
 }
 async function adminRedraw(w,m){
   const [,lab,pr]=DRAWM.find(x=>x[0]===m);
@@ -2845,7 +2860,7 @@ async function adminRedraw(w,m){
   if(!st){toast('Geen tekening'+(d&&d.errors&&d.errors[m]?': '+d.errors[m].slice(0,90):'')+'.');return}
   const c=awCard(w);
   const o=overlay(`<p class="status">Nieuw etiket van ${lab}</p><p class="hint">${d.foto?'Getekend vanaf de foto.':'Geen foto gevonden: getekend uit kennis.'}</p>
-    <div class="cmp"><div class="cmpcol"><b>Huidig</b>${w.label_style?`<div class="cmplbl">${makeLabelSVG(w.label_style,c)}</div>`:'<p class="hint">Nog geen etiket</p>'}</div>
+    <div class="cmp three">${w._foto?`<div class="cmpcol"><b>Foto</b><div class="cmplbl cmpfoto"><img src="${w._foto}" alt=""></div></div>`:''}<div class="cmpcol"><b>Huidig</b>${w.label_style?`<div class="cmplbl">${makeLabelSVG(w.label_style,c)}</div>`:'<p class="hint">Nog geen etiket</p>'}</div>
     <div class="cmpcol"><b>${lab}</b><div class="cmplbl">${makeLabelSVG(st,c)}</div>${(st.key||[]).length?`<ul>${st.key.map(k=>`<li>${esc(k)}</li>`).join('')}</ul>`:''}</div></div>
     <div class="actions"><button class="btn" id="rdno">Huidige houden</button><button class="btn primary" id="rdyes">Nieuwe gebruiken</button></div>`,{nest:true});
   o.querySelector('#rdno').onclick=()=>popOverlay();

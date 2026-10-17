@@ -191,6 +191,12 @@ async function movePhotos(admin: any) {
 // De nieuwste etiketfoto van deze wijn, van wie hem ook heeft
 // deno-lint-ignore no-explicit-any
 async function newestPhoto(admin: any, wid: string): Promise<string | null> {
+  const path = await newestPhotoPath(admin, wid);
+  if (!path) return null;
+  const { data: file } = await admin.storage.from("card-art").download(path);
+  return file ? b64(await file.arrayBuffer()) : null;
+}
+async function newestPhotoPath(admin: any, wid: string): Promise<string | null> {
   const { data: owners } = await admin.from("cards").select("user_id").eq("wine_id", wid).limit(20);
   let best: { path: string; t: string } | null = null;
   // Eerst uitgesneden etiketfoto's (.label.jpg); anders de oudere kaartfoto (.jpg)
@@ -203,9 +209,7 @@ async function newestPhoto(admin: any, wid: string): Promise<string | null> {
     }
     if (best) break;
   }
-  if (!best) return null;
-  const { data: file } = await admin.storage.from("card-art").download(best.path);
-  return file ? b64(await file.arrayBuffer()) : null;
+  return best ? best.path : null;
 }
 
 // AI-gebruik vastleggen voor het beheerderscentrum (kosten per maand); fouten hier mogen nooit iets breken
@@ -232,6 +236,15 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    // Beheer: de nieuwste etiketfoto van een wijn bekijken (tijdelijke link, 10 minuten)
+    if (body.mode === "photo") {
+      try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
+      const path = await newestPhotoPath(admin, body.wine);
+      if (!path) return json({ status: "ok", url: null });
+      const { data: su } = await admin.storage.from("card-art").createSignedUrl(path, 600);
+      return json({ status: "ok", url: su?.signedUrl ?? null });
+    }
 
     // Eén wijn: opnieuw tekenen, vergelijken (dry), opslaan of vastzetten
     if (body.mode === "draw" || body.mode === "save" || body.mode === "lock") {
