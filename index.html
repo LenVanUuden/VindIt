@@ -1214,6 +1214,10 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .arvr{font-size:12px;margin:4px 0 0;color:#E9D3A0}.arvf{font-size:11.5px;margin:3px 0 0;opacity:.85}.arvf i{opacity:.7}
 .arvn{font-size:11.5px;margin:4px 0 0;opacity:.75;font-style:italic}.arvs{font-size:10.5px;margin:4px 0 0;opacity:.7;word-break:break-word}.arvs a{color:#E9D3A0}
 .arva{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}.arva small{opacity:.75}
+.eur{white-space:nowrap;font-style:normal;letter-spacing:.04em}.eur i{font-style:normal;font-weight:700;opacity:.3}
+.eur i.on{opacity:1;color:#E9C46A;text-shadow:0 0 6px rgba(233,196,106,.55);animation:eurOn .5s ease-out backwards;animation-delay:calc(var(--k)*140ms + .2s)}
+@keyframes eurOn{from{opacity:.3;color:inherit;text-shadow:none}55%{opacity:1;color:#FFE7A0;text-shadow:0 0 12px rgba(255,220,140,.95)}to{opacity:1;color:#E9C46A;text-shadow:0 0 6px rgba(233,196,106,.55)}}
+@media (prefers-reduced-motion: reduce){.eur i.on{animation:none}}
 .awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
@@ -1251,19 +1255,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-153402'</script>
-<script src="data.js?v=20261017-153402"></script>
-<script src="art.js?v=20261017-153402"></script>
-<script src="gids.js?v=20261017-153402"></script>
-<script src="maps.js?v=20261017-153402"></script>
-<script src="zegels.js?v=20261017-153402"></script>
-<script src="landen.js?v=20261017-153402"></script>
-<script src="etiket.js?v=20261017-153402"></script>
-<script src="legendes.js?v=20261017-153402"></script>
-<script src="fullart.js?v=20261017-153402"></script>
-<script src="stickers.js?v=20261017-153402"></script>
-<script src="vrienden.js?v=20261017-153402"></script>
-<script src="wereldbol.js?v=20261017-153402"></script>
+<script>window.VI_V='20261017-153721'</script>
+<script src="data.js?v=20261017-153721"></script>
+<script src="art.js?v=20261017-153721"></script>
+<script src="gids.js?v=20261017-153721"></script>
+<script src="maps.js?v=20261017-153721"></script>
+<script src="zegels.js?v=20261017-153721"></script>
+<script src="landen.js?v=20261017-153721"></script>
+<script src="etiket.js?v=20261017-153721"></script>
+<script src="legendes.js?v=20261017-153721"></script>
+<script src="fullart.js?v=20261017-153721"></script>
+<script src="stickers.js?v=20261017-153721"></script>
+<script src="vrienden.js?v=20261017-153721"></script>
+<script src="wereldbol.js?v=20261017-153721"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2190,12 +2194,15 @@ function spinCard(o,c){
 const whyLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);
   if(ic&&ic.legend&&c.rar==='icon')return `Waarom Legende? ${ic.why}`;
   return c.why?`Waarom ${TIERS[c.rar].label}? ${c.why[0].toUpperCase()+c.why.slice(1)}${/€$/.test(c.why)?'':'.'}`:'';};
+/* Prijs als vijf €-tekens: zoveel als het prijsniveau lichten één voor één goud op, de rest blijft dof */
+const eurHTML=n=>`<span class="eur" aria-label="prijsniveau ${n} van 5">${[1,2,3,4,5].map(k=>`<i class="${k<=n?'on':''}" style="--k:${k}">€</i>`).join('')}</span>`;
+const whyHTML=t=>{const m=String(t||'').match(/^(.*?)(€{1,5})$/);return m?esc(m[1])+eurHTML(m[2].length):esc(t)};
 const iconLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return ic&&!ic.legend?`<p class="hint icline">✦ Waarom icoon? ${esc(ic.why)}</p>`:''};
 function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
-    ${whyLine(c)||c.fa?`<p class="hint whyline">${esc(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}${(()=>{let seen='1';try{seen=localStorage.getItem('vi.cardhint');localStorage.setItem('vi.cardhint','1')}catch(e){}return seen?'':'<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>'})()}${sets.length&&!viewing?`<div class="countsfor"><span>Telt mee voor</span>${sets.map(s=>{const k=firstPageOf(q=>q.set===s);return k>=0?`<button data-pg="${k}">${esc(s.name)}</button>`:`<b>${esc(s.name)}</b>`}).join('')}</div>`:sets.length?`<p class="hint">Telt mee voor: ${sets.map(s=>esc(s.name)).join(', ')}</p>`:''}
+    ${whyLine(c)||c.fa?`<p class="hint whyline">${whyHTML(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}${(()=>{let seen='1';try{seen=localStorage.getItem('vi.cardhint');localStorage.setItem('vi.cardhint','1')}catch(e){}return seen?'':'<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>'})()}${sets.length&&!viewing?`<div class="countsfor"><span>Telt mee voor</span>${sets.map(s=>{const k=firstPageOf(q=>q.set===s);return k>=0?`<button data-pg="${k}">${esc(s.name)}</button>`:`<b>${esc(s.name)}</b>`}).join('')}</div>`:sets.length?`<p class="hint">Telt mee voor: ${sets.map(s=>esc(s.name)).join(', ')}</p>`:''}
     <div class="actions"><button class="btn xclose" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     ${isAdmin()&&!viewing?`<div class="actions adm"><button class="btn small" id="adraw">${I('pen')} Etiket opnieuw tekenen</button><button class="btn small" id="acmp">${I('sparkle')} Sonnet vs Opus</button><button class="btn small" id="alock">${c.style&&c.style.locked?'🔓 Losmaken':'🔒 Vastzetten'}</button></div>`:''}
     <div class="actions"><button class="btn primary xclose" id="close">Terug in de sleeve</button></div>`,{nest});
@@ -2614,7 +2621,7 @@ function reveal(c,news,title){
       setTimeout(()=>{tilt(card);if(c.rar!=='common'||c.fa){card.classList.add('burst');if(!title)o.querySelector('.status').textContent=TIERS[c.rar].label+(c.fa?' · Full Art!':'!')}
         o.querySelector('.status').classList.add('pop');
         const prm=o.querySelector('.primeur');if(prm){prm.hidden=false;o.querySelector('.status').hidden=true;buzz([20,40,20,40,60])}
-        const si=stackInfo(c);o.querySelector('#h').textContent=(whyLine(c)?whyLine(c)+' ':HINT[c.rar])+(isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:'');o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
+        const si=stackInfo(c);o.querySelector('#h').innerHTML=(whyLine(c)?whyHTML(whyLine(c))+' ':esc(HINT[c.rar]))+esc((isIcoon(c)?' ✦ En het is een Icoon: '+iconOf(c).why:'')+(c.fa?' En het is een Full Art: puur geluk!':'')+(si&&si.n>1?` Op je stapel ${si.set.slots[si.k].l} gelegd (×${si.n})${si.top?', en hij ligt bovenop!':'.'}`:''));o.querySelector('#acts').hidden=false;o.querySelector('#place').focus()},reduced?0:700)},charge)};
   const walk=!reduced&&(c.rar!=='common'||c.fa)&&typeof MAPS!=='undefined';
   let begun=false;
   const begin=()=>{if(begun)return;begun=true;if(walk)walkout(o,c,open);else open()};
@@ -2863,7 +2870,7 @@ function openAdminWine(w){
   const price=s.price_eur_low||s.price_eur_high?`€${s.price_eur_low||'?'}–${s.price_eur_high||'?'}`:'';
   const o=overlay(`<p class="eyebrow">${esc(w.maker||'')}</p><p class="status">${esc(w.naam)}${w.jaar?' · '+w.jaar:''}</p>
     <p class="hint"><span class="atier t-${t}">${TIERS[t].sym} ${TIERS[t].label}</span>${w.tier_override?' (handmatig)':''} · ${w.kaarten} ${w.kaarten==1?'kaart':'kaarten'}</p>
-    ${w.tier_reason?`<p class="hint small">Waarom: ${esc(priceWords(w.tier_reason))}</p>`:''}
+    ${w.tier_reason?`<p class="hint small">Waarom: ${whyHTML(priceWords(w.tier_reason))}</p>`:''}
     <div class="awpair">${w.label_style?`<figure><div class="awlabel">${makeLabelSVG(w.label_style,awCard(w))}</div><figcaption>Getekend</figcaption></figure>`:''}<figure class="awfoto"><div class="awph"><span>Foto laden…</span></div><figcaption>Foto</figcaption></figure></div>
     ${w.label_style?`<p class="hint small">${w.locked?'🔒 Vastgezet: wordt niet overschreven door "alle etiketten opnieuw tekenen".':'Niet vastgezet.'}</p>`:''}
     ${t==='common'&&!w.label_style?'':`<p class="mgroup">${w.label_style?'Opnieuw tekenen':'Etiket tekenen'}</p><div class="awdraw">${DRAWM.map(([m,l,pr])=>`<button class="btn small" data-draw="${m}">${l}<small>${pr}</small></button>`).join('')}</div><p class="hint small">Vanaf de nieuwste foto. Je ziet eerst het resultaat naast het huidige etiket en kiest dan.</p>`}
@@ -2950,7 +2957,7 @@ async function openAdminReviews(){
     return `<div class="arv${r.changed?' ch':''}" data-w="${r.wine_id}">
       <div class="arvh"><b>${esc(r.naam)}</b><small>${esc(r.maker||'')}${r.jaar?' · '+r.jaar:''} · ${r.kaarten}×</small></div>
       <div class="arvt">${tchip(r.now_tier)}${r.changed?` <span class="arrow">→</span> ${tchip(nt)}`:' <small>blijft gelijk</small>'}${r.tier_override?' <small>(handmatig vastgezet, blijft zo)</small>':''}</div>
-      ${r.next.reason?`<p class="arvr">${esc(priceWords(r.next.reason))}</p>`:''}
+      ${r.next.reason?`<p class="arvr">${whyHTML(priceWords(r.next.reason))}</p>`:''}
       <p class="arvf">${facts(s)}</p>
       ${s.note?`<p class="arvn">${esc(s.note)}</p>`:''}
       ${(s.sources||[]).length?`<p class="arvs">${s.sources.map(u=>{let h='';try{h=new URL(u).hostname.replace(/^www\./,'')}catch(e){}return `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(h)}</a>`}).join(' · ')}</p>`:''}
