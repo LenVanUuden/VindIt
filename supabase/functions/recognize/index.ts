@@ -10,6 +10,7 @@
 //   VINDIT_USER_DAY_CAP   – max. herkenningen per gebruiker per dag (standaard 15; testers krijgen 5x hun dagelimiet)
 // =====================================================================
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { mergeSignals, verifySignals } from "../_shared/verify.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -381,6 +382,11 @@ Deno.serve(async (req) => {
       const { data: ex } = await admin.from("wines").select("id,is_icon,tier,tier_override,signals").eq("wine_key", key).maybeSingle();
       lw = (ex as W) ?? null;
       if (!lw) { const { data: sm } = await admin.rpc("find_same_wine", { p_wine: payload }); if (sm && sm.id) lw = sm as W; }
+      // Nieuwe wijn (nog geen klasse)? Eerst de echte gegevens opzoeken: prijs van dit jaar, NL-webshops, critici (max. 15 s)
+      if (!lw?.is_icon && !(lw && lw.signals)) {
+        const ver = await verifySignals({ naam: payload.naam, maker: payload.maker, jaar: payload.jaar, app: payload.app, regio: payload.regio, land: payload.land, color: payload.color }, 15000);
+        if (ver) payload.signals = mergeSignals(payload.signals, ver) as typeof payload.signals;
+      }
       // Klasse zoals scan_wine hem zou geven
       let tierNext: string | null = null;
       if (lw?.is_icon) tierNext = "icon";

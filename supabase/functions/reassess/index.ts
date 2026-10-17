@@ -9,6 +9,7 @@
 // Body: { mode: "draw", wine, model?|models?, dry? } – één wijn tekenen of vergelijken · { mode: "save", wine, style } · { mode: "lock", wine, locked }
 // =====================================================================
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { LAST_VERIFY_ERR, mergeSignals, verifySignals } from "../_shared/verify.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -241,6 +242,18 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    // Beheer: klasse controleren met gegevens van internet (niets opslaan; toepassen gaat via admin_apply_signals)
+    if (body.mode === "verify") {
+      const { data: w } = await admin.from("wines").select("id,naam,maker,jaar,regio,land,appellation,color,is_icon,tier,tier_override,tier_reason,signals").eq("id", body.wine).single();
+      if (!w) return json({ status: "not_found" }, 404);
+      const ver = await verifySignals({ naam: w.naam, maker: w.maker, jaar: w.jaar, appellation: w.appellation, regio: w.regio, land: w.land, color: w.color }, 45000);
+      if (!ver) return json({ status: "failed", error: LAST_VERIFY_ERR });
+      const sig = mergeSignals(w.signals as Record<string, unknown>, ver);
+      const { data: t } = await admin.rpc("wine_tier", { p_s: sig, p_jaar: w.jaar, p_color: w.color, p_is_icon: !!w.is_icon });
+      return json({ status: "ok", signals: sig, old: { tier: w.is_icon ? "icon" : (w.tier_override || w.tier), calc: w.tier, reason: w.tier_reason, signals: w.signals },
+        next: { tier: w.is_icon ? "icon" : (w.tier_override || (t as any)?.tier), calc: (t as any)?.tier, reason: (t as any)?.reason, score: (t as any)?.score }, manual: !!w.tier_override });
+    }
 
     // Beheer: de nieuwste etiketfoto van een wijn bekijken (tijdelijke link, 10 minuten)
     if (body.mode === "photo") {
