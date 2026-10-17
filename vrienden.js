@@ -60,6 +60,7 @@ async function viewFriend(id,name){
   cards=[];ownedKeys=new Set();
   for(const r of data.cards||[]){if(!r.wine)continue;cards.push(toCard(r,r.wine))}
   STK_VIEW=data.stickers||{};
+  computeSamen(data.name);
   document.body.classList.add('viewing');
   const vb=document.getElementById('viewbar');vb.hidden=false;vb.querySelector('b').textContent=`Album van ${data.name}`;
   closeOverlay();refresh();cur=0;go(0,true);renderChrome();fitAlbum();
@@ -67,6 +68,7 @@ async function viewFriend(id,name){
 function exitFriend(){
   if(!viewing||!mineSaved)return;
   viewing=null;STK_VIEW=null;
+  SAMEN=null;document.body.classList.remove('onlysamen');{const sb2=document.getElementById('samenbar');if(sb2)sb2.hidden=true}
   for(const k in LBL)delete LBL[k];Object.assign(LBL,mineSaved.LBL);
   cards=mineSaved.cards;ownedKeys=mineSaved.ownedKeys;settings=mineSaved.settings;applySettings();
   const back=mineSaved.cur;mineSaved=null;
@@ -99,4 +101,43 @@ function initViewbar(){
   if(document.getElementById('viewbar'))return;
   document.querySelector('.album').insertAdjacentHTML('beforebegin',`<div class="viewbar" id="viewbar" hidden><span>${I('book')}<b></b><small>alleen-lezen</small></span><button class="btn small primary" id="vbback">${I('arrowl')} Mijn album</button></div>`);
   document.getElementById('vbback').onclick=()=>exitFriend();
+}
+
+/* ---------- Samen geproefd: wijnen die jij en je wijnvriend allebei hebben ---------- */
+let SAMEN=null;   // Map: kaart-id van de vriend -> jouw kaart (alleen tijdens het bekijken)
+function samenOf(c){return SAMEN&&c?SAMEN.get(c.id)||null:null}
+function computeSamen(name){
+  SAMEN=new Map();
+  const mine=(mineSaved&&mineSaved.cards)||[];
+  const byKey=new Map();for(const m of mine){const k=m.key||((m.maker||'').toLowerCase()+'|'+(m.naam||'').toLowerCase());if(!byKey.has(k))byKey.set(k,m)}
+  for(const c of cards){const k=c.key||((c.maker||'').toLowerCase()+'|'+(c.naam||'').toLowerCase());const m=byKey.get(k)||mine.find(x=>x.wineId===c.wineId);if(m)SAMEN.set(c.id,m)}
+  const shared=new Set([...SAMEN.values()].map(m=>m.wineId)).size;
+  // Wijnmatch: lijkt jullie smaak op elkaar? Streken (50%), kleur/stijl (25%) en gedeelde wijnen (25%)
+  const vec=(L,f)=>{const v={};for(const x of L){const k=f(x);if(k)v[k]=(v[k]||0)+1}return v};
+  const cos=(a,b)=>{let d=0,na=0,nb=0;for(const k in a){na+=a[k]*a[k];if(b[k])d+=a[k]*b[k]}for(const k in b)nb+=b[k]*b[k];return na&&nb?d/Math.sqrt(na*nb):0};
+  const reg=cos(vec(mine,x=>x.regio||x.land),vec(cards,x=>x.regio||x.land));
+  const col=cos(vec(mine,x=>x.style==='mousserend'?'bubbels':x.color),vec(cards,x=>x.style==='mousserend'?'bubbels':x.color));
+  const ov=Math.min(1,shared/Math.max(1,Math.min(new Set(mine.map(x=>x.wineId)).size,new Set(cards.map(x=>x.wineId)).size))*2);
+  const match=mine.length&&cards.length?Math.round((reg*.5+col*.25+ov*.25)*100):0;
+  try{const k='vi.samenmax',prev=+(localStorage.getItem(k)||0);if(shared>prev)localStorage.setItem(k,String(shared))}catch(e){}
+  let bar=document.getElementById('samenbar');
+  if(!bar){document.getElementById('viewbar').insertAdjacentHTML('afterend',`<div class="samenbar" id="samenbar" hidden><span class="sbtxt"></span><button class="btn small" id="sbonly" aria-pressed="false">Alleen samen</button></div>`);bar=document.getElementById('samenbar');
+    bar.querySelector('#sbonly').onclick=e=>{const on=document.body.classList.toggle('onlysamen');e.currentTarget.setAttribute('aria-pressed',String(on));e.currentTarget.classList.toggle('primary',on)}}
+  bar.querySelector('.sbtxt').innerHTML=shared?`${GLAS2} <b>${shared}</b> ${shared===1?'wijn':'wijnen'} gemeen · Wijnmatch <b>${match}%</b>`:`Nog geen wijnen gemeen · Wijnmatch <b>${match}%</b>`;
+  bar.querySelector('#sbonly').hidden=!shared;bar.querySelector('#sbonly').classList.remove('primary');bar.querySelector('#sbonly').setAttribute('aria-pressed','false');
+  bar.hidden=false;
+}
+/* Twee klinkende glaasjes (klein, goud) */
+const GLAS2='<span class="glas2" aria-hidden="true">🥂</span>';
+/* Je eigen exemplaar laten zien terwijl je het album van een vriend bekijkt */
+function withMine(fn){
+  const v=viewing,saved={...LBL};
+  viewing=null;for(const k in LBL)delete LBL[k];Object.assign(LBL,(mineSaved&&mineSaved.LBL)||{});
+  try{return fn()}finally{viewing=v;for(const k in LBL)delete LBL[k];Object.assign(LBL,saved)}
+}
+function openMyCopy(m){
+  const html=withMine(()=>`<div class="spin">${bigCard(m)}${memoBack(m)}</div>`);
+  const o=overlay(`<p class="status">Jouw kaart</p>${html}<p class="hint">Gescand op ${esc(m.datum||'')}${m.memo?' · tik om je herinnering te lezen':''}</p><div class="actions"><button class="btn" id="turn">${I('turn')} Omdraaien</button><button class="btn primary" id="mcback">Terug naar ${esc(viewing?viewing.name:'')}</button></div>`,{nest:true});
+  tilt(o.querySelector('.card'));if(typeof spinCard==='function')spinCard(o,m);
+  o.querySelector('#mcback').onclick=()=>popOverlay();
 }

@@ -1263,6 +1263,16 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .kprog{position:relative;padding-bottom:8px}.kprog.ready b{color:#E9C46A}
 .kbarp{position:absolute;left:10px;right:10px;bottom:4px;height:3px;border-radius:2px;background:rgba(233,211,160,.18);overflow:hidden}.kbarp::after{content:"";position:absolute;inset:0;width:calc(var(--p)*100%);background:#C9A253;border-radius:2px}
 @media (prefers-reduced-motion: reduce){.kcrate,.kist-stk.go .kst,.kcrate.open .klid{animation-duration:.01s}}
+.glas2{font-style:normal;line-height:1;display:inline-block}
+.msamen{position:absolute;right:3px;top:3px;z-index:6;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#4A3210;background:radial-gradient(circle at 35% 30%,#FBE7B0,#C9A253);box-shadow:0 1px 3px rgba(0,0,0,.45),0 0 0 1px rgba(255,240,200,.6)}.msamen .glas2{font-size:10px}
+.slot:has(.mini.samen) .sleeve{box-shadow:inset 0 2px 3px rgba(0,0,0,.45),0 0 0 1.5px rgba(233,196,106,.85),0 0 12px rgba(233,196,106,.45)}
+.mini.samen{animation:samenglow 2.6s ease-in-out 1}
+@keyframes samenglow{0%,100%{filter:none}40%{filter:drop-shadow(0 0 6px rgba(233,196,106,.9))}}
+body.onlysamen .slot:not(:has(.mini.samen)) .sleeve>*{opacity:.18;filter:grayscale(.7)}body.onlysamen .slot:not(:has(.mini.samen)) .slabel{opacity:.35}
+.samenbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:-4px;padding:4px 8px 4px 12px;font-size:12.5px;color:#F3DDA8}.samenbar[hidden]{display:none}.samenbar b{color:#E9C46A}.samenbar .glas2{color:#E9C46A}
+.samenbar .btn{white-space:nowrap;flex:none}
+.samenline{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 10px;max-width:min(92vw,420px);padding:8px 12px;border-radius:12px;border:1px solid rgba(233,196,106,.55);background:linear-gradient(90deg,rgba(201,162,83,.2),rgba(201,162,83,.06));font-size:13px;color:#F3DDA8;text-align:left}
+.samenline>.glas2{font-size:22px;flex:none}.samenline span{min-width:0}.samenline .btn{grid-column:1/-1;justify-self:center}.samenline b{color:#E9C46A}
 .awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
@@ -1300,20 +1310,20 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-180208'</script>
-<script src="data.js?v=20261017-180208"></script>
-<script src="art.js?v=20261017-180208"></script>
-<script src="gids.js?v=20261017-180208"></script>
-<script src="maps.js?v=20261017-180208"></script>
-<script src="zegels.js?v=20261017-180208"></script>
-<script src="landen.js?v=20261017-180208"></script>
-<script src="etiket.js?v=20261017-180208"></script>
-<script src="legendes.js?v=20261017-180208"></script>
-<script src="fullart.js?v=20261017-180208"></script>
-<script src="stickers.js?v=20261017-180208"></script>
-<script src="kistjes.js?v=20261017-180208"></script>
-<script src="vrienden.js?v=20261017-180208"></script>
-<script src="wereldbol.js?v=20261017-180208"></script>
+<script>window.VI_V='20261017-211655'</script>
+<script src="data.js?v=20261017-211655"></script>
+<script src="art.js?v=20261017-211655"></script>
+<script src="gids.js?v=20261017-211655"></script>
+<script src="maps.js?v=20261017-211655"></script>
+<script src="zegels.js?v=20261017-211655"></script>
+<script src="landen.js?v=20261017-211655"></script>
+<script src="etiket.js?v=20261017-211655"></script>
+<script src="legendes.js?v=20261017-211655"></script>
+<script src="fullart.js?v=20261017-211655"></script>
+<script src="stickers.js?v=20261017-211655"></script>
+<script src="kistjes.js?v=20261017-211655"></script>
+<script src="vrienden.js?v=20261017-211655"></script>
+<script src="wereldbol.js?v=20261017-211655"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1745,13 +1755,14 @@ function bigCard(c){
   return `<div class="card t-${c.rar} idle"><div class="face">${top}${stampHTML(c)}<div class="art">${artHTML(c)}</div>${info}${layers(c.rar)}</div></div>`;
 }
 function mini(c){
-  const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
+  const cls=`mini t-${c.rar}${lastNewId===c.id?' is-new':''}${typeof samenOf==='function'&&samenOf(c)?' samen':''}`,lab=`${esc(c.naam)}, ${TIERS[c.rar].label}, bekijken`;
   const foot=`<span class="mnr"><span>${c.jaar||'NV'}</span>${symHTML(c.rar)}</span>`;
   const ms=(isIcoon(c)?'<span class="micon" aria-hidden="true">✦</span>':'')+(c.memo?'<span class="mpen" aria-hidden="true">'+I('pen')+'</span>':'');
+  const sm=typeof samenOf==='function'&&samenOf(c),ms2=sm?`<span class="msamen" title="Deze hebben jullie allebei">${GLAS2}</span>`:'';
   const lg=typeof legSVG==='function'&&legSVG(c,{mini:true});
-  if(lg) return `<button class="${cls} leg" data-id="${c.id}" aria-label="${lab}"><div class="face">${lg}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
-  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${faScene(c)}${FA_LAYERS}${ms}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
-  return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
+  if(lg) return `<button class="${cls} leg" data-id="${c.id}" aria-label="${lab}"><div class="face">${lg}${ms}${ms2}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
+  if(c.fa) return `<button class="${cls} fa" data-id="${c.id}" aria-label="${lab}, Full Art"><div class="face">${faScene(c)}${FA_LAYERS}${ms}${ms2}<div class="mband"><span class="mname">${esc(c.naam)}</span>${foot}</div></div></button>`;
+  return `<button class="${cls}" data-id="${c.id}" aria-label="${lab}"><div class="face"><div class="art">${artHTML(c)}</div>${layers(c.rar)}${ms}${ms2}</div><span class="mname">${esc(c.naam)}</span>${foot}</button>`;
 }
 function slotHTML(c,label,d,gid,n){
   const empty=gid?`<button class="empty d${d||0} gidbtn" data-gid="${esc(gid)}" aria-label="Waar vind ik ${esc(label)}?"></button>`:`<div class="empty d${d||0}"></div>`;
@@ -2243,12 +2254,17 @@ const whyLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);
 /* Prijs als vijf €-tekens: zoveel als het prijsniveau lichten één voor één goud op, de rest blijft dof */
 const eurHTML=n=>`<span class="eur" aria-label="prijsniveau ${n} van 5">${[1,2,3,4,5].map(k=>`<i class="${k<=n?'on':''}" style="--k:${k}">€</i>`).join('')}</span>`;
 const whyHTML=t=>{const m=String(t||'').match(/^(.*?)(€{1,5})$/);return m?esc(m[1])+eurHTML(m[2].length):esc(t)};
+/* Album van een wijnvriend: deze wijn hebben jullie allebei */
+const samenLine=c=>{if(!viewing||typeof samenOf!=='function')return '';const m=samenOf(c);if(!m)return '';
+  const mo=d=>{try{return new Date(d).toLocaleDateString('nl-NL',{month:'long',year:'numeric'})}catch(e){return ''}};
+  const jr=(m.jaar||'NV')!==(c.jaar||'NV')?` Jij hebt de ${m.jaar||'NV'}, ${esc(viewing.name)} de ${c.jaar||'NV'}.`:'';
+  return `<div class="samenline">${GLAS2}<span><b>Deze hebben jullie allebei!</b> Jij in ${mo(m.created)}, ${esc(viewing.name)} in ${mo(c.created)}.${jr}</span><button class="btn small" id="mycopy">Bekijk mijn kaart</button></div>`};
 const iconLine=c=>{const ic=typeof iconOf==='function'&&iconOf(c);return ic&&!ic.legend?`<p class="hint icline">✦ Waarom icoon? ${esc(ic.why)}</p>`:''};
 function openCard(id,showBack,nest){
   const c=cards.find(x=>x.id===id);if(!c)return;
   const sets=setsOf(c);
   const o=overlay(`<div class="spin" style="--spin:${showBack?180:0}deg">${bigCard(c)}${memoBack(c)}</div>
-    ${whyLine(c)||c.fa?`<p class="hint whyline">${whyHTML(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}${(()=>{let seen='1';try{seen=localStorage.getItem('vi.cardhint');localStorage.setItem('vi.cardhint','1')}catch(e){}return seen?'':'<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>'})()}${sets.length&&!viewing?`<div class="countsfor"><span>Telt mee voor</span>${sets.map(s=>{const k=firstPageOf(q=>q.set===s);return k>=0?`<button data-pg="${k}">${esc(s.name)}</button>`:`<b>${esc(s.name)}</b>`}).join('')}</div>`:sets.length?`<p class="hint">Telt mee voor: ${sets.map(s=>esc(s.name)).join(', ')}</p>`:''}
+    ${whyLine(c)||c.fa?`<p class="hint whyline">${whyHTML(whyLine(c))}${c.fa?' Full Art: puur geluk!':''}</p>`:''}${iconLine(c)}${samenLine(c)}${(()=>{let seen='1';try{seen=localStorage.getItem('vi.cardhint');localStorage.setItem('vi.cardhint','1')}catch(e){}return seen?'':'<p class="hint">Veeg of tik op de kaart om hem om te draaien.</p>'})()}${sets.length&&!viewing?`<div class="countsfor"><span>Telt mee voor</span>${sets.map(s=>{const k=firstPageOf(q=>q.set===s);return k>=0?`<button data-pg="${k}">${esc(s.name)}</button>`:`<b>${esc(s.name)}</b>`}).join('')}</div>`:sets.length?`<p class="hint">Telt mee voor: ${sets.map(s=>esc(s.name)).join(', ')}</p>`:''}
     <div class="actions"><button class="btn xclose" id="turn">${I('turn')} Omdraaien</button><button class="btn" id="memo">${I('pen')} ${c.memo?'Herinnering aanpassen':'Herinnering schrijven'}</button><button class="btn" id="fav">${I('star')} ${c.fav?'Top 10 · #'+c.fav:'Top 10'}</button></div>
     ${isAdmin()&&!viewing?`<div class="actions adm"><button class="btn small" id="adraw">${I('pen')} Etiket opnieuw tekenen</button><button class="btn small" id="acmp">${I('sparkle')} Sonnet vs Opus</button><button class="btn small" id="alock">${c.style&&c.style.locked?'🔓 Losmaken':'🔒 Vastzetten'}</button></div>`:''}
     <div class="actions"><button class="btn primary xclose" id="close">Terug in de sleeve</button></div>`,{nest});
@@ -2257,6 +2273,7 @@ function openCard(id,showBack,nest){
   o.querySelector('#memo').onclick=()=>openMemo(c.id);
   o.querySelector('#fav').onclick=()=>openFavPicker(c.id);
   if(o.querySelector('#adraw')){o.querySelector('#adraw').onclick=()=>adminDraw(c);o.querySelector('#acmp').onclick=()=>adminCompare(c);o.querySelector('#alock').onclick=()=>adminLock(c)}
+  {const mc=o.querySelector('#mycopy');if(mc)mc.onclick=()=>openMyCopy(samenOf(c))}
   const b=o.querySelector('#close');b.onclick=()=>closeOverlay();b.focus();
 }
 function openStack(gid){
