@@ -78,11 +78,13 @@ button{font:inherit;color:inherit}
 .leaf{grid-area:1/1;display:grid;transform-style:preserve-3d;transform-origin:left center;position:relative;z-index:1}
 .leaf>.page,.leaf>.leafback{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
 /* iOS Safari scrolt niet binnen een 3D-context (preserve-3d + backface): alleen 3D tijdens het omslaan */
-.leaf:not(.flip-fwd):not(.flip-back){transform-style:flat}
-.leaf:not(.flip-fwd):not(.flip-back)>.leafback{display:none}
-.leaf:not(.flip-fwd):not(.flip-back)>.page{backface-visibility:visible;-webkit-backface-visibility:visible}
+.leaf:not(.flip-fwd):not(.flip-back):not(.turned){transform-style:flat}
+.leaf:not(.flip-fwd):not(.flip-back):not(.turned)>.leafback{display:none}
+.leaf:not(.flip-fwd):not(.flip-back):not(.turned)>.page{backface-visibility:visible;-webkit-backface-visibility:visible}
 .leafback{transform:rotateY(180deg);background-color:var(--board);background-image:var(--grain);border-radius:6px 2px 2px 6px}
 .leafback.endpaper{background-color:#4A1822;background-image:repeating-radial-gradient(circle at 28% 38%,rgba(210,174,98,.35) 0 1.5px,rgba(0,0,0,0) 1.5px 9px),repeating-radial-gradient(circle at 74% 68%,rgba(122,42,56,.9) 0 5px,rgba(74,24,34,0) 5px 12px),var(--grain)}
+.leaf.turned{transform:rotateY(-180deg);z-index:0;pointer-events:none}
+.leaf.turned>.leafback{position:relative}.leaf.turned>.leafback::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.28) 88%,rgba(0,0,0,.5));pointer-events:none}
 .leaf.flip-fwd{animation:flipF .9s cubic-bezier(.5,.05,.3,1) forwards;z-index:3}
 .leaf.flip-back{animation:flipB .9s cubic-bezier(.5,.05,.3,1) forwards;z-index:3}
 @keyframes flipF{from{transform:rotateY(0)}to{transform:rotateY(-180deg)}}
@@ -619,7 +621,7 @@ button{font:inherit;color:inherit}
 @keyframes spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
 @media (prefers-reduced-motion: reduce){.spin{transition:none}.flipper.open{transition:none}}
 /* Alles op één scherm: vaste hoogte, bladzijde scrolt zo nodig zelf */
-.app{height:100vh;height:100dvh;padding-block:calc(env(safe-area-inset-top,0px) + 8px) calc(max(env(safe-area-inset-bottom,0px),var(--navfix,0px)) + 10px);gap:10px}
+.app{height:100vh;height:100dvh;height:var(--apph,100dvh);padding-block:calc(env(safe-area-inset-top,0px) + 8px) calc(max(env(safe-area-inset-bottom,0px),var(--navfix,0px)) + 10px);gap:10px}
 .album{flex:1;min-height:0;display:flex;flex-direction:column}
 .stack{flex:1;min-height:0;grid-template-rows:minmax(0,1fr)}
 .leaf,.leaf>.page,.leaf>.leafback{min-height:0;height:100%}
@@ -1249,19 +1251,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-121043'</script>
-<script src="data.js?v=20261017-121043"></script>
-<script src="art.js?v=20261017-121043"></script>
-<script src="gids.js?v=20261017-121043"></script>
-<script src="maps.js?v=20261017-121043"></script>
-<script src="zegels.js?v=20261017-121043"></script>
-<script src="landen.js?v=20261017-121043"></script>
-<script src="etiket.js?v=20261017-121043"></script>
-<script src="legendes.js?v=20261017-121043"></script>
-<script src="fullart.js?v=20261017-121043"></script>
-<script src="stickers.js?v=20261017-121043"></script>
-<script src="vrienden.js?v=20261017-121043"></script>
-<script src="wereldbol.js?v=20261017-121043"></script>
+<script>window.VI_V='20261017-122138'</script>
+<script src="data.js?v=20261017-122138"></script>
+<script src="art.js?v=20261017-122138"></script>
+<script src="gids.js?v=20261017-122138"></script>
+<script src="maps.js?v=20261017-122138"></script>
+<script src="zegels.js?v=20261017-122138"></script>
+<script src="landen.js?v=20261017-122138"></script>
+<script src="etiket.js?v=20261017-122138"></script>
+<script src="legendes.js?v=20261017-122138"></script>
+<script src="fullart.js?v=20261017-122138"></script>
+<script src="stickers.js?v=20261017-122138"></script>
+<script src="vrienden.js?v=20261017-122138"></script>
+<script src="wereldbol.js?v=20261017-122138"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -1292,6 +1294,11 @@ function navFix(){try{
   document.documentElement.style.setProperty('--navfix',sa&&screen.height-innerHeight<40?'48px':'0px');
 }catch(e){}}
 navFix();addEventListener('resize',navFix);
+/* Echte zichtbare hoogte meten: na herladen rekent Android soms 100dvh te groot, waardoor de scanknop net onder het scherm valt */
+function appH(){try{const vv=window.visualViewport,h=Math.round(Math.min(innerHeight,vv&&vv.height||innerHeight));if(h>200)document.documentElement.style.setProperty('--apph',h+'px')}catch(e){}}
+appH();addEventListener('resize',appH);addEventListener('orientationchange',()=>setTimeout(appH,300));addEventListener('pageshow',appH);
+try{visualViewport&&visualViewport.addEventListener('resize',appH)}catch(e){}
+[150,600,1500,3000].forEach(t=>setTimeout(()=>{appH();if(typeof fitAlbum==='function')fitAlbum()},t));
 const wkey=w=>low(w.maker)+'|'+low(w.naam);
 const amsDay=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 const fmtDate=iso=>new Date(iso).toLocaleDateString('nl-NL',{day:'numeric',month:'short',year:'numeric'}).replace('.','');
@@ -1433,7 +1440,7 @@ function openSettings(){
     let synced=false;
     if(session){const {error}=await sb.rpc('update_settings',{p_name:name,p_cover:next.cover,p_pages:next.pages});synced=!error;if(error)console.error(error)}
     settings=next;applySettings();closeOverlay();
-    if(stack.querySelector('.leaf'))go(cur,true);
+    if(stack.querySelector('.leaf:not(.turned)'))go(cur,true);
     if(!(synced||!session))toast('Opgeslagen op dit toestel. Synchroniseren met je account lukte niet.');
   };
   sn.focus();
@@ -2039,19 +2046,26 @@ const plain=h=>{const d=document.createElement('div');d.innerHTML=h;d.querySelec
 function go(n,force,noHist){
   if(n<0||n>=pages.length||busy||stkEdit)return;
   if(n===cur&&!force)return;
-  if(!noHist&&n!==cur&&Math.abs(n-cur)>1&&stack.querySelector('.leaf')){
+  if(!noHist&&n!==cur&&Math.abs(n-cur)>1&&stack.querySelector('.leaf:not(.turned)')){
     if(navHist[navHist.length-1]!==cur)navHist.push(cur);if(navHist.length>15)navHist.shift();
     jumpSec=secOf(pages[n]);
     const pushPg=(t=0)=>{if((ignorePop||histOpen)&&t<20){setTimeout(()=>pushPg(t+1),100);return}try{history.pushState({vi:'pg'},'')}catch(e){}};setTimeout(pushPg,120);
   }else if(!noHist&&navHist.length&&secOf(pages[n])!==jumpSec){navHist=[];jumpSec=null}   // onderdeel verlaten: terug-knopje weg
-  const old=stack.querySelector('.leaf'),nu=makeLeaf(n),fwd=n>cur,moved=n!==cur||!old;
+  const old=stack.querySelector('.leaf:not(.turned)'),nu=makeLeaf(n),fwd=n>cur,moved=n!==cur||!old;
   if(moved&&!reduced){const pg=nu.querySelector('.page');pg.classList.add('enter');if(old)pg.classList.add('late');countUp(pg)}
   cur=n;renderChrome();
-  if(!old||reduced||+old.dataset.i===n){stack.replaceChildren(nu);return}
+  if(!old||reduced||+old.dataset.i===n){stack.replaceChildren(nu);setTurned(n-1);return}
   busy=true;
   if(fwd){stack.insertBefore(nu,old);nu.classList.add('under');old.classList.add('flip-fwd')}
-  else{stack.appendChild(nu);nu.classList.add('flip-back');old.classList.add('covered')}
-  setTimeout(()=>{old.remove();nu.classList.remove('under','flip-back');busy=false},DUR+40);
+  else{setTurned(-1);stack.appendChild(nu);nu.classList.add('flip-back');old.classList.add('covered')}
+  setTimeout(()=>{setTurned(n-1);old.remove();nu.classList.remove('under','flip-back');busy=false},DUR+40);
+}
+/* De omgeslagen bladzijde blijft links liggen, zoals in een echt boek: je ziet een randje van de achterkant naast de rug */
+function setTurned(i){
+  stack.querySelectorAll('.leaf.turned').forEach(x=>x.remove());
+  if(i<0||reduced)return;
+  const t=document.createElement('div');t.className='leaf turned';t.setAttribute('aria-hidden','true');
+  t.innerHTML=`<div class="leafback${i===0?' endpaper':''}"></div>`;stack.prepend(t);
 }
 let sx0=null,swiped=false;
 document.addEventListener('click',e=>{
