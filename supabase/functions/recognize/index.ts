@@ -383,7 +383,8 @@ Deno.serve(async (req) => {
       lw = (ex as W) ?? null;
       if (!lw) { const { data: sm } = await admin.rpc("find_same_wine", { p_wine: payload }); if (sm && sm.id) lw = sm as W; }
       // Nieuwe wijn (nog geen klasse)? Eerst de echte gegevens opzoeken: prijs van dit jaar, NL-webshops, critici (max. 15 s)
-      if (!lw?.is_icon && !(lw && lw.signals)) {
+      // Aan/uit via het geheim VERIFY_ON_SCAN=1 (kost ±6 cent per nieuwe wijn)
+      if (Deno.env.get("VERIFY_ON_SCAN") === "1" && !lw?.is_icon && !(lw && lw.signals)) {
         const ver = await verifySignals({ naam: payload.naam, maker: payload.maker, jaar: payload.jaar, app: payload.app, regio: payload.regio, land: payload.land, color: payload.color }, 15000);
         if (ver) payload.signals = mergeSignals(payload.signals, ver) as typeof payload.signals;
       }

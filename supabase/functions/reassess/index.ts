@@ -251,6 +251,8 @@ Deno.serve(async (req) => {
       if (!ver) return json({ status: "failed", error: LAST_VERIFY_ERR });
       const sig = mergeSignals(w.signals as Record<string, unknown>, ver);
       const { data: t } = await admin.rpc("wine_tier", { p_s: sig, p_jaar: w.jaar, p_color: w.color, p_is_icon: !!w.is_icon });
+      // Bewaren als voorstel, zodat de beheerder het later kan toepassen zonder opnieuw te betalen
+      await admin.from("tier_review").upsert({ wine_id: w.id, signals: sig, old_tier: w.is_icon ? "icon" : (w.tier_override || w.tier), next: t, created_at: new Date().toISOString() });
       return json({ status: "ok", signals: sig, old: { tier: w.is_icon ? "icon" : (w.tier_override || w.tier), calc: w.tier, reason: w.tier_reason, signals: w.signals },
         next: { tier: w.is_icon ? "icon" : (w.tier_override || (t as any)?.tier), calc: (t as any)?.tier, reason: (t as any)?.reason, score: (t as any)?.score }, manual: !!w.tier_override });
     }

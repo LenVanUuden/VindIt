@@ -8,7 +8,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 export const VERIFY_MODEL = Deno.env.get("VERIFY_MODEL") ?? "claude-sonnet-5-5";
 const SEARCH_TOOL_TYPE = Deno.env.get("WEB_SEARCH_TOOL") ?? "web_search_20250305";
 
-const VERIFY_SYSTEM = `You verify rarity data for ONE specific wine for a Dutch wine-collecting app. Use web search, at most 3 searches, for example:
+const VERIFY_SYSTEM = `You verify rarity data for ONE specific wine for a Dutch wine-collecting app. Use web search, at most 2 searches, for example:
  1. "<producer> <wine> <vintage> price" (wine-searcher, vivino, critics)
  2. "<producer> <wine> kopen" to find Dutch webshops (.nl domains)
 Keep your text between searches very short. Then call the "klasse_check" tool exactly once. Never invent ratings, scores or shops: use null / empty when you could not find them. The price is the exception: always give one; if you found nothing concrete, give your best realistic estimate for this vintage and set price_basis to "schatting".
@@ -16,6 +16,7 @@ Keep your text between searches very short. Then call the "klasse_check" tool ex
 Fields:
 - price_eur_low / price_eur_high: typical price in euros for a 75 cl bottle of THIS vintage. For current vintages: Dutch or EU retail. For older vintages (> 10 years) use what this vintage actually sells for now (shops, auctions, wine-searcher average). An old bottle of a simple wine is NOT worth more because it is old; most wine does not improve with age.
 - price_basis: "winkel" (shop prices found), "veiling" (auction/secondary market found), "schatting" (nothing concrete found, your estimate).
+- rarity_nl: how easy it is to buy in the Netherlands: "algemeen" (supermarkets, big chains, many shops), "ongewoon" (a few specialist shops), "zeldzaam" (hardly or not available in NL).
 - nl_shop_urls: URLs of Dutch webshops (.nl) that you actually saw offering this wine (any vintage), one per shop, max 10. Empty if you found none.
 - vivino_rating (e.g. 4.1) and vivino_count (number of ratings), null if not found.
 - critic_max: highest professional score on a 100-point scale you found for this wine/vintage (Parker, Suckling, Wine Spectator, Decanter, Gambero Rosso converted), null if none.
@@ -36,6 +37,7 @@ const VERIFY_TOOL = {
     properties: {
       price_eur_low: { type: "number" }, price_eur_high: { type: "number" },
       price_basis: { type: "string", enum: ["winkel", "veiling", "schatting"] },
+      rarity_nl: { type: "string", enum: ["algemeen", "ongewoon", "zeldzaam"] },
       nl_shop_urls: { type: "array", items: { type: "string" } },
       vivino_rating: { type: ["number", "null"] }, vivino_count: { type: ["integer", "null"] },
       critic_max: { type: ["integer", "null"] },
@@ -47,7 +49,7 @@ const VERIFY_TOOL = {
       sources: { type: "array", items: { type: "string" } },
       note: { type: "string" },
     },
-    required: ["price_eur_low", "price_eur_high", "price_basis", "nl_shop_urls", "ageworthy", "past_peak", "classification", "producer_fame", "production", "iconic", "sources", "note"],
+    required: ["price_eur_low", "price_eur_high", "price_basis", "rarity_nl", "nl_shop_urls", "ageworthy", "past_peak", "classification", "producer_fame", "production", "iconic", "sources", "note"],
   },
 };
 
@@ -62,10 +64,18 @@ async function logUsage(model: string, u: Record<string, any> | undefined) {
   } catch (_) { /* negeren */ }
 }
 
-function shopCount(urls: unknown): number | null {
+// Supermarkten en grote ketens: ligt hij daar, dan is hij overal te krijgen
+const CHAINS = ["ah.nl", "jumbo.com", "plus.nl", "lidl.nl", "aldi.nl", "dirk.nl", "coop.nl", "hoogvliet.com", "gall.nl", "mitra.nl", "dekamarkt.nl", "vomar.nl", "spar.nl", "drankdozijn.nl", "wijnvoordeel.nl"];
+export function shopCount(urls: unknown): number | null {
   if (!Array.isArray(urls)) return null;
   const doms = new Set<string>();
-  for (const u of urls) { try { const h = new URL(String(u)).hostname.replace(/^www\./, ""); if (h.endsWith(".nl")) doms.add(h); } catch (_) { /* geen url */ } }
+  for (const u of urls) {
+    try {
+      const h = new URL(String(u)).hostname.replace(/^www\./, "");
+      if (CHAINS.some((c) => h === c || h.endsWith("." + c))) return 10;
+      if (h.endsWith(".nl")) doms.add(h);
+    } catch (_) { /* geen url */ }
+  }
   return doms.size ? doms.size : null;
 }
 const num = (v: unknown) => (typeof v === "number" && isFinite(v) ? v : null);
@@ -82,7 +92,7 @@ export async function verifySignals(w: Wine, timeoutMs = 15000, model = VERIFY_M
       headers: { "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify({
         model: model, max_tokens: 4000, system: VERIFY_SYSTEM,
-        tools: [{ type: SEARCH_TOOL_TYPE, name: "web_search", max_uses: 3, user_location: { type: "approximate", country: "NL" } }, VERIFY_TOOL],
+        tools: [{ type: SEARCH_TOOL_TYPE, name: "web_search", max_uses: 2, user_location: { type: "approximate", country: "NL" } }, VERIFY_TOOL],
         messages: [{ role: "user", content: desc }],
       }),
     });
@@ -100,7 +110,7 @@ export async function verifySignals(w: Wine, timeoutMs = 15000, model = VERIFY_M
       vivino_rating: num(v.vivino_rating), vivino_count: Number.isInteger(v.vivino_count) ? v.vivino_count : null,
       critic_max: Number.isInteger(v.critic_max) ? v.critic_max : null,
       ageworthy: !!v.ageworthy, past_peak: !!v.past_peak,
-      classification: v.classification, producer_fame: v.producer_fame, production: v.production,
+      rarity_nl: v.rarity_nl, classification: v.classification, producer_fame: v.producer_fame, production: v.production,
       iconic: !!v.iconic,
       sources: Array.isArray(v.sources) ? v.sources.filter((s: unknown) => typeof s === "string" && /^https?:\/\//.test(s)).slice(0, 5) : [],
       note: typeof v.note === "string" ? v.note.slice(0, 300) : "",
