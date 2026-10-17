@@ -1205,6 +1205,13 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .awnote{font-size:10.5px;line-height:1.35;opacity:.75;margin:2px 0 0;text-align:center}
 .awbig{max-width:92vw;max-height:78vh;border-radius:6px;display:block;margin:10px auto}
 .cmp.three{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px}.cmp.three .cmpcol{min-width:0}.cmpfoto img{width:100%;aspect-ratio:3/4;object-fit:contain;background:rgba(0,0,0,.25);display:block;border-radius:3px}
+.arvl{display:flex;flex-direction:column;gap:10px;width:min(94vw,440px)}
+.arv{border:1px solid rgba(233,211,160,.22);border-radius:12px;padding:10px 12px;background:rgba(0,0,0,.18);text-align:left}.arv.ch{border-color:rgba(201,162,83,.6)}.arv.done{opacity:.55}
+.arvh b{display:block;font-size:14px}.arvh small{font-size:11.5px;opacity:.65}
+.arvt{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 2px}.arvt .arrow{opacity:.7}.arvt small{opacity:.6;font-size:11px}
+.arvr{font-size:12px;margin:4px 0 0;color:#E9D3A0}.arvf{font-size:11.5px;margin:3px 0 0;opacity:.85}.arvf i{opacity:.7}
+.arvn{font-size:11.5px;margin:4px 0 0;opacity:.75;font-style:italic}.arvs{font-size:10.5px;margin:4px 0 0;opacity:.7;word-break:break-word}.arvs a{color:#E9D3A0}
+.arva{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}.arva small{opacity:.75}
 .awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
@@ -1242,19 +1249,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-090015'</script>
-<script src="data.js?v=20261017-090015"></script>
-<script src="art.js?v=20261017-090015"></script>
-<script src="gids.js?v=20261017-090015"></script>
-<script src="maps.js?v=20261017-090015"></script>
-<script src="zegels.js?v=20261017-090015"></script>
-<script src="landen.js?v=20261017-090015"></script>
-<script src="etiket.js?v=20261017-090015"></script>
-<script src="legendes.js?v=20261017-090015"></script>
-<script src="fullart.js?v=20261017-090015"></script>
-<script src="stickers.js?v=20261017-090015"></script>
-<script src="vrienden.js?v=20261017-090015"></script>
-<script src="wereldbol.js?v=20261017-090015"></script>
+<script>window.VI_V='20261017-093717'</script>
+<script src="data.js?v=20261017-093717"></script>
+<script src="art.js?v=20261017-093717"></script>
+<script src="gids.js?v=20261017-093717"></script>
+<script src="maps.js?v=20261017-093717"></script>
+<script src="zegels.js?v=20261017-093717"></script>
+<script src="landen.js?v=20261017-093717"></script>
+<script src="etiket.js?v=20261017-093717"></script>
+<script src="legendes.js?v=20261017-093717"></script>
+<script src="fullart.js?v=20261017-093717"></script>
+<script src="stickers.js?v=20261017-093717"></script>
+<script src="vrienden.js?v=20261017-093717"></script>
+<script src="wereldbol.js?v=20261017-093717"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2743,7 +2750,7 @@ function openAdmin(){
     <p class="mgroup">Etiketten</p>
     <div class="admlist">${b('relabel','pen','Etiketten tekenen','Wijnen vanaf Rare zonder getekend etiket')}${b('relabelall','pen','Alle etiketten opnieuw tekenen','Vastgezette etiketten blijven staan')}</div>
     <p class="mgroup">Klassen</p>
-    <div class="admlist">${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
+    <div class="admlist">${b('areview','sparkle','Klassen herzien','Voorstellen na opzoeken op internet')}${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
     <p class="mgroup">Voorbeelden</p>
     <div class="admlist">${b('revdemo','camera','Testreveal: nieuw gescande fles','Primeur, potloodschets en een vers getekend etiket')}${b('legdemo','crown','Legende-kaarten bekijken','Alle 21, met glans')}${b('fademo','sparkle','Full Art-voorbeelden','Tijdelijke kopieën van een kaart')}</div>
     <div class="actions"><button class="btn xclose" id="close">Sluiten</button></div>`);
@@ -2757,6 +2764,8 @@ function openAdmin(){
   o.querySelector('#astats').onclick=()=>openAdminStats();
   o.querySelector('#afb').onclick=()=>openAdminFeedback(false);
   o.querySelector('#awines').onclick=()=>openAdminWines('');
+  o.querySelector('#areview').onclick=()=>openAdminReviews();
+  sb.rpc('admin_reviews').then(({data})=>{const e=o.querySelector('#areview small');if(e&&Array.isArray(data)){const n=data.filter(r=>r.changed).length;e.textContent=data.length?`${n} ${n==1?'wijziging':'wijzigingen'} klaar om te bekijken`:'Geen voorstellen'}});
   sb.rpc('admin_stats').then(({data})=>{const e=o.querySelector('#afb small');if(e&&data)e.textContent=data.feedback_open?`${data.feedback_open} nog niet afgehandeld`:'Alles afgehandeld'});
 }
 /* ---------- Beheer: cijfers (altijd opgeteld, nooit per persoon) ---------- */
@@ -2832,6 +2841,7 @@ function openAdminWine(w){
     ${w.is_icon?'<p class="hint small">Een Legende: de klasse ligt vast.</p>':`<p class="mgroup">Klasse aanpassen</p><div class="awtiers">${['common','rare','superrare','ultra'].map(k=>`<button class="btn small${(w.tier_override||'')===k?' primary':''}" data-settier="${k}">${TIERS[k].sym} ${TIERS[k].label}</button>`).join('')}<button class="btn small${w.tier_override?'':' primary'}" data-settier="">Berekend${w.tier&&w.tier_override?' ('+TIERS[w.tier].label+')':''}</button></div>`}
     <p class="mgroup">Overig</p><div class="admlist">
       ${w.label_v==='2'?`<button class="btn admbtn" id="awlock">${w.locked?'🔓 Etiket losmaken':'🔒 Etiket vastzetten'}</button>`:''}
+      ${w.is_icon?'':`<button class="btn admbtn" id="awverify">${I('sparkle')}<span>Klasse controleren op internet<small>Prijs van dat jaar, NL-winkels, critici · ±6 cent</small></span></button>`}
       <button class="btn admbtn" id="awmerge">${I('stack')}<span>Dubbele wijn hierin samenvoegen<small>Kaarten en etiket gaan mee; de andere wijn verdwijnt</small></span></button></div>`,{nest:true});
   o.querySelectorAll('[data-settier]').forEach(b=>b.onclick=async()=>{const v=b.dataset.settier||null;
     o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=true);
@@ -2839,6 +2849,9 @@ function openAdminWine(w){
     if(error){toast('Opslaan lukte niet.');o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=false);return}
     w.tier_override=v;toast(`Klasse: ${TIERS[data.tier].label}. Alle ${w.kaarten} kaarten gaan mee.`);await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)});
   o.querySelectorAll('[data-draw]').forEach(b=>b.onclick=()=>adminRedraw(w,b.dataset.draw));
+  const vb=o.querySelector('#awverify');if(vb)vb.onclick=async()=>{vb.disabled=true;vb.querySelector('small').textContent='Claude zoekt… (±10 seconden)';
+    try{const d=await callDraw({mode:'verify',wine:w.id});if(!d||d.status!=='ok')throw new Error(d&&d.error||'mislukt');openAdminReviews()}
+    catch(e){vb.disabled=false;vb.querySelector('small').textContent='Lukte niet: '+String(e.message).slice(0,80)}};
   adminPhoto(w).then(u=>{const ph=o.querySelector('.awph');if(!ph)return;
     if(!u){ph.innerHTML='<span>Geen foto bewaard</span>';return}
     ph.innerHTML=`<img src="${u}" alt="Foto van het etiket">`;
@@ -2869,6 +2882,44 @@ async function adminRedraw(w,m){
   o.querySelector('#rdyes').onclick=async e=>{e.target.disabled=true;
     try{const r=await callDraw({mode:'save',wine:w.id,style:st});w.label_style=r.style||st;w.label_v='2';w.locked=!!(r.style&&r.style.locked)}catch(err){e.target.disabled=false;toast('Opslaan lukte niet.');return}
     toast(w.locked?'Opgeslagen (blijft vastgezet).':'Opgeslagen.');await loadAlbum();go(cur,true);popOverlay();popOverlay();setTimeout(()=>openAdminWine(w),250)};
+}
+/* Beheer: voorstellen voor een nieuwe klasse (na opzoeken op internet). Niets verandert tot je op Toepassen tikt. */
+const tchip=t=>t?`<span class="awtier">${TIERS[t].sym} ${TIERS[t].label}</span>`:'<span class="awtier">?</span>';
+async function openAdminReviews(){
+  const o=overlay(`<p class="status">Klassen herzien</p><p class="hint">Even laden…</p>`,{nest:true});
+  const {data,error}=await sb.rpc('admin_reviews');if(!o.isConnected)return;
+  if(error){o.querySelector('.hint').textContent='Laden lukte niet.';return}
+  const R=data||[],ch=R.filter(r=>r.changed),same=R.filter(r=>!r.changed);
+  const fmt=v=>v==null?'':String(v).replace('.',',');
+  const facts=s=>{const f=[];
+    if(s.price_eur_low!=null)f.push(`€${fmt(Math.round(s.price_eur_low))}–${fmt(Math.round(s.price_eur_high))} <i>(${s.price_basis||'schatting'})</i>`);
+    if(s.critic_max)f.push(`critici ${s.critic_max}`);
+    if(s.vivino_rating)f.push(`Vivino ${fmt(s.vivino_rating)}${s.vivino_count?` (${s.vivino_count.toLocaleString('nl-NL')})`:''}`);
+    if(s.nl_shops!=null)f.push(s.nl_shops>=10?'in ketens/supermarkt':`${s.nl_shops} NL-shop${s.nl_shops==1?'':'s'}`);
+    if(s.ageworthy)f.push('bewaarwijn');if(s.past_peak)f.push('over de top');if(s.iconic)f.push('iconisch');
+    return f.join(' · ')};
+  const card=r=>{const nt=r.is_icon?'icon':(r.tier_override||r.next.tier),s=r.signals||{};
+    return `<div class="arv${r.changed?' ch':''}" data-w="${r.wine_id}">
+      <div class="arvh"><b>${esc(r.naam)}</b><small>${esc(r.maker||'')}${r.jaar?' · '+r.jaar:''} · ${r.kaarten}×</small></div>
+      <div class="arvt">${tchip(r.now_tier)}${r.changed?` <span class="arrow">→</span> ${tchip(nt)}`:' <small>blijft gelijk</small>'}${r.tier_override?' <small>(handmatig vastgezet, blijft zo)</small>':''}</div>
+      ${r.next.reason?`<p class="arvr">${esc(r.next.reason)}</p>`:''}
+      <p class="arvf">${facts(s)}</p>
+      ${s.note?`<p class="arvn">${esc(s.note)}</p>`:''}
+      ${(s.sources||[]).length?`<p class="arvs">${s.sources.map(u=>{let h='';try{h=new URL(u).hostname.replace(/^www\./,'')}catch(e){}return `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(h)}</a>`}).join(' · ')}</p>`:''}
+      <div class="arva"><button class="btn small" data-skip>Overslaan</button><button class="btn small primary" data-apply>${r.changed?'Toepassen':'Gegevens opslaan'}</button></div></div>`};
+  o.innerHTML=o.querySelector('.ovbar').outerHTML+`<p class="status">Klassen herzien</p>
+    <p class="hint">${R.length?`Claude zocht deze wijnen op: prijs van dat jaar, Nederlandse winkels, critici. Er verandert niets tot je op Toepassen tikt; alle kaarten van die wijn gaan dan mee.`:'Er zijn geen voorstellen. Open een wijn in "Wijnen beheren" en kies "Klasse controleren op internet".'}</p>
+    ${ch.length?`<p class="mgroup">Andere klasse (${ch.length})</p><div class="arvl">${ch.map(card).join('')}</div>`:''}
+    ${same.length?`<p class="mgroup">Blijft gelijk (${same.length})</p><p class="hint small">"Gegevens opslaan" bewaart de gevonden prijs en bronnen bij de wijn, zonder dat de klasse verandert.</p><div class="arvl">${same.map(card).join('')}</div><div class="actions"><button class="btn" id="arvsameall">Alle ${same.length} gegevens opslaan</button></div>`:''}`;
+  const done=(el,txt)=>{el.classList.add('done');el.querySelector('.arva').innerHTML=`<small>${txt}</small>`};
+  const apply=async el=>{const w=el.dataset.w;el.querySelectorAll('button').forEach(b=>b.disabled=true);
+    const {data:res,error:e}=await sb.rpc('admin_review_apply',{p_wine:w});
+    if(e){el.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Toepassen lukte niet.');return false}
+    done(el,res&&res.old!==res.tier?`Toegepast: nu ${TIERS[res.tier].label}`:'Gegevens opgeslagen');return true};
+  o.querySelectorAll('.arv').forEach(el=>{
+    el.querySelector('[data-apply]').onclick=async()=>{if(await apply(el)){await loadAlbum();go(cur,true)}};
+    el.querySelector('[data-skip]').onclick=async()=>{const {error:e}=await sb.rpc('admin_review_dismiss',{p_wine:el.dataset.w});if(e){toast('Lukte niet.');return}done(el,'Overgeslagen')}});
+  const all=o.querySelector('#arvsameall');if(all)all.onclick=async()=>{all.disabled=true;for(const el of o.querySelectorAll('.arv:not(.ch):not(.done)'))await apply(el);all.remove();await loadAlbum();go(cur,true)};
 }
 /* Beheer: testreveal. Kies een wijn; je ziet de onthulling als Primeur met de potloodschets,
    terwijl Sonnet het etiket echt opnieuw tekent vanaf de bewaarde foto (niets wordt opgeslagen). */
