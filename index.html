@@ -1196,6 +1196,10 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 .abar i,.abar em{position:absolute;bottom:14px;width:70%;border-radius:3px 3px 0 0}.abar i{background:rgba(233,211,160,.35)}.abar em{background:#C9A253;width:40%}
 .abar span{position:absolute;bottom:0;font-size:9px;opacity:.6}
 .alg{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:middle;margin:0 3px 0 8px}.alg.s{background:rgba(233,211,160,.35)}.alg.k{background:#C9A253}
+.awthumb{flex:none;width:34px;aspect-ratio:3/4;border-radius:2px;overflow:hidden;background:rgba(233,211,160,.08);display:grid;place-items:center;font-size:12px;opacity:.9}.awthumb>svg{width:100%;height:100%;display:block}.awthumb.none{border:1px dashed rgba(233,211,160,.3);color:#E9D3A0}
+.awtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}.awtier,.awst{font-size:10.5px;padding:1px 7px;border-radius:999px;border:1px solid rgba(233,211,160,.35);color:#E9D3A0;line-height:1.5}.awst.on{background:rgba(201,162,83,.25);border-color:#C9A253}.awst.dim{opacity:.55}.awst.warn{border-color:#C8644F;color:#F0B4A4}
+.awlabel{flex:none;aspect-ratio:3/4;width:min(52vw,190px);margin:8px auto 2px;box-shadow:0 8px 20px rgba(0,0,0,.45);border-radius:3px;overflow:hidden}.awlabel>svg{display:block;width:100%;height:100%}
+.awdraw{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.awdraw .btn{display:flex;flex-direction:column;align-items:center;line-height:1.15;min-width:84px}.awdraw .btn small{font-size:10px;opacity:.75}
 .awfacts{color:#F1E6D6;border-top-color:rgba(233,211,160,.3);width:min(92vw,360px);margin:6px auto;font-size:13px}.awfacts dt{color:#BFA470}.atier b{color:#E9D3A0;margin-left:3px}
 .atiers{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.atier{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;border:1px solid rgba(233,211,160,.4);background:rgba(0,0,0,.2)}
 .atier.t-rare{border-color:#B8C0C6}.atier.t-superrare{border-color:#C9A253;color:#F2D88A}.atier.t-ultra{border-color:#6E9AD8;color:#BFD6FF}.atier.t-icon{border-color:#C47E52;color:#F6D2A8}
@@ -1232,19 +1236,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261016-181338'</script>
-<script src="data.js?v=20261016-181338"></script>
-<script src="art.js?v=20261016-181338"></script>
-<script src="gids.js?v=20261016-181338"></script>
-<script src="maps.js?v=20261016-181338"></script>
-<script src="zegels.js?v=20261016-181338"></script>
-<script src="landen.js?v=20261016-181338"></script>
-<script src="etiket.js?v=20261016-181338"></script>
-<script src="legendes.js?v=20261016-181338"></script>
-<script src="fullart.js?v=20261016-181338"></script>
-<script src="stickers.js?v=20261016-181338"></script>
-<script src="vrienden.js?v=20261016-181338"></script>
-<script src="wereldbol.js?v=20261016-181338"></script>
+<script>window.VI_V='20261017-082112'</script>
+<script src="data.js?v=20261017-082112"></script>
+<script src="art.js?v=20261017-082112"></script>
+<script src="gids.js?v=20261017-082112"></script>
+<script src="maps.js?v=20261017-082112"></script>
+<script src="zegels.js?v=20261017-082112"></script>
+<script src="landen.js?v=20261017-082112"></script>
+<script src="etiket.js?v=20261017-082112"></script>
+<script src="legendes.js?v=20261017-082112"></script>
+<script src="fullart.js?v=20261017-082112"></script>
+<script src="stickers.js?v=20261017-082112"></script>
+<script src="vrienden.js?v=20261017-082112"></script>
+<script src="wereldbol.js?v=20261017-082112"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2695,7 +2699,7 @@ async function adminCompare(c){
   popOverlay();
   const col=(m,lab,price)=>{const st=d.styles[m];return `<div class="cmpcol"><b>${lab}</b><small>${price}</small>${st?`<div class="cmplbl">${makeLabelSVG(st,c)}</div><ul>${(st.key||[]).map(k=>`<li>${esc(k)}</li>`).join('')}</ul><button class="btn small" data-pick="${m}">Deze gebruiken</button>`:`<p class="hint">Geen tekening${d.errors&&d.errors[m]?'<br><small>'+esc(d.errors[m])+'</small>':''}</p>`}</div>`};
   const o=overlay(`<p class="status">Sonnet vs Opus</p><p class="hint">${d.foto?'Getekend vanaf je foto.':'Geen foto gevonden: getekend uit kennis.'}</p>
-    <div class="cmp">${col('sonnet','Sonnet','±2,5 cent')}${col('opus','Opus','±5,5 cent')}</div>
+    <div class="cmp">${col('sonnet','Sonnet','±2 cent')}${col('opus','Opus','±4 cent')}</div>
     <div class="actions"><button class="btn" id="close">Sluiten zonder opslaan</button></div>`,{nest:true});
   o.querySelector('#close').onclick=()=>popOverlay();
   o.querySelectorAll('[data-pick]').forEach(b=>b.onclick=async()=>{b.disabled=true;
@@ -2793,12 +2797,17 @@ async function openAdminFeedback(all){
 }
 /* ---------- Beheer: wijnen ---------- */
 const SIGN={classification:{basis:'basis',kwaliteit:'kwaliteit',premium:'cru/reserva',top:'top'},producer_fame:{merk:'merk',regionaal:'regionaal',gerenommeerd:'gerenommeerd',wereldberoemd:'wereldberoemd'}};
+const awCard=w=>({naam:w.naam,maker:w.maker,jaar:w.jaar,regio:w.regio,land:w.land,color:w.color,rar:w.is_icon?'icon':(w.tier_override||w.tier||'common')});
+/* Schatting per tekening: ±3.400 tokens in (foto + opdracht), ±1.100 uit, tegen de API-prijs per model */
+const DRAWM=[['sonnet','Sonnet','±2 ct'],['opus','Opus','±4 ct'],['fable','Fable','±9 ct']];
 async function openAdminWines(q,pick){
   const o=overlay(`<p class="status">${pick?'Kies de dubbele wijn':'Wijnen beheren'}</p><form class="awsearch" id="aws"><input id="awq" type="search" placeholder="Zoek op naam of maker" value="${esc(q||'')}" autocomplete="off"><button class="btn small" type="submit">Zoek</button></form><div id="awl"><p class="hint">Even laden…</p></div>`,{nest:true});
   const load=async qq=>{const {data,error}=await sb.rpc('admin_wines',{p_q:qq||''});if(!o.isConnected)return;
     const L=(data||[]).filter(w=>!pick||w.id!==pick.id);
     o.querySelector('#awl').innerHTML=error?'<p class="hint">Laden lukte niet.</p>':L.length?`<div class="awrows">${L.map(w=>{const t=w.is_icon?'icon':(w.tier_override||w.tier||'common');
-      return `<button class="awrow" data-w="${w.id}"><span class="atier t-${t}">${TIERS[t].sym}</span><span class="awn"><b>${esc(w.naam)}</b><small>${esc(w.maker||'')}${w.jaar?' · '+w.jaar:''} · ${esc(w.land||'')}</small></span><span class="awm">${w.kaarten}×${w.tier_override?' <i title="handmatig">✎</i>':''}${w.locked?' 🔒':''}</span></button>`}).join('')}</div>`:'<p class="hint">Niets gevonden.</p>';
+      const lbl=w.label_style?`<span class="awthumb">${makeLabelSVG(w.label_style,awCard(w))}</span>`:`<span class="awthumb none">${t==='common'?'':'?'}</span>`;
+      const etk=w.label_style?(w.locked?'<span class="awst on">🔒 vast</span>':'<span class="awst">open</span>'):(t==='common'?'<span class="awst dim">geen etiket</span>':'<span class="awst warn">niet getekend</span>');
+      return `<button class="awrow" data-w="${w.id}">${lbl}<span class="awn"><b>${esc(w.naam)}</b><small>${esc(w.maker||'')}${w.jaar?' · '+w.jaar:''} · ${esc(w.land||'')}</small><span class="awtags"><span class="awtier">${TIERS[t].sym} ${TIERS[t].label}${w.tier_override?' ✎':''}</span>${etk}</span></span><span class="awm">${w.kaarten}×</span></button>`}).join('')}</div>`:'<p class="hint">Niets gevonden.</p>';
     o.querySelectorAll('.awrow').forEach(b=>b.onclick=()=>{const w=L.find(x=>x.id===b.dataset.w);if(pick)return pick.done(w);openAdminWine(w)})};
   o.querySelector('#aws').onsubmit=e=>{e.preventDefault();load(o.querySelector('#awq').value.trim())};
   load(q);
@@ -2810,6 +2819,8 @@ function openAdminWine(w){
   const o=overlay(`<p class="eyebrow">${esc(w.maker||'')}</p><p class="status">${esc(w.naam)}${w.jaar?' · '+w.jaar:''}</p>
     <p class="hint"><span class="atier t-${t}">${TIERS[t].sym} ${TIERS[t].label}</span>${w.tier_override?' (handmatig)':''} · ${w.kaarten} ${w.kaarten==1?'kaart':'kaarten'}</p>
     ${w.tier_reason?`<p class="hint small">Waarom: ${esc(w.tier_reason)}</p>`:''}
+    ${w.label_style?`<div class="awlabel">${makeLabelSVG(w.label_style,awCard(w))}</div><p class="hint small">${w.locked?'🔒 Vastgezet: wordt niet overschreven door "alle etiketten opnieuw tekenen".':'Niet vastgezet.'}</p>`:''}
+    ${t==='common'&&!w.label_style?'':`<p class="mgroup">${w.label_style?'Opnieuw tekenen':'Etiket tekenen'}</p><div class="awdraw">${DRAWM.map(([m,l,pr])=>`<button class="btn small" data-draw="${m}">${l}<small>${pr}</small></button>`).join('')}</div><p class="hint small">Vanaf de nieuwste foto. Je ziet eerst het resultaat naast het huidige etiket en kiest dan.</p>`}
     <dl class="facts awfacts">${row('Prijs (schatting)',price)}${row('Classificatie',SIGN.classification[s.classification]||s.classification)}${row('Maker',SIGN.producer_fame[s.producer_fame]||s.producer_fame)}${row('Oplage',s.production)}${row('In Nederland',s.rarity_nl)}${row('Jaargang',s.vintage_quality)}${row('Etiket',w.label_v==='2'?(w.locked?'getekend, vastgezet':'getekend'):'nog niet getekend')}</dl>
     ${w.is_icon?'<p class="hint small">Een Legende: de klasse ligt vast.</p>':`<p class="mgroup">Klasse aanpassen</p><div class="awtiers">${['common','rare','superrare','ultra'].map(k=>`<button class="btn small${(w.tier_override||'')===k?' primary':''}" data-settier="${k}">${TIERS[k].sym} ${TIERS[k].label}</button>`).join('')}<button class="btn small${w.tier_override?'':' primary'}" data-settier="">Berekend${w.tier&&w.tier_override?' ('+TIERS[w.tier].label+')':''}</button></div>`}
     <p class="mgroup">Overig</p><div class="admlist">
@@ -2820,10 +2831,27 @@ function openAdminWine(w){
     const {data,error}=await sb.rpc('admin_set_tier',{p_wine:w.id,p_tier:v});
     if(error){toast('Opslaan lukte niet.');o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=false);return}
     w.tier_override=v;toast(`Klasse: ${TIERS[data.tier].label}. Alle ${w.kaarten} kaarten gaan mee.`);await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)});
+  o.querySelectorAll('[data-draw]').forEach(b=>b.onclick=()=>adminRedraw(w,b.dataset.draw));
   const lk=o.querySelector('#awlock');if(lk)lk.onclick=async()=>{lk.disabled=true;try{await callDraw({mode:'lock',wine:w.id,locked:!w.locked});w.locked=!w.locked;await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)}catch(e){lk.disabled=false;toast('Lukte niet.')}};
   o.querySelector('#awmerge').onclick=()=>openAdminWines('',{id:w.id,done:other=>askConfirm('Samenvoegen?',`"${other.naam}" (${other.kaarten}×) gaat op in "${w.naam}". Kaarten en een getekend etiket gaan mee. Dit kan niet ongedaan worden.`,'Samenvoegen',async()=>{
     const {error}=await sb.rpc('admin_merge',{p_keep:w.id,p_drop:other.id});if(error){toast('Samenvoegen lukte niet.');return}
     toast('Samengevoegd.');await loadAlbum();go(cur,true);closeOverlay()})});
+}
+async function adminRedraw(w,m){
+  const [,lab,pr]=DRAWM.find(x=>x[0]===m);
+  overlay(`<p class="status">${lab} tekent…</p><p class="hint">${esc(w.naam)} wordt getekend vanaf de nieuwste foto (${pr}). Dit duurt een halve tot hele minuut. Er wordt nog niets opgeslagen.</p>`,{nest:true});
+  let d;try{d=await callDraw({mode:'draw',wine:w.id,model:m,dry:true})}catch(e){popOverlay();toast('Tekenen lukte niet ('+e.message+').');return}
+  const st=d&&d.styles&&d.styles[m];popOverlay();
+  if(!st){toast('Geen tekening'+(d&&d.errors&&d.errors[m]?': '+d.errors[m].slice(0,90):'')+'.');return}
+  const c=awCard(w);
+  const o=overlay(`<p class="status">Nieuw etiket van ${lab}</p><p class="hint">${d.foto?'Getekend vanaf de foto.':'Geen foto gevonden: getekend uit kennis.'}</p>
+    <div class="cmp"><div class="cmpcol"><b>Huidig</b>${w.label_style?`<div class="cmplbl">${makeLabelSVG(w.label_style,c)}</div>`:'<p class="hint">Nog geen etiket</p>'}</div>
+    <div class="cmpcol"><b>${lab}</b><div class="cmplbl">${makeLabelSVG(st,c)}</div>${(st.key||[]).length?`<ul>${st.key.map(k=>`<li>${esc(k)}</li>`).join('')}</ul>`:''}</div></div>
+    <div class="actions"><button class="btn" id="rdno">Huidige houden</button><button class="btn primary" id="rdyes">Nieuwe gebruiken</button></div>`,{nest:true});
+  o.querySelector('#rdno').onclick=()=>popOverlay();
+  o.querySelector('#rdyes').onclick=async e=>{e.target.disabled=true;
+    try{const r=await callDraw({mode:'save',wine:w.id,style:st});w.label_style=r.style||st;w.label_v='2';w.locked=!!(r.style&&r.style.locked)}catch(err){e.target.disabled=false;toast('Opslaan lukte niet.');return}
+    toast(w.locked?'Opgeslagen (blijft vastgezet).':'Opgeslagen.');await loadAlbum();go(cur,true);popOverlay();popOverlay();setTimeout(()=>openAdminWine(w),250)};
 }
 /* Beheer: testreveal. Kies een wijn; je ziet de onthulling als Primeur met de potloodschets,
    terwijl Sonnet het etiket echt opnieuw tekent vanaf de bewaarde foto (niets wordt opgeslagen). */

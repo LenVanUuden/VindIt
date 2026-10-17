@@ -153,6 +153,7 @@ function cleanStyle(s: Record<string, unknown>) {
 const DRAW_MODELS: Record<string, string> = {
   opus: Deno.env.get("LABEL_MODEL_OPUS") ?? "claude-opus-5-5",
   sonnet: Deno.env.get("LABEL_MODEL_SONNET") ?? "claude-sonnet-5-5",
+  fable: Deno.env.get("LABEL_MODEL_FABLE") ?? "claude-fable-5-1",
 };
 const DRAW_SYSTEM = `You redraw wine labels for a Dutch wine-collecting app. The app shows a simplified illustration of the FRONT label; someone holding the real bottle must recognise it at a glance. Return the drawing via the "tekening" tool.
 

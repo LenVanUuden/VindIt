@@ -94,6 +94,7 @@ function cleanStyle(s: Record<string, unknown>) {
 const DRAW_MODELS: Record<string, string> = {
   opus: Deno.env.get("LABEL_MODEL_OPUS") ?? "claude-opus-5-5",
   sonnet: Deno.env.get("LABEL_MODEL_SONNET") ?? "claude-sonnet-5-5",
+  fable: Deno.env.get("LABEL_MODEL_FABLE") ?? "claude-fable-5-1",
 };
 const DRAW_SYSTEM = `You redraw wine labels for a Dutch wine-collecting app. The app shows a simplified illustration of the FRONT label; someone holding the real bottle must recognise it at a glance. Return the drawing via the "tekening" tool.
 
@@ -244,6 +245,8 @@ Deno.serve(async (req) => {
       if (body.mode === "save") {
         const st = body.style && typeof body.style === "object" ? (body.style.v === 2 ? cleanDraw(body.style) : cleanStyle(body.style)) : null;
         if (!st) return json({ status: "bad_style" }, 400);
+        // een vastgezet etiket blijft vastgezet als de beheerder een nieuwe tekening kiest
+        if ((w.label_style as Record<string, unknown> | null)?.locked) (st as Record<string, unknown>).locked = true;
         const { error: e3 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
         return json({ status: e3 ? "error" : "ok", style: st });
       }
