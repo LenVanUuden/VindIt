@@ -280,8 +280,8 @@ Deno.serve(async (req) => {
         if (!st) return json({ status: "bad_style" }, 400);
         // een vastgezet etiket blijft vastgezet als de beheerder een nieuwe tekening kiest
         if ((w.label_style as Record<string, unknown> | null)?.locked) (st as Record<string, unknown>).locked = true;
-        const { error: e3 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
-        return json({ status: e3 ? "error" : "ok", style: st });
+        const { data: okSave, error: e3 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
+        return json({ status: e3 ? "error" : okSave === false ? "rejected" : "ok", style: st });
       }
       try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
       const img = await newestPhoto(admin, w.id);

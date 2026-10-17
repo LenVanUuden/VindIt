@@ -1249,19 +1249,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-093717'</script>
-<script src="data.js?v=20261017-093717"></script>
-<script src="art.js?v=20261017-093717"></script>
-<script src="gids.js?v=20261017-093717"></script>
-<script src="maps.js?v=20261017-093717"></script>
-<script src="zegels.js?v=20261017-093717"></script>
-<script src="landen.js?v=20261017-093717"></script>
-<script src="etiket.js?v=20261017-093717"></script>
-<script src="legendes.js?v=20261017-093717"></script>
-<script src="fullart.js?v=20261017-093717"></script>
-<script src="stickers.js?v=20261017-093717"></script>
-<script src="vrienden.js?v=20261017-093717"></script>
-<script src="wereldbol.js?v=20261017-093717"></script>
+<script>window.VI_V='20261017-114641'</script>
+<script src="data.js?v=20261017-114641"></script>
+<script src="art.js?v=20261017-114641"></script>
+<script src="gids.js?v=20261017-114641"></script>
+<script src="maps.js?v=20261017-114641"></script>
+<script src="zegels.js?v=20261017-114641"></script>
+<script src="landen.js?v=20261017-114641"></script>
+<script src="etiket.js?v=20261017-114641"></script>
+<script src="legendes.js?v=20261017-114641"></script>
+<script src="fullart.js?v=20261017-114641"></script>
+<script src="stickers.js?v=20261017-114641"></script>
+<script src="vrienden.js?v=20261017-114641"></script>
+<script src="wereldbol.js?v=20261017-114641"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2748,7 +2748,7 @@ function openAdmin(){
     <p class="mgroup">Overzicht</p>
     <div class="admlist">${b('astats','trophy','Cijfers','Gebruik, scans en AI-kosten deze maand')}${b('afb','chat','Feedback','Wat testers je stuurden')}${b('awines','grapes','Wijnen beheren','Klasse aanpassen, samenvoegen, etiket vastzetten')}</div>
     <p class="mgroup">Etiketten</p>
-    <div class="admlist">${b('relabel','pen','Etiketten tekenen','Wijnen vanaf Rare zonder getekend etiket')}${b('relabelall','pen','Alle etiketten opnieuw tekenen','Vastgezette etiketten blijven staan')}</div>
+    <div class="admlist">${b('relabel','pen','Etiketten tekenen','Wijnen vanaf Rare zonder getekend etiket')}${b('relabelall','pen','Alle etiketten opnieuw tekenen','Vastgezette etiketten blijven staan')}${b('handlbl','pen','Handgetekende etiketten plaatsen','Door Claude met de hand getekend; worden vastgezet')}</div>
     <p class="mgroup">Klassen</p>
     <div class="admlist">${b('areview','sparkle','Klassen herzien','Voorstellen na opzoeken op internet')}${b('reassess','sparkle','Klassen opnieuw beoordelen','Wijnen zonder beoordeling')}</div>
     <p class="mgroup">Voorbeelden</p>
@@ -2765,6 +2765,7 @@ function openAdmin(){
   o.querySelector('#afb').onclick=()=>openAdminFeedback(false);
   o.querySelector('#awines').onclick=()=>openAdminWines('');
   o.querySelector('#areview').onclick=()=>openAdminReviews();
+  o.querySelector('#handlbl').onclick=()=>placeHandLabels(o.querySelector('#handlbl'));
   sb.rpc('admin_reviews').then(({data})=>{const e=o.querySelector('#areview small');if(e&&Array.isArray(data)){const n=data.filter(r=>r.changed).length;e.textContent=data.length?`${n} ${n==1?'wijziging':'wijzigingen'} klaar om te bekijken`:'Geen voorstellen'}});
   sb.rpc('admin_stats').then(({data})=>{const e=o.querySelector('#afb small');if(e&&data)e.textContent=data.feedback_open?`${data.feedback_open} nog niet afgehandeld`:'Alles afgehandeld'});
 }
@@ -2882,6 +2883,19 @@ async function adminRedraw(w,m){
   o.querySelector('#rdyes').onclick=async e=>{e.target.disabled=true;
     try{const r=await callDraw({mode:'save',wine:w.id,style:st});w.label_style=r.style||st;w.label_v='2';w.locked=!!(r.style&&r.style.locked)}catch(err){e.target.disabled=false;toast('Opslaan lukte niet.');return}
     toast(w.locked?'Opgeslagen (blijft vastgezet).':'Opgeslagen.');await loadAlbum();go(cur,true);popOverlay();popOverlay();setTimeout(()=>openAdminWine(w),250)};
+}
+/* Beheer: met de hand getekende etiketten (handetiketten.json) opslaan en vastzetten, via de beheerdersrechten */
+async function placeHandLabels(btn){
+  const sm=btn.querySelector('small');btn.disabled=true;sm.textContent='Bezig…';
+  let L=[];try{L=await (await fetch('handetiketten.json?v='+Date.now())).json()}catch(e){sm.textContent='Bestand niet gevonden';btn.disabled=false;return}
+  const done=[],fail=[];
+  for(const x of L){
+    try{const r=await callDraw({mode:'save',wine:x.wine,style:x.style});if(!r||r.status!=='ok')throw new Error(r&&r.status||'mislukt');
+      await callDraw({mode:'lock',wine:x.wine,locked:true});done.push(x.naam)}
+    catch(e){fail.push(x.naam+' ('+e.message+')')}
+  }
+  sm.textContent=done.length?`Geplaatst en vastgezet: ${done.join(', ')}`:'';if(fail.length)sm.textContent+=(done.length?' · ':'')+'Mislukt: '+fail.join(', ');
+  btn.disabled=false;if(done.length){await loadAlbum();go(cur,true)}
 }
 /* Beheer: voorstellen voor een nieuwe klasse (na opzoeken op internet). Niets verandert tot je op Toepassen tikt. */
 const tchip=t=>t?`<span class="awtier">${TIERS[t].sym} ${TIERS[t].label}</span>`:'<span class="awtier">?</span>';
