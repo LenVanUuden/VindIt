@@ -1249,19 +1249,19 @@ body:has(.overlay:not([hidden])) .backpill{display:none}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script>window.VI_V='20261017-114641'</script>
-<script src="data.js?v=20261017-114641"></script>
-<script src="art.js?v=20261017-114641"></script>
-<script src="gids.js?v=20261017-114641"></script>
-<script src="maps.js?v=20261017-114641"></script>
-<script src="zegels.js?v=20261017-114641"></script>
-<script src="landen.js?v=20261017-114641"></script>
-<script src="etiket.js?v=20261017-114641"></script>
-<script src="legendes.js?v=20261017-114641"></script>
-<script src="fullart.js?v=20261017-114641"></script>
-<script src="stickers.js?v=20261017-114641"></script>
-<script src="vrienden.js?v=20261017-114641"></script>
-<script src="wereldbol.js?v=20261017-114641"></script>
+<script>window.VI_V='20261017-115556'</script>
+<script src="data.js?v=20261017-115556"></script>
+<script src="art.js?v=20261017-115556"></script>
+<script src="gids.js?v=20261017-115556"></script>
+<script src="maps.js?v=20261017-115556"></script>
+<script src="zegels.js?v=20261017-115556"></script>
+<script src="landen.js?v=20261017-115556"></script>
+<script src="etiket.js?v=20261017-115556"></script>
+<script src="legendes.js?v=20261017-115556"></script>
+<script src="fullart.js?v=20261017-115556"></script>
+<script src="stickers.js?v=20261017-115556"></script>
+<script src="vrienden.js?v=20261017-115556"></script>
+<script src="wereldbol.js?v=20261017-115556"></script>
 <script>
 const SB_URL='https://fneiobwtubeehjqnzeta.supabase.co';
 const SB_KEY='sb_publishable_vpOCr1D2DfYbpBEcAhdvSg_f1dcs5OA'; // publieke sleutel, bedoeld voor de browser
@@ -2848,7 +2848,7 @@ function openAdminWine(w){
     o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=true);
     const {data,error}=await sb.rpc('admin_set_tier',{p_wine:w.id,p_tier:v});
     if(error){toast('Opslaan lukte niet.');o.querySelectorAll('[data-settier]').forEach(x=>x.disabled=false);return}
-    w.tier_override=v;toast(`Klasse: ${TIERS[data.tier].label}. Alle ${w.kaarten} kaarten gaan mee.`);await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)});
+    w.tier_override=v;if(!w.label_style)drawIfMissing(w.id,data.tier);toast(`Klasse: ${TIERS[data.tier].label}. Alle ${w.kaarten} kaarten gaan mee.`);await loadAlbum();go(cur,true);popOverlay();setTimeout(()=>openAdminWine(w),250)});
   o.querySelectorAll('[data-draw]').forEach(b=>b.onclick=()=>adminRedraw(w,b.dataset.draw));
   const vb=o.querySelector('#awverify');if(vb)vb.onclick=async()=>{vb.disabled=true;vb.querySelector('small').textContent='Claude zoekt… (±10 seconden)';
     try{const d=await callDraw({mode:'verify',wine:w.id});if(!d||d.status!=='ok')throw new Error(d&&d.error||'mislukt');openAdminReviews()}
@@ -2897,6 +2897,11 @@ async function placeHandLabels(btn){
   sm.textContent=done.length?`Geplaatst en vastgezet: ${done.join(', ')}`:'';if(fail.length)sm.textContent+=(done.length?' · ':'')+'Mislukt: '+fail.join(', ');
   btn.disabled=false;if(done.length){await loadAlbum();go(cur,true)}
 }
+/* Wijn is (nu) Rare of hoger maar heeft nog geen getekend etiket: in de achtergrond laten tekenen met Sonnet (±2 cent) */
+function drawIfMissing(wineId,tier){
+  if(!tier||tier==='common'||tier==='icon')return;
+  callDraw({mode:'draw',wine:wineId,model:'sonnet',only_missing:true}).then(d=>{if(d&&!d.skipped&&d.styles&&d.styles.sonnet){toast('Etiket getekend.');loadAlbum().then(()=>go(cur,true))}}).catch(()=>{});
+}
 /* Beheer: voorstellen voor een nieuwe klasse (na opzoeken op internet). Niets verandert tot je op Toepassen tikt. */
 const tchip=t=>t?`<span class="awtier">${TIERS[t].sym} ${TIERS[t].label}</span>`:'<span class="awtier">?</span>';
 async function openAdminReviews(){
@@ -2929,7 +2934,7 @@ async function openAdminReviews(){
   const apply=async el=>{const w=el.dataset.w;el.querySelectorAll('button').forEach(b=>b.disabled=true);
     const {data:res,error:e}=await sb.rpc('admin_review_apply',{p_wine:w});
     if(e){el.querySelectorAll('button').forEach(b=>b.disabled=false);toast('Toepassen lukte niet.');return false}
-    done(el,res&&res.old!==res.tier?`Toegepast: nu ${TIERS[res.tier].label}`:'Gegevens opgeslagen');return true};
+    done(el,res&&res.old!==res.tier?`Toegepast: nu ${TIERS[res.tier].label}`:'Gegevens opgeslagen');if(res&&res.old==='common')drawIfMissing(w,res.tier);return true};
   o.querySelectorAll('.arv').forEach(el=>{
     el.querySelector('[data-apply]').onclick=async()=>{if(await apply(el)){await loadAlbum();go(cur,true)}};
     el.querySelector('[data-skip]').onclick=async()=>{const {error:e}=await sb.rpc('admin_review_dismiss',{p_wine:el.dataset.w});if(e){toast('Lukte niet.');return}done(el,'Overgeslagen')}});

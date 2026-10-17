@@ -283,6 +283,8 @@ Deno.serve(async (req) => {
         const { data: okSave, error: e3 } = await admin.rpc("set_label_style", { p_wine: w.id, p_style: st, p_force: true });
         return json({ status: e3 ? "error" : okSave === false ? "rejected" : "ok", style: st });
       }
+      // Alleen tekenen als er nog geen getekend etiket is (bijv. na promotie naar Rare); nooit een bestaand of vastgezet etiket overschrijven
+      if (body.only_missing && (w.label_style as Record<string, unknown> | null)?.v === 2) return json({ status: "ok", skipped: true });
       try { await movePhotos(admin); } catch (e) { console.warn("movePhotos", e); }
       const img = await newestPhoto(admin, w.id);
       const desc = `Wijn: ${w.naam}\nMaker: ${w.maker || "onbekend"}\nJaargang: ${w.jaar ?? "geen"}\nHerkomst: ${w.appellation || ""} (${w.regio}, ${w.land || ""})\nStijl: ${w.stijl || ""}`;
